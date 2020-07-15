@@ -8,14 +8,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author tejc999999
  */
 @SpringBootApplication
-public class AlgoLearnApplication {
+public class EMSApplication {
 
     /**
      * メイン処理(main process).
      * @param args 実行時引数(run time arguments)
      */
     public static void main(String[] args) {
-        SpringApplication.run(AlgoLearnApplication.class, args);
+        SpringApplication.run(EMSApplication.class, args);
     }
 
 }
