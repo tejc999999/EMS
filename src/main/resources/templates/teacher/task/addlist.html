@@ -1,0 +1,76 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>課題登録画面</title>
+<link rel="stylesheet"
+	href="http://maxcdn.bootstrapcdn.com/bootstrap/4.3.0/css/bootstrap.min.css"
+	th:href="@{/webjars/bootstrap/4.3.0/css/bootstrap.min.css}" />
+<script th:src="@{/webjars/jquery/3.4.0/jquery.slim.min.js}"
+	type="text/javascript" charset="utf-8"></script>
+<script th:src="@{/webjars/bootstrap/4.3.0/js/bootstrap.bundle.min.js}"
+	type="text/javascript" charset="utf-8"></script>
+
+
+</head>
+<body>
+
+	<div th:replace="layout :: header"></div>
+
+	<h2>■課題登録</h2>
+	<div class="able-responsive-md container">
+
+		<form th:action="@{/teacher/task/addsearch}"
+			th:object="${questionForm}" method="post">
+			<div class="form-row">
+				<div class="form-group col-md-9">
+					<label for="searchWord" class="col-form-label">検索ワード</label> <input
+						type="text" class="form-control" name="searchWord"
+						placeholder="検索ワード" aria-label="検索ワード" />
+				</div>
+				<div class="form-group col-md-offset-1 col-md-2">
+					<label for="searchbtn" class="col-form-label"> </label> <input
+						type="submit" name="searchbtn" class="btn btn-info btn-block"
+						th:value="検索">
+				</div>
+			</div>
+		</form>
+
+		<table class="table table-hover table-striped">
+			<thead class="thead-dark">
+				<tr class="row">
+					<th class="col-md-3 text-nowrap" scope="col" th:text="タイトル">タイトル</th>
+					<th class="col-md-6 text-nowrap" scope="col" th:text="説明文">説明文</th>
+					<th class="col-md-1 text-nowrap" scope="col" th:text="入力数">入力数</th>
+					<th class="col-md-1" scope="col"></th>
+					<th class="col-md-1" scope="col"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="row" th:each="question : ${questions}">
+					<td class="col-md-3" th:text="${question.title}">タイトル</td>
+					<td class="col-md-6" th:text="${question.description}">説明文</td>
+					<td class="col-md-1" th:text="${question.inputNum}">入力数</td>
+					<td class="col-md-1">
+						<form th:action="@{/teacher/task/addauto}" method="post">
+							<input type="submit" name="form" th:value="自動" /> <input
+								type="hidden" name="id" th:value="${question.id}" />
+						</form>
+					</td>
+					<td class="col-md-1">
+						<form th:action="@{/teacher/task/addauto}" method="post">
+							<input type="submit" name="form" th:value="コード" /> <input
+								type="hidden" name="id" th:value="${question.id}" />
+						</form>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div th:replace="layout :: footer"></div>
+
+</body>
+</html>
