@@ -18,10 +18,10 @@
 
   <!--/* bootstrap関連 */-->
   <link rel="stylesheet"
-    href="http://maxcdn.bootstrapcdn.com/bootstrap/4.3.0/css/bootstrap.min.css"
-    th:href="@{/webjars/bootstrap/4.3.0/css/bootstrap.min.css}" />
+    href="http://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+    th:href="@{/webjars/bootstrap/4.5.0/css/bootstrap.min.css}" />
   <script th:src="@{/webjars/jquery/3.4.0/jquery.slim.min.js}" type="text/javascript" charset="utf-8"></script>
-  <script th:src="@{/webjars/bootstrap/4.3.0/js/bootstrap.bundle.min.js}" type="text/javascript" charset="utf-8"></script>
+  <script th:src="@{/webjars/bootstrap/4.5.0/js/bootstrap.bundle.min.js}" type="text/javascript" charset="utf-8"></script>
 <style type="text/css">
 .dropdown:hover .dropdown-menu {
     display: block;
@@ -69,8 +69,8 @@
           課題
           </a>
           <div class="dropdown-menu" aria-labelledby="taskDropDown">
-              <a class="dropdown-item" th:href="@{'/teacher/task/addlist'}">課題登録</a>
-              <a class="dropdown-item" href="#">課題一覧</a>
+              <a class="dropdown-item" href="#">課題登録</a>
+              <a class="dropdown-item" th:href="@{'/teacher/task/addlist'}">課題一覧</a>
           </div>
         </li>
         <li class="nav-item dropdown">
@@ -103,7 +103,7 @@
       </ul>  
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link btn btn-info" th:href="@{'/login' }">ログアウト</a>
+          <a class="nav-link btn btn-info" th:href="@{'/logout' }">ログアウト</a>
         </li>
       </ul>
     </div>

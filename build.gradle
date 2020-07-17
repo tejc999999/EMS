@@ -1,58 +1,63 @@
-// ƒvƒ‰ƒOƒCƒ“(Gradle plugin repository‚©‚çæ“¾j
+// ãƒ—ãƒ©ã‚°ã‚¤ãƒ³(Gradle plugin repositoryã‹ã‚‰å–å¾—ï¼‰
 // https://plugins.gradle.org/
 plugins {
-	// Spring‚ÌƒTƒ|[ƒgiÀs‚È‚Çj
+	// Springã®ã‚µãƒãƒ¼ãƒˆï¼ˆå®Ÿè¡Œãªã©ï¼‰
 	id 'org.springframework.boot' version '2.3.1.RELEASE'
-	// Spring‚ÌˆË‘¶ŠÖŒWŠÇ—
+	// Springã®ä¾å­˜é–¢ä¿‚ç®¡ç†
 	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
-	// java‚ÌƒRƒ“ƒpƒCƒ‹AƒeƒXƒg
+	// javaã®ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«ã€ãƒ†ã‚¹ãƒˆ
 	id 'java'
 }
 
-// ƒvƒƒWƒFƒNƒg‚ÌƒOƒ‹[ƒvID
+// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã®ã‚°ãƒ«ãƒ¼ãƒ—ID
 group = 'jp.spring.boot.ems'
-// ƒvƒƒWƒFƒNƒg‚Ìƒo[ƒWƒ‡ƒ“
+// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã®ãƒãƒ¼ã‚¸ãƒ§ãƒ³
 version = '0.0.1-SNAPSHOT'
-// ƒvƒƒWƒFƒNƒg‚Ìà–¾
+// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã®èª¬æ˜
 description = 'EMS'
-// JDKƒo[ƒWƒ‡ƒ“i•Ï”‚ğã‘‚«‚·‚é–‚ÅÀs‚Éƒo[ƒWƒ‡ƒ“‚ğ•Ï‚¦‚é‚±‚Æ‚ª‰Â”\j
+// JDKãƒãƒ¼ã‚¸ãƒ§ãƒ³ï¼ˆå¤‰æ•°ã‚’ä¸Šæ›¸ãã™ã‚‹äº‹ã§å®Ÿè¡Œæ™‚ã«ãƒãƒ¼ã‚¸ãƒ§ãƒ³ã‚’å¤‰ãˆã‚‹ã“ã¨ãŒå¯èƒ½ï¼‰
 sourceCompatibility = '1.8'
 
-// ƒ‰ƒCƒuƒ‰ƒŠ’TõêŠ
+// ãƒ©ã‚¤ãƒ–ãƒ©ãƒªæ¢ç´¢å ´æ‰€
 repositories {
 	// Maven Repository
 	mavenCentral()
 }
 
-// •K—v‚Èƒ‰ƒCƒuƒ‰ƒŠiMaven Repositpryj
+// å¿…è¦ãªãƒ©ã‚¤ãƒ–ãƒ©ãƒªï¼ˆMaven Repositpryï¼‰
 dependencies {
-	// implementationFƒRƒ“ƒpƒCƒ‹‚Ég—p
-	// testImplementation:ƒeƒXƒgƒvƒƒOƒ‰ƒ€‚ÌƒRƒ“ƒpƒCƒ‹‚Ég—p
-	// runtimeOnlyFƒRƒ“ƒpƒCƒ‹•s—vAÀsd—l
-    implementation 'org.springframework.boot:spring-boot-starter:2.3.1.RELEASE'
-    implementation 'org.springframework.boot:spring-boot-starter-web:2.3.1.RELEASE'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa:2.3.1.RELEASE'
-    implementation 'org.springframework.boot:spring-boot-starter-validation:2.3.1.RELEASE'
+	// implementationï¼šã‚³ãƒ³ãƒ‘ã‚¤ãƒ«æ™‚ã«ä½¿ç”¨
+	// testImplementation:ãƒ†ã‚¹ãƒˆãƒ—ãƒ­ã‚°ãƒ©ãƒ ã®ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«æ™‚ã«ä½¿ç”¨
+	// runtimeOnlyï¼šã‚³ãƒ³ãƒ‘ã‚¤ãƒ«æ™‚ä¸è¦ã€å®Ÿè¡Œæ™‚ä»•æ§˜
+    implementation 'org.springframework.boot:spring-boot-starter'//:2.3.1.RELEASE'
+    implementation 'org.springframework.boot:spring-boot-starter-web'//:2.3.1.RELEASE'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'//:2.3.1.RELEASE'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'//:2.3.1.RELEASE'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'//:2.3.1.RELEASE'
+    implementation 'org.springframework.boot:spring-boot-starter-security'//:2.3.1.RELEASE'
     implementation 'org.projectlombok:lombok:1.18.12'
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:2.3.1.RELEASE'
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity4:3.0.4.RELEASE'
     implementation 'org.webjars:bootstrap:4.3.0'
     implementation 'org.webjars:jquery:3.4.0'
     implementation 'org.webjars:ace:1.3.3'
     implementation 'com.ninja-squad:DbSetup:2.1.0'
+    implementation 'org.flywaydb:flyway-core:6.5.1'
+    implementation 'org.webjars:bootstrap:4.5.0'    
+    
     runtimeOnly 'com.h2database:h2:1.4.200'
     runtimeOnly 'mysql:mysql-connector-java:8.0.20'
 //    testImplementation 'org.springframework.boot:spring-boot-starter-test:2.3.1.RELEASE'
-    testImplementation('org.springframework.boot:spring-boot-starter-test:2.3.1.RELEASE') {
+    testImplementation('org.springframework.boot:spring-boot-starter-test'/*:2.3.1.RELEASE'*/) {
         exclude(group:'junit', module:'junit')
     }
+    testImplementation 'org.springframework.security:spring-security-test:5.3.3.RELEASE'
     testImplementation 'org.assertj:assertj-core:3.16.0'
     testImplementation 'org.junit.platform:junit-platform-surefire-provider:1.3.2'
     testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.6.2'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'
     testImplementation 'org.junit.vintage:junit-vintage-engine:5.7.0-M1'
     testImplementation 'org.mockito:mockito-core:3.3.3'
-    testImplementation 'org.hamcrest:hamcrest-all:1.3'
+//    testImplementation 'org.hamcrest:hamcrest-all:1.3'
 }
 /*
 publishing {
@@ -68,8 +73,8 @@ tasks.withType(JavaCompile) {
 }
 */
 
-// ƒeƒXƒgˆ—
+// ãƒ†ã‚¹ãƒˆå‡¦ç†
 test {
-	// JUnitƒvƒ‰ƒbƒgƒtƒH[ƒ€‚ğg—piHj
+	// JUnitãƒ—ãƒ©ãƒƒãƒˆãƒ•ã‚©ãƒ¼ãƒ ã‚’ä½¿ç”¨ï¼ˆï¼Ÿï¼‰
 	useJUnitPlatform()
 }

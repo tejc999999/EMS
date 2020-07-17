@@ -1,2 +1,2 @@
-// ���[�g�v���W�F�N�g���i�}���`�v���W�F�N�g�Ƃ��āA�T�u�v���W�F�N�g���܂߂ăr���h�ł���j
+// ルートプロジェクト名（マルチプロジェクトとして、サブプロジェクトを含めてビルドできる）
 rootProject.name = 'EMS'

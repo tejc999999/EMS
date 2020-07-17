@@ -6,6 +6,20 @@
 # JDBCデータソースurlの後方に?useUnicode=true&characterEncoding=utf8を付与することでUnicode(文字)を使ってUTF-8(符号化)を指定しないと文字化ける
 
 spring:
+  batch:
+    # db initialize enable(always/embedded/never)
+    initialize-schema: always
+  flyway:
+#    enabled: true
+#    url: jdbc:h2:mem:algolearn;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=TRUE
+#    username: algolearnadmin
+#    password:
+    locations: classpath:db/migration, classpath:db/test
+  h2:
+    console:
+      settings:
+        web-allow-others: false
+      enabled: true
   jpa:
 #    database-platforn: org.hibernate.dialect.H2Dialect
     hibernate:
@@ -17,9 +31,15 @@ spring:
 #    initialization-mode: always
 #    url: jdbc:mysql://localhost/algolearn?serverTimezone=JST&useUnicode=true&characterEncoding=utf8
     url: jdbc:h2:mem:algolearn
+#   url: jdbc:h2:file:./h2db/sampledb2
     username: algolearnadmin
-    password: algolearnpass
+    password:
+#    password: algolearnpass
 #    driverClassName: com.mysql.cj.jdbc.Driver
+    # platform data(product/develop/test)
+    platform: test
+
+
 prglanguage: 
   java: 
     fileName: TestClass.java
@@ -44,15 +64,22 @@ prglanguage:
 server:
 #  charactercode: utf-8
   charactercode: SJIS
+
+
+#logging:
+#  level.root: TRACE
+#    org.hibernate: TRACE 
+#      springframework.web: TRACE
+
 logging:
-  level:
+  file.name: logfile
+  level: 
+    root: ERROR
     org:
+      springframework.web: ERROR
       hibernate:
-        SQL: DEBUG
-        type:
-          descriptor:
-            sql:
-              BasicBinder: TRACE
+        SQL: ERROR
+        type.descriptor.sql.BasicBinder: ERROR
 #  jpa:
 #    properties:
 #      hibernate:
