@@ -3,6 +3,8 @@ package jp.ac.ems.controller.teacher;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -23,16 +25,24 @@ import jp.ac.ems.bean.QuestionBean;
 import jp.ac.ems.form.teacher.QuestionForm;
 import jp.ac.ems.repository.QuestionRepository;
 
-import org.junit.Before;
+import org.flywaydb.test.FlywayTestExecutionListener;
+import org.flywaydb.test.annotation.FlywayTest;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.TestExecutionListeners;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+//import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -47,10 +57,14 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
  */
 @Transactional
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-@RunWith(SpringRunner.class)
+//@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
+@TestExecutionListeners({DependencyInjectionTestExecutionListener.class, 
+    FlywayTestExecutionListener.class })
+@FlywayTest
 public class QuestionControllerTest {
 
     // テスト用問題データ作成
@@ -62,6 +76,8 @@ public class QuestionControllerTest {
             "t_question").columns("id", "title", "description", "input_num")
             .values(2, "問題タイトル２", "問題説明２", 3).build();
 
+    public static final Operation DELETE_ALL_DATA = Operations.deleteAllFrom("t_question");
+    
     /**
      * SpringMVCのMockオブジェクト.
      */
@@ -86,10 +102,12 @@ public class QuestionControllerTest {
     @Autowired
     private DataSource dataSource;
 
+    @LocalServerPort private int port;
+    
     /**
      * テスト前処理.
      */
-    @Before
+    @BeforeAll
     public void テスト前処理() {
         // Thymeleafを使用していることがテスト時に認識されない様子
         // 循環ビューが発生しないことを明示するためにViewResolverを使用
@@ -99,7 +117,18 @@ public class QuestionControllerTest {
         // StandaloneSetupの場合、ControllerでAutowiredしているオブジェクトのMockが必要。後日時間あれば対応
         // mockMvc = MockMvcBuilders.standaloneSetup(new StudentLearnController())
         //         .setViewResolvers(viewResolver).build();
-        mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
+        mockMvc = MockMvcBuilders.webAppContextSetup(wac)
+    			.apply(springSecurity()).build();
+    	System.out.println("BEFORE ALL.");
+    }
+    
+    @BeforeEach
+    void DB初期化() {
+    	System.out.println("BEFORE EACH.");
+        Destination dest = new DataSourceDestination(dataSource);
+        Operation ops = Operations.sequenceOf(DELETE_ALL_DATA);
+        DbSetup dbSetup = new DbSetup(dest, ops);
+        dbSetup.launch();
     }
 
     /**
@@ -109,7 +138,7 @@ public class QuestionControllerTest {
     @SuppressWarnings("unchecked")
     @Test
     public void 先生用問題一覧ページ表示_問題あり() throws Exception {
-
+    	System.out.println("DB TEST.");
         // DB状態
         // 問題：問題１、問題２
         Destination dest = new DataSourceDestination(dataSource);
@@ -129,8 +158,10 @@ public class QuestionControllerTest {
         form2.setDescription("問題説明２");
         form2.setInputNum(3);
 
-        MvcResult result = mockMvc.perform(get("/teacher/question")).andExpect(
-                status().isOk()).andExpect(view().name("teacher/question/list"))
+        MvcResult result = mockMvc.perform(get("/teacher/question")
+        			.with(user("teacher").password("pass").roles("TEACHER")))
+        		.andExpect(status().isOk())
+        		.andExpect(view().name("teacher/question/list"))
                 .andReturn();
 
         try {
@@ -151,7 +182,8 @@ public class QuestionControllerTest {
     @Test
     public void 先生用問題一覧ページ表示_問題なし() throws Exception {
 
-        MvcResult result = mockMvc.perform(get("/teacher/question"))
+        MvcResult result = mockMvc.perform(get("/teacher/question")
+        			.with(user("teacher").password("pass").roles("TEACHER")))
                 .andExpect(status().isOk())
                 .andExpect(view().name("teacher/question/list"))
                 .andReturn();
@@ -174,7 +206,8 @@ public class QuestionControllerTest {
     @Test
     public void 先生用問題登録ページ表示() throws Exception {
 
-        mockMvc.perform(get("/teacher/question/add"))
+        mockMvc.perform(get("/teacher/question/add")
+        		.with(user("teacher").password("pass").roles("TEACHER")))
             .andExpect(status().isOk())
             .andExpect(view().name("teacher/question/add"));
     }
@@ -192,7 +225,8 @@ public class QuestionControllerTest {
         form.setInputNum(2);
 
         mockMvc.perform(post("/teacher/question/add")
-                .flashAttr("questionForm", form))
+                .flashAttr("questionForm", form)
+        		.with(user("teacher").password("pass").roles("TEACHER")))
             .andExpect(status().is3xxRedirection())
             .andExpect(view().name("redirect:/teacher/question"));
 
@@ -221,7 +255,8 @@ public class QuestionControllerTest {
         dbSetup.launch();
 
         MvcResult result = mockMvc.perform(post("/teacher/question/edit")
-                    .param("id", "1"))
+                    .param("id", "1")
+                    .with(user("teacher").password("pass").roles("TEACHER")))
                 .andExpect(status().isOk())
                 .andExpect(view().name("teacher/question/edit"))
                 .andReturn();

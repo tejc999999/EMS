@@ -14,7 +14,7 @@ spring:
 #    url: jdbc:h2:mem:algolearn;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=TRUE
 #    username: algolearnadmin
 #    password:
-    locations: classpath:db/migration, classpath:db/data
+    locations: classpath:db/migration
   h2:
     console:
       settings:

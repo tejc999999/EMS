@@ -2,6 +2,7 @@ package jp.ac.ems.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -21,6 +22,7 @@ import jp.ac.ems.service.LoginUserDetailsService;
  * @author tejc999999
  *
  */
+@Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -54,6 +56,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http
 			.authorizeRequests()
 					.antMatchers("/login").permitAll()
+					.antMatchers("/student/**").hasRole(RoleCode.ROLE_STUDENT.getCode())
+					.antMatchers("/teacher/**").hasRole(RoleCode.ROLE_TEACHER.getCode())
+					.antMatchers("/admin/**").hasRole(RoleCode.ROLE_ADMIN.getCode())
 					.anyRequest().authenticated()
 				.and()
 				.formLogin()

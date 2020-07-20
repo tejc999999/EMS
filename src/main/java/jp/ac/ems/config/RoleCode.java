@@ -5,9 +5,9 @@ package jp.ac.ems.config;
  * @author tejc999999
  */
 public enum RoleCode {
-    ROLE_ADMIN("001", "管理者", "ROLE_ADMIN"),
-    ROLE_TEACHER("002", "先生", "ROLE_TEACHER"),
-    ROLE_STUDENT("003", "学生", "ROLE_STUDENT");
+    ROLE_ADMIN("001", "管理者", "ADMIN"),
+    ROLE_TEACHER("002", "先生", "TEACHER"),
+    ROLE_STUDENT("003", "学生", "STUDENT");
 
     /**
      * 権限ID(Role id).
@@ -70,11 +70,11 @@ public enum RoleCode {
     	String roleName = null;
     	
     	if(roleId.equals(ROLE_ADMIN.getId())) {
-    		roleName = ROLE_ADMIN.getCode();
+    		roleName = "ROLE_" + ROLE_ADMIN.getCode();
     	} else if(roleId.equals(ROLE_TEACHER.getId())) {
-    		roleName = ROLE_TEACHER.getCode();
+    		roleName = "ROLE_" + ROLE_TEACHER.getCode();
     	} else if(roleId.equals(ROLE_STUDENT.getId())) {
-    		roleName = ROLE_STUDENT.getCode();
+    		roleName = "ROLE_" + ROLE_STUDENT.getCode();
     	}
     	
     	return roleName;
