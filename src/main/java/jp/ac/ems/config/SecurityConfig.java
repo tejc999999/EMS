@@ -23,7 +23,7 @@ import jp.ac.ems.service.LoginUserDetailsService;
  *
  */
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity	// CSRF対策
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	/**

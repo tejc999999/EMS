@@ -1,4 +1,7 @@
 /* MySQL用 */
+/* CREATE DATABASE IF NOT EXISTS algolearn; */
+/* GRANT ALL PRIVILEGES ON algolearn.* TO algolearnadmin@localhost IDENTIFIED BY 'algolearnpass' WITH GRANT OPTION; */
+
 CREATE TABLE m_role(
 	id CHAR(3),
 	name VARCHAR(40),

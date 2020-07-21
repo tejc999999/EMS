@@ -1,11 +1,10 @@
 package jp.ac.ems.controller.teacher;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -31,15 +30,21 @@ import jp.ac.ems.form.teacher.ClassForm;
 import jp.ac.ems.repository.ClassRepository;
 import jp.ac.ems.repository.UserRepository;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.flywaydb.test.FlywayTestExecutionListener;
+import org.flywaydb.test.annotation.FlywayTest;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestExecutionListeners;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -52,12 +57,26 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
  * @author tejc999999
  *
  */
-@Transactional
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-@RunWith(SpringRunner.class)
+//@Transactional
+//@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+//@RunWith(SpringRunner.class)
+//@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+//@AutoConfigureMockMvc
+//@ActiveProfiles("test")
+//JUnit5用テストランナー
+@ExtendWith(SpringExtension.class)
+//@ContextConfigurationの代替
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+//MockMVCの自動設定
 @AutoConfigureMockMvc
-@ActiveProfiles("test")
+//テスト用インスタンスの生成（クラス単位）
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)	
+//FlyWayのリスナー（テストの特定タイミングでクラスを実行する）
+@TestExecutionListeners({DependencyInjectionTestExecutionListener.class, FlywayTestExecutionListener.class })
+//テスト用Flyway対象
+@FlywayTest
+//テスト失敗時のロールバック
+@Transactional
 public class ClassControllerTest {
 
     // テスト用クラスデータ作成
@@ -130,7 +149,7 @@ public class ClassControllerTest {
     /**
      * テスト前処理.
      */
-    @Before
+    @BeforeEach
     public void テスト前処理() {
         // Thymeleafを使用していることがテスト時に認識されない様子
         // 循環ビューが発生しないことを明示するためにViewResolverを使用

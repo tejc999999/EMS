@@ -1,7 +1,7 @@
 package jp.ac.ems.controller.teacher;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
@@ -28,7 +28,6 @@ import jp.ac.ems.repository.QuestionRepository;
 import org.flywaydb.test.FlywayTestExecutionListener;
 import org.flywaydb.test.annotation.FlywayTest;
 import org.junit.jupiter.api.Test;
-//import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,7 +35,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
@@ -58,15 +56,20 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 //@SpringJUnitWebConfig(classes = QuestionControllerTest.Config.class)
 //@ContextConfiguration(classes = {TestWebConfig.class})
 //@RunWith(SpringRunner.class) // JUnit4用テストランナー
-@Transactional
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-@ExtendWith(SpringExtension.class) // JUnit5用テストランナー
+//JUnit5用テストランナー
+@ExtendWith(SpringExtension.class)
+//@ContextConfigurationの代替
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+//MockMVCの自動設定
 @AutoConfigureMockMvc
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@TestExecutionListeners({DependencyInjectionTestExecutionListener.class, 
-    FlywayTestExecutionListener.class })
+//テスト用インスタンスの生成（クラス単位）
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)	
+//FlyWayのリスナー（テストの特定タイミングでクラスを実行する）
+@TestExecutionListeners({DependencyInjectionTestExecutionListener.class, FlywayTestExecutionListener.class })
+//テスト用Flyway対象
 @FlywayTest
+//テスト失敗時のロールバック
+@Transactional
 public class QuestionControllerTest {
 	
     // テスト用問題データ作成
@@ -233,7 +236,7 @@ public class QuestionControllerTest {
         if(list.isEmpty()) {
         	throw new Exception("bean not found.");
         } else {
-        	assertThat(list.size()).isEqualTo(1);
+        	assertEquals(list.size(), 1);
         	QuestionBean questionBean = list.get(0);
 			assertEquals(questionBean.getTitle(), form.getTitle());
 			assertEquals(questionBean.getDescription(), form.getDescription());

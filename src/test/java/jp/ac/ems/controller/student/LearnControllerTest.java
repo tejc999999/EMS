@@ -4,8 +4,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -13,10 +11,7 @@ import javax.sql.DataSource;
 
 import org.flywaydb.test.FlywayTestExecutionListener;
 import org.flywaydb.test.annotation.FlywayTest;
-import org.junit.Before;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,26 +20,15 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.security.test.context.support.WithAnonymousUser;
-import org.springframework.security.test.context.support.WithUserDetails;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
-
-import com.ninja_squad.dbsetup.DbSetup;
-import com.ninja_squad.dbsetup.Operations;
-import com.ninja_squad.dbsetup.destination.DataSourceDestination;
-import com.ninja_squad.dbsetup.destination.Destination;
-import com.ninja_squad.dbsetup.operation.Operation;
-
-import jp.ac.ems.config.SecurityConfig;
 
 /**
  * 学習Controllerテスト.
@@ -52,17 +36,24 @@ import jp.ac.ems.config.SecurityConfig;
  *
  */
 //@RunWith(SpringRunner.class)
-@ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureMockMvc
 //@ActiveProfiles("test")
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 //@@ContextConfiguration(locations = {"/context/simple_applicationContext.xml" })
 //@ContextConfiguration(classes = SecurityConfig.class)
-@TestExecutionListeners({DependencyInjectionTestExecutionListener.class, 
-    FlywayTestExecutionListener.class })
-@FlywayTest
 //@WithUserDetails(value="testadmin1", userDetailsServiceBeanName="loginUserDetailsService")
+//JUnit5用テストランナー
+@ExtendWith(SpringExtension.class)
+//@ContextConfigurationの代替
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+//MockMVCの自動設定
+@AutoConfigureMockMvc
+//テスト用インスタンスの生成（クラス単位）
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)	
+// FlyWayのリスナー（テストの特定タイミングでクラスを実行する）
+@TestExecutionListeners({DependencyInjectionTestExecutionListener.class, FlywayTestExecutionListener.class })
+//テスト用Flyway対象
+@FlywayTest
+//テスト失敗時のロールバック
+@Transactional
 public class LearnControllerTest {
 
 	// 認証用ユーザ作成
