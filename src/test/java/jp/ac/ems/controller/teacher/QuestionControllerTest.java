@@ -1,8 +1,8 @@
 package jp.ac.ems.controller.teacher;
 
-import static org.hamcrest.CoreMatchers.hasItems;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -27,21 +27,18 @@ import jp.ac.ems.repository.QuestionRepository;
 
 import org.flywaydb.test.FlywayTestExecutionListener;
 import org.flywaydb.test.annotation.FlywayTest;
-import org.junit.Test;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+//import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-//import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -55,18 +52,23 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
  * @author tejc999999
  *
  */
+//@ActiveProfiles("test")
+//@SpringJUnitConfig(SpringJUnitConfigIntegrationTest.Config.class)
+//@SpringJUnitWebConfig//(classes = {EMSApplication.class})
+//@SpringJUnitWebConfig(classes = QuestionControllerTest.Config.class)
+//@ContextConfiguration(classes = {TestWebConfig.class})
+//@RunWith(SpringRunner.class) // JUnit4用テストランナー
 @Transactional
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-//@RunWith(SpringRunner.class)
-@ExtendWith(SpringExtension.class)
+@ExtendWith(SpringExtension.class) // JUnit5用テストランナー
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-@ActiveProfiles("test")
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestExecutionListeners({DependencyInjectionTestExecutionListener.class, 
     FlywayTestExecutionListener.class })
 @FlywayTest
 public class QuestionControllerTest {
-
+	
     // テスト用問題データ作成
     public static final Operation INSERT_DATA1 = Operations.insertInto(
             "t_question").columns("id", "title", "description", "input_num")
@@ -76,6 +78,7 @@ public class QuestionControllerTest {
             "t_question").columns("id", "title", "description", "input_num")
             .values(2, "問題タイトル２", "問題説明２", 3).build();
 
+    // テスト用問題データ削除
     public static final Operation DELETE_ALL_DATA = Operations.deleteAllFrom("t_question");
     
     /**
@@ -101,14 +104,12 @@ public class QuestionControllerTest {
      */
     @Autowired
     private DataSource dataSource;
-
-    @LocalServerPort private int port;
     
     /**
      * テスト前処理.
      */
-    @BeforeAll
-    public void テスト前処理() {
+    @BeforeEach
+    void テスト前処理() {
         // Thymeleafを使用していることがテスト時に認識されない様子
         // 循環ビューが発生しないことを明示するためにViewResolverを使用
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
@@ -118,13 +119,11 @@ public class QuestionControllerTest {
         // mockMvc = MockMvcBuilders.standaloneSetup(new StudentLearnController())
         //         .setViewResolvers(viewResolver).build();
         mockMvc = MockMvcBuilders.webAppContextSetup(wac)
-    			.apply(springSecurity()).build();
-    	System.out.println("BEFORE ALL.");
-    }
-    
-    @BeforeEach
-    void DB初期化() {
-    	System.out.println("BEFORE EACH.");
+        		// セキュリティ設定適用
+    			.apply(springSecurity())
+    			.build();
+
+        // テストデータ削除
         Destination dest = new DataSourceDestination(dataSource);
         Operation ops = Operations.sequenceOf(DELETE_ALL_DATA);
         DbSetup dbSetup = new DbSetup(dest, ops);
@@ -138,7 +137,6 @@ public class QuestionControllerTest {
     @SuppressWarnings("unchecked")
     @Test
     public void 先生用問題一覧ページ表示_問題あり() throws Exception {
-    	System.out.println("DB TEST.");
         // DB状態
         // 問題：問題１、問題２
         Destination dest = new DataSourceDestination(dataSource);
@@ -168,7 +166,7 @@ public class QuestionControllerTest {
             List<QuestionForm> list
                     = (List<QuestionForm>) result.getModelAndView().getModel().get("questions");
 
-            assertThat(list, hasItems(form1, form2));
+            assertThat(list).contains(form1, form2);
         } catch (NullPointerException e) {
             throw new Exception(e);
         }
@@ -226,18 +224,30 @@ public class QuestionControllerTest {
 
         mockMvc.perform(post("/teacher/question/add")
                 .flashAttr("questionForm", form)
-        		.with(user("teacher").password("pass").roles("TEACHER")))
+        		.with(user("teacher").password("pass").roles("TEACHER"))
+                .with(csrf()))
             .andExpect(status().is3xxRedirection())
             .andExpect(view().name("redirect:/teacher/question"));
 
-        Optional<QuestionBean> opt = questionRepository.findById(new Long(1));
-        opt.ifPresent(questionBean -> {
-            assertEquals(questionBean.getTitle(), form.getTitle());
-            assertEquals(questionBean.getDescription(), form.getDescription());
-            assertEquals(questionBean.getInputNum(), form.getInputNum());
-        });
-        // ifPresentOrElseの実装はJDK9からの様子
-        opt.orElseThrow(() -> new Exception("bean not found."));
+        List<QuestionBean> list = questionRepository.findAll();
+        if(list.isEmpty()) {
+        	throw new Exception("bean not found.");
+        } else {
+        	assertThat(list.size()).isEqualTo(1);
+        	QuestionBean questionBean = list.get(0);
+			assertEquals(questionBean.getTitle(), form.getTitle());
+			assertEquals(questionBean.getDescription(), form.getDescription());
+			assertEquals(questionBean.getInputNum(), form.getInputNum());
+        }
+        
+//        Optional<QuestionBean> opt = questionRepository.findById(new Long(1));
+//        opt.ifPresent(questionBean -> {
+//            assertEquals(questionBean.getTitle(), form.getTitle());
+//            assertEquals(questionBean.getDescription(), form.getDescription());
+//            assertEquals(questionBean.getInputNum(), form.getInputNum());
+//        });
+//        // ifPresentOrElseの実装はJDK9からの様子
+//        opt.orElseThrow(() -> new Exception("bean not found."));
     }
 
     /**
@@ -256,7 +266,8 @@ public class QuestionControllerTest {
 
         MvcResult result = mockMvc.perform(post("/teacher/question/edit")
                     .param("id", "1")
-                    .with(user("teacher").password("pass").roles("TEACHER")))
+                    .with(user("teacher").password("pass").roles("TEACHER"))
+                    .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("teacher/question/edit"))
                 .andReturn();
@@ -295,7 +306,9 @@ public class QuestionControllerTest {
         form.setInputNum(0);
 
         mockMvc.perform(post("/teacher/question/editprocess")
-                    .flashAttr("questionForm", form))
+                    .flashAttr("questionForm", form)
+                    .with(user("teacher").password("pass").roles("TEACHER"))
+                    .with(csrf()))
             .andExpect(status().is3xxRedirection())
             .andExpect(view().name("redirect:/teacher/question"));
 
@@ -325,7 +338,9 @@ public class QuestionControllerTest {
         dbSetup.launch();
 
         mockMvc.perform(post("/teacher/question/delete")
-                    .param("id", "1"))
+                    .param("id", "1")
+                    .with(user("teacher").password("pass").roles("TEACHER"))
+                    .with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/teacher/question"));
 
