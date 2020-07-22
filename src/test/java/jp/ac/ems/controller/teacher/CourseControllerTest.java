@@ -550,7 +550,7 @@ public class CourseControllerTest {
             assertEquals(courseBean.getClassIdList().size(), 1);
             assertEquals(courseBean.getClassIdList().get(0), "1");
             assertEquals(courseBean.getUserIdList().size(), 2);
-            assertThat(courseBean.getUserIdList()).contains("user01", "user02");
+            assertThat(courseBean.getUserIdList()).containsOnly("user01", "user02");
         });
         // ifPresentOrElseの実装はJDK9からの様子
         opt.orElseThrow(() -> new Exception("bean not found."));
@@ -799,7 +799,7 @@ public class CourseControllerTest {
             assertEquals(courseForm.getClassCheckedList().size(), 1);
             assertThat(courseForm.getClassCheckedList()).contains("1");
             assertEquals(courseForm.getUserCheckedList().size(), 2);
-            assertThat(courseForm.getUserCheckedList()).contains("user01", "user02");
+            assertThat(courseForm.getUserCheckedList()).containsOnly("user01", "user02");
         } catch (NullPointerException e) {
             throw new Exception(e);
         }

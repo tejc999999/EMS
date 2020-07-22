@@ -2,9 +2,11 @@ package jp.ac.ems.controller.teacher;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.allOf;
-import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.Matchers.hasEntry;
-import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -39,11 +41,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -116,6 +115,16 @@ public class ClassControllerTest {
             .insertInto("t_user_class").columns("id", "user_id", "class_id").values(
                     3, "user01", 2).build();
 
+    // テスト用学生-クラス関連データ削除
+    public static final Operation DELETE_ALL_USER_CLASS_DATA = Operations.deleteAllFrom("t_user_class");
+
+    // テスト用ユーザーデータ削除
+    public static final Operation DELETE_ALL_USER_DATA = Operations.deleteAllFrom("t_user");
+
+    // テスト用クラスデータ削除
+    public static final Operation DELETE_ALL_CLASS_DATA = Operations.deleteAllFrom("t_class");
+    
+    
     /**
      * SpringMVCモックオブジェクト.
      */
@@ -159,7 +168,17 @@ public class ClassControllerTest {
         // StandaloneSetupの場合、ControllerでAutowiredしているオブジェクトのMockが必要。後日時間あれば対応
         // mockMvc = MockMvcBuilders.standaloneSetup(new StudentLearnController())
         //         .setViewResolvers(viewResolver).build();
-        mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
+        mockMvc = MockMvcBuilders
+        		.webAppContextSetup(wac)
+        		// セキュリティ設定適用
+    			.apply(springSecurity())
+        		.build();
+        
+        // テストデータ削除
+        Destination dest = new DataSourceDestination(dataSource);
+        Operation ops = Operations.sequenceOf(DELETE_ALL_USER_CLASS_DATA, DELETE_ALL_USER_DATA, DELETE_ALL_CLASS_DATA);
+        DbSetup dbSetup = new DbSetup(dest, ops);
+        dbSetup.launch();
     }
 
     /**
@@ -193,7 +212,8 @@ public class ClassControllerTest {
         form3.setId("3");
         form3.setName("クラス３");
 
-        MvcResult result = mockMvc.perform(get("/teacher/class"))
+        MvcResult result = mockMvc.perform(get("/teacher/class")
+    				.with(user("teacher").password("pass").roles("TEACHER")))
                 .andExpect(status().isOk())
                 .andExpect(view().name("teacher/class/list"))
                 .andReturn();
@@ -202,7 +222,7 @@ public class ClassControllerTest {
             List<ClassForm> list = (List<ClassForm>) result
                         .getModelAndView().getModel().get("classes");
     
-            assertThat(list, hasItems(form1, form2, form3));
+            assertThat(list).containsOnly(form1, form2, form3);
         } catch (NullPointerException e) {
             throw new Exception(e);
         }
@@ -216,8 +236,10 @@ public class ClassControllerTest {
     @Test
     public void 先生用クラス一覧ページ表示_クラスなし() throws Exception {
 
-        MvcResult result = mockMvc.perform(get("/teacher/class")).andExpect(
-                status().isOk()).andExpect(view().name("teacher/class/list"))
+        MvcResult result = mockMvc.perform(get("/teacher/class")
+        			.with(user("teacher").password("pass").roles("TEACHER")))
+        		.andExpect(status().isOk())
+        		.andExpect(view().name("teacher/class/list"))
                 .andReturn();
 
         try {
@@ -252,9 +274,12 @@ public class ClassControllerTest {
         DbSetup dbSetup = new DbSetup(dest, ops);
         dbSetup.launch();
 
-        MvcResult result = mockMvc.perform(get("/teacher/class/add")).andExpect(status().isOk())
-                .andExpect(model().attributeExists("userCheckItems")).andExpect(
-                        view().name("teacher/class/add")).andReturn();
+        MvcResult result = mockMvc.perform(get("/teacher/class/add")
+					.with(user("teacher").password("pass").roles("TEACHER")))
+        		.andExpect(status().isOk())
+                .andExpect(model().attributeExists("userCheckItems"))
+                .andExpect(view().name("teacher/class/add"))
+                .andReturn();
 
         try {
             Map<String, String> userMap = (Map<String, String>) result.getModelAndView().getModel()
@@ -262,8 +287,8 @@ public class ClassControllerTest {
     
             // 学生のみ存在する（先生、管理者は存在しない）
             assertEquals(userMap.size(), 2);
-            assertThat(userMap, hasEntry("user01", "テストユーザー１"));
-            assertThat(userMap, hasEntry("user02", "テストユーザー２"));
+            assertThat(userMap).containsEntry("user01", "テストユーザー１");
+            assertThat(userMap).containsEntry("user02", "テストユーザー２");
         } catch (NullPointerException e) {
             throw new Exception(e);
         }
@@ -277,9 +302,12 @@ public class ClassControllerTest {
     @Test
     public void 先生用クラス登録ページ表示_ユーザーなし() throws Exception {
 
-        MvcResult result = mockMvc.perform(get("/teacher/class/add")).andExpect(status().isOk())
-                .andExpect(model().attributeExists("userCheckItems")).andExpect(
-                        view().name("teacher/class/add")).andReturn();
+        MvcResult result = mockMvc.perform(get("/teacher/class/add")
+					.with(user("teacher").password("pass").roles("TEACHER")))
+        		.andExpect(status().isOk())
+                .andExpect(model().attributeExists("userCheckItems"))
+                .andExpect(view().name("teacher/class/add"))
+                .andReturn();
 
         try {
             Map<String, String> userMap = (Map<String, String>) result.getModelAndView().getModel()
@@ -311,9 +339,12 @@ public class ClassControllerTest {
         selectUserIdList.add("user01");
         form.setUserCheckedList(selectUserIdList);
 
-        mockMvc.perform(post("/teacher/class/add").flashAttr("classForm", form))
-                .andExpect(status().is3xxRedirection()).andExpect(view().name(
-                        "redirect:/teacher/class"));
+        mockMvc.perform(post("/teacher/class/add")
+        			.flashAttr("classForm", form)
+    				.with(user("teacher").password("pass").roles("TEACHER"))
+                    .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/teacher/class"));
 
         Optional<ClassBean> opt = classRepository.findById(new Long(1));
         // ifPresentOrElseの実装はJDK9からの様子
@@ -337,9 +368,12 @@ public class ClassControllerTest {
         ClassForm form = new ClassForm();
         form.setName("クラス１");
 
-        mockMvc.perform(post("/teacher/class/add").flashAttr("classForm", form))
-                .andExpect(status().is3xxRedirection()).andExpect(view().name(
-                        "redirect:/teacher/class"));
+        mockMvc.perform(post("/teacher/class/add")
+        			.flashAttr("classForm", form)
+					.with(user("teacher").password("pass").roles("TEACHER"))
+	                .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/teacher/class"));
 
         Optional<ClassBean> opt = classRepository.findById(new Long(1));
         // ifPresentOrElseの実装はJDK9からの様子
@@ -371,7 +405,9 @@ public class ClassControllerTest {
         dbSetup.launch();
 
         MvcResult result = mockMvc.perform(post("/teacher/class/edit")
-                    .param("id", "1"))
+                    .param("id", "1")
+    				.with(user("teacher").password("pass").roles("TEACHER"))
+                    .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("teacher/class/edit"))
                 .andExpect(model().attributeExists("userCheckItems"))
@@ -387,15 +423,14 @@ public class ClassControllerTest {
             assertEquals(classForm.getId(), "1");
             assertEquals(classForm.getName(), "クラス１");
             assertEquals(classForm.getUserCheckedList().size(), 2);
-            assertThat(classForm.getUserCheckedList(), containsInAnyOrder(
-                    "user01", "user02"));
+            assertThat(classForm.getUserCheckedList()).containsOnly("user01", "user02");
             
             Map<String, String> userMap = (Map<String, String>) result
                     .getModelAndView().getModel().get("userCheckItems");
     
             assertEquals(userMap.size(), 2);
-            assertThat(userMap, hasEntry("user01", "テストユーザー１"));
-            assertThat(userMap, hasEntry("user02", "テストユーザー２"));
+            assertThat(userMap).containsEntry("user01", "テストユーザー１");
+            assertThat(userMap).containsEntry("user02", "テストユーザー２");
             
         } catch (NullPointerException e) {
             throw new Exception(e);
@@ -428,8 +463,11 @@ public class ClassControllerTest {
         list.add("user02");
         form.setUserCheckedList(list);
 
-        mockMvc.perform(post("/teacher/class/editprocess").flashAttr(
-                "classForm", form)).andExpect(status().is3xxRedirection())
+        mockMvc.perform(post("/teacher/class/editprocess")
+        			.flashAttr("classForm", form)
+					.with(user("teacher").password("pass").roles("TEACHER"))
+	                .with(csrf()))
+        		.andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/teacher/class"));
 
         Optional<ClassBean> opt = classRepository.findById(new Long(1));
@@ -469,8 +507,11 @@ public class ClassControllerTest {
         List<String> list = new ArrayList<>();
         form.setUserCheckedList(list);
 
-        mockMvc.perform(post("/teacher/class/editprocess").flashAttr(
-                "classForm", form)).andExpect(status().is3xxRedirection())
+        mockMvc.perform(post("/teacher/class/editprocess")
+        			.flashAttr("classForm", form)
+        			.with(user("teacher").password("pass").roles("TEACHER"))
+                    .with(csrf()))
+        		.andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/teacher/class"));
 
         Optional<ClassBean> opt = classRepository.findById(new Long(1));
@@ -510,7 +551,9 @@ public class ClassControllerTest {
         // ・クラス名変更
         // ・所属ユーザをなし→１名
         mockMvc.perform(post("/teacher/class/editprocess")
-                .flashAttr("classForm", form))
+                .flashAttr("classForm", form)
+				.with(user("teacher").password("pass").roles("TEACHER"))
+                .with(csrf()))
             .andExpect(status().is3xxRedirection())
             .andExpect(view().name("redirect:/teacher/class"));
 
@@ -544,7 +587,9 @@ public class ClassControllerTest {
 
         // ・クラス名変更
         mockMvc.perform(post("/teacher/class/editprocess")
-                .flashAttr("classForm", form))
+                .flashAttr("classForm", form)
+				.with(user("teacher").password("pass").roles("TEACHER"))
+                .with(csrf()))
             .andExpect(status().is3xxRedirection())
             .andExpect(view().name("redirect:/teacher/class"));
 
@@ -573,9 +618,12 @@ public class ClassControllerTest {
         DbSetup dbSetup = new DbSetup(dest, ops);
         dbSetup.launch();
 
-        mockMvc.perform(post("/teacher/class/delete").param("id", "1"))
-                .andExpect(status().is3xxRedirection()).andExpect(view().name(
-                        "redirect:/teacher/class"));
+        mockMvc.perform(post("/teacher/class/delete")
+        			.param("id", "1")
+        			.with(user("teacher").password("pass").roles("TEACHER"))
+                    .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/teacher/class"));
 
         List<ClassBean> classList = classRepository.findAll();
         assertEquals(classList.size(), 1);
@@ -602,9 +650,12 @@ public class ClassControllerTest {
         DbSetup dbSetup = new DbSetup(dest, ops);
         dbSetup.launch();
 
-        mockMvc.perform(post("/teacher/class/delete").param("id", "3"))
-                .andExpect(status().is3xxRedirection()).andExpect(view().name(
-                        "redirect:/teacher/class"));
+        mockMvc.perform(post("/teacher/class/delete")
+        			.param("id", "3")
+    				.with(user("teacher").password("pass").roles("TEACHER"))
+                    .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/teacher/class"));
 
         List<ClassBean> classList = classRepository.findAll();
         if (classList != null) {

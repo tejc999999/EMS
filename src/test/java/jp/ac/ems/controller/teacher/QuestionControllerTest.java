@@ -169,7 +169,7 @@ public class QuestionControllerTest {
             List<QuestionForm> list
                     = (List<QuestionForm>) result.getModelAndView().getModel().get("questions");
 
-            assertThat(list).contains(form1, form2);
+            assertThat(list).containsOnly(form1, form2);
         } catch (NullPointerException e) {
             throw new Exception(e);
         }

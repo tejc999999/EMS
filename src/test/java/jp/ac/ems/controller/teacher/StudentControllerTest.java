@@ -1,7 +1,9 @@
 package jp.ac.ems.controller.teacher;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -105,6 +107,15 @@ public class StudentControllerTest {
             .insertInto("t_user_class").columns("id", "user_id", "class_id").values(
                     3, "user01", 2).build();
 
+    // テスト用学生-クラス関連削除
+    public static final Operation DELETE_ALL_USER_CLASS_DATA = Operations.deleteAllFrom("t_user_class");
+
+    // テスト用クラスデータ削除
+    public static final Operation DELETE_ALL_CLASS_DATA = Operations.deleteAllFrom("t_class");
+    
+    // テスト用ユーザーデータ削除
+    public static final Operation DELETE_ALL_USER_DATA = Operations.deleteAllFrom("t_user");
+    
     /**
      * SpringMVCモックオブジェクト.
      */
@@ -149,6 +160,13 @@ public class StudentControllerTest {
         // mockMvc = MockMvcBuilders.standaloneSetup(new StudentLearnController())
         //         .setViewResolvers(viewResolver).build();
         mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
+        
+        // テストデータ削除
+        Destination dest = new DataSourceDestination(dataSource);
+        Operation ops = Operations.sequenceOf(DELETE_ALL_USER_CLASS_DATA,
+        		DELETE_ALL_CLASS_DATA, DELETE_ALL_USER_DATA);
+        DbSetup dbSetup = new DbSetup(dest, ops);
+        dbSetup.launch();
     }
 
     /**
@@ -167,7 +185,8 @@ public class StudentControllerTest {
         DbSetup dbSetup = new DbSetup(dest, ops);
         dbSetup.launch();
 
-        MvcResult result = mockMvc.perform(get("/teacher/student"))
+        MvcResult result = mockMvc.perform(get("/teacher/student")
+        			.with(user("teacher").password("pass").roles("TEACHER")))
                 .andExpect(status().isOk())
                 .andExpect(view().name("teacher/student/list"))
                 .andReturn();
@@ -187,7 +206,7 @@ public class StudentControllerTest {
             form2.setPassword("password");
             form2.setName("テストユーザー２");
     
-            assertThat(list, hasItems(form1, form2));
+            assertThat(list).containsOnly(form1, form2);
         } catch (NullPointerException e) {
             throw new Exception(e);
         }
@@ -201,7 +220,10 @@ public class StudentControllerTest {
     @Test
     public void 先生用学生一覧ページ表示_ユーザーなし() throws Exception {
 
-        MvcResult result = mockMvc.perform(get("/teacher/student")).andExpect(
+        MvcResult result = mockMvc.perform(get("/teacher/student")
+
+    			.with(user("teacher").password("pass").roles("TEACHER")))
+        		.andExpect(
                 status().isOk()).andExpect(view().name("teacher/student/list"))
                 .andReturn();
 
@@ -240,7 +262,9 @@ public class StudentControllerTest {
         form.setName("テストユーザー１");
 
         mockMvc.perform(post("/teacher/student/add")
-                    .flashAttr("studentForm", form))
+                    .flashAttr("studentForm", form)
+
+        			.with(user("teacher").password("pass").roles("TEACHER")))
             .andExpect(status().is3xxRedirection())
             .andExpect(view().name("redirect:/teacher/student"));
 
@@ -273,7 +297,9 @@ public class StudentControllerTest {
         dbSetup.launch();
 
         MvcResult result = mockMvc.perform(post("/teacher/student/edit")
-                    .param("id", "user01"))
+                    .param("id", "user01")
+
+        			.with(user("teacher").password("pass").roles("TEACHER")))
                 .andExpect(status().isOk())
                 .andExpect(view().name("teacher/student/edit"))
                 .andReturn();
@@ -304,7 +330,9 @@ public class StudentControllerTest {
         dbSetup.launch();
 
         MvcResult result = mockMvc.perform(post("/teacher/student/edit")
-                    .param("id", "user01"))
+                    .param("id", "user01")
+
+        			.with(user("teacher").password("pass").roles("TEACHER")))
                 .andExpect(status().isOk())
                 .andExpect(view().name("teacher/student/edit"))
                 .andReturn();
@@ -341,7 +369,9 @@ public class StudentControllerTest {
         form.setPassword("password2");
 
         mockMvc.perform(post("/teacher/student/editprocess")
-                    .flashAttr("studentForm", form))
+                    .flashAttr("studentForm", form)
+
+        			.with(user("teacher").password("pass").roles("TEACHER")))
             .andExpect(status().is3xxRedirection())
             .andExpect(view().name("redirect:/teacher/student"));
 
@@ -381,7 +411,9 @@ public class StudentControllerTest {
         form.setPassword("password2");
 
         mockMvc.perform(post("/teacher/student/editprocess")
-                    .flashAttr("studentForm", form))
+                    .flashAttr("studentForm", form)
+
+        			.with(user("teacher").password("pass").roles("TEACHER")))
             .andExpect(status().is3xxRedirection())
             .andExpect(view().name("redirect:/teacher/student"));
 
@@ -420,7 +452,8 @@ public class StudentControllerTest {
         dbSetup.launch();
 
         mockMvc.perform(post("/teacher/student/delete")
-                    .param("id", "user01"))
+                    .param("id", "user01")
+        			.with(user("teacher").password("pass").roles("TEACHER")))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/teacher/student"));
         
