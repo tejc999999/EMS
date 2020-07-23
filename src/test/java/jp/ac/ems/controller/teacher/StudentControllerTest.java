@@ -254,8 +254,10 @@ public class StudentControllerTest {
     @Test
     public void 先生用学生登録ページ表示() throws Exception {
 
-        mockMvc.perform(get("/teacher/student/add")).andExpect(status().isOk())
-                .andExpect(view().name("teacher/student/add"));
+        mockMvc.perform(get("/teacher/student/add")
+        		.with(user("teacher").password("pass").roles("TEACHER")))
+        	.andExpect(status().isOk())
+            .andExpect(view().name("teacher/student/add"));
     }
 
     /**

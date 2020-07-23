@@ -23,12 +23,25 @@ public interface UserRepository extends JpaRepository<UserBean, String> {
      */
     List<UserBean> findByRoleId(String roleId);
     
-    @Query("SELECT DISTINCT u FROM UserBean u LEFT JOIN FETCH u.userClassBeans WHERE u.id = :id")
+    @Query("SELECT DISTINCT u FROM UserBean u"
+    		+ " LEFT JOIN FETCH u.userClassBeans"
+    		+ " WHERE u.id = :id")
     Optional<UserBean> findByIdFetchUserClass(@Param("id") String id);
 
-    @Query("SELECT DISTINCT u FROM UserBean u LEFT JOIN FETCH u.userCourseBeans WHERE u.id = :id")
+    @Query("SELECT DISTINCT u FROM UserBean u"
+    		+ " LEFT JOIN FETCH u.userCourseBeans"
+    		+ " WHERE u.id = :id")
     Optional<UserBean> findByIdFetchUserCourse(@Param("id") String id);
 
-    @Query("SELECT DISTINCT u FROM UserBean u LEFT JOIN FETCH u.userTaskCodeBeans WHERE u.id = :id")
+    @Query("SELECT DISTINCT u FROM UserBean u"
+    		+ " LEFT JOIN FETCH u.userTaskCodeBeans"
+    		+ " WHERE u.id = :id")
     Optional<UserBean> findByIdFetchUserTask(@Param("id") String id);
+
+    @Query("SELECT DISTINCT u FROM UserBean u"
+    		+ " LEFT JOIN FETCH u.userClassBeans"
+    		+ " LEFT JOIN FETCH u.userCourseBeans"
+    		+ " LEFT JOIN FETCH u.userTaskCodeBeans"
+    		+ " WHERE u.id = :id")
+    Optional<UserBean> findByIdFetchAll(@Param("id") String id);
 }

@@ -136,9 +136,12 @@ public class CourseControllerTest {
     // テスト用クラス-コース関連データ削除
     public static final Operation DELETE_ALL_CLASS_COURSE_DATA = Operations.deleteAllFrom("t_class_course");
 
-    // テスト用学生-クラス関連データ削除
+    // テスト用学生-コース関連データ削除
     public static final Operation DELETE_ALL_USER_COURSE_DATA = Operations.deleteAllFrom("t_user_course");
-    
+
+    // テスト用学生-クラス関連データ削除
+    public static final Operation DELETE_ALL_USER_CLASS_DATA = Operations.deleteAllFrom("t_user_class");
+
     // テスト用ユーザー（学生、先生、管理者）データ削除
     public static final Operation DELETE_ALL_USER_DATA = Operations.deleteAllFrom("t_user");
     
@@ -188,8 +191,8 @@ public class CourseControllerTest {
         // テストデータ削除
         Destination dest = new DataSourceDestination(dataSource);
         Operation ops = Operations.sequenceOf(DELETE_ALL_CLASS_COURSE_DATA,
-        		DELETE_ALL_USER_COURSE_DATA, DELETE_ALL_USER_DATA,
-        		DELETE_ALL_CLASS_DATA, DELETE_ALL_COURSE_DATA);
+        		DELETE_ALL_USER_COURSE_DATA, DELETE_ALL_USER_CLASS_DATA,
+        		DELETE_ALL_USER_DATA, DELETE_ALL_CLASS_DATA, DELETE_ALL_COURSE_DATA);
         DbSetup dbSetup = new DbSetup(dest, ops);
         dbSetup.launch();
     }
@@ -496,7 +499,12 @@ public class CourseControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/teacher/course"));
 
-        Optional<CourseBean> opt = courseRepository.findById(new Long(1));
+        // IDが自動採番のため一旦取得する
+        List<CourseBean> courseList = courseRepository.findAll();
+        assertEquals(courseList.size(), 1);
+        CourseBean courseBeanForGetId = courseList.get(0);
+        
+        Optional<CourseBean> opt = courseRepository.findByIdFetchAll(courseBeanForGetId.getId());
         opt.ifPresent(courseBean -> {
             assertEquals(courseBean.getName(), "コース１");
             assertEquals(courseBean.getClassIdList().size(), 1);
@@ -544,7 +552,13 @@ public class CourseControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/teacher/course"));
 
-        Optional<CourseBean> opt = courseRepository.findById(new Long(1));
+        // IDが自動採番のため一旦取得する
+        List<CourseBean> courseList = courseRepository.findAll();
+        assertEquals(courseList.size(), 1);
+        CourseBean courseBeanForGetId = courseList.get(0);
+        
+//        Optional<CourseBean> opt = courseRepository.findById(new Long(1));
+        Optional<CourseBean> opt = courseRepository.findByIdFetchAll(courseBeanForGetId.getId());
         opt.ifPresent(courseBean -> {
             assertEquals(courseBean.getName(), form.getName());
             assertEquals(courseBean.getClassIdList().size(), 1);
@@ -589,7 +603,12 @@ public class CourseControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/teacher/course"));
 
-        Optional<CourseBean> opt = courseRepository.findById(new Long(1));
+        // IDが自動採番のため一旦取得する
+        List<CourseBean> courseList = courseRepository.findAll();
+        assertEquals(courseList.size(), 1);
+        CourseBean courseBeanForGetId = courseList.get(0);
+        
+        Optional<CourseBean> opt = courseRepository.findByIdFetchAll(courseBeanForGetId.getId());
         opt.ifPresent(courseBean -> {
             assertEquals(courseBean.getName(), form.getName());
             assertEquals(courseBean.getClassIdList().size(), 0);
@@ -632,7 +651,12 @@ public class CourseControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/teacher/course"));
 
-        Optional<CourseBean> opt = courseRepository.findById(new Long(1));
+        // IDが自動採番のため一旦取得する
+        List<CourseBean> courseList = courseRepository.findAll();
+        assertEquals(courseList.size(), 1);
+        CourseBean courseBeanForGetId = courseList.get(0);
+        
+        Optional<CourseBean> opt = courseRepository.findByIdFetchAll(courseBeanForGetId.getId());
         opt.ifPresent(courseBean -> {
             assertEquals(courseBean.getName(), form.getName());
             assertEquals(courseBean.getClassIdList().size(), 1);
@@ -672,7 +696,12 @@ public class CourseControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/teacher/course"));
 
-        Optional<CourseBean> opt = courseRepository.findById(new Long(1));
+        // IDが自動採番のため一旦取得する
+        List<CourseBean> courseList = courseRepository.findAll();
+        assertEquals(courseList.size(), 1);
+        CourseBean courseBeanForGetId = courseList.get(0);
+        
+        Optional<CourseBean> opt = courseRepository.findByIdFetchAll(courseBeanForGetId.getId());
         opt.ifPresent(courseBean -> {
             assertEquals(courseBean.getName(), form.getName());
             assertEquals(courseBean.getClassIdList().size(), 0);
@@ -1027,7 +1056,8 @@ public class CourseControllerTest {
             .andExpect(status().is3xxRedirection())
             .andExpect(view().name("redirect:/teacher/course"));
 
-        Optional<CourseBean> opt = courseRepository.findById(new Long(1));
+//        Optional<CourseBean> opt = courseRepository.findById(new Long(1));
+        Optional<CourseBean> opt = courseRepository.findByIdFetchAll(new Long(1));
         opt.ifPresent(courseBean -> {
             assertEquals(courseBean.getName(), "コース１－２");
             assertEquals(courseBean.getUserIdList().size(), 1);
@@ -1075,7 +1105,8 @@ public class CourseControllerTest {
             .andExpect(status().is3xxRedirection())
             .andExpect(view().name("redirect:/teacher/course"));
 
-        Optional<CourseBean> opt = courseRepository.findById(new Long(1));
+//        Optional<CourseBean> opt = courseRepository.findById(new Long(1));
+        Optional<CourseBean> opt = courseRepository.findByIdFetchAll(new Long(1));
         opt.ifPresent(courseBean -> {
             assertEquals(courseBean.getName(), "コース１－２");
             assertEquals(courseBean.getUserIdList().size(), 0);
@@ -1120,7 +1151,8 @@ public class CourseControllerTest {
             .andExpect(status().is3xxRedirection())
             .andExpect(view().name("redirect:/teacher/course"));
 
-        Optional<CourseBean> opt = courseRepository.findById(new Long(1));
+//        Optional<CourseBean> opt = courseRepository.findById(new Long(1));
+        Optional<CourseBean> opt = courseRepository.findByIdFetchAll(new Long(1));
         opt.ifPresent(courseBean -> {
             assertEquals(courseBean.getName(), "コース１－２");
             assertEquals(courseBean.getUserIdList().size(), 0);
@@ -1166,7 +1198,8 @@ public class CourseControllerTest {
             .andExpect(status().is3xxRedirection())
             .andExpect(view().name("redirect:/teacher/course"));
 
-        Optional<CourseBean> opt = courseRepository.findById(new Long(1));
+//        Optional<CourseBean> opt = courseRepository.findById(new Long(1));
+        Optional<CourseBean> opt = courseRepository.findByIdFetchAll(new Long(1));
         // ifPresentOrElseの実装はJDK9からの様子
         opt.ifPresent(courseBean -> {
             assertEquals(courseBean.getName(), "コース１－２");
@@ -1216,7 +1249,8 @@ public class CourseControllerTest {
             .andExpect(status().is3xxRedirection())
             .andExpect(view().name("redirect:/teacher/course"));
 
-        Optional<CourseBean> opt = courseRepository.findById(new Long(1));
+//        Optional<CourseBean> opt = courseRepository.findById(new Long(1));
+        Optional<CourseBean> opt = courseRepository.findByIdFetchAll(new Long(1));
         opt.ifPresent(courseBean -> {
             assertEquals(courseBean.getName(), "コース１－２");
             assertEquals(courseBean.getUserIdList().size(), 1);
@@ -1238,8 +1272,8 @@ public class CourseControllerTest {
     public void 先生用コース削除処理_ユーザーあり_クラスあり() throws Exception {
 
         // DB状態
-        // クラス：クラス１（user01), クラス２（学生なし）
         // ユーザー：user01(学生), user02(学生)
+        // クラス：クラス１（user01), クラス２（学生なし）
         // コース：コース１（学生（user02）、クラス（クラス１（user01）））
         Destination dest = new DataSourceDestination(dataSource);
         Operation ops = Operations.sequenceOf(INSERT_STUDENT_DATA1,
@@ -1261,7 +1295,9 @@ public class CourseControllerTest {
             assertEquals(courseList.size(), 0);
         }
         
-        Optional<UserBean> userOpt1 = userRepository.findById("user01");
+        // LAZYの問題が発生するため、JOIN FETCHしたUserBeanを取得する
+//        Optional<UserBean> userOpt1 = userRepository.findById("user01");
+        Optional<UserBean> userOpt1 = userRepository.findByIdFetchAll("user01");
         userOpt1.ifPresent(userBean -> {
             assertEquals(userBean.getId(), "user01");
             assertEquals(userBean.getPassword(), "password");
@@ -1272,7 +1308,8 @@ public class CourseControllerTest {
         });
         userOpt1.orElseThrow(() -> new Exception("bean not found."));
 
-        Optional<UserBean> userOpt2 = userRepository.findById("user02");
+//        Optional<UserBean> userOpt2 = userRepository.findById("user02");
+        Optional<UserBean> userOpt2 = userRepository.findByIdFetchAll("user02");
         userOpt2.ifPresent(userBean -> {
             assertEquals(userBean.getId(), "user02");
             assertEquals(userBean.getPassword(), "password");
@@ -1282,8 +1319,8 @@ public class CourseControllerTest {
         });
         userOpt2.orElseThrow(() -> new Exception("bean not found."));
 
-        
-        Optional<ClassBean> classOpt = classRepository.findById(new Long(1));
+//        Optional<ClassBean> classOpt = classRepository.findById(new Long(1));
+        Optional<ClassBean> classOpt = classRepository.findByIdFetchAll(new Long(1));
         classOpt.ifPresent(classBean -> {
             assertEquals(classBean.getId(), new Long(1));
             assertEquals(classBean.getName(), "クラス１");
@@ -1327,7 +1364,8 @@ public class CourseControllerTest {
             assertEquals(courseList.size(), 0);
         }
         
-        Optional<UserBean> opt = userRepository.findById("user02");
+//        Optional<UserBean> opt = userRepository.findById("user02");
+        Optional<UserBean> opt = userRepository.findByIdFetchAll("user02");
         opt.ifPresent(userBean -> {
             assertEquals(userBean.getId(), "user02");
             assertEquals(userBean.getPassword(), "password");
@@ -1371,7 +1409,8 @@ public class CourseControllerTest {
             assertEquals(courseList.size(), 0);
         }
         
-        Optional<UserBean> userOpt = userRepository.findById("user01");
+//        Optional<UserBean> userOpt = userRepository.findById("user01");
+        Optional<UserBean> userOpt = userRepository.findByIdFetchAll("user01");
         userOpt.ifPresent(userBean -> {
             assertEquals(userBean.getId(), "user01");
             assertEquals(userBean.getPassword(), "password");
@@ -1383,7 +1422,8 @@ public class CourseControllerTest {
         userOpt.orElseThrow(() -> new Exception("bean not found."));
 
         
-        Optional<ClassBean> classOpt = classRepository.findById(new Long(1));
+//        Optional<ClassBean> classOpt = classRepository.findById(new Long(1));
+        Optional<ClassBean> classOpt = classRepository.findByIdFetchAll(new Long(1));
         classOpt.ifPresent(classBean -> {
             assertEquals(classBean.getId(), new Long(1));
             assertEquals(classBean.getName(), "クラス１");
@@ -1427,7 +1467,8 @@ public class CourseControllerTest {
             assertEquals(courseList.size(), 0);
         }
         
-        Optional<UserBean> userOpt1 = userRepository.findById("user01");
+//        Optional<UserBean> userOpt1 = userRepository.findById("user01");
+        Optional<UserBean> userOpt1 = userRepository.findByIdFetchAll("user01");
         userOpt1.ifPresent(userBean -> {
             assertEquals(userBean.getId(), "user01");
             assertEquals(userBean.getPassword(), "password");
@@ -1438,7 +1479,8 @@ public class CourseControllerTest {
         });
         userOpt1.orElseThrow(() -> new Exception("bean not found."));
 
-        Optional<UserBean> userOpt2 = userRepository.findById("user02");
+//        Optional<UserBean> userOpt2 = userRepository.findById("user02");
+        Optional<UserBean> userOpt2 = userRepository.findByIdFetchAll("user02");
         userOpt2.ifPresent(userBean -> {
             assertEquals(userBean.getId(), "user02");
             assertEquals(userBean.getPassword(), "password");
@@ -1450,7 +1492,8 @@ public class CourseControllerTest {
         userOpt2.orElseThrow(() -> new Exception("bean not found."));
 
         
-        Optional<ClassBean> classOpt = classRepository.findById(new Long(1));
+//        Optional<ClassBean> classOpt = classRepository.findById(new Long(1));
+        Optional<ClassBean> classOpt = classRepository.findByIdFetchAll(new Long(1));
         classOpt.ifPresent(classBean -> {
             assertEquals(classBean.getId(), new Long(1));
             assertEquals(classBean.getName(), "クラス１");
