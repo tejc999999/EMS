@@ -121,12 +121,15 @@ public class LearnController {
                     sb.append(line);
                     sb.append(lineFeedCode);
                 }
+                br.close();
+                
                 br = new BufferedReader(new InputStreamReader(es, serverProperties
                         .getCharacterCode()));
                 while ((line = br.readLine()) != null) {
                     sb.append(line);
                     sb.append(lineFeedCode);
                 }
+                br.close();
 
                 p.waitFor(); // プロセスが終了するまで待機する
                 p.destroy();

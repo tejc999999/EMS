@@ -9,7 +9,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import jp.ac.ems.bean.ClassBean;
-import jp.ac.ems.bean.UserBean;
 
 /**
  * 問題用リポジトリ(question repository).

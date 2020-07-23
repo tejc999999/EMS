@@ -27,7 +27,6 @@ import java.util.Optional;
 import javax.sql.DataSource;
 
 import jp.ac.ems.bean.ClassBean;
-import jp.ac.ems.bean.CourseBean;
 import jp.ac.ems.config.RoleCode;
 import jp.ac.ems.form.teacher.ClassForm;
 import jp.ac.ems.repository.ClassRepository;
@@ -481,7 +480,7 @@ public class ClassControllerTest {
         		.andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/teacher/class"));
 
-        Optional<ClassBean> opt = classRepository.findByIdFetchAll(new Long(1));
+        Optional<ClassBean> opt = classRepository.findByIdFetchAll(Long.valueOf("l"));
         // ifPresentOrElseの実装はJDK9からの様子
         opt.ifPresent(classBean -> {
             assertEquals(classBean.getName(), "クラス１－２");
@@ -525,7 +524,7 @@ public class ClassControllerTest {
         		.andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/teacher/class"));
 
-        Optional<ClassBean> opt = classRepository.findByIdFetchAll(new Long(1));
+        Optional<ClassBean> opt = classRepository.findByIdFetchAll(Long.valueOf("l"));
         // ifPresentOrElseの実装はJDK9からの様子
         opt.ifPresent(classBean -> {
             assertEquals(classBean.getName(), "クラス１－２");
@@ -568,7 +567,7 @@ public class ClassControllerTest {
             .andExpect(status().is3xxRedirection())
             .andExpect(view().name("redirect:/teacher/class"));
 
-        Optional<ClassBean> opt = classRepository.findByIdFetchAll(new Long(3));
+        Optional<ClassBean> opt = classRepository.findByIdFetchAll(Long.valueOf("3"));
         // ifPresentOrElseの実装はJDK9からの様子
         opt.ifPresent(classBean -> {
             assertEquals(classBean.getName(), "クラス３－２");
@@ -604,7 +603,7 @@ public class ClassControllerTest {
             .andExpect(status().is3xxRedirection())
             .andExpect(view().name("redirect:/teacher/class"));
 
-        Optional<ClassBean> opt = classRepository.findByIdFetchAll(new Long(3));
+        Optional<ClassBean> opt = classRepository.findByIdFetchAll(Long.valueOf("3"));
         // ifPresentOrElseの実装はJDK9からの様子
         opt.ifPresent(classBean -> {
             assertEquals(classBean.getName(), "クラス３－２");

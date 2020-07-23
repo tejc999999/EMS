@@ -7,8 +7,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-import javax.sql.DataSource;
-
 import org.flywaydb.test.FlywayTestExecutionListener;
 import org.flywaydb.test.annotation.FlywayTest;
 import org.junit.jupiter.api.Test;
@@ -72,11 +70,11 @@ public class LearnControllerTest {
     @Autowired
     WebApplicationContext wac;
 
-    /**
-     * データソース.
-     */
-    @Autowired
-    private DataSource dataSource;
+//    /**
+//     * データソース.
+//     */
+//    @Autowired
+//    private DataSource dataSource;
     
     @LocalServerPort private int port;
     

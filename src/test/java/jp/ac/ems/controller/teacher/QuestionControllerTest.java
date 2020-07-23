@@ -315,10 +315,10 @@ public class QuestionControllerTest {
             .andExpect(status().is3xxRedirection())
             .andExpect(view().name("redirect:/teacher/question"));
 
-        Optional<QuestionBean> opt = questionRepository.findById(new Long(1));
+        Optional<QuestionBean> opt = questionRepository.findById(Long.valueOf("l"));
         // ifPresentOrElseの実装はJDK9からの様子
         opt.ifPresent(questionBean -> {
-            assertEquals(questionBean.getId(), new Long(1));
+            assertEquals(questionBean.getId(), Long.valueOf("l"));
             assertEquals(questionBean.getTitle(), "問題タイトル１－２");
             assertEquals(questionBean.getDescription(), "問題説明１ー２");
             assertEquals(questionBean.getInputNum(), 0);

@@ -440,6 +440,7 @@ public class TaskService {
                 }
                 executeResult.setOutputString(sb.toString());
                 sb.setLength(0);
+                br.close();
                 
                 // 標準エラー出力を取得する
                 InputStream es = p.getErrorStream();
@@ -450,6 +451,7 @@ public class TaskService {
                     sb.append(lineFeedCode);
                 }
                 executeResult.setErrorOutputString(sb.toString());
+                br.close();
 
                 executeResult.setReturnCode(p.waitFor()); // プロセスが終了するまで待機する
                 p.destroy();
@@ -514,6 +516,7 @@ public class TaskService {
                     sb.append(lineFeedCode);
                 }
                 executeResult.setOutputString(sb.toString());
+                br.close();
                 
                 sb.setLength(0);
                 InputStream es = p.getErrorStream();
@@ -524,6 +527,7 @@ public class TaskService {
                     sb.append(lineFeedCode);
                 }
                 executeResult.setErrorOutputString(sb.toString());
+                br.close();
 
                 executeResult.setReturnCode(p.waitFor()); // プロセスが終了するまで待機する
                 p.destroy();
@@ -531,7 +535,6 @@ public class TaskService {
             } catch (IOException ex) {
                 ex.printStackTrace();
             } catch (InterruptedException e) {
-
                 e.printStackTrace();
             }
 

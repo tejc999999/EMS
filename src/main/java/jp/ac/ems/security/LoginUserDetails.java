@@ -3,11 +3,9 @@ package jp.ac.ems.security;
 import java.util.Collection;
 
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 
 import jp.ac.ems.bean.UserBean;
-import jp.ac.ems.config.RoleCode;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
