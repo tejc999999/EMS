@@ -14,6 +14,13 @@ import jp.ac.ems.bean.CourseBean;
  */
 public interface CourseRepository extends JpaRepository<CourseBean, Long> {
 
+	/**
+	 * 関連Beanを含めたCourseBean取得（Fetch.LAZY対応）
+	 * (Acquisition of Course Bean including related beans (Fetch.LAZY compatible)).
+	 * 
+	 * @param id コースID(Course Id).
+	 * @return コースBeanリスト（Course Bean List）.
+	 */
     @Query("SELECT DISTINCT c FROM CourseBean c"
     		+ " LEFT JOIN FETCH c.userCourseBeans"
     		+ " LEFT JOIN FETCH c.classCourseBeans"

@@ -18,12 +18,25 @@ import jp.ac.ems.bean.ClassBean;
  */
 public interface ClassRepository  extends JpaRepository<ClassBean, Long> {
     
-    @Query("SELECT DISTINCT c FROM ClassBean c"
+	/**
+	 * 関連Beanを含めたClassBean取得（Fetch.LAZY対応）
+	 * (Acquisition of Class Bean including related beans (Fetch.LAZY compatible)).
+	 * 
+	 * @param id クラスID(Class Id).
+	 * @return クラスBeanリスト（Class Bean List）.
+	 */
+	@Query("SELECT DISTINCT c FROM ClassBean c"
     		+ " LEFT JOIN FETCH c.userClassBeans"
     		+ " LEFT JOIN FETCH c.classCourseBeans"
     		+ " WHERE c.id = :id")
     Optional<ClassBean> findByIdFetchAll(@Param("id") Long id);
     
+	/**
+	 * 関連Beanを含めた全ClassBean取得（Fetch.LAZY対応）
+	 * (Acquisition of Class Bean including related beans (Fetch.LAZY compatible)).
+	 * 
+	 * @return クラスBeanリスト（Class Bean List）.
+	 */
     @Query("SELECT DISTINCT c FROM ClassBean c"
     		+ " LEFT JOIN FETCH c.userClassBeans"
     		+ " LEFT JOIN FETCH c.classCourseBeans")
