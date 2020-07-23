@@ -3,7 +3,9 @@ package jp.ac.ems.controller.teacher;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -29,6 +31,8 @@ import jp.ac.ems.repository.UserRepository;
 
 import org.flywaydb.test.FlywayTestExecutionListener;
 import org.flywaydb.test.annotation.FlywayTest;
+import org.hibernate.Hibernate;
+import org.hibernate.annotations.Proxy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -36,6 +40,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Commit;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestExecutionListeners;
@@ -159,7 +164,11 @@ public class StudentControllerTest {
         // StandaloneSetupの場合、ControllerでAutowiredしているオブジェクトのMockが必要。後日時間あれば対応
         // mockMvc = MockMvcBuilders.standaloneSetup(new StudentLearnController())
         //         .setViewResolvers(viewResolver).build();
-        mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
+        mockMvc = MockMvcBuilders
+        		.webAppContextSetup(wac)
+        		// セキュリティ設定適用
+    			.apply(springSecurity())
+        		.build();
         
         // テストデータ削除
         Destination dest = new DataSourceDestination(dataSource);
@@ -263,8 +272,8 @@ public class StudentControllerTest {
 
         mockMvc.perform(post("/teacher/student/add")
                     .flashAttr("studentForm", form)
-
-        			.with(user("teacher").password("pass").roles("TEACHER")))
+        			.with(user("teacher").password("pass").roles("TEACHER"))
+        			.with(csrf()))
             .andExpect(status().is3xxRedirection())
             .andExpect(view().name("redirect:/teacher/student"));
 
@@ -298,8 +307,8 @@ public class StudentControllerTest {
 
         MvcResult result = mockMvc.perform(post("/teacher/student/edit")
                     .param("id", "user01")
-
-        			.with(user("teacher").password("pass").roles("TEACHER")))
+        			.with(user("teacher").password("pass").roles("TEACHER"))
+        			.with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("teacher/student/edit"))
                 .andReturn();
@@ -331,8 +340,8 @@ public class StudentControllerTest {
 
         MvcResult result = mockMvc.perform(post("/teacher/student/edit")
                     .param("id", "user01")
-
-        			.with(user("teacher").password("pass").roles("TEACHER")))
+        			.with(user("teacher").password("pass").roles("TEACHER"))
+        			.with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("teacher/student/edit"))
                 .andReturn();
@@ -370,12 +379,15 @@ public class StudentControllerTest {
 
         mockMvc.perform(post("/teacher/student/editprocess")
                     .flashAttr("studentForm", form)
-
-        			.with(user("teacher").password("pass").roles("TEACHER")))
+        			.with(user("teacher").password("pass").roles("TEACHER"))
+        			.with(csrf()))
             .andExpect(status().is3xxRedirection())
             .andExpect(view().name("redirect:/teacher/student"));
 
-        Optional<UserBean> opt = userRepository.findById("user01");
+        // LAZYの問題が発生するため、JOIN FETCHしたUserBeanを取得する
+//        Optional<UserBean> opt = userRepository.findById("user01");
+        Optional<UserBean> opt = userRepository.findByIdFetchUserClass("user01");
+        
         // ifPresentOrElseの実装はJDK9からの様子
         opt.ifPresent(userBean -> {
 
@@ -384,6 +396,10 @@ public class StudentControllerTest {
             assertEquals(userBean.getName(), "テストユーザー１－２");
             assertEquals(userBean.getRoleId(), RoleCode.ROLE_STUDENT
                     .getId());
+            
+//            List<String> classIdList;
+//            Hibernate.initialize(classIdList = userBean.getClassIdList());
+            
             List<String> classIdList = userBean.getClassIdList();
             assertEquals(classIdList.size(), 1);
             classIdList.forEach(classId -> {
@@ -412,12 +428,14 @@ public class StudentControllerTest {
 
         mockMvc.perform(post("/teacher/student/editprocess")
                     .flashAttr("studentForm", form)
-
-        			.with(user("teacher").password("pass").roles("TEACHER")))
+        			.with(user("teacher").password("pass").roles("TEACHER"))
+        			.with(csrf()))
             .andExpect(status().is3xxRedirection())
             .andExpect(view().name("redirect:/teacher/student"));
 
-        Optional<UserBean> opt = userRepository.findById("user01");
+        // LAZYの問題が発生するため、JOIN FETCHしたUserBeanを取得する
+//        Optional<UserBean> opt = userRepository.findById("user01");
+        Optional<UserBean> opt = userRepository.findByIdFetchUserClass("user01");
         // ifPresentOrElseの実装はJDK9からの様子
         opt.ifPresent(userBean -> {
 
@@ -453,7 +471,8 @@ public class StudentControllerTest {
 
         mockMvc.perform(post("/teacher/student/delete")
                     .param("id", "user01")
-        			.with(user("teacher").password("pass").roles("TEACHER")))
+        			.with(user("teacher").password("pass").roles("TEACHER"))
+        			.with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/teacher/student"));
         
@@ -483,7 +502,9 @@ public class StudentControllerTest {
         dbSetup.launch();
 
         mockMvc.perform(post("/teacher/student/delete")
-                    .param("id", "user01"))
+                    .param("id", "user01")
+					.with(user("teacher").password("pass").roles("TEACHER"))
+					.with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/teacher/student"));
 
