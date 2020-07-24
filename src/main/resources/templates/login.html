@@ -1,6 +1,6 @@
 
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity">
   <head th:replace="layout :: common_layout(title = 'ログイン画面', scripts = ~{::script}, links = ~{::link})">
     <meta charset="utf-8" />
     <title>ログインフォーム</title>
@@ -12,7 +12,7 @@
     <div th:replace="layout :: header"></div>
 
     <div class="container">
-      <h1>アルゴ学習サイト</h1>
+      <h1>課題管理サイト</h1>
       <form class="form-signin" method="post" th:action="@{/loginlogic}" >
         <h2 class="form-signin-heading">ログインフォーム</h2>
         <div th:if="${param.error}" class="alert alert-danger">
