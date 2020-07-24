@@ -57,7 +57,7 @@ public class UserBean {
      */
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
-    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private Set<UserClassBean> userClassBeans;
 
@@ -66,18 +66,37 @@ public class UserBean {
      */
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
-    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private Set<UserCourseBean> userCourseBeans;
     
     /**
-     * ユーザー、課題コードBean：相互参照オブジェクト(user・task：cross reference object).
+     * ユーザー・コース・課題コードBean：相互参照オブジェクト(user・course・task：cross reference object).
      */
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
-    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
-    private Set<UserTaskCodeBean> userTaskCodeBeans;
+    private Set<UserCourseTaskBean> userCourseTaskBeans;
+
+
+    /**
+     * ユーザー・コース・課題履歴Bean：相互参照オブジェクト(user・course・task history：cross reference object).
+     */
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private Set<UserCourseTaskHistoryBean> userCourseTaskHistoryBeans;
+    
+    /**
+     * ユーザー・問題履歴Bean：相互参照オブジェクト(user・question history：cross reference object).
+     */
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private Set<UserQuestionHistoryBean> userQuestionHistoryBeans;
 
     /**
      * コンストラクタ(constructor).
@@ -85,7 +104,9 @@ public class UserBean {
     public UserBean() {
         userClassBeans = new HashSet<>();
         userCourseBeans = new HashSet<>();
-        userTaskCodeBeans = new HashSet<>();
+        userCourseTaskBeans = new HashSet<>();
+        userCourseTaskHistoryBeans = new HashSet<>();
+        userQuestionHistoryBeans = new HashSet<>();
     }
     
     /**

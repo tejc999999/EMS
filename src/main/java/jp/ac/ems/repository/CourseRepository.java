@@ -25,7 +25,7 @@ public interface CourseRepository extends JpaRepository<CourseBean, Long> {
     		+ " LEFT JOIN FETCH c.userCourseBeans"
     		+ " LEFT JOIN FETCH c.classCourseBeans"
     		+ " LEFT JOIN FETCH c.taskCourseBeans"
-    		+ " LEFT JOIN FETCH c.userTaskCodeBeans"
+    		+ " LEFT JOIN FETCH c.userCourseTaskBeans"
     		+ " WHERE c.id = :id")
     Optional<CourseBean> findByIdFetchAll(@Param("id") Long id);
 }

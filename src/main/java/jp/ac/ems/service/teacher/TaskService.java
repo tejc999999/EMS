@@ -74,9 +74,9 @@ public class TaskService {
         for (QuestionBean questionBean : questionRepository.findAll()) {
             QuestionForm questionForm = new QuestionForm();
             questionForm.setId(String.valueOf(questionBean.getId()));
-            questionForm.setTitle(questionBean.getTitle());
-            questionForm.setDescription(questionBean.getDescription());
-            questionForm.setInputNum(questionBean.getInputNum());
+//            questionForm.setTitle(questionBean.getTitle());
+//            questionForm.setDescription(questionBean.getDescription());
+//            questionForm.setInputNum(questionBean.getInputNum());
             list.add(questionForm);
         }
 
@@ -92,15 +92,15 @@ public class TaskService {
             String searchStr) {
         List<QuestionForm> list = new ArrayList<>();
 
-        for (QuestionBean questionBean : questionRepository
-                .findByTitleLikeOrDescriptionLike(searchStr, searchStr)) {
-            QuestionForm questionForm = new QuestionForm();
-            questionForm.setId(String.valueOf(questionBean.getId()));
-            questionForm.setTitle(questionBean.getTitle());
-            questionForm.setDescription(questionBean.getDescription());
-            questionForm.setInputNum(questionBean.getInputNum());
-            list.add(questionForm);
-        }
+//        for (QuestionBean questionBean : questionRepository
+//                .findByTitleLikeOrDescriptionLike(searchStr, searchStr)) {
+//            QuestionForm questionForm = new QuestionForm();
+//            questionForm.setId(String.valueOf(questionBean.getId()));
+//            questionForm.setTitle(questionBean.getTitle());
+//            questionForm.setDescription(questionBean.getDescription());
+//            questionForm.setInputNum(questionBean.getInputNum());
+//            list.add(questionForm);
+//        }
 
         return list;
     }
@@ -150,10 +150,10 @@ public class TaskService {
         }
         taskBean.setTitle(form.getTitle());
         taskBean.setDescription(form.getDescription());
-        taskBean.setLanguageId(form.getPrgLanguageId());
-        taskBean.setQuestionId(Long.parseLong(form.getQuestionId()));
-        taskBean.setCodeMethod(form.getCodeMethod());
-        taskBean.setCodeReturn(form.getCodeReturn());
+//        taskBean.setLanguageId(form.getPrgLanguageId());
+//        taskBean.setQuestionId(Long.parseLong(form.getQuestionId()));
+//        taskBean.setCodeMethod(form.getCodeMethod());
+//        taskBean.setCodeReturn(form.getCodeReturn());
 
         taskBean = taskRepository.save(taskBean);
         taskId = String.valueOf(taskBean.getId());
@@ -202,8 +202,8 @@ public class TaskService {
                 id));
         opt.ifPresent(questionBean -> {
             taskAddCodeForm.setQuestionId(String.valueOf(questionBean.getId()));
-            taskAddCodeForm.setQuestionDescription(questionBean
-                    .getDescription());
+//            taskAddCodeForm.setQuestionDescription(questionBean
+//                    .getDescription());
         });
         
         return taskAddCodeForm;

@@ -18,8 +18,8 @@ import lombok.Setter;
 @Setter
 @Getter
 @Entity
-@Table(name = "t_user_task_code")
-public class UserTaskCodeBean {
+@Table(name = "t_user_task")
+public class UserCourseTaskBean {
 
     /**
      * サロゲートキー(surrogate key).
@@ -36,26 +36,22 @@ public class UserTaskCodeBean {
     private String userId;
 
     /**
-     * コースID(course id).
-     */
-    @Column(name = "course_id")
-    private Long courseId;
-
-    /**
      * 課題ID(task id).
      */
     @Column(name = "task_id")
     private Long taskId;
 
     /**
-     * 進捗状況(progress)l.
+     * コースID(course id).
      */
-    @Column(name = "status")
-    private byte status;
-    
+    @Column(name = "course_id")
+    private Long courseId;
+
     /**
-     * プログラムコード(program code).
+     * 回答フラグ(amswer flg).
+     * 0:未回答(0:unanswerd)
+     * 1:回答済(1:answered)
      */
-    @Column(name = "code")
-    private String code;
+    @Column(name = "answer_flg")
+    private boolean answerFlg;
 }

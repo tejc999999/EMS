@@ -56,7 +56,7 @@ public class ClassBean {
      */
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
-    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "class_id")
     private Set<UserClassBean> userClassBeans;
     
@@ -65,7 +65,7 @@ public class ClassBean {
      */
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
-    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "class_id")
     private Set<ClassCourseBean> classCourseBeans;
     

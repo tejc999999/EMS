@@ -36,9 +36,9 @@ public class QuestionService {
         for (QuestionBean questionBean : questionRepository.findAll()) {
             QuestionForm questionForm = new QuestionForm();
             questionForm.setId(String.valueOf(questionBean.getId()));
-            questionForm.setTitle(questionBean.getTitle());
-            questionForm.setDescription(questionBean.getDescription());
-            questionForm.setInputNum(questionBean.getInputNum());
+//            questionForm.setTitle(questionBean.getTitle());
+//            questionForm.setDescription(questionBean.getDescription());
+//            questionForm.setInputNum(questionBean.getInputNum());
             list.add(questionForm);
         }
         
@@ -57,9 +57,9 @@ public class QuestionService {
                 .parseLong(id));
         optQuestion.ifPresent(questionBean -> {
             form.setId(String.valueOf(questionBean.getId()));
-            form.setTitle(questionBean.getTitle());
-            form.setDescription(questionBean.getDescription());
-            form.setInputNum(questionBean.getInputNum());
+//            form.setTitle(questionBean.getTitle());
+//            form.setDescription(questionBean.getDescription());
+//            form.setInputNum(questionBean.getInputNum());
         });
         
         return form;
@@ -77,17 +77,17 @@ public class QuestionService {
         if (questionId != null && !questionId.equals("")) {
             questionBean.setId(Long.parseLong(questionId));
         }
-        questionBean.setTitle(form.getTitle());
-        questionBean.setDescription(form.getDescription());
-        questionBean.setInputNum((byte) form.getInputNum());
+//        questionBean.setTitle(form.getTitle());
+//        questionBean.setDescription(form.getDescription());
+//        questionBean.setInputNum((byte) form.getInputNum());
         
         questionBean = questionRepository.save(questionBean);
         
         QuestionForm resultQuestionForm = new QuestionForm();
         resultQuestionForm.setId(String.valueOf(questionId));
-        resultQuestionForm.setTitle(questionBean.getTitle());
-        resultQuestionForm.setDescription(questionBean.getDescription());
-        resultQuestionForm.setInputNum(questionBean.getInputNum());
+//        resultQuestionForm.setTitle(questionBean.getTitle());
+//        resultQuestionForm.setDescription(questionBean.getDescription());
+//        resultQuestionForm.setInputNum(questionBean.getInputNum());
         
         return resultQuestionForm;
     }

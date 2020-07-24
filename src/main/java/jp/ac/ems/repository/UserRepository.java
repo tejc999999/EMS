@@ -55,7 +55,7 @@ public interface UserRepository extends JpaRepository<UserBean, String> {
 	 * @return ユーザーBeanリスト（User Bean List）.
 	 */
     @Query("SELECT DISTINCT u FROM UserBean u"
-    		+ " LEFT JOIN FETCH u.userTaskCodeBeans"
+    		+ " LEFT JOIN FETCH u.userCourseTaskBeans"
     		+ " WHERE u.id = :id")
     Optional<UserBean> findByIdFetchUserTask(@Param("id") String id);
 
@@ -69,7 +69,9 @@ public interface UserRepository extends JpaRepository<UserBean, String> {
     @Query("SELECT DISTINCT u FROM UserBean u"
     		+ " LEFT JOIN FETCH u.userClassBeans"
     		+ " LEFT JOIN FETCH u.userCourseBeans"
-    		+ " LEFT JOIN FETCH u.userTaskCodeBeans"
+    		+ " LEFT JOIN FETCH u.userCourseTaskBeans"
+    		+ " LEFT JOIN FETCH u.userCourseTaskHistoryBeans"
+    		+ " LEFT JOIN FETCH u.userQuestionHistoryBeans"
     		+ " WHERE u.id = :id")
     Optional<UserBean> findByIdFetchAll(@Param("id") String id);
 }

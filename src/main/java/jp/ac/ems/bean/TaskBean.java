@@ -46,30 +46,6 @@ public class TaskBean {
      */
     @Column(name = "description")
     private String description;
-
-    /**
-     * プログラム言語種別.
-     */
-    @Column(name = "language_id")
-    private String languageId;
-
-    /**
-     * 問題ID(question id).
-     */
-    @Column(name = "question_id")
-    private Long questionId;
-
-    /**
-     * メソッド部コード(method part code).
-     */
-    @Column(name = "code_method")
-    private String codeMethod;
-
-    /**
-     * 戻り値部コード(return part code).
-     */
-    @Column(name = "code_return")
-    private String codeReturn;
     
     /**
      * コンストラクタ(constructor).
@@ -77,7 +53,7 @@ public class TaskBean {
     public TaskBean() {
         taskCourseBeans = new HashSet<>();
         taskQuestionBeans = new HashSet<>();
-        userTaskCodeBeans = new HashSet<>();
+        userCourseTaskBeans = new HashSet<>();
     }
     
     /**
@@ -85,7 +61,7 @@ public class TaskBean {
      */
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
-    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "task_id")
     private Set<TaskCourseBean> taskCourseBeans;
 
@@ -94,17 +70,17 @@ public class TaskBean {
      */
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
-    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "task_id")
     private Set<TaskQuestionBean> taskQuestionBeans;
     
     /**
-     * 課題・コース：相互参照オブジェクト(task・course：cross reference object).
+     * ユーザー・コース・課題：相互参照オブジェクト(user・course・task：cross reference object).
      */
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
-    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "task_id")
-    private Set<UserTaskCodeBean> userTaskCodeBeans;
+    private Set<UserCourseTaskBean> userCourseTaskBeans;
 
 }

@@ -50,7 +50,7 @@ public class CourseBean {
         userCourseBeans = new HashSet<>();
         classCourseBeans = new HashSet<>();
         taskCourseBeans = new HashSet<>();
-        userTaskCodeBeans = new HashSet<>();
+        userCourseTaskBeans = new HashSet<>();
     }
 
     /**
@@ -58,7 +58,7 @@ public class CourseBean {
      */
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
-    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "course_id")
     Set<UserCourseBean> userCourseBeans;
     
@@ -67,7 +67,7 @@ public class CourseBean {
      */
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
-    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "course_id")
     Set<ClassCourseBean> classCourseBeans;
 
@@ -76,18 +76,18 @@ public class CourseBean {
      */
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
-    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "course_id")
     Set<TaskCourseBean> taskCourseBeans;
 
     /**
-     * ユーザー・課題：相互参照オブジェクト(user・task：cross reference object).
+     * ユーザー・コース・課題：相互参照オブジェクト(user・course・task：cross reference object).
      */
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
-    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "course_id")
-    Set<UserTaskCodeBean> userTaskCodeBeans;
+    Set<UserCourseTaskBean> userCourseTaskBeans;
 
     /**
      * ユーザ・コース情報クリア(clear info(user/course)).

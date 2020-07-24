@@ -40,20 +40,27 @@ public class QuestionBean {
     /**
      * タイトル(title).
      */
-    @Column(name = "title")
-    private String title;
+    @Column(name = "division")
+    private String division;
 
     /**
-     * 説明文(description).
+     * 年度(year).
+     * ex)R01
      */
-    @Column(name = "description")
-    private String description;
+    @Column(name = "year")
+    private String year;
 
     /**
-     * 入力値個数(number of input).
+     * 問番(question number).
      */
-    @Column(name = "input_num")
-    private byte inputNum;
+    @Column(name = "number")
+    private Long number;
+
+    /**
+     * 正解(answer).
+     */
+    @Column(name = "correct")
+    private Long correct;
 
     /**
      * コンストラクタ(constructor).
@@ -67,7 +74,7 @@ public class QuestionBean {
      */
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
-    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "question_id")
     private Set<TaskQuestionBean> taskQuestionBeans;
 }
