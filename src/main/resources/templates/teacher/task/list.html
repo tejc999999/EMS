@@ -5,7 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>課題登録画面</title>
+<title>課題一覧画面</title>
 <link rel="stylesheet"
 	href="http://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
 	th:href="@{/webjars/bootstrap/4.5.0/css/bootstrap.min.css}" />
@@ -20,11 +20,11 @@
 
 	<div th:replace="layout :: header"></div>
 
-	<h2>■課題登録</h2>
+	<h2>■課題一覧</h2>
 	<div class="able-responsive-md container">
 
 		<form th:action="@{/teacher/task/addsearch}"
-			th:object="${questionForm}" method="post">
+			th:object="${taskForm}" method="post">
 			<div class="form-row">
 				<div class="form-group col-md-9">
 					<label for="searchWord" class="col-form-label">検索ワード</label> <input
@@ -43,27 +43,25 @@
 			<thead class="thead-dark">
 				<tr class="row">
 					<th class="col-md-3 text-nowrap" scope="col" th:text="タイトル">タイトル</th>
-					<th class="col-md-6 text-nowrap" scope="col" th:text="説明文">説明文</th>
-					<th class="col-md-1 text-nowrap" scope="col" th:text="入力数">入力数</th>
+					<th class="col-md-7 text-nowrap" scope="col" th:text="説明文">説明文</th>
 					<th class="col-md-1" scope="col"></th>
 					<th class="col-md-1" scope="col"></th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr class="row" th:each="question : ${questions}">
-					<td class="col-md-3" th:text="${question.title}">タイトル</td>
-					<td class="col-md-6" th:text="${question.description}">説明文</td>
-					<td class="col-md-1" th:text="${question.inputNum}">入力数</td>
+				<tr class="row" th:each="task : ${tasks}">
+					<td class="col-md-3" th:text="${task.title}">タイトル</td>
+					<td class="col-md-7" th:text="${task.description}">説明文</td>
 					<td class="col-md-1">
-						<form th:action="@{/teacher/task/addauto}" method="post">
-							<input type="submit" name="form" th:value="自動" /> <input
-								type="hidden" name="id" th:value="${question.id}" />
+						<form th:action="@{/teacher/task/edit}" method="post">
+							<input type="submit" name="form" th:value="編集" /> <input
+								type="hidden" name="id" th:value="${task.id}" />
 						</form>
 					</td>
 					<td class="col-md-1">
-						<form th:action="@{/teacher/task/addauto}" method="post">
-							<input type="submit" name="form" th:value="コード" /> <input
-								type="hidden" name="id" th:value="${question.id}" />
+						<form th:action="@{/teacher/task/delete}" method="post">
+							<input type="submit" name="form" th:value="削除" /> <input
+								type="hidden" name="id" th:value="${task.id}" />
 						</form>
 					</td>
 				</tr>

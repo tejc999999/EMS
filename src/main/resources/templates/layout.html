@@ -56,21 +56,12 @@
           <a class="nav-link" href="#">課題</a>
         </li>
         <li class="nav-item dropdown" sec:authorize="hasRole('TEACHER')">
-          <a class="nav-link dropdown-toggle" href="#" id="questionDropDown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          問題
-          </a>
-          <div class="dropdown-menu" aria-labelledby="questionDropDown">
-              <a class="dropdown-item" th:href="@{'/teacher/question/add'}">問題登録</a>
-              <a class="dropdown-item" th:href="@{'/teacher/question'}">問題一覧</a>
-          </div>
-        </li>
-        <li class="nav-item dropdown" sec:authorize="hasRole('TEACHER')">
           <a class="nav-link dropdown-toggle" href="#" id="taskDropDown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           課題
           </a>
           <div class="dropdown-menu" aria-labelledby="taskDropDown">
-              <a class="dropdown-item" href="#">課題登録</a>
-              <a class="dropdown-item" th:href="@{'/teacher/task/addlist'}">課題一覧</a>
+              <a class="dropdown-item" th:href="@{'/teacher/task/add'}">課題登録</a>
+              <a class="dropdown-item" th:href="@{'/teacher/task'}">課題一覧</a>
           </div>
         </li>
         <li class="nav-item dropdown" sec:authorize="hasRole('TEACHER')">
@@ -92,10 +83,10 @@
           </div>
         </li>
         <li class="nav-item dropdown dmenu" sec:authorize="hasRole('TEACHER')">
-          <a class="nav-link dropdown-toggle" href="#" id="questionDropDown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <a class="nav-link dropdown-toggle" href="#" id="studentDropDown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           学生
           </a>
-          <div class="dropdown-menu sm-menu" aria-labelledby="questionDropDown">
+          <div class="dropdown-menu sm-menu" aria-labelledby="studentDropDown">
               <a class="dropdown-item" th:href="@{'/teacher/student/add'}">学生登録</a>
               <a class="dropdown-item" th:href="@{'/teacher/student'}">学生一覧</a>
           </div>

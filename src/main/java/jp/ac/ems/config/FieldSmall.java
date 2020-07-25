@@ -80,4 +80,64 @@ public enum FieldSmall {
     public String getName() {
         return this.name;
     }
+    
+    /**
+     * 分野名取得(Get field name).
+     * @param division 区分コード(division code)
+     * @param id 小分類ID(Small field id)
+     * @return 分野名(Field name)
+     */
+    public static String getName(String division, Byte id) {
+    	String name = null;
+    	if("AP".equals(division)) {
+    		if(id == AP_FS_1_BASIC_THEORY.getId()) {
+    			name = AP_FS_1_BASIC_THEORY.getName();
+    		} else if(id == AP_FS_2_ALGORITHM_AND_PROGRAMING.getId()) {
+    			name = AP_FS_2_ALGORITHM_AND_PROGRAMING.getName();
+    		} else if(id == AP_FS_3_COMPUTER_COMPONENTS.getId()) {
+    			name = AP_FS_3_COMPUTER_COMPONENTS.getName();
+    		} else if(id == AP_FS_4_SYSTEM_COMPONENTS.getId()) {
+    			name = AP_FS_4_SYSTEM_COMPONENTS.getName();
+    		} else if(id == AP_FS_5_SOFTWARE.getId()) {
+    			name = AP_FS_5_SOFTWARE.getName();
+    		} else if(id == AP_FS_6_HARDWARE.getId()) {
+    			name = AP_FS_6_HARDWARE.getName();
+    		} else if(id == AP_FS_7_HUMAN_INTERFACE.getId()) {
+    			name = AP_FS_7_HUMAN_INTERFACE.getName();
+    		} else if(id == AP_FS_8_MULTIMEDIA.getId()) {
+    			name = AP_FS_8_MULTIMEDIA.getName();
+    		} else if(id == AP_FS_9_MANAGEMENT.getId()) {
+    			name = AP_FS_9_MANAGEMENT.getName();
+    		} else if(id == AP_FS_10_NETWORK.getId()) {
+    			name = AP_FS_10_NETWORK.getName();
+    		} else if(id == AP_FS_11_SECURITY.getId()) {
+    			name = AP_FS_11_SECURITY.getName();
+    		} else if(id == AP_FS_12_SYSTEM_COMPONENTS.getId()) {
+    			name = AP_FS_12_SYSTEM_COMPONENTS.getName();
+    		} else if(id == AP_FS_13_SOFTWARE_DEVELOPMENT_MANAGEMENT_TECHNOLOGY.getId()) {
+    			name = AP_FS_13_SOFTWARE_DEVELOPMENT_MANAGEMENT_TECHNOLOGY.getName();
+    		} else if(id == AP_FS_14_PROJECT_MANAGEMENT.getId()) {
+    			name = AP_FS_14_PROJECT_MANAGEMENT.getName();
+    		} else if(id == AP_FS_15_SERVICE_MANAGEMENT.getId()) {
+    			name = AP_FS_15_SERVICE_MANAGEMENT.getName();
+    		} else if(id == AP_FS_16_SYSTEM_AUDIT.getId()) {
+    			name = AP_FS_16_SYSTEM_AUDIT.getName();
+    		} else if(id == AP_FS_17_SYSTEM_PLANNING.getId()) {
+    			name = AP_FS_17_SYSTEM_PLANNING.getName();
+    		} else if(id == AP_FS_18_SYSTEM_STRATEGY.getId()) {
+    			name = AP_FS_18_SYSTEM_STRATEGY.getName();
+    		} else if(id == AP_FS_19_BUSINESS_STRATEGY_MANAGEMENT.getId()) {
+    			name = AP_FS_19_BUSINESS_STRATEGY_MANAGEMENT.getName();
+    		} else if(id == AP_FS_20_TECHNOLOGY_STRATEGY_MANAGEMENT.getId()) {
+    			name = AP_FS_20_TECHNOLOGY_STRATEGY_MANAGEMENT.getName();
+    		} else if(id == AP_FS_21_BUSINESS_INDUSTRY.getId()) {
+    			name = AP_FS_21_BUSINESS_INDUSTRY.getName();
+    		} else if(id == AP_FS_22_CORPORATE_ACTIITY.getId()) {
+    			name = AP_FS_22_CORPORATE_ACTIITY.getName();
+    		} else if(id == AP_FS_23_LEGAL_AFFAIRS.getId()) {
+    			name = AP_FS_23_LEGAL_AFFAIRS.getName();
+    		}
+    	}
+        return name;
+    }
 }

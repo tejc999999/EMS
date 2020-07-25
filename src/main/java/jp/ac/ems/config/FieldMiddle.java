@@ -14,7 +14,7 @@ public enum FieldMiddle {
     AP_FM_7_SYSTEM_PLANNING((byte)7, "AP", "システム企画"),
     AP_FM_8_SYSTEM_STRATEGY((byte)8, "AP", "システム戦略"),
     AP_FM_9_MANAGEMENT_STRATEGY((byte)9, "AP", "経営戦略"),
-    AP_FM_10_CORPORATE_AND_LEGAL((byte)23, "AP", "企業と法務");
+    AP_FM_10_CORPORATE_AND_LEGAL((byte)10, "AP", "企業と法務");
 
     /**
      * 試験区分コード(division code).
@@ -66,5 +66,39 @@ public enum FieldMiddle {
      */
     public String getName() {
         return this.name;
+    }
+    
+    /**
+     * 分野名取得(Get field name).
+     * @param division 区分コード(division code)
+     * @param id 中分類ID(Middle field id)
+     * @return 分野名(Field name)
+     */
+    public static String getName(String division, Byte id) {
+    	String name = null;
+    	if("AP".equals(division)) {
+    		if(id == AP_FM_1_BASIC_THEORY.getId()) {
+    			name = AP_FM_1_BASIC_THEORY.getName();
+    		} else if(id == AP_FM_2_COMPUTER_SYSTEM.getId()) {
+    			name = AP_FM_2_COMPUTER_SYSTEM.getName();
+    		} else if(id == AP_FM_3_TECHNOLOGY_ELEMENT.getId()) {
+    			name = AP_FM_3_TECHNOLOGY_ELEMENT.getName();
+    		} else if(id == AP_FM_4_DEVELOPMENT_TECHNOLOGY.getId()) {
+    			name = AP_FM_4_DEVELOPMENT_TECHNOLOGY.getName();
+    		} else if(id == AP_FM_5_PROJECT_MANAGEMNET.getId()) {
+    			name = AP_FM_5_PROJECT_MANAGEMNET.getName();
+    		} else if(id == AP_FM_6_SERVICE_MANAGEMENT.getId()) {
+    			name = AP_FM_6_SERVICE_MANAGEMENT.getName();
+    		} else if(id == AP_FM_7_SYSTEM_PLANNING.getId()) {
+    			name = AP_FM_7_SYSTEM_PLANNING.getName();
+    		} else if(id == AP_FM_8_SYSTEM_STRATEGY.getId()) {
+    			name = AP_FM_8_SYSTEM_STRATEGY.getName();
+    		} else if(id == AP_FM_9_MANAGEMENT_STRATEGY.getId()) {
+    			name = AP_FM_9_MANAGEMENT_STRATEGY.getName();
+    		} else if(id == AP_FM_10_CORPORATE_AND_LEGAL.getId()) {
+    			name = AP_FM_10_CORPORATE_AND_LEGAL.getName();
+    		}
+    	}
+        return name;
     }
 }

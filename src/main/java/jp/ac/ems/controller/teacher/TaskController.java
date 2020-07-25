@@ -1,10 +1,10 @@
 package jp.ac.ems.controller.teacher;
 
 import java.util.List;
+import java.util.Map;
 
-import jp.ac.ems.code.ExecuteResult;
-import jp.ac.ems.form.teacher.QuestionForm;
-import jp.ac.ems.form.teacher.TaskAddCodeForm;
+import jp.ac.ems.form.teacher.TaskForm;
+import jp.ac.ems.service.teacher.QuestionService;
 import jp.ac.ems.service.teacher.TaskService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,13 +29,16 @@ public class TaskController {
     @Autowired
     TaskService taskService;
 
+//    @Autowired
+//    QuestionService questionService;
+
     /**
      * モデルにフォームをセットする(set form the model).
-     * @return 課題コード追加Form(task code add form)
+     * @return 課題Form(task form)
      */
     @ModelAttribute
-    TaskAddCodeForm setupForm() {
-        return new TaskAddCodeForm();
+    TaskForm setupForm() {
+        return new TaskForm();
     }
     
     /**
@@ -43,152 +46,98 @@ public class TaskController {
      * @param model 問題一覧保存用モデル(model to save question list)
      * @return 課題登録用問題一覧ページビュー(question list page view for task add)
      */
-    @GetMapping(path = "addlist")
-    String addlist(Model model) {
+    @GetMapping
+    String list(Model model) {
 
-        List<QuestionForm> list = taskService.findAll();
+        List<TaskForm> list = taskService.findAll();
 
-        model.addAttribute("questions", list);
+        model.addAttribute("tasks", list);
 
-        return "teacher/task/addlist";
+        return "teacher/task/list";
     }
     
     /**
-     * 課題登録用問題検索(question search for task add).
-     * @param form 課題コード追加Form(task code add form)
+     * 課題登録(task add).
+     * @return 課題情報登録用ページビュー(task info add page view)
+     */
+    @GetMapping(path = "add")
+    public String add(Model model) {
+
+        return "/teacher/task/add";
+    }
+
+    /**
+     * 課題編集(task edit).
+     * @return 課題情報登録用ページビュー(task info add page view)
+     */
+    @PostMapping(path = "edit")
+    public String edit(@RequestParam String id, Model model) {
+
+        TaskForm taskForm = taskService.findById(id);
+
+        model.addAttribute("taskForm", taskForm);
+    	
+        return "/teacher/task/edit";
+    }
+    
+    /**
+     * 課題編集処理(edit process for task).
+     * @return 課題一覧ページリダイレクト(task list page redirect)
+     */
+    @PostMapping(path = "editprocess")
+    public String editprocess(TaskForm form, Model model) {
+
+    	taskService.save(form);
+    	
+        return "redirect:/teacher/task";
+    }
+    
+    /**
+     * 課題登録(task add).
+     * @return 課題一覧(task list)
+     */
+    @PostMapping(path = "delete")
+    public String delete(@RequestParam String id, Model model) {
+
+    	// 削除処理
+    	taskService.delete(id);
+    	
+        return "redirect:/teacher/task";
+    }
+
+    /**
+     * 課題情報登録用(task info add).
+     * @param form 課題Form(task form)
      * @param result エラーチェック結果(error validate result)
-     * @param model 問題一覧保存用モデル(model to save question list)
-     * @return 課題登録用問題一覧ページビュー(question list page view for task add)
+     * @param model モデル(model to save xxx)
+     * @return 課題問題登録用ページビュー(task question add page view)
      */
-    @PostMapping(path = "addsearch")
-    public String addSearch(@Validated TaskAddCodeForm form, BindingResult result,
+    @PostMapping(path = "add_question")
+    public String addInfo(@Validated TaskForm form, BindingResult result,
             Model model) {
 
-        List<QuestionForm> list = taskService
-                .findByTitleLikeOrDescriptionLike("%" + form.getSearchWord() + "%");
-       
-        model.addAttribute("questions", list);
+//        model.addAttribute("taskForm", form);
 
-        return "/teacher/task/addlist";
-    }
-
-    /**
-     * 課題自動コード生成画面表示.
-     * @param id 問題ID
-     * @param model モデル(model)
-     * @return 課題自動コード生成ページビュー
-     */
-    @PostMapping(path = "addauto")
-    public String addAuto(@RequestParam String id, Model model) {
+    	// 年度取得
+        Map<String, String> yearMap = taskService.findAllYearMap(form.getExclusionYearList());
+        model.addAttribute("yearDropItems", yearMap);
+    	
+//    	// 大分類取得
+//        Map<String, String> fieldLMap = taskService.findAllFieldLMap(form.getExclusionFieldLList());
+//        model.addAttribute("fieldLDropItemsItems", fieldLMap);
+//    	
+//    	// 中分類取得
+//        Map<String, String> fieldMMap = taskService.findAllFieldMMap(form.getExclusionFieldMList());
+//        model.addAttribute("fieldMDropItems", fieldMMap);
+//    	
+//    	// 小分類取得
+//        Map<String, String> fieldSMap = taskService.findAllFieldSMap(form.getExclusionFieldSList());
+//        model.addAttribute("fieldSDropItems", fieldSMap);
+    	
+        // 全問題取得
+        Map<String, String> questionMap = taskService.findAllMap();
+        model.addAttribute("questionCheckItems", questionMap);
         
-        TaskAddCodeForm taskAddCodeForm = taskService.setQuestionData(id);
-        taskAddCodeForm = taskService.setPrgLanguageMap(taskAddCodeForm);
-        model.addAttribute("taskAddCodeForm", taskAddCodeForm);
-        
-        return "/teacher/task/addauto";
+        return "/teacher/task/add_question";
     }
-    
-    /**
-     * 課題登録コード画面表示.
-     * @param taskAddCodeForm 課題登録コードForm
-     * @param result エラー検証結果
-     * @param model モデル(model)
-     * @return 課題コード登録ページビュー
-     */
-    @PostMapping(path = "addcode")
-    public String addCode(@Validated TaskAddCodeForm taskAddCodeForm, BindingResult result,
-            Model model) {
-        
-        taskAddCodeForm = taskService.setPrgLanguageMap(taskAddCodeForm);
-        if (taskAddCodeForm.getCode() == null) {
-            try {
-    
-                String code = taskService.getCheckCode(taskAddCodeForm);
-                taskAddCodeForm.setCode(code);
-            } catch (Exception e) {
-                
-                return addAuto(taskAddCodeForm.getQuestionId(), model);
-            }
-        }
-        return "/teacher/task/addcode";
-    }
-
-    /**
-     * 課題自動作成画面表示(question list page view for task add).
-     * @return 課題自動作成ページビュー(auto create task page view)
-     */
-    @PostMapping(path = "addprocess")
-    public String addProcess(@Validated TaskAddCodeForm taskAddCodeForm, BindingResult result,
-            Model model) {
-
-        ExecuteResult executeResult = null;
-        try {
-            
-            executeResult = taskService.save(taskAddCodeForm);
-        } catch (Exception e) {
-            // TODO: handle exception
-        }
-        
-        if (executeResult != null && executeResult
-                .getReturnCode() == ExecuteResult.RETURN_CODE_SUCCESS) {
-
-            return addlist(model);
-        } else {
-            
-            if (executeResult != null) {
-                model.addAttribute("result", executeResult.getErrorOutputString());
-            }
-            model.addAttribute("taskAddCodeForm", taskAddCodeForm);
-            
-            return addCode(taskAddCodeForm, result, model);
-        }
-    }
-
-//    /**
-//     * 学生編集ページ表示(show edit student page).
-//     * @return 学生編集ページビュー(edit student page view)
-//     */
-//    @PostMapping(path = "edit")
-//    public String edit(@RequestParam String id, Model model) {
-//
-//        // Optional<UserBean> opt = userRepository.findById(userId);
-//        // opt.ifPresent(bean -> {
-//        // StudentForm form = new StudentForm();
-//        // BeanUtils.copyProperties(bean, form);
-//        //
-//        // model.addAttribute("studentForm", form);
-//        // });
-//
-//        return "teacher/task/edit";
-//    }
-//
-//    /**
-//     * 学生編集処理(edit process for student).
-//     * @return 学生一覧ページリダイレクト(student list page redirect)
-//     */
-//    @PostMapping(path = "editprocess")
-//    public String editProcess(StudentForm form, Model model) {
-//
-//        // UserBean bean = new UserBean();
-//        // BeanUtils.copyProperties(form, bean);
-//        //
-//        // userRepository.save(bean);
-//
-//        return "redirect:/teacher/task";
-//    }
-//
-//    /**
-//     * 学生削除処理(delete student for question).
-//     * @return 学生一覧ページリダイレクト(redirect student list page)
-//     */
-//    @PostMapping(path = "delete")
-//    public String delete(@RequestParam String userId, Model model) {
-//
-//        // UserBean bean = new UserBean();
-//        // bean.setUserId(userId);
-//        //
-//        // userRepository.delete(bean);
-//
-//        return "redirect:/teacher/task";
-//    }
 }

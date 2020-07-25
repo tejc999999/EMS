@@ -70,6 +70,8 @@ INSERT INTO m_field_m(id, division, name) VALUES(22, 'AP', '企業活動')
 INSERT INTO m_field_m(id, division, name) VALUES(23, 'AP', '法務')
 */
 /* 課題 */
+INSERT INTO t_task(id, title, description) VALUES(1, 'AP対策テスト課題1', 'R01A_01-20');
+INSERT INTO t_task(id, title, description) VALUES(2, 'AP対策テスト課題2', 'H29H_10-19+H30H_01-05');
 
 /* 問題 */
 INSERT INTO t_question(id, division, year, term, number, field_l_id, field_m_id, field_s_id, correct) VALUES(1, 'AP', 'H21', 'H',1, 1, 1, 1, 2);
@@ -1832,4 +1834,38 @@ INSERT INTO t_question(id, division, year, term, number, field_l_id, field_m_id,
 INSERT INTO t_question(id, division, year, term, number, field_l_id, field_m_id, field_s_id, correct) VALUES(1758, 'AP', 'R01', 'A',78, 3, 10, 23, 4);
 INSERT INTO t_question(id, division, year, term, number, field_l_id, field_m_id, field_s_id, correct) VALUES(1759, 'AP', 'R01', 'A',79, 3, 10, 23, 3);
 INSERT INTO t_question(id, division, year, term, number, field_l_id, field_m_id, field_s_id, correct) VALUES(1760, 'AP', 'R01', 'A',80, 3, 10, 23, 2);
+
+/* 課題_問題 */
+INSERT INTO t_task_question(id, task_id, question_id, sequence_number) VALUES(1, 1, 1681, 1);
+INSERT INTO t_task_question(id, task_id, question_id, sequence_number) VALUES(2, 1, 1682, 2);
+INSERT INTO t_task_question(id, task_id, question_id, sequence_number) VALUES(3, 1, 1683, 3);
+INSERT INTO t_task_question(id, task_id, question_id, sequence_number) VALUES(4, 1, 1684, 4);
+INSERT INTO t_task_question(id, task_id, question_id, sequence_number) VALUES(5, 1, 1685, 5);
+INSERT INTO t_task_question(id, task_id, question_id, sequence_number) VALUES(6, 1, 1686, 6);
+INSERT INTO t_task_question(id, task_id, question_id, sequence_number) VALUES(7, 1, 1687, 7);
+INSERT INTO t_task_question(id, task_id, question_id, sequence_number) VALUES(8, 1, 1688, 8);
+INSERT INTO t_task_question(id, task_id, question_id, sequence_number) VALUES(9, 1, 1689, 9);
+INSERT INTO t_task_question(id, task_id, question_id, sequence_number) VALUES(10, 1, 1690, 10);
+
+INSERT INTO t_task_question(id, task_id, question_id, sequence_number) VALUES(11, 2, 1290, 1);
+INSERT INTO t_task_question(id, task_id, question_id, sequence_number) VALUES(12, 2, 1291, 2);
+INSERT INTO t_task_question(id, task_id, question_id, sequence_number) VALUES(13, 2, 1292, 3);
+INSERT INTO t_task_question(id, task_id, question_id, sequence_number) VALUES(14, 2, 1293, 4);
+INSERT INTO t_task_question(id, task_id, question_id, sequence_number) VALUES(15, 2, 1294, 5);
+INSERT INTO t_task_question(id, task_id, question_id, sequence_number) VALUES(16, 2, 1295, 6);
+INSERT INTO t_task_question(id, task_id, question_id, sequence_number) VALUES(17, 2, 1296, 7);
+INSERT INTO t_task_question(id, task_id, question_id, sequence_number) VALUES(18, 2, 1297, 8);
+INSERT INTO t_task_question(id, task_id, question_id, sequence_number) VALUES(19, 2, 1298, 9);
+INSERT INTO t_task_question(id, task_id, question_id, sequence_number) VALUES(20, 2, 1299, 10);
+INSERT INTO t_task_question(id, task_id, question_id, sequence_number) VALUES(21, 2, 1441, 11);
+INSERT INTO t_task_question(id, task_id, question_id, sequence_number) VALUES(22, 2, 1442, 12);
+INSERT INTO t_task_question(id, task_id, question_id, sequence_number) VALUES(23, 2, 1443, 13);
+INSERT INTO t_task_question(id, task_id, question_id, sequence_number) VALUES(24, 2, 1444, 14);
+INSERT INTO t_task_question(id, task_id, question_id, sequence_number) VALUES(25, 2, 1445, 15);
+
+/* コース_課題 */
+INSERT INTO t_task_course(id, task_id, course_id) VALUES(1, 1, 1);
+
+/* ユーザー_課題 */
+INSERT INTO t_user_course_task(id, user_id, course_id, task_id, answer_flg) VALUES(1, 'teststudent1', 1, 1, 0);
 

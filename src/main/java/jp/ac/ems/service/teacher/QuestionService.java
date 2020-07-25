@@ -1,14 +1,23 @@
 package jp.ac.ems.service.teacher;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import jp.ac.ems.bean.QuestionBean;
+import jp.ac.ems.config.FieldLarge;
+import jp.ac.ems.config.FieldMiddle;
+import jp.ac.ems.config.FieldSmall;
 import jp.ac.ems.form.teacher.QuestionForm;
 import jp.ac.ems.repository.QuestionRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 
 
@@ -64,6 +73,8 @@ public class QuestionService {
         
         return form;
     }
+    
+
     
     /**
      * 問題を登録する.

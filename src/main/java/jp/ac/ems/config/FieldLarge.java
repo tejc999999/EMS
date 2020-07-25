@@ -60,4 +60,24 @@ public enum FieldLarge {
     public String getName() {
         return this.name;
     }
+    
+    /**
+     * 分野名取得(Get field name).
+     * @param division 区分コード(division code)
+     * @param id 大分類ID(Large field id)
+     * @return 分野名(Field name)
+     */
+    public static String getName(String division, Byte id) {
+    	String name = null;
+    	if("AP".equals(division)) {
+    		if(id == AP_FL_1_TECHNOLOGY.getId()) {
+    			name = AP_FL_1_TECHNOLOGY.getName();
+    		} else if(id == AP_FL_2_MANAGEMENT.getId()) {
+    			name = AP_FL_2_MANAGEMENT.getName();
+    		} else if(id == AP_FL_3_STRATEGY.getId()) {
+    			name = AP_FL_3_STRATEGY.getName();
+    		}
+    	}
+        return name;
+    }
 }

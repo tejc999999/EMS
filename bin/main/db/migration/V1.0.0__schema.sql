@@ -121,7 +121,6 @@ CREATE TABLE t_task_course(
     id BIGINT AUTO_INCREMENT,
     task_id BIGINT,
     course_id BIGINT,
-    number BIGINT,
     PRIMARY KEY(id)
 ) CHARACTER SET 'utf8';
 

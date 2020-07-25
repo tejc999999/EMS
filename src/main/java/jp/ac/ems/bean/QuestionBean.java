@@ -14,6 +14,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,9 +27,21 @@ import lombok.Setter;
 @Entity
 @Setter
 @Getter
+@AllArgsConstructor
 @Table(name = "t_question")
 public class QuestionBean {
 
+	/**
+	 * 年度抽出用コンストラクタ
+	 * 
+	 * @param year 年度
+	 * @param term 期
+	 */
+	public QuestionBean(String year, String term) {
+		this.year = year;
+		this.term = term;
+	}
+	
     /**
      * 問題コード(question code).
      */
@@ -84,7 +97,7 @@ public class QuestionBean {
      * 
      */
     @Column(name = "field_s_id")
-    private Long fieldSId;
+    private Byte fieldSId;
     
     
     /**
