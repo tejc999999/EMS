@@ -40,4 +40,10 @@ public class TaskQuestionBean {
      */
     @Column(name = "question_id")
     private Long questionId;
+
+    /**
+     * 順番(sequence number).
+     */
+    @Column(name = "sequence_number")
+    private Short sequenceNumber;
 }

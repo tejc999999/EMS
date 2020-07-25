@@ -49,8 +49,8 @@ public class UserBean {
     /**
      * 権限ID(role id).
      */
-    @Column(name = "role_id", nullable = false, length = 3)
-    private String roleId;
+    @Column(name = "role_id", nullable = false)
+    private Byte roleId;
 
     /**
      * ユーザー所属クラス：相互参照オブジェクト(user belonging class：cross reference object).

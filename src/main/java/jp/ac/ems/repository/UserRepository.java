@@ -21,7 +21,7 @@ public interface UserRepository extends JpaRepository<UserBean, String> {
      * @param roleId 権限ID
      * @return ユーザーBean
      */
-    List<UserBean> findByRoleId(String roleId);
+    List<UserBean> findByRoleId(Byte roleId);
     
 	/**
 	 * ユーザー-クラス関連Beanを含めたUserBean取得（Fetch.LAZY対応）

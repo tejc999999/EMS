@@ -38,10 +38,17 @@ public class QuestionBean {
     private Long id;
 
     /**
-     * タイトル(title).
+     * 試験区分(division).
      */
     @Column(name = "division")
     private String division;
+
+    /**
+     * 期(term).
+     * A or H
+     */
+    @Column(name = "term")
+    private String term;
 
     /**
      * 年度(year).
@@ -56,11 +63,36 @@ public class QuestionBean {
     @Column(name = "number")
     private Long number;
 
+    
+    /**
+     * 大分類(large field).
+     * 
+     */
+    @Column(name = "field_l_id")
+    private Byte fieldLId;
+    
+    /**
+     * 中分類(middle field).
+     * 
+     */
+    @Column(name = "field_m_id")
+    private Byte fieldMId;
+    
+    
+    /**
+     * 小分類(small field).
+     * 
+     */
+    @Column(name = "field_s_id")
+    private Long fieldSId;
+    
+    
     /**
      * 正解(answer).
+     * 1-4:ア~エ
      */
     @Column(name = "correct")
-    private Long correct;
+    private Byte correct;
 
     /**
      * コンストラクタ(constructor).

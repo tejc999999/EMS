@@ -2,7 +2,7 @@
 <!--引数の title, links は fragment expressions */-->
 <head th:fragment="common_layout(title, scripts, links)">
 
-  <title th:text="${title==null}? 'アルゴ学習サイト' : ${title}">アルゴ学習サイト</title>
+  <title th:text="${title==null}? '課題管理サイト' : ${title}">課題管理サイト</title>
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -42,7 +42,7 @@
   <!-- /* サブコンポーネント */ -->
 <!-- <div class="container">-->
     <!-- /* ブランド */ -->
-    <a class="navbar-brand" th:href="@{'/login' }">アルゴ学習サイト</a>
+    <a class="navbar-brand" th:href="@{'/login' }">課題管理サイト</a>
     <!-- /* 切替ボタン */ -->
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-content"
        aria-controls="navbar-content" aria-expanded="false" aria-label="Toggle navigation">

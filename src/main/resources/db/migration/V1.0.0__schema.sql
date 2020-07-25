@@ -2,11 +2,32 @@
 /* CREATE DATABASE IF NOT EXISTS algolearn; */
 /* GRANT ALL PRIVILEGES ON algolearn.* TO algolearnadmin@localhost IDENTIFIED BY 'algolearnpass' WITH GRANT OPTION; */
 
+/*
 CREATE TABLE m_role(
     id CHAR(3),
     name VARCHAR(40),
     PRIMARY KEY(id)
 ) CHARACTER SET 'utf8';
+CREATE TABLE m_field_l(
+    id CHAR(3),
+    division VARCHAR(2),
+    name VARCHAR(100),
+    PRIMARY KEY(id)
+) CHARACTER SET 'utf8';
+CREATE TABLE m_field_m(
+    id CHAR(3),
+    division VARCHAR(2),
+    name VARCHAR(100),
+    PRIMARY KEY(id)
+) CHARACTER SET 'utf8';
+CREATE TABLE m_field_s(
+    id CHAR(3),
+    division VARCHAR(2),
+    name VARCHAR(100),
+    PRIMARY KEY(id)
+) CHARACTER SET 'utf8';
+*/
+
     
 CREATE TABLE t_question(
     id BIGINT AUTO_INCREMENT,
@@ -14,6 +35,9 @@ CREATE TABLE t_question(
     year VARCHAR(3),
     term VARCHAR(1),
     number TINYINT,
+    field_l_id BIGINT,
+    field_m_id BIGINT,
+    field_s_id BIGINT,
     correct TINYINT,
     PRIMARY KEY(id)
 ) CHARACTER SET 'utf8';
@@ -22,7 +46,7 @@ CREATE TABLE t_user(
     id VARCHAR(20),
     password VARCHAR(200),
     name VARCHAR(100),
-    role_id CHAR(3),
+    role_id TINYINT,
     PRIMARY KEY(id)
 ) CHARACTER SET 'utf8';
 
@@ -89,6 +113,7 @@ CREATE TABLE t_task_question(
     id BIGINT AUTO_INCREMENT,
     task_id BIGINT,
     question_id BIGINT,
+    sequence_number SMALLINT,
     PRIMARY KEY(id)
 ) CHARACTER SET 'utf8';
 

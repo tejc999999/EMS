@@ -5,14 +5,14 @@ package jp.ac.ems.config;
  * @author tejc999999
  */
 public enum RoleCode {
-    ROLE_ADMIN("001", "管理者", "ADMIN"),
-    ROLE_TEACHER("002", "先生", "TEACHER"),
-    ROLE_STUDENT("003", "学生", "STUDENT");
+    ROLE_ADMIN((byte)1, "管理者", "ADMIN"),
+    ROLE_TEACHER((byte)2, "先生", "TEACHER"),
+    ROLE_STUDENT((byte)3, "学生", "STUDENT");
 
     /**
      * 権限ID(Role id).
      */
-    private final String id;
+    private final Byte id;
 
     /**
      * 権限名(Role name).
@@ -30,7 +30,7 @@ public enum RoleCode {
      * @param name 権限名(Role name)
      * @param code 権限コード(Role code)
      */
-    private RoleCode(final String id, final String name, final String code) {
+    private RoleCode(final Byte id, final String name, final String code) {
         this.id = id;
         this.name = name;
         this.code = code;
@@ -40,7 +40,7 @@ public enum RoleCode {
      * 権限ID取得(Get role id).
      * @return 権限ID(Role id)
      */
-    public String getId() {
+    public Byte getId() {
         return this.id;
     }
     
@@ -65,15 +65,15 @@ public enum RoleCode {
      * @param roleId 権限ID(Role id)
      * @return 権限コード(Role code)
      */
-    public static String getCode(String roleId) {
+    public static String getCode(Byte roleId) {
     	
     	String roleName = null;
     	
-    	if(roleId.equals(ROLE_ADMIN.getId())) {
+    	if(roleId == ROLE_ADMIN.getId()) {
     		roleName = "ROLE_" + ROLE_ADMIN.getCode();
-    	} else if(roleId.equals(ROLE_TEACHER.getId())) {
+    	} else if(roleId == ROLE_TEACHER.getId()) {
     		roleName = "ROLE_" + ROLE_TEACHER.getCode();
-    	} else if(roleId.equals(ROLE_STUDENT.getId())) {
+    	} else if(roleId == ROLE_STUDENT.getId()) {
     		roleName = "ROLE_" + ROLE_STUDENT.getCode();
     	}
     	
