@@ -83,4 +83,19 @@ public class TaskBean {
     @JoinColumn(name = "task_id")
     private Set<UserCourseTaskBean> userCourseTaskBeans;
 
+    /**
+     * 課題・問題情報を追加する(add an info(task/question)).
+     * @param userCourseBean 課題・問題Bean(task/question bean)
+     */
+    public void addTaskQuestionBean(TaskQuestionBean taskQuestionBean) {
+        taskQuestionBeans.add(taskQuestionBean);
+    }
+    
+    /**
+     * 課題・問題情報クリア(clear info(task/question)).
+     */
+    public void clearTaskQuestionBean() {
+    	taskQuestionBeans.clear();
+    }
+
 }

@@ -1,5 +1,8 @@
 package jp.ac.ems.config;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 /**
  * 中分野コードEnum(middle field code enum).
  * @author tejc999999
@@ -9,8 +12,10 @@ public enum FieldMiddle {
     AP_FM_2_COMPUTER_SYSTEM((byte)2, "AP", "コンピュータシステム"),
     AP_FM_3_TECHNOLOGY_ELEMENT((byte)3, "AP", "技術要素"),
     AP_FM_4_DEVELOPMENT_TECHNOLOGY((byte)4, "AP", "開発技術"),
+    
     AP_FM_5_PROJECT_MANAGEMNET((byte)5, "AP", "プロジェクトマネジメント"),
     AP_FM_6_SERVICE_MANAGEMENT((byte)6, "AP", "サービスマネジメント"),
+    
     AP_FM_7_SYSTEM_PLANNING((byte)7, "AP", "システム企画"),
     AP_FM_8_SYSTEM_STRATEGY((byte)8, "AP", "システム戦略"),
     AP_FM_9_MANAGEMENT_STRATEGY((byte)9, "AP", "経営戦略"),
@@ -100,5 +105,69 @@ public enum FieldMiddle {
     		}
     	}
         return name;
+    }
+    
+    /**
+     * 分野ID取得(Get field id).
+     * @param division 区分コード(division code)
+     * @param id 中分類名(Middle field name)
+     * @return 分野ID(Field id)
+     */
+    public static Byte getId(String division, String name) {
+    	Byte id = 0;
+    	if("AP".equals(division)) {
+    		if(AP_FM_1_BASIC_THEORY.getName().equals(name)) {
+    			id = AP_FM_1_BASIC_THEORY.getId();
+    		} else if(AP_FM_2_COMPUTER_SYSTEM.getName().equals(name)) {
+    			id = AP_FM_2_COMPUTER_SYSTEM.getId();
+    		} else if(AP_FM_3_TECHNOLOGY_ELEMENT.getName().equals(name)) {
+    			id = AP_FM_3_TECHNOLOGY_ELEMENT.getId();
+    		} else if(AP_FM_4_DEVELOPMENT_TECHNOLOGY.getName().equals(name)) {
+    			id = AP_FM_4_DEVELOPMENT_TECHNOLOGY.getId();
+    		} else if(AP_FM_5_PROJECT_MANAGEMNET.getName().equals(name)) {
+    			id = AP_FM_5_PROJECT_MANAGEMNET.getId();
+    		} else if(AP_FM_6_SERVICE_MANAGEMENT.getName().equals(name)) {
+    			id = AP_FM_6_SERVICE_MANAGEMENT.getId();
+    		} else if(AP_FM_7_SYSTEM_PLANNING.getName().equals(name)) {
+    			id = AP_FM_7_SYSTEM_PLANNING.getId();
+    		} else if(AP_FM_8_SYSTEM_STRATEGY.getName().equals(name)) {
+    			id = AP_FM_8_SYSTEM_STRATEGY.getId();
+    		} else if(AP_FM_9_MANAGEMENT_STRATEGY.getName().equals(name)) {
+    			id = AP_FM_9_MANAGEMENT_STRATEGY.getId();
+    		} else if(AP_FM_10_CORPORATE_AND_LEGAL.getName().equals(name)) {
+    			id = AP_FM_10_CORPORATE_AND_LEGAL.getId();
+    		}
+    	}
+        return id;
+    }
+
+    /**
+     * 中分類マップを取得する(get middle field map).
+     * @param parentId 大分類ID(large field id)
+     * @return 中分類マップ(middle field map)
+     */
+    public static Map<String, String> getMap(Byte parentId) {
+    	
+    	Map<String, String> map = new LinkedHashMap<String, String>();
+    	
+    	if(parentId == FieldLarge.AP_FL_1_TECHNOLOGY.getId()) {
+    		
+    		map.put(String.valueOf(AP_FM_1_BASIC_THEORY.getId()), AP_FM_1_BASIC_THEORY.getName());
+    		map.put(String.valueOf(AP_FM_2_COMPUTER_SYSTEM.getId()), AP_FM_2_COMPUTER_SYSTEM.getName());
+    		map.put(String.valueOf(AP_FM_3_TECHNOLOGY_ELEMENT.getId()), AP_FM_3_TECHNOLOGY_ELEMENT.getName());
+    		map.put(String.valueOf(AP_FM_4_DEVELOPMENT_TECHNOLOGY.getId()), AP_FM_4_DEVELOPMENT_TECHNOLOGY.getName());
+    	} else if(parentId == FieldLarge.AP_FL_2_MANAGEMENT.getId()) {
+    		
+    		map.put(String.valueOf(AP_FM_5_PROJECT_MANAGEMNET.getId()), AP_FM_5_PROJECT_MANAGEMNET.getName());
+    		map.put(String.valueOf(AP_FM_6_SERVICE_MANAGEMENT.getId()), AP_FM_6_SERVICE_MANAGEMENT.getName());
+    	} else if(parentId == FieldLarge.AP_FL_3_STRATEGY.getId()) {
+    		
+    		map.put(String.valueOf(AP_FM_7_SYSTEM_PLANNING.getId()), AP_FM_7_SYSTEM_PLANNING.getName());
+    		map.put(String.valueOf(AP_FM_8_SYSTEM_STRATEGY.getId()), AP_FM_8_SYSTEM_STRATEGY.getName());
+    		map.put(String.valueOf(AP_FM_9_MANAGEMENT_STRATEGY.getId()), AP_FM_9_MANAGEMENT_STRATEGY.getName());
+    		map.put(String.valueOf(AP_FM_10_CORPORATE_AND_LEGAL.getId()), AP_FM_10_CORPORATE_AND_LEGAL.getName());
+    	}
+    	
+    	return map;
     }
 }

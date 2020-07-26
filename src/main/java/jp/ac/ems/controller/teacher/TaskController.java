@@ -119,24 +119,141 @@ public class TaskController {
 //        model.addAttribute("taskForm", form);
 
     	// 年度取得
-        Map<String, String> yearMap = taskService.findAllYearMap(form.getExclusionYearList());
+        Map<String, String> yearMap = taskService.findAllYearMap();
         model.addAttribute("yearDropItems", yearMap);
     	
-//    	// 大分類取得
-//        Map<String, String> fieldLMap = taskService.findAllFieldLMap(form.getExclusionFieldLList());
-//        model.addAttribute("fieldLDropItemsItems", fieldLMap);
-//    	
-//    	// 中分類取得
-//        Map<String, String> fieldMMap = taskService.findAllFieldMMap(form.getExclusionFieldMList());
-//        model.addAttribute("fieldMDropItems", fieldMMap);
-//    	
-//    	// 小分類取得
-//        Map<String, String> fieldSMap = taskService.findAllFieldSMap(form.getExclusionFieldSList());
-//        model.addAttribute("fieldSDropItems", fieldSMap);
+    	// 大分類取得
+        Map<String, String> fieldLMap = taskService.findAllFieldLMap();
+        model.addAttribute("fieldLDropItemsItems", fieldLMap);
+    	
+    	// 中分類取得
+        Map<String, String> fieldMMap = taskService.findAllFieldMMap(form.getSelectFieldL());
+        model.addAttribute("fieldMDropItems", fieldMMap);
+    	
+    	// 小分類取得
+        Map<String, String> fieldSMap = taskService.findAllFieldSMap(form.getSelectFieldM());
+        model.addAttribute("fieldSDropItems", fieldSMap);
     	
         // 全問題取得
         Map<String, String> questionMap = taskService.findAllMap();
         model.addAttribute("questionCheckItems", questionMap);
+        
+        return "/teacher/task/add_question";
+    }
+    
+    /**
+     * 課題登録(task add).
+     * @param form 課題Form(task form)
+     * @param result エラーチェック結果(error validate result)
+     * @param model モデル(model to save xxx)
+     * @return 課題問題登録用ページビュー(task question add page view)
+     */
+    @PostMapping(path = "add_process")
+    public String addProcess(@Validated TaskForm form, BindingResult result,
+            Model model) {
+
+        // コース情報をDBに保存する
+        taskService.save(form);
+        
+        return "redirect:/teacher/task";
+    }
+    
+    /**
+     * 年度別問題取得(Obtaining questions by year).
+     * @param form 課題Form(task form)
+     * @param result エラーチェック結果(error validate result)
+     * @param model モデル(model)
+     * @return 課題問題登録用ページビュー(task question add page view)
+     */
+    @PostMapping(path = "add_process", params = "selectYearBtn")
+    public String addSelectYear(@Validated TaskForm form, BindingResult result,
+            Model model) {
+
+    	Map<String, String> questionMap = taskService.findAllQuestionByYearAndTerm(form.getSelectYear());
+    	model.addAttribute("questionCheckItems", questionMap);
+    	
+    	// 年度取得
+        Map<String, String> yearMap = taskService.findAllYearMap();
+        model.addAttribute("yearDropItems", yearMap);
+    	
+    	// 大分類取得
+        Map<String, String> fieldLMap = taskService.findAllFieldLMap();
+        model.addAttribute("fieldLDropItemsItems", fieldLMap);
+    	
+    	// 中分類取得
+        Map<String, String> fieldMMap = taskService.findAllFieldMMap(form.getSelectFieldL());
+        model.addAttribute("fieldMDropItems", fieldMMap);
+    	
+    	// 小分類取得
+        Map<String, String> fieldSMap = taskService.findAllFieldSMap(form.getSelectFieldM());
+        model.addAttribute("fieldSDropItems", fieldSMap);
+    	
+        // 入力状態保持のため
+        model.addAttribute("courseForm", form);
+        
+        return "/teacher/task/add_question";
+    }
+    
+    /**
+     * 中分類取得(get field middle list).
+     * @param form 課題Form(task form)
+     * @param result エラーチェック結果(error validate result)
+     * @param model モデル(model)
+     * @return 課題問題登録用ページビュー(task question add page view)
+     */
+    @PostMapping(path = "add_process", params = "selectFieldLargeBtn")
+    public String addSelectFieldMiddle(@Validated TaskForm form, BindingResult result,
+            Model model) {
+        
+        return addInfo(form, result, model);
+    }
+    
+    /**
+     * 小分類取得(get field small list).
+     * @param form 課題Form(task form)
+     * @param result エラーチェック結果(error validate result)
+     * @param model モデル(model)
+     * @return 課題問題登録用ページビュー(task question add page view)
+     */
+    @PostMapping(path = "add_process", params = "selectFieldMiddleBtn")
+    public String addSelectFieldSmall(@Validated TaskForm form, BindingResult result,
+            Model model) {
+        
+        return addInfo(form, result, model);
+    }
+    
+    /**
+     * 分野別問題取得(Obtaining questions by field).
+     * @param form 課題Form(task form)
+     * @param result エラーチェック結果(error validate result)
+     * @param model モデル(model)
+     * @return 課題問題登録用ページビュー(task question add page view)
+     */
+    @PostMapping(path = "add_process", params = "selectFieldBtn")
+    public String addSelectField(@Validated TaskForm form, BindingResult result,
+            Model model) {
+
+    	Map<String, String> questionMap = taskService.findAllQuestionByField(form.getSelectFieldL(), form.getSelectFieldM(), form.getSelectFieldS());
+    	model.addAttribute("questionCheckItems", questionMap);
+    	
+    	// 年度取得
+        Map<String, String> yearMap = taskService.findAllYearMap();
+        model.addAttribute("yearDropItems", yearMap);
+    	
+    	// 大分類取得
+        Map<String, String> fieldLMap = taskService.findAllFieldLMap();
+        model.addAttribute("fieldLDropItemsItems", fieldLMap);
+    	
+    	// 中分類取得
+        Map<String, String> fieldMMap = taskService.findAllFieldMMap(form.getSelectFieldL());
+        model.addAttribute("fieldMDropItems", fieldMMap);
+    	
+    	// 小分類取得
+        Map<String, String> fieldSMap = taskService.findAllFieldSMap(form.getSelectFieldM());
+        model.addAttribute("fieldSDropItems", fieldSMap);
+    	
+        // 入力状態保持のため
+        model.addAttribute("courseForm", form);
         
         return "/teacher/task/add_question";
     }

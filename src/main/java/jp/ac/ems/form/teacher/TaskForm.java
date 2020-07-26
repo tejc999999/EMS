@@ -32,24 +32,44 @@ public class TaskForm {
      * 問題IDリスト(question id list).
      */
     private List<String> questionCheckedList;
+
+    /**
+     * 選択年度(select year).
+     */
+    private String selectYear;
     
     /**
-     * 除外年度リスト(exclusion year list).
+     * 選択大分類(select large field).
      */
-    private List<String> exclusionYearList;
+    private String selectFieldL;
+    
+    /**
+     * 選択中分類(select middle field).
+     */
+    private String selectFieldM;
+    
+    /**
+     * 選択小分類（select small field).
+     */
+    private String selectFieldS;
+    
+    /**
+     * 年度リスト(year list).
+     */
+    private List<String> yearList;
 
     /**
-     * 除外大分類リスト(exclusion large field list).
+     * 大分類リスト(large field list).
      */
-    private List<String> exclusionFieldLList;
+    private List<String> fieldLList;
 
     /**
-     * 除外中分類リスト(exclusion middle field list).
+     * 中分類リスト(middle field list).
      */
-    private List<String> exclusionFieldMList;
+    private List<String> fieldMList;
 
     /**
-     * 除外小分類リスト(exclusion small field list).
+     * 小分類リスト(small field list).
      */
-    private List<String> exclusionFieldSList;
+    private List<String> fieldSList;
 }

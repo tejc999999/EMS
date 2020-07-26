@@ -36,7 +36,7 @@ public class QuestionService {
     QuestionRepository questionRepository;
     
     /**
-     * 全ての問題を取得する.
+     * 全ての問題を取得する(get all question).
      * @return 全ての問題Formリスト
      */
     public List<QuestionForm> findAll() {
@@ -53,7 +53,7 @@ public class QuestionService {
         
         return list;
     }
-    
+        
     /**
      * 問題を取得する.
      * @param id 問題ID
