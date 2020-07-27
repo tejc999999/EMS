@@ -53,60 +53,60 @@ public class UserBean {
     private Byte roleId;
 
     /**
-     * ユーザー所属クラス：相互参照オブジェクト(user belonging class：cross reference object).
+     * 学生所属クラス：相互参照オブジェクト(user belonging class：cross reference object).
      */
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
-    private Set<UserClassBean> userClassBeans;
+    private Set<StudentClassBean> studentClassBeans;
 
     /**
-     * ユーザー所属コース：相互参照オブジェクト(user belonging course：cross reference object).
+     * 学生所属コース：相互参照オブジェクト(user belonging course：cross reference object).
      */
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
-    private Set<UserCourseBean> userCourseBeans;
+    private Set<StudentCourseBean> studentCourseBeans;
     
     /**
-     * ユーザー・コース・課題コードBean：相互参照オブジェクト(user・course・task：cross reference object).
+     * 学生・コース・課題コードBean：相互参照オブジェクト(user・course・task：cross reference object).
      */
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
-    private Set<UserCourseTaskBean> userCourseTaskBeans;
+    private Set<StudentPresentTaskBean> studentCourseTaskBeans;
 
 
     /**
-     * ユーザー・コース・課題履歴Bean：相互参照オブジェクト(user・course・task history：cross reference object).
+     * 学生・コース・課題履歴Bean：相互参照オブジェクト(user・course・task history：cross reference object).
      */
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
-    private Set<UserCourseTaskHistoryBean> userCourseTaskHistoryBeans;
+    private Set<StudentTaskHistoryBean> studentCourseTaskHistoryBeans;
     
     /**
-     * ユーザー・問題履歴Bean：相互参照オブジェクト(user・question history：cross reference object).
+     * 学生・問題履歴Bean：相互参照オブジェクト(user・question history：cross reference object).
      */
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
-    private Set<UserQuestionHistoryBean> userQuestionHistoryBeans;
+    private Set<StudentPresentTaskQuestionHistoryBean> studentQuestionHistoryBeans;
 
     /**
      * コンストラクタ(constructor).
      */
     public UserBean() {
-        userClassBeans = new HashSet<>();
-        userCourseBeans = new HashSet<>();
-        userCourseTaskBeans = new HashSet<>();
-        userCourseTaskHistoryBeans = new HashSet<>();
-        userQuestionHistoryBeans = new HashSet<>();
+        studentClassBeans = new HashSet<>();
+        studentCourseBeans = new HashSet<>();
+        studentCourseTaskBeans = new HashSet<>();
+        studentCourseTaskHistoryBeans = new HashSet<>();
+        studentQuestionHistoryBeans = new HashSet<>();
     }
     
     /**
@@ -115,8 +115,8 @@ public class UserBean {
      */
     public List<String> getClassIdList() {
         List<String> list = new ArrayList<>();
-        userClassBeans.forEach(userClassBean -> {
-            list.add(String.valueOf(userClassBean.getClassId()));
+        studentClassBeans.forEach(studentClassBean -> {
+            list.add(String.valueOf(studentClassBean.getClassId()));
         });
         return list;
     }
@@ -127,8 +127,8 @@ public class UserBean {
      */
     public List<String> getCourseIdList() {
         List<String> list = new ArrayList<>();
-        userCourseBeans.forEach(userCourseBean -> {
-            list.add(String.valueOf(userCourseBean.getCourseId()));
+        studentCourseBeans.forEach(studentCourseBean -> {
+            list.add(String.valueOf(studentCourseBean.getCourseId()));
         });
         return list;
     }

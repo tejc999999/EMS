@@ -2,6 +2,8 @@ package jp.ac.ems.form.teacher;
 
 import java.util.List;
 
+import javax.validation.constraints.Max;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -21,11 +23,13 @@ public class TaskForm {
     /**
      * タイトル(title).
      */
+    @Max(50)
     private String title;
 
     /**
      * 説明文(description).
      */
+    @Max(500)
     private String description;
     
     /**

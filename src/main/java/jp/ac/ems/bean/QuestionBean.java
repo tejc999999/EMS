@@ -74,7 +74,7 @@ public class QuestionBean {
      * 問番(question number).
      */
     @Column(name = "number")
-    private Long number;
+    private Byte number;
 
     
     /**

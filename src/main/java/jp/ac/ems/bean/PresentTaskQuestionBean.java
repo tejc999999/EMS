@@ -11,15 +11,15 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 課題、問題・連関エンティティBean(task/question : Intersection Entity bean).
+ * 提示課題、問題・連関エンティティBean(present task, question : Intersection Entity bean).
  * @author tejc999999
  *
  */
 @Entity
 @Setter
 @Getter
-@Table(name = "t_task_question")
-public class TaskQuestionBean {
+@Table(name = "t_present_task_question")
+public class PresentTaskQuestionBean {
 
     /**
      * サロゲートキー(surrogate key).
@@ -28,16 +28,22 @@ public class TaskQuestionBean {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-
+    
     /**
-     * 課題ID(task id).
+     * 提示課題ID(present task id).
      */
-    @Column(name = "task_id")
-    private Long taskId;
+    @Column(name = "present_task_id")
+    private Long presentTaskId;
 
     /**
      * 問題ID(question id).
      */
     @Column(name = "question_id")
     private Long questionId;
+
+    /**
+     * 順番(sequence number).
+     */
+    @Column(name = "sequence_number")
+    private Short sequenceNumber;
 }

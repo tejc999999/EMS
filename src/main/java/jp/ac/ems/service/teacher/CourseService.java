@@ -10,7 +10,7 @@ import jp.ac.ems.bean.ClassBean;
 import jp.ac.ems.bean.ClassCourseBean;
 import jp.ac.ems.bean.CourseBean;
 import jp.ac.ems.bean.UserBean;
-import jp.ac.ems.bean.UserCourseBean;
+import jp.ac.ems.bean.StudentCourseBean;
 import jp.ac.ems.config.RoleCode;
 import jp.ac.ems.form.teacher.CourseForm;
 import jp.ac.ems.repository.ClassRepository;
@@ -167,11 +167,11 @@ public class CourseService {
                 optClass.ifPresent(userBean -> {
                     idList.add(userBean.getId());
                 });
-                UserCourseBean userCourseBean = new UserCourseBean();
+                StudentCourseBean userCourseBean = new StudentCourseBean();
                 if (courseId != null && !courseId.equals("")) {
                     userCourseBean.setCourseId(Long.parseLong(courseId));
                 }
-                userCourseBean.setUserId(idList.get(0));
+                userCourseBean.setStudentId(idList.get(0));
                 courseBean.addUserCourseBean(userCourseBean);
             }
         }

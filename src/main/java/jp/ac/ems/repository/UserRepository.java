@@ -31,7 +31,7 @@ public interface UserRepository extends JpaRepository<UserBean, String> {
 	 * @return ユーザーBeanリスト（User Bean List）.
 	 */
     @Query("SELECT DISTINCT u FROM UserBean u"
-    		+ " LEFT JOIN FETCH u.userClassBeans"
+    		+ " LEFT JOIN FETCH u.studentClassBeans"
     		+ " WHERE u.id = :id")
     Optional<UserBean> findByIdFetchUserClass(@Param("id") String id);
 
@@ -43,9 +43,9 @@ public interface UserRepository extends JpaRepository<UserBean, String> {
 	 * @return ユーザーBeanリスト（User Bean List）.
 	 */
     @Query("SELECT DISTINCT u FROM UserBean u"
-    		+ " LEFT JOIN FETCH u.userCourseBeans"
+    		+ " LEFT JOIN FETCH u.studentCourseBeans"
     		+ " WHERE u.id = :id")
-    Optional<UserBean> findByIdFetchUserCourse(@Param("id") String id);
+    Optional<UserBean> findByIdFetchStudentCourse(@Param("id") String id);
 
 	/**
 	 * ユーザー-課題関連Beanを含めたUserBean取得（Fetch.LAZY対応）
@@ -55,7 +55,7 @@ public interface UserRepository extends JpaRepository<UserBean, String> {
 	 * @return ユーザーBeanリスト（User Bean List）.
 	 */
     @Query("SELECT DISTINCT u FROM UserBean u"
-    		+ " LEFT JOIN FETCH u.userCourseTaskBeans"
+    		+ " LEFT JOIN FETCH u.studentCourseTaskBeans"
     		+ " WHERE u.id = :id")
     Optional<UserBean> findByIdFetchUserTask(@Param("id") String id);
 
@@ -67,11 +67,11 @@ public interface UserRepository extends JpaRepository<UserBean, String> {
 	 * @return ユーザーBeanリスト（User Bean List）.
 	 */
     @Query("SELECT DISTINCT u FROM UserBean u"
-    		+ " LEFT JOIN FETCH u.userClassBeans"
-    		+ " LEFT JOIN FETCH u.userCourseBeans"
-    		+ " LEFT JOIN FETCH u.userCourseTaskBeans"
-    		+ " LEFT JOIN FETCH u.userCourseTaskHistoryBeans"
-    		+ " LEFT JOIN FETCH u.userQuestionHistoryBeans"
+    		+ " LEFT JOIN FETCH u.studentClassBeans"
+    		+ " LEFT JOIN FETCH u.studentCourseBeans"
+    		+ " LEFT JOIN FETCH u.studentCourseTaskBeans"
+    		+ " LEFT JOIN FETCH u.studentCourseTaskHistoryBeans"
+    		+ " LEFT JOIN FETCH u.studentQuestionHistoryBeans"
     		+ " WHERE u.id = :id")
     Optional<UserBean> findByIdFetchAll(@Param("id") String id);
 }

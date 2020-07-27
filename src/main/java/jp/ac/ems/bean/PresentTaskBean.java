@@ -11,15 +11,15 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 課題、コース・連関エンティティBean(task/course : Intersection Entity bean).
+ * 提示課題Bean(present task bean).
  * @author tejc999999
  *
  */
 @Entity
-@Table(name = "t_task_course")
 @Setter
 @Getter
-public class TaskCourseBean {
+@Table(name = "t_present_task")
+public class PresentTaskBean {
 
     /**
      * サロゲートキー(surrogate key).
@@ -30,15 +30,20 @@ public class TaskCourseBean {
     private Long id;
     
     /**
-     * 課題ID(task id).
+     * 学生ID(student id).
      */
-    @Column(name = "task_id")
-    private int taskId;
+    @Column(name = "student_id")
+    private String studentId;
+    
+    /**
+     * タイトル(title).
+     */
+    @Column(name = "title")
+    private String title;
 
     /**
-     * コースID(course id).
+     * 説明(description).
      */
-    @Column(name = "course_id")
-    private int courseId;
-
+    @Column(name = "description")
+    private String description;
 }

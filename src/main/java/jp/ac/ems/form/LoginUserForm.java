@@ -14,8 +14,9 @@ import lombok.NoArgsConstructor;
 public class LoginUserForm {
 
 	@NotNull
-	@Size(min=6, max=12)
+	@Size(min=6, max=20)
 	private String username;
-	@Size(min=6, max=12)
+	@NotNull
+	@Size(min=6, max=100)
 	private String password;
 }

@@ -47,20 +47,20 @@ public class CourseBean {
      * コンストラクタ(constructor).
      */
     public CourseBean() {
-        userCourseBeans = new HashSet<>();
+        studentCourseBeans = new HashSet<>();
         classCourseBeans = new HashSet<>();
         taskCourseBeans = new HashSet<>();
-        userCourseTaskBeans = new HashSet<>();
+        studentCourseTaskBeans = new HashSet<>();
     }
 
     /**
-     * ユーザ所属コース：相互参照オブジェクト(user belonging course：cross reference object).
+     * 学生所属コース：相互参照オブジェクト(student belonging course：cross reference object).
      */
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "course_id")
-    Set<UserCourseBean> userCourseBeans;
+    Set<StudentCourseBean> studentCourseBeans;
     
     /**
      * クラス所属コース：相互参照オブジェクト(class belonging course：cross reference object).
@@ -78,22 +78,22 @@ public class CourseBean {
     @Getter(AccessLevel.NONE)
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "course_id")
-    Set<TaskCourseBean> taskCourseBeans;
+    Set<PresentTaskBean> taskCourseBeans;
 
     /**
-     * ユーザー・コース・課題：相互参照オブジェクト(user・course・task：cross reference object).
+     * 学生・コース・課題：相互参照オブジェクト(student・course・task：cross reference object).
      */
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "course_id")
-    Set<UserCourseTaskBean> userCourseTaskBeans;
+    Set<StudentPresentTaskBean> studentCourseTaskBeans;
 
     /**
-     * ユーザ・コース情報クリア(clear info(user/course)).
+     * 学生・コース情報クリア(clear info(student/course)).
      */
-    public void clearUserCourseBean() {
-        userCourseBeans.clear();
+    public void clearStudentCourseBean() {
+        studentCourseBeans.clear();
     }
     
     /**
@@ -107,8 +107,8 @@ public class CourseBean {
      * ユーザー・コース情報を追加する(add an info(user/course)).
      * @param userCourseBean ユーザー・コースBean(user/course bean)
      */
-    public void addUserCourseBean(UserCourseBean userCourseBean) {
-        userCourseBeans.add(userCourseBean);
+    public void addUserCourseBean(StudentCourseBean userCourseBean) {
+        studentCourseBeans.add(userCourseBean);
     }
     
     /**
@@ -120,13 +120,13 @@ public class CourseBean {
     }
     
     /**
-     * コースに紐づくユーザーIDリストを取得する(get the user id list linked to the course).
-     * @return ユーザーIDリスト(user id list)
+     * コースに紐づく学生IDリストを取得する(get the student id list linked to the course).
+     * @return 学生IDリスト(student id list)
      */
     public List<String> getUserIdList() {
         List<String> list = new ArrayList<>();
-        userCourseBeans.forEach(userCourseBean -> {
-            list.add(String.valueOf(userCourseBean.getUserId()));
+        studentCourseBeans.forEach(studentCourseBean -> {
+            list.add(String.valueOf(studentCourseBean.getStudentId()));
         });
         return list;
     }

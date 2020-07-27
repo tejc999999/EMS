@@ -14,7 +14,7 @@ import jp.ac.ems.bean.QuestionBean;
 import jp.ac.ems.bean.TaskBean;
 import jp.ac.ems.bean.TaskQuestionBean;
 import jp.ac.ems.bean.UserBean;
-import jp.ac.ems.bean.UserCourseBean;
+import jp.ac.ems.bean.StudentCourseBean;
 import jp.ac.ems.config.FieldLarge;
 import jp.ac.ems.config.FieldMiddle;
 import jp.ac.ems.config.FieldSmall;
@@ -153,7 +153,7 @@ public class TaskService {
     	taskBean.clearTaskQuestionBean();
         List<String> questionCheckedList = form.getQuestionCheckedList();
         if(questionCheckedList != null) {
-        	short i = 0;
+
         	for(String questionId : questionCheckedList) {
         		
 //                	taskBean.addTaskQuestionBean(taskQuestionBean);
@@ -167,7 +167,6 @@ public class TaskService {
 	                taskQuestionBean.setTaskId(Long.parseLong(taskId));
 	            }
 	            taskQuestionBean.setQuestionId(idList.get(0));
-	    		taskQuestionBean.setSequenceNumber(i++);
 
 	            taskBean.addTaskQuestionBean(taskQuestionBean);
         	}

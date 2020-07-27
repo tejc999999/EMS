@@ -8,7 +8,7 @@ import java.util.Optional;
 
 import jp.ac.ems.bean.ClassBean;
 import jp.ac.ems.bean.UserBean;
-import jp.ac.ems.bean.UserClassBean;
+import jp.ac.ems.bean.StudentClassBean;
 import jp.ac.ems.config.RoleCode;
 import jp.ac.ems.form.teacher.ClassForm;
 import jp.ac.ems.repository.ClassRepository;
@@ -90,8 +90,8 @@ public class ClassService {
         List<String> userIdList = form.getUserCheckedList();
         if (userIdList != null) {
             for (int i = 0; i < userIdList.size(); i++) {
-                UserClassBean userClassBean = new UserClassBean();
-                userClassBean.setUserId(userIdList.get(i));
+                StudentClassBean userClassBean = new StudentClassBean();
+                userClassBean.setStudentId(userIdList.get(i));
                 if (form.getId() != null && !form.getId().equals("")) {
                     userClassBean.setClassId(Long.parseLong(form.getId()));
                 }

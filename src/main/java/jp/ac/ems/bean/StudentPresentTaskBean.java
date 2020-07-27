@@ -15,47 +15,43 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * ユーザー、問題履歴Bean(user/question hisotory bean).
+ * 学生、提示課題・連関エンティティ兼コードBean(student/present task : Intersection Entity bean).
  * @author tejc999999
  *
  */
 @Setter
 @Getter
 @Entity
-@Table(name = "t_user_question_history")
-public class UserQuestionHistoryBean {
+@Table(name = "t_student_present_task")
+public class StudentPresentTaskBean {
 
     /**
-     * 履歴コード(history code).
+     * サロゲートキー(surrogate key).
      */
     @Id
-    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     /**
-     * ユーザーID(user id).
+     * 学生ID(student id).
      */
-    @Column(name = "user_id")
-    private String userId;
+    @Column(name = "student_id")
+    private String StudentId;
 
     /**
-     * 問題ID(question id).
+     * 提示課題ID(present task id).
      */
-    @Column(name = "question_id")
-    private Long questionId;
+    @Column(name = "present_task_id")
+    private Long presentTaskId;
 
     /**
-     * 正解回数(correct count).
+     * 回答フラグ(amswer flg).
+     * 0:未回答(0:unanswerd)
+     * 1:回答済(1:answered)
      */
-    @Column(name = "correct_cnt")
-    private Long correctCnt;
-
-    /**
-     * 不正解回数(incorrect count).
-     */
-    @Column(name = "incorrect_cnt")
-    private Long incorrectCnt;
+    @Column(name = "answer_flg")
+    private boolean answerFlg;
     
     /**
      * 更新日時(update date time).

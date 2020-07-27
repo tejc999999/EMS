@@ -63,7 +63,7 @@ public class TaskBean {
     @Getter(AccessLevel.NONE)
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "task_id")
-    private Set<TaskCourseBean> taskCourseBeans;
+    private Set<PresentTaskBean> taskCourseBeans;
 
     /**
      * 課題・問題：相互参照オブジェクト(task・question：cross reference object).
@@ -81,7 +81,7 @@ public class TaskBean {
     @Getter(AccessLevel.NONE)
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "task_id")
-    private Set<UserCourseTaskBean> userCourseTaskBeans;
+    private Set<StudentPresentTaskBean> userCourseTaskBeans;
 
     /**
      * 課題・問題情報を追加する(add an info(task/question)).

@@ -11,15 +11,15 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * ユーザー、コース・連関エンティティBean(user/course : Intersection Entity bean).
+ * 学生、コース・連関エンティティBean(student/course : Intersection Entity bean).
  * @author tejc999999
  *
  */
 @Setter
 @Getter
 @Entity
-@Table(name = "t_user_course")
-public class UserCourseBean {
+@Table(name = "t_student_course")
+public class StudentCourseBean {
 
     /**
      * サロゲートキー(surrogate key).
@@ -30,10 +30,10 @@ public class UserCourseBean {
     private Long id;
 
     /**
-     * ユーザーID(user id).
+     * 学生ID(student id).
      */
-    @Column(name = "user_id")
-    private String userId;
+    @Column(name = "student_id")
+    private String studentId;
 
     /**
      * コースID(course id).

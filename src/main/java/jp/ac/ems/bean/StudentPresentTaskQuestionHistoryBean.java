@@ -15,15 +15,15 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * ユーザー、コース、課題履歴Bean(user/course/task hisotory bean).
+ * 学生、提示課題、問題履歴Bean(student/present task/question hisotory bean).
  * @author tejc999999
  *
  */
 @Setter
 @Getter
 @Entity
-@Table(name = "t_user_course_task_history")
-public class UserCourseTaskHistoryBean {
+@Table(name = "t_student_present_task_question_history")
+public class StudentPresentTaskQuestionHistoryBean {
 
     /**
      * 履歴コード(history code).
@@ -34,22 +34,16 @@ public class UserCourseTaskHistoryBean {
     private Long id;
 
     /**
-     * ユーザーID(user id).
+     * 学生ID(student id).
      */
-    @Column(name = "user_id")
-    private String userId;
+    @Column(name = "student_id")
+    private String studentId;
 
     /**
-     * コースID(course id).
+     * 提示課題ID(present task id).
      */
-    @Column(name = "course_id")
-    private Long courseId;
-
-    /**
-     * 課題ID(task id).
-     */
-    @Column(name = "task_id")
-    private Long taskId;
+    @Column(name = "present_task_id")
+    private Long presentTaskId;
 
     /**
      * 問題ID(question id).
@@ -59,17 +53,17 @@ public class UserCourseTaskHistoryBean {
 
     /**
      * 回答(answer).
-     * 1-4(ア~エ）
+     * 1~4(ア~エ)
      */
     @Column(name = "answer")
-    private Long answer;
-    
+    private Byte answer;
+
     /**
      * 正解(correct).
-     * 1-4(ア~エ）
+     * 1~4(ア~エ)
      */
     @Column(name = "correct")
-    private Long correct;
+    private Byte correct;
     
     /**
      * 更新日時(update date time).

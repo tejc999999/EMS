@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Max;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -52,13 +53,13 @@ public class ClassBean {
     }
 
     /**
-     * ユーザー所属クラス：相互参照オブジェクト(user belonging class：cross reference object).
+     * 学生所属クラス：相互参照オブジェクト(student belonging class：cross reference object).
      */
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "class_id")
-    private Set<UserClassBean> userClassBeans;
+    private Set<StudentClassBean> userClassBeans;
     
     /**
      * コース所属クラス：相互参照オブジェクト(class belonging course：cross reference object).
@@ -70,28 +71,28 @@ public class ClassBean {
     private Set<ClassCourseBean> classCourseBeans;
     
     /**
-     * ユーザー所属クラス：相互参照オブジェクトを追加する(add an object(class belonging course)).
+     * 学生所属クラス：相互参照オブジェクトを追加する(add an object(class belonging student)).
      * @param userClassBean ユーザ所属クラスBean
      */
-    public void addUserClassBean(UserClassBean userClassBean) {
+    public void addUserClassBean(StudentClassBean userClassBean) {
         userClassBeans.add(userClassBean);
     }
 
     /**
-     * ユーザー所属クラス：相互参照オブジェクトを削除する(delete an object(class belonging course)).
+     * 学生所属クラス：相互参照オブジェクトを削除する(delete an object(class belonging student)).
      */
     public void clearUserClassBean() {
         userClassBeans.clear();
     }
     
     /**
-     * ユーザIDリストを取得する(get user id list).
-     * @return ユーザIDリスト(user id list)
+     * 学生IDリストを取得する(get student id list).
+     * @return 学生IDリスト(student id list)
      */
     public List<String> getUserIdList() {
         List<String> list = new ArrayList<>();
-        userClassBeans.forEach(userClassBean -> {
-            list.add(userClassBean.getUserId());
+        userClassBeans.forEach(studentClassBean -> {
+            list.add(studentClassBean.getStudentId());
         });
         return list;
     }
