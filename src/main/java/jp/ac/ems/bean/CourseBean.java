@@ -49,7 +49,6 @@ public class CourseBean {
     public CourseBean() {
         studentCourseBeans = new HashSet<>();
         classCourseBeans = new HashSet<>();
-        taskCourseBeans = new HashSet<>();
         studentCourseTaskBeans = new HashSet<>();
     }
 
@@ -72,22 +71,13 @@ public class CourseBean {
     Set<ClassCourseBean> classCourseBeans;
 
     /**
-     * 課題・コース：相互参照オブジェクト(task・course：cross reference object).
-     */
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "course_id")
-    Set<PresentTaskBean> taskCourseBeans;
-
-    /**
      * 学生・コース・課題：相互参照オブジェクト(student・course・task：cross reference object).
      */
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "course_id")
-    Set<StudentPresentTaskBean> studentCourseTaskBeans;
+    Set<StudentTaskBean> studentCourseTaskBeans;
 
     /**
      * 学生・コース情報クリア(clear info(student/course)).

@@ -212,10 +212,10 @@ public class ClassControllerTest {
         form3.setId("3");
         form3.setName("クラス３");
 
-        MvcResult result = mockMvc.perform(get("/teacher/class")
+        MvcResult result = mockMvc.perform(get("/teacher/class_")
     				.with(user("teacher").password("pass").roles("TEACHER")))
                 .andExpect(status().isOk())
-                .andExpect(view().name("teacher/class/list"))
+                .andExpect(view().name("teacher/class_/list"))
                 .andReturn();
 
         try {
@@ -236,10 +236,10 @@ public class ClassControllerTest {
     @Test
     public void 先生用クラス一覧ページ表示_クラスなし() throws Exception {
 
-        MvcResult result = mockMvc.perform(get("/teacher/class")
+        MvcResult result = mockMvc.perform(get("/teacher/class_")
         			.with(user("teacher").password("pass").roles("TEACHER")))
         		.andExpect(status().isOk())
-        		.andExpect(view().name("teacher/class/list"))
+        		.andExpect(view().name("teacher/class_/list"))
                 .andReturn();
 
         try {
@@ -274,11 +274,11 @@ public class ClassControllerTest {
         DbSetup dbSetup = new DbSetup(dest, ops);
         dbSetup.launch();
 
-        MvcResult result = mockMvc.perform(get("/teacher/class/add")
+        MvcResult result = mockMvc.perform(get("/teacher/class_/add")
 					.with(user("teacher").password("pass").roles("TEACHER")))
         		.andExpect(status().isOk())
                 .andExpect(model().attributeExists("userCheckItems"))
-                .andExpect(view().name("teacher/class/add"))
+                .andExpect(view().name("teacher/class_/add"))
                 .andReturn();
 
         try {
@@ -302,11 +302,11 @@ public class ClassControllerTest {
     @Test
     public void 先生用クラス登録ページ表示_ユーザーなし() throws Exception {
 
-        MvcResult result = mockMvc.perform(get("/teacher/class/add")
+        MvcResult result = mockMvc.perform(get("/teacher/class_/add")
 					.with(user("teacher").password("pass").roles("TEACHER")))
         		.andExpect(status().isOk())
                 .andExpect(model().attributeExists("userCheckItems"))
-                .andExpect(view().name("teacher/class/add"))
+                .andExpect(view().name("teacher/class_/add"))
                 .andReturn();
 
         try {
@@ -339,12 +339,12 @@ public class ClassControllerTest {
         selectUserIdList.add("user01");
         form.setUserCheckedList(selectUserIdList);
 
-        mockMvc.perform(post("/teacher/class/add")
+        mockMvc.perform(post("/teacher/class_/add")
         			.flashAttr("classForm", form)
     				.with(user("teacher").password("pass").roles("TEACHER"))
                     .with(csrf()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/teacher/class"));
+                .andExpect(view().name("redirect:/teacher/class_"));
 
         // IDが自動採番のため一旦取得する
         List<ClassBean> classList = classRepository.findAll();
@@ -373,12 +373,12 @@ public class ClassControllerTest {
         ClassForm form = new ClassForm();
         form.setName("クラス１");
 
-        mockMvc.perform(post("/teacher/class/add")
+        mockMvc.perform(post("/teacher/class_/add")
         			.flashAttr("classForm", form)
 					.with(user("teacher").password("pass").roles("TEACHER"))
 	                .with(csrf()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/teacher/class"));
+                .andExpect(view().name("redirect:/teacher/class_"));
 
         // IDが自動採番のため一旦取得する
         List<ClassBean> classList = classRepository.findAll();
@@ -414,12 +414,12 @@ public class ClassControllerTest {
         DbSetup dbSetup = new DbSetup(dest, ops);
         dbSetup.launch();
 
-        MvcResult result = mockMvc.perform(post("/teacher/class/edit")
+        MvcResult result = mockMvc.perform(post("/teacher/class_/edit")
                     .param("id", "1")
     				.with(user("teacher").password("pass").roles("TEACHER"))
                     .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(view().name("teacher/class/edit"))
+                .andExpect(view().name("teacher/class_/edit"))
                 .andExpect(model().attributeExists("userCheckItems"))
                 .andExpect(model().attribute("userCheckItems",
                         allOf(hasEntry("user01", "テストユーザー１"),
@@ -473,12 +473,12 @@ public class ClassControllerTest {
         list.add("user02");
         form.setUserCheckedList(list);
 
-        mockMvc.perform(post("/teacher/class/editprocess")
+        mockMvc.perform(post("/teacher/class_/editprocess")
         			.flashAttr("classForm", form)
 					.with(user("teacher").password("pass").roles("TEACHER"))
 	                .with(csrf()))
         		.andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/teacher/class"));
+                .andExpect(view().name("redirect:/teacher/class_"));
 
         Optional<ClassBean> opt = classRepository.findByIdFetchAll(Long.valueOf("l"));
         // ifPresentOrElseの実装はJDK9からの様子
@@ -517,12 +517,12 @@ public class ClassControllerTest {
         List<String> list = new ArrayList<>();
         form.setUserCheckedList(list);
 
-        mockMvc.perform(post("/teacher/class/editprocess")
+        mockMvc.perform(post("/teacher/class_/editprocess")
         			.flashAttr("classForm", form)
         			.with(user("teacher").password("pass").roles("TEACHER"))
                     .with(csrf()))
         		.andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/teacher/class"));
+                .andExpect(view().name("redirect:/teacher/class_"));
 
         Optional<ClassBean> opt = classRepository.findByIdFetchAll(Long.valueOf("l"));
         // ifPresentOrElseの実装はJDK9からの様子
@@ -560,12 +560,12 @@ public class ClassControllerTest {
 
         // ・クラス名変更
         // ・所属ユーザをなし→１名
-        mockMvc.perform(post("/teacher/class/editprocess")
+        mockMvc.perform(post("/teacher/class_/editprocess")
                 .flashAttr("classForm", form)
 				.with(user("teacher").password("pass").roles("TEACHER"))
                 .with(csrf()))
             .andExpect(status().is3xxRedirection())
-            .andExpect(view().name("redirect:/teacher/class"));
+            .andExpect(view().name("redirect:/teacher/class_"));
 
         Optional<ClassBean> opt = classRepository.findByIdFetchAll(Long.valueOf("3"));
         // ifPresentOrElseの実装はJDK9からの様子
@@ -596,12 +596,12 @@ public class ClassControllerTest {
         form.setName("クラス３－２");
 
         // ・クラス名変更
-        mockMvc.perform(post("/teacher/class/editprocess")
+        mockMvc.perform(post("/teacher/class_/editprocess")
                 .flashAttr("classForm", form)
 				.with(user("teacher").password("pass").roles("TEACHER"))
                 .with(csrf()))
             .andExpect(status().is3xxRedirection())
-            .andExpect(view().name("redirect:/teacher/class"));
+            .andExpect(view().name("redirect:/teacher/class_"));
 
         Optional<ClassBean> opt = classRepository.findByIdFetchAll(Long.valueOf("3"));
         // ifPresentOrElseの実装はJDK9からの様子
@@ -628,12 +628,12 @@ public class ClassControllerTest {
         DbSetup dbSetup = new DbSetup(dest, ops);
         dbSetup.launch();
 
-        mockMvc.perform(post("/teacher/class/delete")
+        mockMvc.perform(post("/teacher/class_/delete")
         			.param("id", "1")
         			.with(user("teacher").password("pass").roles("TEACHER"))
                     .with(csrf()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/teacher/class"));
+                .andExpect(view().name("redirect:/teacher/class_"));
 
         List<ClassBean> classList = classRepository.findAllFetchAll();
         assertEquals(classList.size(), 1);
@@ -660,12 +660,12 @@ public class ClassControllerTest {
         DbSetup dbSetup = new DbSetup(dest, ops);
         dbSetup.launch();
 
-        mockMvc.perform(post("/teacher/class/delete")
+        mockMvc.perform(post("/teacher/class_/delete")
         			.param("id", "3")
     				.with(user("teacher").password("pass").roles("TEACHER"))
                     .with(csrf()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/teacher/class"));
+                .andExpect(view().name("redirect:/teacher/class_"));
 
         List<ClassBean> classList = classRepository.findAll();
         if (classList != null) {

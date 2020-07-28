@@ -77,7 +77,7 @@ public class UserBean {
     @Getter(AccessLevel.NONE)
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
-    private Set<StudentPresentTaskBean> studentCourseTaskBeans;
+    private Set<StudentTaskBean> studentCourseTaskBeans;
 
 
     /**
@@ -96,7 +96,7 @@ public class UserBean {
     @Getter(AccessLevel.NONE)
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
-    private Set<StudentPresentTaskQuestionHistoryBean> studentQuestionHistoryBeans;
+    private Set<StudentTaskQuestionHistoryBean> studentQuestionHistoryBeans;
 
     /**
      * コンストラクタ(constructor).

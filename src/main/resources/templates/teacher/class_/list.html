@@ -1,34 +1,34 @@
 
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity">
-<head th:replace="layout :: common_layout(title = 'クラス一覧画面', scripts = ~{::script}, links = ~{::link})">
+<head th:replace="layout :: common_layout(title = '繧ｯ繝ｩ繧ｹ荳�隕ｧ逕ｻ髱｢', scripts = ~{::script}, links = ~{::link})">
  </head>
 <body>
 
 <div th:replace="layout :: header"></div>
 
-<h2>■クラス一覧</h2>
+<h2>笆�繧ｯ繝ｩ繧ｹ荳�隕ｧ</h2>
 <div class="able-responsive-md container">
 	<table class="table table-hover table-striped">
 		<thead class="thead-dark">
           	<tr class="row">
-				<th class="col-md-10 text-nowrap" scope="col" th:text="タイトル">クラス名</th>
+				<th class="col-md-10 text-nowrap" scope="col" th:text="繧ｿ繧､繝医Ν">繧ｯ繝ｩ繧ｹ蜷�</th>
 				<th class="col-md-1" scope="col"></th>
 				<th class="col-md-1" scope="col"></th>
 			</tr>
 		</thead>
 		<tbody>
 		<tr class="row" th:each="class : ${classes}">
-			<td class="col-md-10" th:text="${class.name}">クラス名</td>
+			<td class="col-md-10" th:text="${class.name}">繧ｯ繝ｩ繧ｹ蜷�</td>
 			<td class="col-md-1">
-				<form th:action="@{/teacher/class/edit}" method="post">
-					<input type="submit" name="form" th:value="編集" />
+				<form th:action="@{/teacher/class_/edit}" method="post">
+					<input type="submit" name="form" th:value="邱ｨ髮�" />
 					<input type="hidden" name="id" th:value="${class.id}" />
 				</form>
 			</td>
 			<td class="col-md-1">
-				<form th:action="@{/teacher/class/delete}" method="post">
-					<input type="submit" name="form" th:value="削除" />
+				<form th:action="@{/teacher/class_/delete}" method="post">
+					<input type="submit" name="form" th:value="蜑企勁" />
 					<input type="hidden" name="id" th:value="${class.id}" />
 				</form>
 			</td>

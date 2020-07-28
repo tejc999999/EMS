@@ -14,7 +14,7 @@ spring:
 #    url: jdbc:h2:mem:algolearn;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=TRUE
 #    username: algolearnadmin
 #    password:
-    locations: classpath:db/migration
+    locations: classpath:db/migration, classpath:db/data
   h2:
     console:
       settings:
@@ -29,13 +29,13 @@ spring:
       ddl-auto: update
   datasource:
 #    initialization-mode: always
-#    url: jdbc:mysql://localhost/algolearn?serverTimezone=JST&useUnicode=true&characterEncoding=utf8
-    url: jdbc:h2:mem:algolearn
+    url: jdbc:mysql://localhost/algolearn?serverTimezone=JST&useUnicode=true&characterEncoding=utf8
+#    url: jdbc:h2:mem:algolearn
 #   url: jdbc:h2:file:./h2db/sampledb2
-#    username: algolearnadmin
-    username: sa
-    password:
-#    password: algolearnpass
+    username: algolearnadmin
+    password: algolearnpass
+#    username: sa
+#   password:
 #    driverClassName: com.mysql.cj.jdbc.Driver
     # platform data(product/develop/test)
     platform: test

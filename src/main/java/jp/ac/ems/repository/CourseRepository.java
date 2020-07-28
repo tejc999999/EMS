@@ -24,7 +24,6 @@ public interface CourseRepository extends JpaRepository<CourseBean, Long> {
     @Query("SELECT DISTINCT c FROM CourseBean c"
     		+ " LEFT JOIN FETCH c.studentCourseBeans"
     		+ " LEFT JOIN FETCH c.classCourseBeans"
-    		+ " LEFT JOIN FETCH c.taskCourseBeans"
     		+ " LEFT JOIN FETCH c.studentCourseTaskBeans"
     		+ " WHERE c.id = :id")
     Optional<CourseBean> findByIdFetchAll(@Param("id") Long id);

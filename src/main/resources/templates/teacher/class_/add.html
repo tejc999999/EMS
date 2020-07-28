@@ -1,30 +1,30 @@
 
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity">
-<head th:replace="layout :: common_layout(title = 'クラス登録画面', scripts = ~{::script}, links = ~{::link})">
+<head th:replace="layout :: common_layout(title = '繧ｯ繝ｩ繧ｹ逋ｻ骭ｲ逕ｻ髱｢', scripts = ~{::script}, links = ~{::link})">
  </head>
 <body>
 
 <div th:replace="layout :: header"></div>
 
-<h2>■クラス登録</h2>
+<h2>笆�繧ｯ繝ｩ繧ｹ逋ｻ骭ｲ</h2>
 <div class="container-fluid no-gutters pb-5">
-		<form th:action="@{/teacher/class/add}" th:object="${classForm}" method="post">
+		<form th:action="@{/teacher/class_/add}" th:object="${classForm}" method="post">
   <div class="form-row">
     <div class="form-group col-md-12">
-      <label for="name" class="col-form-label">クラス名</label>
-      <input type="text" class="form-control" name="name"  placeholder="クラスの名前" aria-label="クラスの名前" />
+      <label for="name" class="col-form-label">繧ｯ繝ｩ繧ｹ蜷�</label>
+      <input type="text" class="form-control" name="name"  placeholder="繧ｯ繝ｩ繧ｹ縺ｮ蜷榊燕" aria-label="繧ｯ繝ｩ繧ｹ縺ｮ蜷榊燕" />
     </div>
   </div>
   <div class="form-row">
     <div class="col-md-12">
-      <input type="submit" class="btn btn-info btn-block" th:value="作成">
+      <input type="submit" class="btn btn-info btn-block" th:value="菴懈��">
     </div>
   </div>
   <div class="form-row">
     <div class="form-group col-md-12">
       <div class="form-group">
-      <label class="col-form-label">所属ユーザ</label>
+      <label class="col-form-label">謇�螻槭Θ繝ｼ繧ｶ</label>
          <div class="checkbox" th:each="item : ${userCheckItems}">
           <label>
             <input type="checkbox" name="userCheckedList" th:value="${item.key}" th:text="${item.value}" th:field="*{userCheckedList}" />

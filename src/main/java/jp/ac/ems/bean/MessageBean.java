@@ -59,8 +59,8 @@ public class MessageBean {
     /**
      * 提示課題ID(present task id).
      */
-    @Column(name = "present_task_id")
-    private Long presentTaskId;
+    @Column(name = "task_id")
+    private Long taskId;
 
 
     /**

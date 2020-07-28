@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @author tejc999999
  */
 @Controller
-@RequestMapping("/teacher/class")
+@RequestMapping("/teacher/class_")
 public class ClassController {
 
     /**
@@ -55,7 +55,7 @@ public class ClassController {
 
         model.addAttribute("classes", classFormList);
 
-        return "teacher/class/list";
+        return "teacher/class_/list";
     }
 
     /**
@@ -69,7 +69,7 @@ public class ClassController {
 
         model.addAttribute("userCheckItems", userMap);
 
-        return "teacher/class/add";
+        return "teacher/class_/add";
     }
 
     /**
@@ -101,7 +101,7 @@ public class ClassController {
 
         model.addAttribute("classForm", classForm);
 
-        return "teacher/class/edit";
+        return "teacher/class_/edit";
     }
 
     /**
