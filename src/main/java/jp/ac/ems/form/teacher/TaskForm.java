@@ -76,4 +76,20 @@ public class TaskForm {
      * 小分類リスト(small field list).
      */
     private List<String> fieldSList;
+    
+    /**
+     * 対象コースIDリスト(target course list).
+     */
+    private List<String> courseCheckedList;
+
+    /**
+     * 対象クラスIDリスト(target class list).
+     */
+    private List<String> classCheckedList;
+    
+    /**
+     * 対象ユーザIDリスト(target user list).
+     */
+    private List<String> userCheckedList;
+
 }

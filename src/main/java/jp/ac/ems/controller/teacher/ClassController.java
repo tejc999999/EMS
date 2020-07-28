@@ -82,7 +82,7 @@ public class ClassController {
 
         classService.save(form);
 
-        return "redirect:/teacher/class";
+        return "redirect:/teacher/class_";
     }
 
     /**
@@ -113,7 +113,7 @@ public class ClassController {
 
         classService.save(form);
 
-        return "redirect:/teacher/class";
+        return "redirect:/teacher/class_";
     }
 
     /**
@@ -125,6 +125,6 @@ public class ClassController {
 
         classService.delete(id);
 
-        return "redirect:/teacher/class";
+        return "redirect:/teacher/class_";
     }
 }

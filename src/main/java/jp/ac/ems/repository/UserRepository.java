@@ -74,4 +74,11 @@ public interface UserRepository extends JpaRepository<UserBean, String> {
     		+ " LEFT JOIN FETCH u.studentQuestionHistoryBeans"
     		+ " WHERE u.id = :id")
     Optional<UserBean> findByIdFetchAll(@Param("id") String id);
+
+    /**
+     * 学生のUserBean全取得
+     * @return 学生の全UserBeanリスト
+     */
+    @Query("SELECT u FROM UserBean u WHERE u.roleId = 3")
+    List<UserBean> findAllStudent();
 }

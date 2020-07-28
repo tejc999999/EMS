@@ -3,6 +3,8 @@ package jp.ac.ems.controller.teacher;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import jp.ac.ems.form.teacher.TaskForm;
 import jp.ac.ems.service.teacher.QuestionService;
 import jp.ac.ems.service.teacher.TaskService;
@@ -29,6 +31,9 @@ public class TaskController {
     @Autowired
     TaskService taskService;
 
+//    @Autowired
+//    HttpSession session;
+    
 //    @Autowired
 //    QuestionService questionService;
 
@@ -101,8 +106,10 @@ public class TaskController {
      * @return 課題情報登録用ページビュー(task info add page view)
      */
     @GetMapping(path = "add")
-    public String add(Model model) {
+    public String add() {
 
+//    	session.removeAttribute("taskForm");
+    	
         return "/teacher/task/add";
     }
 
@@ -138,6 +145,8 @@ public class TaskController {
         Map<String, String> questionMap = taskService.findAllMap();
         model.addAttribute("questionCheckItems", questionMap);
         
+//    	session.setAttribute("taskForm", form);
+        
         return "/teacher/task/add_question";
     }
 
@@ -154,10 +163,18 @@ public class TaskController {
 
     	// TODO:作成中
     	// コース一覧
+        Map<String, String> courseMap = taskService.findAllCourse();
+        model.addAttribute("courseCheckItems", courseMap);
     	
-    	// クラス一覧
-    	
-    	// ユーザ一覧
+        // 全クラス取得
+        Map<String, String> classMap = taskService.findAllClass();
+        model.addAttribute("classCheckItems", classMap);
+
+        // 全学生取得
+        Map<String, String> userMap = taskService.findAllStudent();
+        model.addAttribute("userCheckItems", userMap);
+        
+//    	session.setAttribute("taskForm", form);
         
         return "/teacher/task/add_submit";
     }
@@ -176,7 +193,7 @@ public class TaskController {
         
 //    	model.addAttribute("taskForm", form);
     	
-        return add(model);
+        return "/teacher/task/add";
     }
     
     /**
@@ -194,6 +211,36 @@ public class TaskController {
     	
         return addQuestion(form, result, model);
     }
+
+    /**
+     * 所属要素除外(exclution).
+     * @param form 課題Form(task form)
+     * @param result エラーチェック結果(error validate result)
+     * @param model モデル(model to save xxx)
+     * @return 課題問題登録用ページビュー(task question add page view)
+     */
+    @PostMapping(path = "add_process", params = "exclusionBtn")
+    public String addProcessExclution(@Validated TaskForm form, BindingResult result,
+            Model model) {
+    	
+    	// 全コースを取得する
+        Map<String, String> userMap = taskService.findAllCourse();
+        model.addAttribute("courseCheckItems", userMap);
+        
+    	// コースに所属するクラスを除外する
+        Map<String, String> classMap = taskService.findAllClass(form.getCourseCheckedList());
+        model.addAttribute("classCheckItems", classMap);
+
+        // 全ユーザ取得(クラス所属ユーザを除外する）
+        Map<String, String> userMap = taskService.findAllStudent(form.getCourseCheckedList(), form.getClassCheckedList());
+        model.addAttribute("userCheckItems", userMap);
+
+//    	model.addAttribute("taskForm", form);
+    	
+        return addQuestion(form, result, model);
+    }
+
+    
     
     /**
      * 課題登録処理(add process for task).

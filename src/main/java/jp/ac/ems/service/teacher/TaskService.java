@@ -2,10 +2,13 @@ package jp.ac.ems.service.teacher;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import jp.ac.ems.bean.ClassBean;
 import jp.ac.ems.bean.ClassCourseBean;
@@ -22,8 +25,11 @@ import jp.ac.ems.config.PrgLanguageProperties;
 import jp.ac.ems.config.ServerProperties;
 import jp.ac.ems.form.teacher.QuestionForm;
 import jp.ac.ems.form.teacher.TaskForm;
+import jp.ac.ems.repository.ClassRepository;
+import jp.ac.ems.repository.CourseRepository;
 import jp.ac.ems.repository.QuestionRepository;
 import jp.ac.ems.repository.TaskRepository;
+import jp.ac.ems.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -51,12 +57,23 @@ public class TaskService {
     @Autowired
     QuestionRepository questionRepository;
 
-
     /**
-     * プログラム言語プロパティ.
+     * コースリポジトリ(course repository).
      */
     @Autowired
-    PrgLanguageProperties prgLanguageProperties;
+    CourseRepository courseRepository;
+    
+    /**
+     * クラスリポジトリ(class repository).
+     */
+    @Autowired
+    ClassRepository classRepository;
+
+    /**
+     * ユーザーリポジトリ(user repository).
+     */
+    @Autowired
+    UserRepository userRepository;
 
     /**
      * サーバー設定プロパティ.
@@ -373,7 +390,102 @@ public class TaskService {
    			map.put(String.valueOf(questionBean.getId())/*keyBuff.toString()*/, valueBuff.toString());
     	}
 
+    	return map;
+    }
+
+    /**
+     * 全コースMap取得
+     * @return 全コースMap
+     */
+    public Map<String, String> findAllCourse() {
+    	Map<String, String> map = new HashMap<String, String>();
+    	
+    	for(CourseBean courseBean : courseRepository.findAll()) {
+    		map.put(String.valueOf(courseBean.getId()), courseBean.getName());
+    	}
     	
     	return map;
     }
+    
+    /**
+     * 全クラスMap取得
+     * @return 全クラスMap
+     */
+    public Map<String, String> findAllClass() {
+    	Map<String, String> map = new HashMap<String, String>();
+    	
+    	for(ClassBean classBean : classRepository.findAll()) {
+    		map.put(String.valueOf(classBean.getId()), classBean.getName());
+    	}
+    	
+    	return map;
+    }
+    
+    /**
+     * コース所属クラスを除いた全クラスMap取得
+     * @param exclusionCourseList 除外コースリスト
+     * @return 全クラスMap
+     */
+    public Map<String, String> findAllClass(List<String> exclusionCourseList) {
+    	Map<String, String> map = new HashMap<String, String>();
+    	Set<String> exclusionUserList = new HashSet<String>();
+    	
+    	for(String courseId : exclusionCourseList) {
+    		Optional<CourseBean> courseOpt = courseRepository.findById(Long.valueOf(courseId));
+    		courseOpt.ifPresent(courseBean -> exclusionUserList.addAll(courseBean.getUserIdList());
+    	}
+    		
+    		
+    		removeUserLlist.addAll(classBean.getUserIdList()));
+    			
+    		}
+    	}
+    	
+    	for(CourseBean courseBean : courseRepository.findAll()) {
+    		if()
+    	}
+    	
+    	
+    	for(ClassBean classBean : classRepository.findAll()) {
+    		if(!exclutionCourseList.contains(String.valueOf(classBean.getId()))) {
+    			map.put(String.valueOf(classBean.getId()), classBean.getName());
+    		}
+    	}
+    	
+    	return map;
+    }
+
+    /**
+     * 全学生Map取得
+     * @return 全クラスMap
+     */
+    public Map<String, String> findAllStudent() {
+    	Map<String, String> map = new HashMap<String, String>();
+    	
+    	for(UserBean userBean : userRepository.findAllStudent()) {
+    		map.put(userBean.getId(), userBean.getName());
+    	}
+    	
+    	return map;
+    }
+    
+    /**
+     * コース所属クラスを除いた全クラスMap取得
+     * @param exclutionCourseList 除外コースリスト
+     * @param exclutionClassList 除外クラスリスト
+     * @return 全クラスMap
+     */
+    public Map<String, String> findAllStudent(List<String> exclutionCourseList, List<String> exclutionClassList) {
+    	Map<String, String> map = new HashMap<String, String>();
+    	
+    	for(ClassBean classBean : classRepository.findAll()) {
+    		if(!exclutionCourseList.contains(String.valueOf(classBean.getId()))) {
+    			map.put(String.valueOf(classBean.getId()), classBean.getName());
+    		}
+    	}
+    	
+    	return map;
+    }
+
+
 }
