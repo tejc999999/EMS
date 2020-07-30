@@ -224,20 +224,20 @@ public class TaskController {
             Model model) {
     	
     	// 全コースを取得する
-        Map<String, String> userMap = taskService.findAllCourse();
-        model.addAttribute("courseCheckItems", userMap);
+        Map<String, String> courseMap = taskService.findAllCourse();
+        model.addAttribute("courseCheckItems", courseMap);
         
-    	// コースに所属するクラスを除外する
+    	// コースに所属するクラスを除外した全クラスを取得する
         Map<String, String> classMap = taskService.findAllClass(form.getCourseCheckedList());
         model.addAttribute("classCheckItems", classMap);
 
-        // 全ユーザ取得(クラス所属ユーザを除外する）
+        // コース（所属クラス）とクラスを除外した全ユーザを取得する
         Map<String, String> userMap = taskService.findAllStudent(form.getCourseCheckedList(), form.getClassCheckedList());
         model.addAttribute("userCheckItems", userMap);
 
 //    	model.addAttribute("taskForm", form);
     	
-        return addQuestion(form, result, model);
+        return "/teacher/task/add_submit";
     }
 
     

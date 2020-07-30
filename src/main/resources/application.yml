@@ -40,28 +40,10 @@ spring:
     # platform data(product/develop/test)
     platform: test
 
+ap:
+  question:
+    imagefilepath: F:\\AP_AM
 
-prglanguage: 
-  java: 
-    fileName: TestClass.java
-    buildFileName: TestClass
-    checkFileName: CheckClass.java
-    buildCheckFileName: CheckClass
-    buildCmdPath: F:\\dev_team\\jdk-13.0.2\\bin\\javac
-    executeCmdPath: F:\\dev_team\\jdk-13.0.2\\bin\\java
-    workFolderPath: F:\\workfolder
-  ccpp: 
-    fileName: 
-    buildFileName: 
-    buildCmdPath: 
-    executeCmdPath:
-    workFolderPath:
-  python: 
-    fileName: 
-    buildFileName: 
-    buildCmdPath:
-    executeCmdPath:
-    workFolderPath:
 server:
 #  charactercode: utf-8
   charactercode: SJIS

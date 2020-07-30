@@ -77,7 +77,7 @@ public class UserBean {
     @Getter(AccessLevel.NONE)
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
-    private Set<StudentTaskBean> studentCourseTaskBeans;
+    private Set<StudentTaskBean> studentTaskBeans;
 
 
     /**
@@ -87,7 +87,7 @@ public class UserBean {
     @Getter(AccessLevel.NONE)
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
-    private Set<StudentTaskHistoryBean> studentCourseTaskHistoryBeans;
+    private Set<StudentTaskHistoryBean> studentTaskHistoryBeans;
     
     /**
      * 学生・問題履歴Bean：相互参照オブジェクト(user・question history：cross reference object).
@@ -104,8 +104,8 @@ public class UserBean {
     public UserBean() {
         studentClassBeans = new HashSet<>();
         studentCourseBeans = new HashSet<>();
-        studentCourseTaskBeans = new HashSet<>();
-        studentCourseTaskHistoryBeans = new HashSet<>();
+        studentTaskBeans = new HashSet<>();
+        studentTaskHistoryBeans = new HashSet<>();
         studentQuestionHistoryBeans = new HashSet<>();
     }
     
@@ -129,6 +129,18 @@ public class UserBean {
         List<String> list = new ArrayList<>();
         studentCourseBeans.forEach(studentCourseBean -> {
             list.add(String.valueOf(studentCourseBean.getCourseId()));
+        });
+        return list;
+    }
+
+    /**
+     * 課題IDリストを取得する(get task id list).
+     * @return 課題IDリスト(task id list)
+     */
+    public List<String> getTaskIdList() {
+        List<String> list = new ArrayList<>();
+        studentTaskBeans.forEach(studentTaskBean -> {
+            list.add(String.valueOf(studentTaskBean.getTaskId()));
         });
         return list;
     }

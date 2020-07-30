@@ -108,12 +108,10 @@ public class CourseService {
         // クラスに所属するユーザをマップから削除する
         if (classIdList != null) {
             List<String> removeUserLlist = new ArrayList<>();
-            if (classIdList != null) {
-                classIdList.forEach(classId -> {
-                    Optional<ClassBean> opt = classRepository.findById(Long.parseLong(classId));
-                    opt.ifPresent(classBean -> removeUserLlist.addAll(classBean.getUserIdList()));
-                });
-            }
+            classIdList.forEach(classId -> {
+                Optional<ClassBean> opt = classRepository.findById(Long.parseLong(classId));
+                opt.ifPresent(classBean -> removeUserLlist.addAll(classBean.getUserIdList()));
+            });
             // 選択済みクラス所属ユーザを除外
             if (removeUserLlist != null && userMap != null) {
                 removeUserLlist.forEach(userId -> userMap.remove(userId));
@@ -184,7 +182,7 @@ public class CourseService {
         resultForm.setId(String.valueOf(courseBean.getId()));
         resultForm.setName(courseBean.getName());
         resultForm.setClassCheckedList(courseBean.getClassIdList());
-        resultForm.setUserCheckedList(courseBean.getUserIdList());
+        resultForm.setUserCheckedList(courseBean.getPartStudentIdList());
 
         return resultForm;
     }
@@ -202,7 +200,7 @@ public class CourseService {
             courseForm.setId(String.valueOf(courseBean.getId()));
             courseForm.setName(courseBean.getName());
             courseForm.setClassCheckedList(courseBean.getClassIdList());
-            courseForm.setUserCheckedList(courseBean.getUserIdList());      
+            courseForm.setUserCheckedList(courseBean.getPartStudentIdList());      
         });
         
         return courseForm;

@@ -18,10 +18,11 @@ import jp.ac.ems.bean.TaskBean;
 import jp.ac.ems.bean.TaskQuestionBean;
 import jp.ac.ems.bean.UserBean;
 import jp.ac.ems.bean.StudentCourseBean;
+import jp.ac.ems.bean.StudentTaskBean;
 import jp.ac.ems.config.FieldLarge;
 import jp.ac.ems.config.FieldMiddle;
 import jp.ac.ems.config.FieldSmall;
-import jp.ac.ems.config.PrgLanguageProperties;
+import jp.ac.ems.config.ExamDivisionCodeProperties;
 import jp.ac.ems.config.ServerProperties;
 import jp.ac.ems.form.teacher.QuestionForm;
 import jp.ac.ems.form.teacher.TaskForm;
@@ -98,7 +99,7 @@ public class TaskService {
 
         return list;
     }
-
+    
     /**
      * 検索文字列をタイトルか説明文に含む問題を取得する.
      * @param searchStr 検索文字列
@@ -164,28 +165,65 @@ public class TaskService {
         
         taskBean.setTitle(form.getTitle());
         taskBean.setDescription(form.getDescription());
-
         	
         // 課題、問題中間情報をBeanに設定する
     	taskBean.clearTaskQuestionBean();
         List<String> questionCheckedList = form.getQuestionCheckedList();
         if(questionCheckedList != null) {
-
         	for(String questionId : questionCheckedList) {
         		
-//                	taskBean.addTaskQuestionBean(taskQuestionBean);
-                Optional<QuestionBean> optQuestion = questionRepository.findById(Long.valueOf(questionId));
-	            List<Long> idList = new ArrayList<>();
-	            optQuestion.ifPresent(questionBean -> {
-	                idList.add(questionBean.getId());
-	            });
 	            TaskQuestionBean taskQuestionBean = new TaskQuestionBean();
-	            if (taskId != null && !taskId.equals("")) {
-	                taskQuestionBean.setTaskId(Long.parseLong(taskId));
-	            }
-	            taskQuestionBean.setQuestionId(idList.get(0));
+
+	            Optional<QuestionBean> optQuestion = questionRepository.findById(Long.valueOf(questionId));
+	            optQuestion.ifPresent(questionBean -> {
+		            if (taskId != null && !taskId.equals("")) {
+		                taskQuestionBean.setTaskId(Long.parseLong(taskId));
+		            }
+		            taskQuestionBean.setQuestionId(questionBean.getId());
+	            });
 
 	            taskBean.addTaskQuestionBean(taskQuestionBean);
+        	}
+        }
+        
+        // 提示先情報（ユーザ、課題中間情報）をBeanに設定する
+        taskBean.clearStudentTaskBeans();
+        Set<String> studentIdSet = new HashSet<String>();
+        Set<String> classIdSet = new HashSet<String>();
+        List<String> courseCheckedList = form.getCourseCheckedList();
+        if(courseCheckedList != null) {
+        	for(String courseId : courseCheckedList) {
+        		
+                Optional<CourseBean> optCourse = courseRepository.findById(Long.valueOf(courseId));
+	            optCourse.ifPresent(courseBean -> {
+	            	// コースに所属するクラスを取得
+	                classIdSet.addAll(courseBean.getClassIdList());
+	                // コースに所属する学生（クラス所属学生を除く）を取得
+	            	studentIdSet.addAll(courseBean.getPartStudentIdList());
+	            });
+
+	            // 選択したクラスと、選択したコースに所属するクラスを結合
+	            classIdSet.addAll(form.getClassCheckedList());
+	            
+	            // クラスに所属する学生を登録
+	            for(String classId : classIdSet) {
+		            Optional<ClassBean> optClass = classRepository.findById(Long.parseLong(classId));
+		            optClass.ifPresent(classBean -> studentIdSet.addAll(classBean.getUserIdList()));
+	            }
+	            
+	            // コース、クラスに所属する全学生と、選択した全学生を結合
+	            studentIdSet.addAll(form.getUserCheckedList());
+	            
+	            for(String studentId : studentIdSet) {
+	            	
+	            	StudentTaskBean studentTaskBean = new StudentTaskBean();
+		            if (taskId != null && !taskId.equals("")) {
+		            	studentTaskBean.setTaskId(Long.parseLong(taskId));
+		            }
+		            studentTaskBean.setStudentId(studentId);
+		            
+		            taskBean.addStudentTaskBean(studentTaskBean);
+	            }
         	}
         }
         
@@ -214,7 +252,7 @@ public class TaskService {
         	term = "A";
         }
     	
-        Map<String, String> map = convertQuestionMap(questionRepository.findAllByYearAndTerm(year, term));
+        Map<String, String> map = convertQuestionMap(questionRepository.findByYearAndTerm(year, term));
         
         return map;
     }
@@ -234,17 +272,17 @@ public class TaskService {
         	// 小分類名をIDに変換
         	Byte id = FieldSmall.getId("AP", fieldS);
         	
-        	questionBeanList = questionRepository.findAllByFieldSId(id);
+        	questionBeanList = questionRepository.findByFieldSId(id);
         } else if(fieldM != null && !"".equals(fieldM)) {
         	// 中分類名をIDに変換
         	Byte id = FieldMiddle.getId("AP", fieldM);
         	
-        	questionBeanList = questionRepository.findAllByFieldMId(id);
+        	questionBeanList = questionRepository.findByFieldMId(id);
         } else if(fieldL != null && !"".equals(fieldL)) {
         	// 大分類名をIDに変換
         	Byte id = FieldLarge.getId("AP", fieldL);
         	
-        	questionBeanList = questionRepository.findAllByFieldLId(id);
+        	questionBeanList = questionRepository.findByFieldLId(id);
         } else {
         	questionBeanList = questionRepository.findAll();
         }
@@ -424,35 +462,27 @@ public class TaskService {
     /**
      * コース所属クラスを除いた全クラスMap取得
      * @param exclusionCourseList 除外コースリスト
-     * @return 全クラスMap
+     * @return 全クラスMap（該当コース所属クラス除外）
      */
     public Map<String, String> findAllClass(List<String> exclusionCourseList) {
-    	Map<String, String> map = new HashMap<String, String>();
-    	Set<String> exclusionUserList = new HashSet<String>();
     	
-    	for(String courseId : exclusionCourseList) {
-    		Optional<CourseBean> courseOpt = courseRepository.findById(Long.valueOf(courseId));
-    		courseOpt.ifPresent(courseBean -> exclusionUserList.addAll(courseBean.getUserIdList());
-    	}
-    		
-    		
-    		removeUserLlist.addAll(classBean.getUserIdList()));
-    			
-    		}
-    	}
+        // 全てのクラスの情報をマップに取得
+        Map<String, String> classMap = findAllClass();
     	
-    	for(CourseBean courseBean : courseRepository.findAll()) {
-    		if()
-    	}
+        if (exclusionCourseList != null) {
+        	List<String> exclusionClassLlist = new ArrayList<>();
+        	exclusionCourseList.forEach(courseId -> {
+				Optional<CourseBean> opt = courseRepository.findById(Long.parseLong(courseId));
+                opt.ifPresent(courseBean -> exclusionClassLlist.addAll(courseBean.getClassIdList()));
+            });
+        	
+            // 選択済みクラス所属ユーザを除外
+            if (exclusionClassLlist != null && classMap != null) {
+            	exclusionClassLlist.forEach(classId -> classMap.remove(classId));
+            }
+        }
     	
-    	
-    	for(ClassBean classBean : classRepository.findAll()) {
-    		if(!exclutionCourseList.contains(String.valueOf(classBean.getId()))) {
-    			map.put(String.valueOf(classBean.getId()), classBean.getName());
-    		}
-    	}
-    	
-    	return map;
+    	return classMap;
     }
 
     /**
@@ -475,17 +505,37 @@ public class TaskService {
      * @param exclutionClassList 除外クラスリスト
      * @return 全クラスMap
      */
-    public Map<String, String> findAllStudent(List<String> exclutionCourseList, List<String> exclutionClassList) {
-    	Map<String, String> map = new HashMap<String, String>();
+    public Map<String, String> findAllStudent(List<String> exclusionCourseList, List<String> exclusionClassList) {
     	
-    	for(ClassBean classBean : classRepository.findAll()) {
-    		if(!exclutionCourseList.contains(String.valueOf(classBean.getId()))) {
-    			map.put(String.valueOf(classBean.getId()), classBean.getName());
-    		}
-    	}
+        // 全てのユーザの情報をマップに取得
+        Map<String, String> userMap = findAllStudent();
+
+        // 除外クラスリスト
+    	List<String> cashExclusionClassList = new ArrayList<>();
+
+        if (exclusionCourseList != null) {
+        	exclusionCourseList.forEach(courseId -> {
+				Optional<CourseBean> opt = courseRepository.findById(Long.parseLong(courseId));
+                opt.ifPresent(courseBean -> cashExclusionClassList.addAll(courseBean.getClassIdList()));
+            });
+        }
+        
+        // コースに所属する除外クラスと、指定された除外クラスを結合
+        cashExclusionClassList.addAll(exclusionClassList);
+
+        // 除外クラスに所属するユーザを取得し、全ユーザ（学生）から除外する
+        if (cashExclusionClassList != null) {
+            List<String> removeUserLlist = new ArrayList<>();
+            cashExclusionClassList.forEach(classId -> {
+                Optional<ClassBean> opt = classRepository.findById(Long.parseLong(classId));
+                opt.ifPresent(classBean -> removeUserLlist.addAll(classBean.getUserIdList()));
+            });
+            // クラス所属ユーザを除外する
+            if (removeUserLlist != null && userMap != null) {
+                removeUserLlist.forEach(userId -> userMap.remove(userId));
+            }
+        }
     	
-    	return map;
+    	return userMap;
     }
-
-
 }

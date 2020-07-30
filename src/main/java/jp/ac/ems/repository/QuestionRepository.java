@@ -21,28 +21,28 @@ public interface QuestionRepository extends
 	 * @param term 期（'A' or 'H')
 	 * @return 問題Beanリスト
 	 */
-	List<QuestionBean> findAllByYearAndTerm(String year, String term);
+	List<QuestionBean> findByYearAndTerm(String year, String term);
 
 	/**
 	 * 大分類を指定した全問取得(get all question by specifying the large field).
 	 * @param field_l_id 大分類(large field)
 	 * @return 問題Beanリスト
 	 */
-	List<QuestionBean> findAllByFieldLId(Byte field_l_id);
+	List<QuestionBean> findByFieldLId(Byte field_l_id);
 	
 	/**
 	 * 中分類を指定した全問取得(get all question by specifying the middle field).
 	 * @param field_m_id 中分類(middle field)
 	 * @return 問題Beanリスト
 	 */
-	List<QuestionBean> findAllByFieldMId(Byte field_m_id);
+	List<QuestionBean> findByFieldMId(Byte field_m_id);
 
 	/**
 	 * 小分類を指定した全問取得(get all question by specifying the small field).
 	 * @param field_s_id 小分類(small field)
 	 * @return 問題Beanリスト
 	 */
-	List<QuestionBean> findAllByFieldSId(Byte field_s_id);
+	List<QuestionBean> findByFieldSId(Byte field_s_id);
 
 	  /**
 	  * 年度、期、タイトルと説明文に検索文字列が含まれることを条件とした取得.

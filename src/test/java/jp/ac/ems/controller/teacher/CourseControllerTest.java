@@ -507,8 +507,8 @@ public class CourseControllerTest {
             assertEquals(courseBean.getName(), "コース１");
             assertEquals(courseBean.getClassIdList().size(), 1);
             assertEquals(courseBean.getClassIdList().get(0), "1");
-            assertEquals(courseBean.getUserIdList().size(), 1);
-            assertEquals(courseBean.getUserIdList().get(0), "user02");
+            assertEquals(courseBean.getPartStudentIdList().size(), 1);
+            assertEquals(courseBean.getPartStudentIdList().get(0), "user02");
         });
         // ifPresentOrElseの実装はJDK9からの様子
         opt.orElseThrow(() -> new Exception("bean not found."));
@@ -561,8 +561,8 @@ public class CourseControllerTest {
             assertEquals(courseBean.getName(), form.getName());
             assertEquals(courseBean.getClassIdList().size(), 1);
             assertEquals(courseBean.getClassIdList().get(0), "1");
-            assertEquals(courseBean.getUserIdList().size(), 2);
-            assertThat(courseBean.getUserIdList()).containsOnly("user01", "user02");
+            assertEquals(courseBean.getPartStudentIdList().size(), 2);
+            assertThat(courseBean.getPartStudentIdList()).containsOnly("user01", "user02");
         });
         // ifPresentOrElseの実装はJDK9からの様子
         opt.orElseThrow(() -> new Exception("bean not found."));
@@ -610,8 +610,8 @@ public class CourseControllerTest {
         opt.ifPresent(courseBean -> {
             assertEquals(courseBean.getName(), form.getName());
             assertEquals(courseBean.getClassIdList().size(), 0);
-            assertEquals(courseBean.getUserIdList().size(), 1);
-            assertEquals(courseBean.getUserIdList().get(0), "user01");
+            assertEquals(courseBean.getPartStudentIdList().size(), 1);
+            assertEquals(courseBean.getPartStudentIdList().get(0), "user01");
         });
         // ifPresentOrElseの実装はJDK9からの様子
         opt.orElseThrow(() -> new Exception("bean not found."));
@@ -659,7 +659,7 @@ public class CourseControllerTest {
             assertEquals(courseBean.getName(), form.getName());
             assertEquals(courseBean.getClassIdList().size(), 1);
             assertEquals(courseBean.getClassIdList().get(0), "1");
-            assertEquals(courseBean.getUserIdList().size(), 0);
+            assertEquals(courseBean.getPartStudentIdList().size(), 0);
         });
         // ifPresentOrElseの実装はJDK9からの様子
         opt.orElseThrow(() -> new Exception("bean not found."));
@@ -703,7 +703,7 @@ public class CourseControllerTest {
         opt.ifPresent(courseBean -> {
             assertEquals(courseBean.getName(), form.getName());
             assertEquals(courseBean.getClassIdList().size(), 0);
-            assertEquals(courseBean.getUserIdList().size(), 0);
+            assertEquals(courseBean.getPartStudentIdList().size(), 0);
         });
         // ifPresentOrElseの実装はJDK9からの様子
         opt.orElseThrow(() -> new Exception("bean not found."));
@@ -1058,8 +1058,8 @@ public class CourseControllerTest {
         Optional<CourseBean> opt = courseRepository.findByIdFetchAll(Long.valueOf("l"));
         opt.ifPresent(courseBean -> {
             assertEquals(courseBean.getName(), "コース１－２");
-            assertEquals(courseBean.getUserIdList().size(), 1);
-            assertEquals(courseBean.getUserIdList().get(0), "user02");
+            assertEquals(courseBean.getPartStudentIdList().size(), 1);
+            assertEquals(courseBean.getPartStudentIdList().get(0), "user02");
             assertEquals(courseBean.getClassIdList().size(), 0);
         });
         // ifPresentOrElseの実装はJDK9からの様子
@@ -1107,7 +1107,7 @@ public class CourseControllerTest {
         Optional<CourseBean> opt = courseRepository.findByIdFetchAll(Long.valueOf("l"));
         opt.ifPresent(courseBean -> {
             assertEquals(courseBean.getName(), "コース１－２");
-            assertEquals(courseBean.getUserIdList().size(), 0);
+            assertEquals(courseBean.getPartStudentIdList().size(), 0);
             assertEquals(courseBean.getClassIdList().size(), 1);
             assertEquals(courseBean.getClassIdList().get(0), "1");
         });
@@ -1153,7 +1153,7 @@ public class CourseControllerTest {
         Optional<CourseBean> opt = courseRepository.findByIdFetchAll(Long.valueOf("l"));
         opt.ifPresent(courseBean -> {
             assertEquals(courseBean.getName(), "コース１－２");
-            assertEquals(courseBean.getUserIdList().size(), 0);
+            assertEquals(courseBean.getPartStudentIdList().size(), 0);
             assertEquals(courseBean.getClassIdList().size(), 0);
         });
         // ifPresentOrElseの実装はJDK9からの様子
@@ -1201,7 +1201,7 @@ public class CourseControllerTest {
         // ifPresentOrElseの実装はJDK9からの様子
         opt.ifPresent(courseBean -> {
             assertEquals(courseBean.getName(), "コース１－２");
-            assertEquals(courseBean.getUserIdList().size(), 0);
+            assertEquals(courseBean.getPartStudentIdList().size(), 0);
             assertEquals(courseBean.getClassIdList().size(), 1);
             assertEquals(courseBean.getClassIdList().get(0), "1");
         });
@@ -1251,8 +1251,8 @@ public class CourseControllerTest {
         Optional<CourseBean> opt = courseRepository.findByIdFetchAll(Long.valueOf("l"));
         opt.ifPresent(courseBean -> {
             assertEquals(courseBean.getName(), "コース１－２");
-            assertEquals(courseBean.getUserIdList().size(), 1);
-            assertEquals(courseBean.getUserIdList().get(0), "user02");
+            assertEquals(courseBean.getPartStudentIdList().size(), 1);
+            assertEquals(courseBean.getPartStudentIdList().get(0), "user02");
             assertEquals(courseBean.getClassIdList().size(), 1);
             assertEquals(courseBean.getClassIdList().get(0), "1");
         });

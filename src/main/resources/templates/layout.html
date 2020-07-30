@@ -53,7 +53,12 @@
     <div class="collapse navbar-collapse justify-content-around" id="navbar-content" ontouchstart="">
       <ul class="navbar-nav mr-auto ">
         <li class="nav-item" sec:authorize="hasRole('ROLE_STUDENT')">
-          <a class="nav-link" href="#">課題</a>
+          <a class="nav-link dropdown-toggle" href="#" id="taskDropDown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          課題
+          </a>
+          <div class="dropdown-menu" aria-labelledby="taskDropDown">
+              <a class="dropdown-item" th:href="@{'/student/task'}">課題一覧</a>
+          </div>
         </li>
         <li class="nav-item dropdown" sec:authorize="hasRole('TEACHER')">
           <a class="nav-link dropdown-toggle" href="#" id="taskDropDown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

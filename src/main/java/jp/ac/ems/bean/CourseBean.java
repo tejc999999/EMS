@@ -49,7 +49,6 @@ public class CourseBean {
     public CourseBean() {
         studentCourseBeans = new HashSet<>();
         classCourseBeans = new HashSet<>();
-        studentCourseTaskBeans = new HashSet<>();
     }
 
     /**
@@ -69,15 +68,6 @@ public class CourseBean {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "course_id")
     Set<ClassCourseBean> classCourseBeans;
-
-    /**
-     * 学生・コース・課題：相互参照オブジェクト(student・course・task：cross reference object).
-     */
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "course_id")
-    Set<StudentTaskBean> studentCourseTaskBeans;
 
     /**
      * 学生・コース情報クリア(clear info(student/course)).
@@ -111,16 +101,17 @@ public class CourseBean {
     
     /**
      * コースに紐づく学生IDリストを取得する(get the student id list linked to the course).
+     * ※コースに紐づくクラスに所属する学生を除く
      * @return 学生IDリスト(student id list)
      */
-    public List<String> getUserIdList() {
+    public List<String> getPartStudentIdList() {
         List<String> list = new ArrayList<>();
         studentCourseBeans.forEach(studentCourseBean -> {
             list.add(String.valueOf(studentCourseBean.getStudentId()));
         });
         return list;
     }
-    
+
     /**
      * コースに紐づくクラスIDリストを取得する(get the class id list linked to the course).
      * @return クラスIDリスト(class id list)
