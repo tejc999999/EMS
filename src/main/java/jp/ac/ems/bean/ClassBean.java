@@ -92,7 +92,7 @@ public class ClassBean {
     public List<String> getUserIdList() {
         List<String> list = new ArrayList<>();
         userClassBeans.forEach(studentClassBean -> {
-            list.add(studentClassBean.getStudentId());
+            list.add(studentClassBean.getUserId());
         });
         return list;
     }

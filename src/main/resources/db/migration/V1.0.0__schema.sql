@@ -18,14 +18,14 @@ CREATE TABLE t_class(
 
 CREATE TABLE t_student_class(
     id BIGINT AUTO_INCREMENT,
-    student_id VARCHAR(20),
+    user_id VARCHAR(20),
     class_id BIGINT,
     PRIMARY KEY(id)
 ) CHARACTER SET 'utf8';
 
 CREATE TABLE t_student_course(
     id BIGINT AUTO_INCREMENT,
-    student_id VARCHAR(20),
+    user_id VARCHAR(20),
     course_id BIGINT,
     PRIMARY KEY(id)
 ) CHARACTER SET 'utf8';
@@ -47,7 +47,7 @@ CREATE TABLE t_message(
     id BIGINT AUTO_INCREMENT,
     message VARCHAR(1000),
     response_message VARCHAR(1000),
-    student_id VARCHAR(20),
+    user_id VARCHAR(20),
     present_task_id BIGINT,
     read_flg TINYINT(1),
     PRIMARY KEY(id)
@@ -62,7 +62,7 @@ CREATE TABLE t_task(
 
 CREATE TABLE t_student_task(
     id BIGINT AUTO_INCREMENT,
-    student_id VARCHAR(20),
+    user_id VARCHAR(20),
     task_id BIGINT,
     answer_flg TINYINT(1),
     update_date TIMESTAMP,
@@ -91,7 +91,7 @@ CREATE TABLE t_task_question(
 
 CREATE TABLE t_student_task_history(
     id BIGINT AUTO_INCREMENT,
-    student_id VARCHAR(20),
+    user_id VARCHAR(20),
     question_id BIGINT,
     correct_cnt TINYINT default 0,
     incorrect_cnt TINYINT default 0,
@@ -101,7 +101,7 @@ CREATE TABLE t_student_task_history(
 
 CREATE TABLE t_student_present_task_question_history(
     id BIGINT AUTO_INCREMENT,
-    student_id VARCHAR(20),
+    user_id VARCHAR(20),
     present_task_id BIGINT,
     question_id BIGINT,
     answer TINYINT,

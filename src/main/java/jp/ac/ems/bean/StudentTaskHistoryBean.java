@@ -36,8 +36,8 @@ public class StudentTaskHistoryBean {
     /**
      * 学生ID(student id).
      */
-    @Column(name = "student_id")
-    private String studentId;
+    @Column(name = "user_id")
+    private String userId;
 
     /**
      * 問題ID(question id).

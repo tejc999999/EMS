@@ -52,8 +52,8 @@
     <!-- /* ナビゲーション */ -->
     <div class="collapse navbar-collapse justify-content-around" id="navbar-content" ontouchstart="">
       <ul class="navbar-nav mr-auto ">
-        <li class="nav-item" sec:authorize="hasRole('ROLE_STUDENT')">
-          <a class="nav-link dropdown-toggle" href="#" id="taskDropDown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <li class="nav-item dropdown" sec:authorize="hasRole('STUDENT')">
+          <a class="nav-link dropdown-toggle" href="#" id="studentTaskDropDown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           課題
           </a>
           <div class="dropdown-menu" aria-labelledby="taskDropDown">

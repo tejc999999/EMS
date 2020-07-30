@@ -15,12 +15,12 @@ INSERT INTO t_user(id, password, name, role_id) VALUES('teststudent2', '$2a$10$0
 INSERT INTO t_class(id, name) VALUES(1, 'クラスＡ');
 INSERT INTO t_class(id, name) VALUES(2, 'クラスＢ');
 /* 学生所属クラス */
-INSERT INTO t_student_class(id, student_id, class_id) VALUES(1, 'teststudent1', 1);
-INSERT INTO t_student_class(id, student_id, class_id) VALUES(2, 'teststudent1', 2);
+INSERT INTO t_student_class(id, user_id, class_id) VALUES(1, 'teststudent1', 1);
+INSERT INTO t_student_class(id, user_id, class_id) VALUES(2, 'teststudent1', 2);
 /* コース */
 INSERT INTO t_course(id, name) VALUES(1, 'テストコース');
 /* 学生所属コース */
-INSERT INTO t_student_course(id, student_id, course_id) VALUES(1, 'teststudent1', 1);
+INSERT INTO t_student_course(id, user_id, course_id) VALUES(1, 'teststudent1', 1);
 /* クラス所属コース */
 INSERT INTO t_class_course(id, class_id, course_id) VALUES(1, 2, 1);
 

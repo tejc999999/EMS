@@ -36,8 +36,8 @@ public class StudentTaskBean {
     /**
      * 学生ID(student id).
      */
-    @Column(name = "student_id")
-    private String StudentId;
+    @Column(name = "user_id")
+    private String userId;
 
     /**
      * 課題ID(task id).

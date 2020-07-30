@@ -32,8 +32,8 @@ public class StudentClassBean {
     /**
      * 学生ID(student id).
      */
-    @Column(name = "student_id")
-    private String studentId;
+    @Column(name = "user_id")
+    private String userId;
     
     /**
      * クラスID(class id).

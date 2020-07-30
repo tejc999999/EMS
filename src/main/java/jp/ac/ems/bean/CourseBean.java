@@ -107,7 +107,7 @@ public class CourseBean {
     public List<String> getPartStudentIdList() {
         List<String> list = new ArrayList<>();
         studentCourseBeans.forEach(studentCourseBean -> {
-            list.add(String.valueOf(studentCourseBean.getStudentId()));
+            list.add(String.valueOf(studentCourseBean.getUserId()));
         });
         return list;
     }

@@ -62,7 +62,9 @@
 	      
 	      <input type="hidden" name="title" th:value="*{title}" >
           <input type="hidden" name="description" th:value="*{description}" >
-          <input type="hidden" name="questionCheckedList" th:value="*{questionCheckedList}" >
+          <div th:each="item : *{questionCheckedList}">
+              <input type="hidden" name="questionCheckedList" th:value="${item}" >
+          </div>
           <input type="hidden" name="selectYear" th:value="*{selectYear}" >
           <input type="hidden" name="selectFieldL" th:value="*{selectFieldL}" >
           <input type="hidden" name="selectFieldM" th:value="*{selectFieldM}" >
