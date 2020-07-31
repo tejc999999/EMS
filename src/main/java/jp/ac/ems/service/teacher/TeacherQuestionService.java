@@ -26,92 +26,31 @@ import org.springframework.stereotype.Service;
  * @author tejc999999
  *
  */
-@Service
-public class TeacherQuestionService {
-
-    /**
-     * 問題リポジトリ(question repository).
-     */
-    @Autowired
-    QuestionRepository questionRepository;
+public interface TeacherQuestionService {
     
     /**
      * 全ての問題を取得する(get all question).
      * @return 全ての問題Formリスト
      */
-    public List<QuestionForm> findAll() {
-        List<QuestionForm> list = new ArrayList<QuestionForm>();
+    public List<QuestionForm> findAll();
 
-        for (QuestionBean questionBean : questionRepository.findAll()) {
-            QuestionForm questionForm = new QuestionForm();
-            questionForm.setId(String.valueOf(questionBean.getId()));
-//            questionForm.setTitle(questionBean.getTitle());
-//            questionForm.setDescription(questionBean.getDescription());
-//            questionForm.setInputNum(questionBean.getInputNum());
-            list.add(questionForm);
-        }
-        
-        return list;
-    }
-        
     /**
      * 問題を取得する.
      * @param id 問題ID
      * @return 問題Form
      */
-    public QuestionForm findById(String id) {
-
-        QuestionForm form = new QuestionForm();
-        Optional<QuestionBean> optQuestion = questionRepository.findById(Long
-                .parseLong(id));
-        optQuestion.ifPresent(questionBean -> {
-            form.setId(String.valueOf(questionBean.getId()));
-//            form.setTitle(questionBean.getTitle());
-//            form.setDescription(questionBean.getDescription());
-//            form.setInputNum(questionBean.getInputNum());
-        });
-        
-        return form;
-    }
-    
-
+    public QuestionForm findById(String id);
     
     /**
      * 問題を登録する.
      * @param form 問題Form
      * @return 登録済み問題Form
      */
-    public QuestionForm save(QuestionForm form) {
-
-        QuestionBean questionBean = new QuestionBean();
-        String questionId = form.getId();
-        if (questionId != null && !questionId.equals("")) {
-            questionBean.setId(Long.parseLong(questionId));
-        }
-//        questionBean.setTitle(form.getTitle());
-//        questionBean.setDescription(form.getDescription());
-//        questionBean.setInputNum((byte) form.getInputNum());
-        
-        questionBean = questionRepository.save(questionBean);
-        
-        QuestionForm resultQuestionForm = new QuestionForm();
-        resultQuestionForm.setId(String.valueOf(questionId));
-//        resultQuestionForm.setTitle(questionBean.getTitle());
-//        resultQuestionForm.setDescription(questionBean.getDescription());
-//        resultQuestionForm.setInputNum(questionBean.getInputNum());
-        
-        return resultQuestionForm;
-    }
+    public QuestionForm save(QuestionForm form);
     
     /**
      * 問題削除.
      * @param id 問題ID
      */
-    public void delete(String id) {
-
-        QuestionBean questionBean = new QuestionBean();
-        questionBean.setId(Long.parseLong(id));
-
-        questionRepository.delete(questionBean);
-    }
+    public void delete(String id);
 }

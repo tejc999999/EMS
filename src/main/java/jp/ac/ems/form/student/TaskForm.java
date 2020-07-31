@@ -31,4 +31,9 @@ public class TaskForm {
      */
     @Max(500)
     private String description;
+    
+    /**
+     * 完了フラグ（true:完了、false:未完了）
+     */
+    private boolean completeFlag;
 }

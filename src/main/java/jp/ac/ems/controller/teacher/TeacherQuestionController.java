@@ -3,6 +3,7 @@ package jp.ac.ems.controller.teacher;
 import java.util.List;
 
 import jp.ac.ems.form.teacher.QuestionForm;
+import jp.ac.ems.impl.service.teacher.TeacherQuestionServiceImpl;
 import jp.ac.ems.service.teacher.TeacherQuestionService;
 
 import org.springframework.beans.factory.annotation.Autowired;

@@ -6,7 +6,8 @@ import java.util.Map;
 import javax.servlet.http.HttpSession;
 
 import jp.ac.ems.form.teacher.TaskForm;
-import jp.ac.ems.service.teacher.TeacherQuestionService;
+import jp.ac.ems.impl.service.teacher.TeacherQuestionServiceImpl;
+import jp.ac.ems.impl.service.teacher.TeacherTaskServiceImpl;
 import jp.ac.ems.service.teacher.TeacherTaskService;
 
 import org.springframework.beans.factory.annotation.Autowired;

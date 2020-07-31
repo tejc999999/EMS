@@ -10,11 +10,12 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import jp.ac.ems.service.LoginUserDetailsService;
+import jp.ac.ems.impl.service.UserDetailServiceImpl;
 
 /**
  * 認証及び認可の設定(Authentication and authorization settings).
@@ -30,7 +31,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	 * ログインユーザ用サービス(Service for login users).
 	 */
 	@Autowired
-	private LoginUserDetailsService userDetailsService;
+	private UserDetailsService userDetailsService;
 	
 	/**
 	 * 初期設定(Init Settings).

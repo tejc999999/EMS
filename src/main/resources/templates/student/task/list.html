@@ -18,9 +18,15 @@
 		</thead>
 		<tbody>
 		<tr class="row" th:each="task : ${tasks}">
-			<td class="col-md-4" th:text="${task.title}">タイトル</td>
-			<td class="col-md-6" th:text="${task.description}">説明</td>
-			<td class="col-md-2">ステータス</td>
+			<td class="col-md-3" th:text="${task.title}">タイトル</td>
+			<td class="col-md-5" th:text="${task.description}">説明</td>
+			<td class="col-md-2" >
+				<form th:action="@{/student/task/learn}" method="post">
+					<input type="submit" name="form" th:value="開始" disabled="${not task.completeFlag}" />
+					<input type="hidden" name="id" th:value="${task.id}" />
+				</form>
+			</td>
+			<td class="col-md-2"></td>
 		</tr>
 		</tbody>
 	</table>

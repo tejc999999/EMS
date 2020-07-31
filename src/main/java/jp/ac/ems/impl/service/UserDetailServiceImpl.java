@@ -1,4 +1,4 @@
-package jp.ac.ems.service;
+package jp.ac.ems.impl.service;
 
 import java.util.Optional;
 
@@ -15,7 +15,7 @@ import jp.ac.ems.repository.UserRepository;
 import jp.ac.ems.security.LoginUserDetails;
 
 @Service
-public class LoginUserDetailsService implements UserDetailsService {
+public class UserDetailServiceImpl implements UserDetailsService {
 
 	@Autowired
 	UserRepository userRepository;
