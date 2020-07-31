@@ -24,7 +24,6 @@ import jp.ac.ems.config.FieldMiddle;
 import jp.ac.ems.config.FieldSmall;
 import jp.ac.ems.config.ExamDivisionCodeProperties;
 import jp.ac.ems.config.ServerProperties;
-import jp.ac.ems.form.teacher.QuestionForm;
 import jp.ac.ems.form.teacher.TaskForm;
 import jp.ac.ems.repository.ClassRepository;
 import jp.ac.ems.repository.CourseRepository;
@@ -52,15 +51,7 @@ public interface TeacherTaskService {
     public List<TaskForm> findAll();
 
     
-    /**
-     * 検索文字列をタイトルか説明文に含む問題を取得する.
-     * @param searchStr 検索文字列
-     * @return 合致する問題Formリスト
-     */
-    public List<QuestionForm> findByTitleLikeOrDescriptionLike(
-            String searchStr);
 
-    
     /**
      * 課題情報を取得する.
      * @return 課題Form
@@ -137,15 +128,6 @@ public interface TeacherTaskService {
      * @return 画面用問題マップ（key:チェックボックスID、value：問題ラベル）
      */
     public Map<String, String> findAllMap();
-
-    
-    /**
-     * 問題Beanリストを画面用Mapに変換(convert question bean to map for monitor).
-     * @param questionBeanList 問題Beanリスト(question baen list)
-     * @return 画面用問題Map(question map for monitor)
-     */
-    private Map<String, String> convertQuestionMap(List<QuestionBean> questionBeanList);
-
 
     /**
      * 全コースMap取得

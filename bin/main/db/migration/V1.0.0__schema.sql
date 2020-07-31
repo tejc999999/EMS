@@ -99,7 +99,7 @@ CREATE TABLE t_student_task_history(
     PRIMARY KEY(id)
 ) CHARACTER SET 'utf8';
 
-CREATE TABLE t_student_present_task_question_history(
+CREATE TABLE t_student_task_question_history(
     id BIGINT AUTO_INCREMENT,
     user_id VARCHAR(20),
     present_task_id BIGINT,

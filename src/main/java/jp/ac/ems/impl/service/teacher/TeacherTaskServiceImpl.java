@@ -24,7 +24,6 @@ import jp.ac.ems.config.FieldMiddle;
 import jp.ac.ems.config.FieldSmall;
 import jp.ac.ems.config.ExamDivisionCodeProperties;
 import jp.ac.ems.config.ServerProperties;
-import jp.ac.ems.form.teacher.QuestionForm;
 import jp.ac.ems.form.teacher.TaskForm;
 import jp.ac.ems.repository.ClassRepository;
 import jp.ac.ems.repository.CourseRepository;
@@ -97,28 +96,6 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
             taskForm.setDescription(taskBean.getDescription());
             list.add(taskForm);
         }
-
-        return list;
-    }
-    
-    /**
-     * 検索文字列をタイトルか説明文に含む問題を取得する.
-     * @param searchStr 検索文字列
-     * @return 合致する問題Formリスト
-     */
-    public List<QuestionForm> findByTitleLikeOrDescriptionLike(
-            String searchStr) {
-        List<QuestionForm> list = new ArrayList<>();
-
-//        for (QuestionBean questionBean : questionRepository
-//                .findByTitleLikeOrDescriptionLike(searchStr, searchStr)) {
-//            QuestionForm questionForm = new QuestionForm();
-//            questionForm.setId(String.valueOf(questionBean.getId()));
-//            questionForm.setTitle(questionBean.getTitle());
-//            questionForm.setDescription(questionBean.getDescription());
-//            questionForm.setInputNum(questionBean.getInputNum());
-//            list.add(questionForm);
-//        }
 
         return list;
     }

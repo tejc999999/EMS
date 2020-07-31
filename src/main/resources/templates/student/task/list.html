@@ -11,8 +11,9 @@
 	<table class="table table-hover table-striped">
 		<thead class="thead-dark">
           	<tr class="row">
-				<th class="col-md-4 text-nowrap" scope="col" th:text="タイトル"></th>
-				<th class="col-md-6 text-nowrap" scope="col" th:text="説明"></th>
+				<th class="col-md-3 text-nowrap" scope="col" th:text="タイトル"></th>
+				<th class="col-md-5 text-nowrap" scope="col" th:text="説明"></th>
+				<th class="col-md-2 text-nowrap" scope="col" th:text=""></th>
 				<th class="col-md-2 text-nowrap" scope="col" th:text="ステータス"></th>
 			</tr>
 		</thead>
@@ -21,8 +22,8 @@
 			<td class="col-md-3" th:text="${task.title}">タイトル</td>
 			<td class="col-md-5" th:text="${task.description}">説明</td>
 			<td class="col-md-2" >
-				<form th:action="@{/student/task/learn}" method="post">
-					<input type="submit" name="form" th:value="開始" disabled="${not task.completeFlag}" />
+				<form th:action="@{/student/task/answer}" method="post">
+					<input type="submit" name="form" th:value="開始" disabled="${task.completeFlag}" />
 					<input type="hidden" name="id" th:value="${task.id}" />
 				</form>
 			</td>
