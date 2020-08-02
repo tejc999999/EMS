@@ -14,8 +14,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-
-import jp.ac.ems.impl.service.UserDetailServiceImpl;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * 認証及び認可の設定(Authentication and authorization settings).
@@ -25,13 +25,21 @@ import jp.ac.ems.impl.service.UserDetailServiceImpl;
  */
 @Configuration
 @EnableWebSecurity	// CSRF対策
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements WebMvcConfigurer {
 
 	/**
 	 * ログインユーザ用サービス(Service for login users).
 	 */
 	@Autowired
 	private UserDetailsService userDetailsService;
+
+	
+	/**
+	 * 区分コード設定
+	 */
+	@Autowired
+	ExamDivisionCodeProperties examDivisionCodeProperties;
+
 	
 	/**
 	 * 初期設定(Init Settings).
@@ -43,7 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring()
 			// ライブラリ、CSS、H2コンソールのURLを認証から除外
-			.antMatchers("/webjars/**", "/css/**", "/h2-console/**");
+			.antMatchers("/webjars/**", "/css/**", "/h2-console/**", "/images/**");
 	}
 	
 	/**
@@ -119,5 +127,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Bean
 	PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
+	}
+
+	/**
+	 * ローカルリソースをURLで配信
+	 */
+	@Override
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		registry.addResourceHandler("/images/question/**")
+			.addResourceLocations("file:\\" + examDivisionCodeProperties.getMap().get(ExamDivisionCode.AP.getName()).getFilepath() + "\\");
 	}
 }

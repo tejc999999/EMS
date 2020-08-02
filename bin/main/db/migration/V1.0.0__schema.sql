@@ -86,6 +86,7 @@ CREATE TABLE t_task_question(
     id BIGINT AUTO_INCREMENT,
     task_id BIGINT,
     question_id BIGINT,
+    seq_id BIGINT,
     PRIMARY KEY(id)
 ) CHARACTER SET 'utf8';
 

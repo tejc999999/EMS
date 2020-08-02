@@ -36,4 +36,10 @@ public class TaskForm {
      * 完了フラグ（true:完了、false:未完了）
      */
     private boolean completeFlag;
+    
+    /**
+     * 問題Form(question Form).
+     */
+    // 1問ずつ表示するためコレクションを使用しない
+    private QuestionForm questionForm;
 }

@@ -57,12 +57,12 @@ server:
 logging:
   file.name: logfile
   level: 
-    root: ERROR
+    root: INFO
     org:
-      springframework.web: ERROR
+      springframework.web: INFO
       hibernate:
-        SQL: ERROR
-        type.descriptor.sql.BasicBinder: ERROR
+        SQL: INFO
+        type.descriptor.sql.BasicBinder: INFO
 #  jpa:
 #    properties:
 #      hibernate:

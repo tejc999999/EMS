@@ -1,6 +1,10 @@
 package jp.ac.ems.bean;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -101,5 +105,17 @@ public class TaskBean {
      */
     public void clearStudentTaskBeans() {
     	studentTaskBeans.clear();
+    }
+    
+    /**
+     * 問題IDマップ（キーが順番）を取得する(get course id list).
+     * @return コースIDリスト(course id list)
+     */
+    public Map<String, String> getQuestionIdSeqMap() {
+        Map<String, String> map = new HashMap<>();
+        taskQuestionBeans.forEach(taskQuestionBean -> {
+            map.put(String.valueOf(taskQuestionBean.getSeqNumber()), String.valueOf(taskQuestionBean.getQuestionId()));
+        });
+        return map;
     }
 }

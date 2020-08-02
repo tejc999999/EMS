@@ -18,5 +18,11 @@ public interface StudentTaskService {
      * @return 全ての問題Formリスト
      */
     public List<TaskForm> findAllByStudent(String userId);
+    
+    public TaskForm getFirstQuestionForm(TaskForm form);
+
+    public TaskForm getPrevQuestionForm(TaskForm form);
+
+    public TaskForm getNextQuestionForm(TaskForm form);
 
 }

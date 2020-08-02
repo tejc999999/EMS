@@ -26,6 +26,7 @@ import jp.ac.ems.bean.QuestionBean;
 import jp.ac.ems.config.ExamDivisionCode;
 import jp.ac.ems.config.ExamDivisionCodeInfoDetail;
 import jp.ac.ems.config.ExamDivisionCodeProperties;
+import jp.ac.ems.form.student.QuestionForm;
 import jp.ac.ems.form.student.TaskForm;
 import jp.ac.ems.form.teacher.ClassForm;
 import jp.ac.ems.repository.QuestionRepository;
@@ -41,6 +42,13 @@ public class StudentTaskController {
 
     @Autowired
     StudentTaskService taskService;
+    
+	@Autowired
+	ExamDivisionCodeProperties examDivisionCodeProperties;
+	
+    
+    @Autowired
+    QuestionRepository questionRepository;
     
     /**
      * モデルにフォームをセットする(set form the model).
@@ -70,4 +78,45 @@ public class StudentTaskController {
         return "student/task/list";
     }
     
+    /**
+     * 課題-問題回答(task-question answer).
+     * @return 課題-問題ページビュー(task-question page view)
+     */
+    @PostMapping(path = "question")
+    public String question(@RequestParam String id, TaskForm form, Model model) {
+
+    	TaskForm taskForm = taskService.getFirstQuestionForm(form);
+    	
+    	model.addAttribute("taskForm", taskForm);
+
+        return "student/task/question";
+    }
+    
+    /**
+     * 課題-問題回答(task-question answer).
+     * @return 課題-問題ページビュー(task-question page view)
+     */
+    @PostMapping(path = "question", params="prevBtn")
+    public String prevQuestion(TaskForm form, Model model) {
+
+    	TaskForm taskForm = taskService.getPrevQuestionForm(form);
+    	
+    	model.addAttribute("taskForm", taskForm);
+
+        return "student/task/question";
+    }
+    
+    /**
+     * 課題-問題回答(task-question answer).
+     * @return 課題-問題ページビュー(task-question page view)
+     */
+    @PostMapping(path = "question", params="nextBtn")
+    public String nextQuestion(TaskForm form, Model model) {
+
+    	TaskForm taskForm = taskService.getNextQuestionForm(form);
+    	
+    	model.addAttribute("taskForm", taskForm);
+
+        return "student/task/question";
+    }
 }

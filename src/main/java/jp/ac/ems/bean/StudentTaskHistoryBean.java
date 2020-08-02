@@ -22,7 +22,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @Entity
-@Table(name = "t_user_course_task_history")
+@Table(name = "t_student_task_history")
 public class StudentTaskHistoryBean {
 
     /**

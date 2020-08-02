@@ -28,7 +28,7 @@ public interface UserRepository extends JpaRepository<UserBean, String> {
 	 * (Acquisition of User Bean including related beans (Fetch.LAZY compatible)).
 	 * 
 	 * @param id ユーザーID(User Id).
-	 * @return ユーザーBeanリスト（User Bean List）.
+	 * @return ユーザーBean（User Bean）.
 	 */
     @Query("SELECT DISTINCT u FROM UserBean u"
     		+ " LEFT JOIN FETCH u.studentClassBeans"
@@ -40,7 +40,7 @@ public interface UserRepository extends JpaRepository<UserBean, String> {
 	 * (Acquisition of User Bean including related beans (Fetch.LAZY compatible)).
 	 * 
 	 * @param id ユーザーID(User Id).
-	 * @return ユーザーBeanリスト（User Bean List）.
+	 * @return ユーザーBean（User Bean）.
 	 */
     @Query("SELECT DISTINCT u FROM UserBean u"
     		+ " LEFT JOIN FETCH u.studentCourseBeans"
@@ -52,7 +52,7 @@ public interface UserRepository extends JpaRepository<UserBean, String> {
 	 * (Acquisition of User Bean including related beans (Fetch.LAZY compatible)).
 	 * 
 	 * @param id ユーザーID(User Id).
-	 * @return ユーザーBeanリスト（User Bean List）.
+	 * @return ユーザーBean（User Bean）.
 	 */
     @Query("SELECT DISTINCT u FROM UserBean u"
     		+ " LEFT JOIN FETCH u.studentTaskBeans"
@@ -64,7 +64,7 @@ public interface UserRepository extends JpaRepository<UserBean, String> {
 	 * (Acquisition of User Bean including related beans (Fetch.LAZY compatible)).
 	 * 
 	 * @param id ユーザーID(User Id).
-	 * @return ユーザーBeanリスト（User Bean List）.
+	 * @return ユーザーBean（User Bean）.
 	 */
     @Query("SELECT DISTINCT u FROM UserBean u"
     		+ " LEFT JOIN FETCH u.studentClassBeans"

@@ -1,10 +1,5 @@
 package jp.ac.ems.form.student;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -19,7 +14,7 @@ public class QuestionForm {
     /**
      * 問題コード(question code).
      */
-    private Long id;
+    private String id;
 
     /**
      * 試験区分(division).
@@ -41,38 +36,39 @@ public class QuestionForm {
     /**
      * 問番(question number).
      */
-    private Byte number;
+    private String number;
 
     
     /**
      * 大分類(large field).
      * 
      */
-    private Byte fieldLId;
+    private String fieldLId;
     
     /**
      * 中分類(middle field).
      * 
      */
-    private Byte fieldMId;
+    private String fieldMId;
     
     
     /**
      * 小分類(small field).
      * 
      */
-    private Byte fieldSId;
+    private String fieldSId;
     
     /**
-     * 正解(answer).
+     * 正解(answer correct).
      * 1-4:ア~エ
      */
-    private Byte correct;
+    private String correct;
     
     /**
-     * 課題ID(task id).
+     * 回答(answer).
+     * 1-4:ア~エ
      */
-    private String taskId;
+    private String answer;
     
     /**
      * 問題画像ファイルパス

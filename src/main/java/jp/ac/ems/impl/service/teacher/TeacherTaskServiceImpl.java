@@ -148,6 +148,7 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
     	taskBean.clearTaskQuestionBean();
         List<String> questionCheckedList = form.getQuestionCheckedList();
         if(questionCheckedList != null) {
+        	int i = 0;
         	for(String questionId : questionCheckedList) {
         		
 	            TaskQuestionBean taskQuestionBean = new TaskQuestionBean();
@@ -159,6 +160,7 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
 		            }
 		            taskQuestionBean.setQuestionId(questionBean.getId());
 	            });
+	            taskQuestionBean.setSeqNumber(Long.valueOf(i++));
 
 	            taskBean.addTaskQuestionBean(taskQuestionBean);
         	}
