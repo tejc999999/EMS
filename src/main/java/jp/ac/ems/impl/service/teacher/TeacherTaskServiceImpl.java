@@ -35,6 +35,8 @@ import jp.ac.ems.service.teacher.TeacherTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
@@ -143,7 +145,11 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
         
         taskBean.setTitle(form.getTitle());
         taskBean.setDescription(form.getDescription());
-        	
+        
+        // 課題作成者（先生ID）を設定する
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        taskBean.setTeacherId(auth.getName());
+        
         // 課題、問題中間情報をBeanに設定する
     	taskBean.clearTaskQuestionBean();
         List<String> questionCheckedList = form.getQuestionCheckedList();
@@ -165,6 +171,8 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
 	            taskBean.addTaskQuestionBean(taskQuestionBean);
         	}
         }
+        // 問題数を設定する
+        taskBean.setQuestionSize(Long.valueOf(questionCheckedList.size()));
         
         // 提示先情報（ユーザ、課題中間情報）をBeanに設定する
         taskBean.clearStudentTaskBeans();

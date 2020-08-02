@@ -38,6 +38,26 @@ public class TaskForm {
     private boolean completeFlag;
     
     /**
+     * 問題情報文字列
+     */
+    private String questionInfoStr;
+    
+    /**
+     * 問題分野情報文字列
+     */
+    private String questionFieldInfoStr;
+    
+    /**
+     * 問題数
+     */
+    private String questionSize;
+    
+    /**
+     * 現在の問題順番
+     */
+    private String questionCnt;
+    
+    /**
      * 問題Form(question Form).
      */
     // 1問ずつ表示するためコレクションを使用しない

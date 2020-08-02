@@ -14,6 +14,10 @@ import org.springframework.stereotype.Service;
 import jp.ac.ems.bean.QuestionBean;
 import jp.ac.ems.bean.TaskBean;
 import jp.ac.ems.bean.UserBean;
+import jp.ac.ems.config.ExamDivisionCode;
+import jp.ac.ems.config.FieldLarge;
+import jp.ac.ems.config.FieldMiddle;
+import jp.ac.ems.config.FieldSmall;
 import jp.ac.ems.form.student.QuestionForm;
 import jp.ac.ems.form.student.TaskForm;
 import jp.ac.ems.repository.QuestionRepository;
@@ -48,11 +52,16 @@ public class StudentTaskServiceImpl implements StudentTaskService {
 
     /**
      * ユーザに紐づく全ての課題を取得する.
-     * @param userId ユーザID
-     * @return 全ての問題Formリスト
+     * @param userId ユーザID(user id)
+     * @return 全ての問題Formリスト(list of all question forms)
      */
     @Override
-    public List<TaskForm> findAllByStudent(String userId) {
+    public List<TaskForm> findAllByLoginStudentId() {
+    	
+    	// 一覧画面にPOSTする時にauthentication情報からユーザ名を送る
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String userId = auth.getName();
+
         List<TaskForm> list = new ArrayList<>();
 
         List<String> taskIdList = new ArrayList<String>();
@@ -75,79 +84,39 @@ public class StudentTaskServiceImpl implements StudentTaskService {
     }
     
     /**
+     * 課題Formに問題Formをセットする
      * 
-     * @param form
-     * @return
+     * @param form 課題Form(task form)
+     * @param position 位置情報(position info)
+     * @return 課題Form(task form)
      */
-    @Override
-    public TaskForm getFirstQuestionForm(TaskForm form) {
+    public TaskForm getQuestionForm(TaskForm form, int position) {
 
     	Map<String, String> questionMap = new HashMap<>();
     	Optional<TaskBean> optTask = taskRepository.findByIdFetchTaskQuestion(Long.valueOf(form.getId()));
     	optTask.ifPresent(taskBean -> {
-    		questionMap.putAll(taskBean.getQuestionIdSeqMap());
-    	});
-    	String questionId = questionMap.get("0");
-
-    	form.setQuestionForm(createQuestionForm(questionId));
-    	
-    	return form;
-    }
-
-    public TaskForm getPrevQuestionForm(TaskForm form) {
-    	
-    	Map<String, String> questionMap = new HashMap<>();
-    	Optional<TaskBean> optTask = taskRepository.findByIdFetchTaskQuestion(Long.valueOf(form.getId()));
-    	optTask.ifPresent(taskBean -> {
+    		form.setTitle(taskBean.getTitle());
+    		form.setQuestionSize(String.valueOf(taskBean.getQuestionSize()));
     		questionMap.putAll(taskBean.getQuestionIdSeqMap());
     	});
 
-    	String currentQuestionId = form.getQuestionForm().getId();
-    	String currentPosition = questionMap
-    									.entrySet()
-    									.stream()
-    									.filter(entry -> currentQuestionId.equals(entry.getValue()))
-    									.map(Map.Entry::getKey)
-    									.findFirst().get();
-    	int position = Integer.valueOf(currentPosition) - 1;
-    	String questionId = questionMap.get(String.valueOf(position));
-
-    	form.setQuestionForm(createQuestionForm(questionId));
-
-    	return form;
-    }
-
-    public TaskForm getNextQuestionForm(TaskForm form) {
-
-    	Map<String, String> questionMap = new HashMap<>();
-    	Optional<TaskBean> optTask = taskRepository.findByIdFetchTaskQuestion(Long.valueOf(form.getId()));
-    	optTask.ifPresent(taskBean -> {
-    		questionMap.putAll(taskBean.getQuestionIdSeqMap());
-    	});
-    	
-    	String currentQuestionId = form.getQuestionForm().getId();
-    	String currentPosition = questionMap
-    									.entrySet()
-    									.stream()
-    									.filter(entry -> currentQuestionId.equals(entry.getValue()))
-    									.map(Map.Entry::getKey)
-    									.findFirst().get();
-    	int position = Integer.valueOf(currentPosition) + 1;
-    	String questionId = questionMap.get(String.valueOf(position));
-
-    	form.setQuestionForm(createQuestionForm(questionId));
-
-    	return form;
-    }
-
-    /**
-     * 内部処理：QuestionForm生成
-     * 
-     * @param questionId
-     * @return 課題：問題Form
-     */
-    private QuestionForm createQuestionForm(String questionId) {
-    	
+    	// 指定位置情報の問題を取得する
+ 		String questionId = null;
+ 		if(position == 0) {
+ 			questionId = questionMap.get("0");
+ 			form.setQuestionCnt("1");
+ 		} else {
+	    	String currentQuestionId = form.getQuestionForm().getId();
+	    	String currentPosition = questionMap
+	    									.entrySet()
+	    									.stream()
+	    									.filter(entry -> currentQuestionId.equals(entry.getValue()))
+	    									.map(Map.Entry::getKey)
+	    									.findFirst().get();
+	    	String positionStr = String.valueOf(Integer.valueOf(currentPosition) + position);
+	    	questionId = questionMap.get(positionStr);
+	    	form.setQuestionCnt(String.valueOf(Integer.parseInt(positionStr) + 1));
+    	}
     	QuestionForm questionForm = new QuestionForm();
     	Optional<QuestionBean> optQuestion = questionRepository.findById(Long.parseLong(questionId));
     	optQuestion.ifPresent(questionBean -> {
@@ -167,6 +136,32 @@ public class StudentTaskServiceImpl implements StudentTaskService {
 		
 		questionForm.setImagePath(imagePath);
 		
-		return questionForm;
+    	form.setQuestionForm(questionForm);
+
+    	// 問題情報文字列を作成し、Formにセットする
+    	StringBuffer questionInfoStrBuff = new StringBuffer();
+    	String yearStr = questionForm.getYear().substring(0, 1);
+    	if("H".equals(yearStr)) {
+    		questionInfoStrBuff.append("平成");
+    	} else if("R".equals(yearStr)) {
+    		questionInfoStrBuff.append("令和");
+    	}
+		questionInfoStrBuff.append("年");
+    	String termStr = questionForm.getTerm();
+    	if("H".equals(termStr)) {
+    		questionInfoStrBuff.append("春");
+    	} else if("A".equals(yearStr)) {
+    		questionInfoStrBuff.append("秋");
+    	}
+		questionInfoStrBuff.append("期 第" + questionForm.getNumber() + "問");
+    	form.setQuestionInfoStr(questionInfoStrBuff.toString());
+    	
+    	// 問題分野情報文字列を作成し、Formにセットする
+    	form.setQuestionFieldInfoStr(
+    			FieldLarge.getName(ExamDivisionCode.AP.getName(), Byte.valueOf(questionForm.getFieldLId())) + "/"
+    			+ FieldMiddle.getName(ExamDivisionCode.AP.getName(), Byte.valueOf(questionForm.getFieldMId())) + "/"
+    			+ FieldSmall.getName(ExamDivisionCode.AP.getName(), Byte.valueOf(questionForm.getFieldSId())));
+
+    	return form;
     }
 }

@@ -36,7 +36,7 @@
 </head>
 
 <!-- /* ヘッダー */ -->
-<header th:fragment="header">
+<header th:fragment="header" class="sticky-top">
 <!-- /* ナビゲーションバー */ -->
 <nav class="navbar navbar-expand-md navbar-dark bg-dark sticky-top">
   <!-- /* サブコンポーネント */ -->
@@ -112,8 +112,9 @@
 
 <!-- /* フッター */ -->
 <footer th:fragment="footer">
+  <div class="pusth" style="height:10px"></div>
   <div class="fixed-bottom bg-dark">
-    <span class="text-light">固定フッター</span>
+    <span class="text-light" style="height:10px; margin-bottom:-10px">固定フッター</span>
   </div>
 </footer>
 </html>

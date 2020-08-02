@@ -50,7 +50,19 @@ public class TaskBean {
      */
     @Column(name = "description")
     private String description;
-    
+
+    /**
+     * 問題数(the number of question).
+     */
+    @Column(name = "question_size")
+    private Long questionSize;
+
+    /**
+     * 課題説明文(task description).
+     */
+    @Column(name = "teacher_id")
+    private String teacherId;
+
     /**
      * コンストラクタ(constructor).
      */

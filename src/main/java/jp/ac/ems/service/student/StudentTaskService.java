@@ -17,12 +17,14 @@ public interface StudentTaskService {
      * @param userId ユーザID
      * @return 全ての問題Formリスト
      */
-    public List<TaskForm> findAllByStudent(String userId);
+    public List<TaskForm> findAllByLoginStudentId();
     
-    public TaskForm getFirstQuestionForm(TaskForm form);
-
-    public TaskForm getPrevQuestionForm(TaskForm form);
-
-    public TaskForm getNextQuestionForm(TaskForm form);
-
+    /**
+     * 課題Formに問題Formをセットする
+     * 
+     * @param form 課題Form(task form)
+     * @param position 位置情報(position info)
+     * @return 課題Form(task form)
+     */
+    public TaskForm getQuestionForm(TaskForm form, int position);
 }

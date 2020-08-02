@@ -1,14 +1,32 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
-<head th:replace="layout :: common_layout(title = '課題一覧画面', scripts = ~{::script}, links = ~{::link})">
+<head th:replace="layout :: common_layout(title = '課題回答画面', scripts = ~{::script}, links = ~{::link})">
  </head>
 <body>
 
 <div th:replace="layout :: header"></div>
 
-<h2>■課題一覧</h2>
+<h2>■課題</h2>
 <div class="able-responsive-md container">
 <form th:action="@{/student/task/question}" th:object="${taskForm}"  method="post">
+  <div class="form-row">
+    <div class="form-group col-md-12">
+      <h3 th:text="*{title}"></h3>
+      <h4 th:text="*{questionInfoStr}"></h4>
+      <h4 th:text="*{questionFieldInfoStr}"></h4>
+      <h4 th:text="${'課題 第' + taskForm.questionCnt + ' / ' + taskForm.questionSize + '問'}"></h4>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-md-12">
+	  <img th:src="@{'/images/question/' + *{questionForm.imagePath}}" alt="問題画像" class="border border-info" width=100% border=10>
+	  <input type="hidden" name="id" th:value="*{id}">
+	  <input type="hidden" name="questionForm.id" th:value="*{questionForm.id}">
+	  <input type="hidden" name="questionForm.fieldLId" th:value="*{questionForm.fieldLId}">
+	  <input type="hidden" name="questionForm.fieldMId" th:value="*{questionForm.fieldMId}">
+	  <input type="hidden" name="questionForm.fieldSId" th:value="*{questionForm.fieldSId}">
+	</div>
+  </div>
   <div class="form-row">
     <div class="form-group col-md-6">
       <input type="submit" class="btn btn-info btn-block" name="prevBtn" value="前へ">
@@ -16,22 +34,6 @@
     <div class="form-group col-md-6">
       <input type="submit" class="btn btn-info btn-block" name="nextBtn" value="次へ">
     </div>
-  </div>
-  <div class="form-row">
-    <div class="form-group col-md-12">
-	  <img th:src="@{'/images/question/' + *{questionForm.imagePath}}" alt="問題画像" width=100%>
-	  <input type="hidden" name="questionForm.imagePath" th:value="*{questionForm.imagePath}">
-	  <input type="hidden" name="questionForm.id" th:value="*{questionForm.id}">
-	  <input type="hidden" name="questionForm.term" th:value="*{questionForm.term}">
-	  <input type="hidden" name="questionForm.year" th:value="*{questionForm.year}">
-	  <input type="hidden" name="questionForm.number" th:value="*{questionForm.number}">
-	  <input type="hidden" name="questionForm.fieldLId" th:value="*{questionForm.fieldLId}">
-	  <input type="hidden" name="questionForm.fieldMId" th:value="*{questionForm.fieldMId}">
-	  <input type="hidden" name="questionForm.fieldSId" th:value="*{questionForm.fieldSId}">
-	  <input type="hidden" name="questionForm.correct" th:value="*{questionForm.correct}">
-	  <input type="hidden" name="questionForm.answer" th:value="*{questionForm.answer}">
-	  <input type="hidden" name="id" th:value="*{id}">
-	</div>
   </div>
   </form>
 </div>

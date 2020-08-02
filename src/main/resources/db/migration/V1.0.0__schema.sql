@@ -57,6 +57,8 @@ CREATE TABLE t_task(
     id BIGINT AUTO_INCREMENT,
     title VARCHAR(100),
     description VARCHAR(1000),
+    question_size BIGINT,
+    teacher_id VARCHAR(20),
     PRIMARY KEY(id)
 ) CHARACTER SET 'utf8';
 
