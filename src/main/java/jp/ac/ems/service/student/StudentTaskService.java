@@ -1,6 +1,7 @@
 package jp.ac.ems.service.student;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -27,4 +28,11 @@ public interface StudentTaskService {
      * @return 課題Form(task form)
      */
     public TaskForm getQuestionForm(TaskForm form, int position);
+
+    /**
+     * 回答アイテム取得
+     * 
+     * @return 回答アイテムマップ
+     */
+    public Map<String,String> getAnswerSelectedItems();
 }

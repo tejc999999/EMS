@@ -65,10 +65,14 @@ public class StudentTaskController {
     @PostMapping(path = "question")
     public String question(@RequestParam String id, TaskForm form, Model model) {
 
+    	// 回答履歴からtaskForm.questionFormに回答を設定する
+    	
     	TaskForm taskForm = taskService.getQuestionForm(form, 0);
     	
     	model.addAttribute("taskForm", taskForm);
-
+    	
+    	model.addAttribute("answerSelectedItems", taskService.getAnswerSelectedItems());
+    	
         return "student/task/question";
     }
     
@@ -79,9 +83,14 @@ public class StudentTaskController {
     @PostMapping(path = "question", params="prevBtn")
     public String prevQuestion(TaskForm form, Model model) {
 
+    	// 前の問題の回答を回答履歴に保存する
+
+    	
     	TaskForm taskForm = taskService.getQuestionForm(form, -1);
     	
     	model.addAttribute("taskForm", taskForm);
+
+    	model.addAttribute("answerSelectedItems", taskService.getAnswerSelectedItems());
 
         return "student/task/question";
     }
@@ -93,9 +102,13 @@ public class StudentTaskController {
     @PostMapping(path = "question", params="nextBtn")
     public String nextQuestion(TaskForm form, Model model) {
 
+    	// 前の問題の回答を回答履歴に保存する
+    	
     	TaskForm taskForm = taskService.getQuestionForm(form, 1);
     	
     	model.addAttribute("taskForm", taskForm);
+
+    	model.addAttribute("answerSelectedItems", taskService.getAnswerSelectedItems());
 
         return "student/task/question";
     }

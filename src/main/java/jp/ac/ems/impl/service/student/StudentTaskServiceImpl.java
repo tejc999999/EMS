@@ -2,6 +2,7 @@ package jp.ac.ems.impl.service.student;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -146,11 +147,11 @@ public class StudentTaskServiceImpl implements StudentTaskService {
     	} else if("R".equals(yearStr)) {
     		questionInfoStrBuff.append("令和");
     	}
-		questionInfoStrBuff.append("年");
+		questionInfoStrBuff.append(questionForm.getYear().substring(1, 3) + "年");
     	String termStr = questionForm.getTerm();
     	if("H".equals(termStr)) {
     		questionInfoStrBuff.append("春");
-    	} else if("A".equals(yearStr)) {
+    	} else if("A".equals(termStr)) {
     		questionInfoStrBuff.append("秋");
     	}
 		questionInfoStrBuff.append("期 第" + questionForm.getNumber() + "問");
@@ -164,4 +165,19 @@ public class StudentTaskServiceImpl implements StudentTaskService {
 
     	return form;
     }
+    
+    /**
+     * 回答アイテム取得
+     * 
+     * @return 回答アイテムマップ
+     */
+    @Override
+    public Map<String,String> getAnswerSelectedItems(){
+        Map<String, String> selectMap = new LinkedHashMap<String, String>();
+        selectMap.put("1", "ア");
+        selectMap.put("2", "イ");
+        selectMap.put("3", "ウ");
+        selectMap.put("4", "エ");
+        return selectMap;
+    }  
 }
