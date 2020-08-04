@@ -1,6 +1,7 @@
 package jp.ac.ems.impl.service.student;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -13,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import jp.ac.ems.bean.QuestionBean;
+import jp.ac.ems.bean.StudentTaskQuestionHistoryBean;
 import jp.ac.ems.bean.TaskBean;
 import jp.ac.ems.bean.UserBean;
 import jp.ac.ems.config.ExamDivisionCode;
@@ -22,6 +24,8 @@ import jp.ac.ems.config.FieldSmall;
 import jp.ac.ems.form.student.QuestionForm;
 import jp.ac.ems.form.student.TaskForm;
 import jp.ac.ems.repository.QuestionRepository;
+import jp.ac.ems.repository.StudentTaskHistoryRepository;
+import jp.ac.ems.repository.StudentTaskQuestionHistoryRepository;
 import jp.ac.ems.repository.TaskRepository;
 import jp.ac.ems.repository.UserRepository;
 import jp.ac.ems.service.student.StudentTaskService;
@@ -52,6 +56,12 @@ public class StudentTaskServiceImpl implements StudentTaskService {
     QuestionRepository questionRepository;
 
     /**
+     * 課題履歴リポジトリ(task history repository).
+     */
+    @Autowired
+    StudentTaskQuestionHistoryRepository studentTaskQuestionTaskHistoryRepository;
+
+    /**
      * ユーザに紐づく全ての課題を取得する.
      * @param userId ユーザID(user id)
      * @return 全ての問題Formリスト(list of all question forms)
@@ -71,7 +81,7 @@ public class StudentTaskServiceImpl implements StudentTaskService {
         	taskIdList.addAll(userBean.getTaskIdList());
         });
     	for(String taskId : taskIdList) {
-            Optional<TaskBean> optTask = taskRepository.findById(Long.parseLong(taskId));
+            Optional<TaskBean> optTask = taskRepository.findById(Long.valueOf(taskId));
             optTask.ifPresent(taskBean -> {
             	TaskForm taskForm = new TaskForm();
             	taskForm.setId(String.valueOf(taskBean.getId()));
@@ -119,7 +129,7 @@ public class StudentTaskServiceImpl implements StudentTaskService {
 	    	form.setQuestionCnt(String.valueOf(Integer.parseInt(positionStr) + 1));
     	}
     	QuestionForm questionForm = new QuestionForm();
-    	Optional<QuestionBean> optQuestion = questionRepository.findById(Long.parseLong(questionId));
+    	Optional<QuestionBean> optQuestion = questionRepository.findById(Long.valueOf(questionId));
     	optQuestion.ifPresent(questionBean -> {
     		// データ型が違うためコピーされない
     		questionForm.setId(String.valueOf(questionBean.getId()));
@@ -164,6 +174,35 @@ public class StudentTaskServiceImpl implements StudentTaskService {
     			+ FieldSmall.getName(ExamDivisionCode.AP.getName(), Byte.valueOf(questionForm.getFieldSId())));
 
     	return form;
+    }
+    
+    /**
+     * 問題への回答を保存する(save answer for question).
+     * @param form 課題Form(task form)
+     */
+    @Override
+    public void answerSave(TaskForm form) {
+
+    	if(form.getQuestionForm().getAnswer() != null) {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            String userId = auth.getName();
+    		
+        	// 問題履歴を更新する
+            // IDを設定
+    		StudentTaskQuestionHistoryBean studentTaskQuestionHistoryBean = new StudentTaskQuestionHistoryBean();
+    		Optional<StudentTaskQuestionHistoryBean> optStudentTaskQuestionHistory = studentTaskQuestionTaskHistoryRepository.findByUserIdAndTaskId(userId, Long.valueOf(form.getId()));
+    		optStudentTaskQuestionHistory.ifPresent(bean->{
+    			studentTaskQuestionHistoryBean.setId(bean.getId());
+    		});
+    		// 回答情報を設定
+    		studentTaskQuestionHistoryBean.setTaskId(Long.valueOf(form.getId()));
+    		studentTaskQuestionHistoryBean.setQuestionId(Long.valueOf(form.getQuestionForm().getId()));
+    		studentTaskQuestionHistoryBean.setAnswer(Byte.valueOf(form.getQuestionForm().getAnswer()));
+    		studentTaskQuestionHistoryBean.setUpdateDate(new Date());
+    		studentTaskQuestionHistoryBean.setUserId(userId);
+    		
+    		studentTaskQuestionTaskHistoryRepository.save(studentTaskQuestionHistoryBean);
+    	}
     }
     
     /**

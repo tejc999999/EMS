@@ -109,7 +109,7 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
     public TaskForm findById(String id) {
         
         TaskForm taskForm = new TaskForm();
-        Optional<TaskBean> optTask = taskRepository.findById(Long.parseLong(id));
+        Optional<TaskBean> optTask = taskRepository.findById(Long.valueOf(id));
         optTask.ifPresent(taskBean -> {
             taskForm.setId(String.valueOf(taskBean.getId()));
             taskForm.setTitle(taskBean.getTitle());
@@ -125,7 +125,7 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
      */
     public void delete(String id) {
         TaskBean taskBean = new TaskBean();
-        taskBean.setId(Long.parseLong(id));
+        taskBean.setId(Long.valueOf(id));
         taskRepository.delete(taskBean);
     }
 
@@ -140,7 +140,7 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
         // ID、タイトル、説明をBeanに設定する
         String taskId = form.getId();
         if (taskId != null && !taskId.equals("")) {
-            taskBean.setId(Long.parseLong(taskId));
+            taskBean.setId(Long.valueOf(taskId));
         }
         
         taskBean.setTitle(form.getTitle());
@@ -162,7 +162,7 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
 	            Optional<QuestionBean> optQuestion = questionRepository.findById(Long.valueOf(questionId));
 	            optQuestion.ifPresent(questionBean -> {
 		            if (taskId != null && !taskId.equals("")) {
-		                taskQuestionBean.setTaskId(Long.parseLong(taskId));
+		                taskQuestionBean.setTaskId(Long.valueOf(taskId));
 		            }
 		            taskQuestionBean.setQuestionId(questionBean.getId());
 	            });
@@ -197,7 +197,7 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
         
         // クラスに所属する学生を登録
         for(String classId : classIdSet) {
-            Optional<ClassBean> optClass = classRepository.findById(Long.parseLong(classId));
+            Optional<ClassBean> optClass = classRepository.findById(Long.valueOf(classId));
             optClass.ifPresent(classBean -> studentIdSet.addAll(classBean.getUserIdList()));
         }
 	            
@@ -208,7 +208,7 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
         	
         	StudentTaskBean studentTaskBean = new StudentTaskBean();
             if (taskId != null && !taskId.equals("")) {
-            	studentTaskBean.setTaskId(Long.parseLong(taskId));
+            	studentTaskBean.setTaskId(Long.valueOf(taskId));
             }
             studentTaskBean.setUserId(studentId);
             
@@ -460,7 +460,7 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
         if (exclusionCourseList != null) {
         	List<String> exclusionClassLlist = new ArrayList<>();
         	exclusionCourseList.forEach(courseId -> {
-				Optional<CourseBean> opt = courseRepository.findById(Long.parseLong(courseId));
+				Optional<CourseBean> opt = courseRepository.findById(Long.valueOf(courseId));
                 opt.ifPresent(courseBean -> exclusionClassLlist.addAll(courseBean.getClassIdList()));
             });
         	
@@ -503,7 +503,7 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
 
         if (exclusionCourseList != null) {
         	exclusionCourseList.forEach(courseId -> {
-				Optional<CourseBean> opt = courseRepository.findById(Long.parseLong(courseId));
+				Optional<CourseBean> opt = courseRepository.findById(Long.valueOf(courseId));
                 opt.ifPresent(courseBean -> cashExclusionClassList.addAll(courseBean.getClassIdList()));
             });
         }
@@ -515,7 +515,7 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
         if (cashExclusionClassList != null) {
             List<String> removeUserLlist = new ArrayList<>();
             cashExclusionClassList.forEach(classId -> {
-                Optional<ClassBean> opt = classRepository.findById(Long.parseLong(classId));
+                Optional<ClassBean> opt = classRepository.findById(Long.valueOf(classId));
                 opt.ifPresent(classBean -> removeUserLlist.addAll(classBean.getUserIdList()));
             });
             // クラス所属ユーザを除外する

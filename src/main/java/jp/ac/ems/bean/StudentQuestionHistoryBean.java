@@ -20,15 +20,15 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 学生、課題履歴Bean(student/task hisotory bean).
+ * 学生、課題履歴Bean(student/task history bean).
  * @author tejc999999
  *
  */
 @Setter
 @Getter
 @Entity
-@Table(name = "t_student_task_history")
-public class StudentTaskHistoryBean {
+@Table(name = "t_student_question_history")
+public class StudentQuestionHistoryBean {
 
     /**
      * 履歴コード(history code).
@@ -45,17 +45,22 @@ public class StudentTaskHistoryBean {
     private String userId;
 
     /**
-     * 課題ID(task id).
+     * 問題ID(question id).
      */
-    @Column(name = "task_id")
-    private Long taskId;
+    @Column(name = "question_id")
+    private Long questionId;
 
     /**
-     * 回答フラグ
-     * 0:未回答, 1:回答済
+     * 正解数(correct count).
      */
-    @Column(name = "answer_flg")
-    private Boolean answerFlg;
+    @Column(name = "correct_cnt")
+    private Short correctCnt;
+    
+    /**
+     * 不正解数(incorrect count).
+     */
+    @Column(name = "incorrect_cnt")
+    private Short incorrectCnt;
     
     /**
      * 更新日時(update date time).
@@ -65,11 +70,11 @@ public class StudentTaskHistoryBean {
     private Date updateDate;
     
     /**
-     * 学生・課題-問題履歴Bean：相互参照オブジェクト(user・task question history：cross reference object).
+     * 課題・問題履歴Bean(task・question history).
      */
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "task_history_id")
-    private Set<TaskQuestionHistoryBean> TaskQuestionHistoryBeans;
+    @JoinColumn(name = "user_id")
+    private Set<StudentQuestionHistoryBean> studentQuestionHistoryBeans;
 }

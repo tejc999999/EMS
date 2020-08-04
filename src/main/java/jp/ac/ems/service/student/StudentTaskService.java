@@ -30,6 +30,12 @@ public interface StudentTaskService {
     public TaskForm getQuestionForm(TaskForm form, int position);
 
     /**
+     * 問題への回答を保存する(save answer for question).
+     * @param form 課題Form(task form)
+     */
+    public void answerSave(TaskForm form);
+    
+    /**
      * 回答アイテム取得
      * 
      * @return 回答アイテムマップ

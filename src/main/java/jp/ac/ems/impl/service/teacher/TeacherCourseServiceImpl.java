@@ -110,7 +110,7 @@ public class TeacherCourseServiceImpl implements TeacherCourseService {
         if (classIdList != null) {
             List<String> removeUserLlist = new ArrayList<>();
             classIdList.forEach(classId -> {
-                Optional<ClassBean> opt = classRepository.findById(Long.parseLong(classId));
+                Optional<ClassBean> opt = classRepository.findById(Long.valueOf(classId));
                 opt.ifPresent(classBean -> removeUserLlist.addAll(classBean.getUserIdList()));
             });
             // 選択済みクラス所属ユーザを除外
@@ -133,7 +133,7 @@ public class TeacherCourseServiceImpl implements TeacherCourseService {
         // ID、名前をBeanに設定する
         String courseId = form.getId();
         if (courseId != null && !courseId.equals("")) {
-            courseBean.setId(Long.parseLong(courseId));
+            courseBean.setId(Long.valueOf(courseId));
         }
         courseBean.setName(form.getName());
 
@@ -143,14 +143,14 @@ public class TeacherCourseServiceImpl implements TeacherCourseService {
         if (classIdList != null) {
             for (int i = 0; i < classIdList.size(); i++) {
                 Optional<ClassBean> optClass
-                        = classRepository.findById(Long.parseLong(classIdList.get(i)));
+                        = classRepository.findById(Long.valueOf(classIdList.get(i)));
                 List<Long> idList = new ArrayList<>();
                 optClass.ifPresent(classBean -> {
                     idList.add(classBean.getId());
                 });
                 ClassCourseBean classCourseBean = new ClassCourseBean();
                 if (courseId != null && !courseId.equals("")) {
-                    classCourseBean.setCourseId(Long.parseLong(courseId));
+                    classCourseBean.setCourseId(Long.valueOf(courseId));
                 }
                 classCourseBean.setClassId(idList.get(0));
                 courseBean.addClassCourseBean(classCourseBean);
@@ -168,7 +168,7 @@ public class TeacherCourseServiceImpl implements TeacherCourseService {
                 });
                 StudentCourseBean userCourseBean = new StudentCourseBean();
                 if (courseId != null && !courseId.equals("")) {
-                    userCourseBean.setCourseId(Long.parseLong(courseId));
+                    userCourseBean.setCourseId(Long.valueOf(courseId));
                 }
                 userCourseBean.setUserId(idList.get(0));
                 courseBean.addUserCourseBean(userCourseBean);
@@ -196,7 +196,7 @@ public class TeacherCourseServiceImpl implements TeacherCourseService {
     public CourseForm checkClassAndUser(String id) {
 
         CourseForm courseForm = new CourseForm();
-        Optional<CourseBean> optBean = courseRepository.findById(Long.parseLong(id));
+        Optional<CourseBean> optBean = courseRepository.findById(Long.valueOf(id));
         optBean.ifPresent(courseBean -> {
             courseForm.setId(String.valueOf(courseBean.getId()));
             courseForm.setName(courseBean.getName());
@@ -213,7 +213,7 @@ public class TeacherCourseServiceImpl implements TeacherCourseService {
      */
     public void delete(String id) {
         CourseBean courseBean = new CourseBean();
-        courseBean.setId(Long.parseLong(id));
+        courseBean.setId(Long.valueOf(id));
         courseRepository.delete(courseBean);
     }
 }

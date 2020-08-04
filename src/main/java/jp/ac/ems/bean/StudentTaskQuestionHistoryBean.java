@@ -57,13 +57,6 @@ public class StudentTaskQuestionHistoryBean {
      */
     @Column(name = "answer")
     private Byte answer;
-
-    /**
-     * 正解(correct).
-     * 1~4(ア~エ)
-     */
-    @Column(name = "correct")
-    private Byte correct;
     
     /**
      * 更新日時(update date time).

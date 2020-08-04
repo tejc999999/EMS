@@ -40,7 +40,8 @@
   
   
   <div class="form-row mt-5">
-    <div class="form-check form-check-inline col-md-3 m-0 p-0" th:each="answerItem : ${answerSelectedItems}">       <input class="form-check-input" type="radio" name="taskForm.questionForm.answer" th:value="${answerItem.key}" />
+    <div class="form-check form-check-inline col-md-3 m-0 p-0" th:each="answerItem : ${answerSelectedItems}">
+      <input class="form-check-input" type="radio" name="questionForm.answer" th:value="${answerItem.key}" />
       <label class="form-check-label" th:text="${answerItem.value}"></label>
     </div>
   </div>

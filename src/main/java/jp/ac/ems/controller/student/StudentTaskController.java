@@ -1,6 +1,14 @@
 package jp.ac.ems.controller.student;
 
+import java.util.Date;
 import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -84,12 +92,12 @@ public class StudentTaskController {
     public String prevQuestion(TaskForm form, Model model) {
 
     	// 前の問題の回答を回答履歴に保存する
+    	taskService.answerSave(form);
 
-    	
+    	// 次の問題をセットする
     	TaskForm taskForm = taskService.getQuestionForm(form, -1);
     	
     	model.addAttribute("taskForm", taskForm);
-
     	model.addAttribute("answerSelectedItems", taskService.getAnswerSelectedItems());
 
         return "student/task/question";
@@ -103,11 +111,12 @@ public class StudentTaskController {
     public String nextQuestion(TaskForm form, Model model) {
 
     	// 前の問題の回答を回答履歴に保存する
-    	
+    	taskService.answerSave(form);
+
+    	// 前の問題をセットする
     	TaskForm taskForm = taskService.getQuestionForm(form, 1);
     	
     	model.addAttribute("taskForm", taskForm);
-
     	model.addAttribute("answerSelectedItems", taskService.getAnswerSelectedItems());
 
         return "student/task/question";

@@ -83,7 +83,7 @@ public class TeacherClassServiceImpl implements TeacherClassService {
         // Formの値を（クラスの情報）Beanにコピーする
         ClassBean classBean = new ClassBean();
         if (form.getId() != null && !form.getId().equals("")) {
-            classBean.setId(Long.parseLong(form.getId()));
+            classBean.setId(Long.valueOf(form.getId()));
         }
         classBean.setName(form.getName());
         
@@ -94,7 +94,7 @@ public class TeacherClassServiceImpl implements TeacherClassService {
                 StudentClassBean userClassBean = new StudentClassBean();
                 userClassBean.setUserId(userIdList.get(i));
                 if (form.getId() != null && !form.getId().equals("")) {
-                    userClassBean.setClassId(Long.parseLong(form.getId()));
+                    userClassBean.setClassId(Long.valueOf(form.getId()));
                 }
                 classBean.addUserClassBean(userClassBean);
             }
@@ -119,7 +119,7 @@ public class TeacherClassServiceImpl implements TeacherClassService {
     public ClassForm findById(String id) {
         
         ClassForm classForm = new ClassForm();
-        Optional<ClassBean> optClass = classRepository.findById(Long.parseLong(id));
+        Optional<ClassBean> optClass = classRepository.findById(Long.valueOf(id));
         optClass.ifPresent(classBean -> {
             classForm.setId(String.valueOf(classBean.getId()));
             classForm.setName(classBean.getName());
@@ -135,7 +135,7 @@ public class TeacherClassServiceImpl implements TeacherClassService {
      */
     public void delete(String id) {
         ClassBean classBean = new ClassBean();
-        classBean.setId(Long.parseLong(id));
+        classBean.setId(Long.valueOf(id));
         classRepository.delete(classBean);
     }
 }
