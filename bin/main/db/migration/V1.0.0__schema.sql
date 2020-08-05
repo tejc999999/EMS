@@ -102,28 +102,12 @@ CREATE TABLE t_student_question_history(
     PRIMARY KEY(id)
 ) CHARACTER SET 'utf8';
 
-CREATE TABLE t_student_task_history(
-    id BIGINT AUTO_INCREMENT,
-    user_id VARCHAR(20),
-    task_id BIGINT,
-    answer_flg TINYINT default 0,
-    update_date TIMESTAMP,
-    PRIMARY KEY(id)
-) CHARACTER SET 'utf8';
-
-CREATE TABLE t_task_question_history(
-    id BIGINT AUTO_INCREMENT,
-    task_history_id BIGINT,
-    question_history_id BIGINT,
-    PRIMARY KEY(id)
-) CHARACTER SET 'utf8';
-
 CREATE TABLE t_student_task_question_history(
     id BIGINT AUTO_INCREMENT,
     user_id VARCHAR(20),
     task_id BIGINT,
     question_id BIGINT,
     answer TINYINT,
-    update_date TIMESTAMP,
+    correct TINYINT,
     PRIMARY KEY(id)
 ) CHARACTER SET 'utf8';

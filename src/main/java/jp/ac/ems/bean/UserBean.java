@@ -1,8 +1,11 @@
 package jp.ac.ems.bean;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -80,22 +83,12 @@ public class UserBean {
     private Set<StudentTaskBean> studentTaskBeans;
 
     /**
-     * 学生・問題履歴Bean：相互参照オブジェクト(user・question history：cross reference object).
-     */
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
-    private Set<StudentQuestionHistoryBean> studentQuestionHistoryBeans;
-
-    /**
      * コンストラクタ(constructor).
      */
     public UserBean() {
         studentClassBeans = new HashSet<>();
         studentCourseBeans = new HashSet<>();
         studentTaskBeans = new HashSet<>();
-        studentQuestionHistoryBeans = new HashSet<>();
     }
     
     /**
@@ -134,4 +127,32 @@ public class UserBean {
         return list;
     }
 
+    /**
+     * 課題回答済みマップを取得する
+     * 
+     * @return 課題回答済みマップ
+     */
+    public Map<String, Boolean> getTaskAnsweredMap() {
+    	Map<String, Boolean> map = new HashMap<>();
+    	
+    	for(StudentTaskBean studentTaskBean : studentTaskBeans) {
+    		map.put(String.valueOf(studentTaskBean.getTaskId()), studentTaskBean.isAnswerFlg());
+    	}
+    	
+    	return map;
+    }
+    
+    /**
+     * 学生-課題関連データを回答済みに更新する(Student-Update assignment-related data to answered).
+     * 
+     * @param taskId 課題ID(task id)
+     */
+    public void updateStudentTaskAnswerd(Long taskId) {
+        studentTaskBeans.forEach(studentTaskBean -> {
+        	if(studentTaskBean.getTaskId() == taskId) {
+        		studentTaskBean.setAnswerFlg(true);
+        		studentTaskBean.setUpdateDate(new Date());
+        	}
+        });
+    }
 }

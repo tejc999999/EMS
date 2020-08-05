@@ -22,15 +22,15 @@
 		<tr class="row" th:each="task : ${tasks}">
 			<td class="col-md-2" th:text="${task.title}">タイトル</td>
 			<td class="col-md-4" th:text="${task.description}">説明</td>
-			<td class="col-md-2" th:text="${task.answeredQuestionCnt + '　/　' + task.questionSize + '問'}">
+			<td class="col-md-2" th:text="${task.answeredQuestionCnt + '/' + task.questionSize + '問'}">
 			</td>
 			<td class="col-md-2" >
 				<form th:action="@{/student/task/question}" method="post">
-					<input type="submit" name="form" th:value="開始" th:disabled="${task.completeFlag}" />
+					<input type="submit" name="form" th:value="開始" th:disabled="${task.answeredFlg}" />
 					<input type="hidden" name="id" th:value="${task.id}" />
 				</form>
 			</td>
-			<td class="col-md-2" th:text="${task.completeFlag}? '完了' : '未完了'">
+			<td class="col-md-2" th:text="${task.answeredFlg}? '完了' : '未完了'">
 			</td>
 		</tr>
 		</tbody>

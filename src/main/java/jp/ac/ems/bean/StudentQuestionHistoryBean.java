@@ -68,13 +68,4 @@ public class StudentQuestionHistoryBean {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "update_date")
     private Date updateDate;
-    
-    /**
-     * 課題・問題履歴Bean(task・question history).
-     */
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
-    private Set<StudentQuestionHistoryBean> studentQuestionHistoryBeans;
 }

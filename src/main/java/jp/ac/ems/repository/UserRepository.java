@@ -60,18 +60,6 @@ public interface UserRepository extends JpaRepository<UserBean, String> {
     Optional<UserBean> findByIdFetchUserTask(@Param("id") String id);
 
 	/**
-	 * ユーザー-問題履歴Beanを含めたUserBean取得（Fetch.LAZY対応）
-	 * (Acquisition of User question history Bean including related beans (Fetch.LAZY compatible)).
-	 * 
-	 * @param id ユーザーID(User Id).
-	 * @return ユーザーBean（User Bean）.
-	 */
-    @Query("SELECT DISTINCT u FROM UserBean u"
-    		+ " LEFT JOIN FETCH u.studentQuestionHistoryBeans"
-    		+ " WHERE u.id = :id")
-    Optional<UserBean> findByIdFetchUserQuestionHistory(@Param("id") String id);
-
-	/**
 	 * 関連Beanを含めたUserBean取得（Fetch.LAZY対応）
 	 * (Acquisition of User Bean including related beans (Fetch.LAZY compatible)).
 	 * 
@@ -82,7 +70,6 @@ public interface UserRepository extends JpaRepository<UserBean, String> {
     		+ " LEFT JOIN FETCH u.studentClassBeans"
     		+ " LEFT JOIN FETCH u.studentCourseBeans"
     		+ " LEFT JOIN FETCH u.studentTaskBeans"
-    		+ " LEFT JOIN FETCH u.studentQuestionHistoryBeans"
     		+ " WHERE u.id = :id")
     Optional<UserBean> findByIdFetchAll(@Param("id") String id);
 

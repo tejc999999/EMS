@@ -33,9 +33,9 @@ public class TaskForm {
     private String description;
     
     /**
-     * 完了フラグ（true:完了、false:未完了）
+     * 回答済みフラグ(answered flag).
      */
-    private boolean completeFlag;
+    private boolean answeredFlg;
     
     /**
      * 問題情報文字列
