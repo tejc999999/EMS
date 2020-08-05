@@ -41,4 +41,11 @@ public interface StudentTaskService {
      * @return 回答アイテムマップ
      */
     public Map<String,String> getAnswerSelectedItems();
+    
+    /**
+     * 課題提出(submission of task).
+     * 
+     * @param taskForm 課題Form(task form)
+     */
+    public void submissionTask(TaskForm task);
 }

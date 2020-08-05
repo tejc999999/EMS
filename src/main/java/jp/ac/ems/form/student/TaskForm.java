@@ -58,6 +58,11 @@ public class TaskForm {
     private String questionCnt;
     
     /**
+     * 回答済問題数
+     */
+    private String answeredQuestionCnt;
+    
+    /**
      * 問題Form(question Form).
      */
     // 1問ずつ表示するためコレクションを使用しない

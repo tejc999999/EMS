@@ -32,13 +32,21 @@ import jp.ac.ems.service.student.StudentTaskService;
 @RequestMapping("/student/task")
 public class StudentTaskController {
 
+	/**
+	 * 課題サービス
+	 */
     @Autowired
     StudentTaskService taskService;
     
+    /**
+     * ローカル設定関連プロパティファイル設定値
+     */
 	@Autowired
 	ExamDivisionCodeProperties examDivisionCodeProperties;
 	
-    
+    /**
+     * 問題リポジトリ
+     */
     @Autowired
     QuestionRepository questionRepository;
     
@@ -67,14 +75,12 @@ public class StudentTaskController {
     }
     
     /**
-     * 課題-問題回答(task-question answer).
+     * 最初の課題-問題回答(first task-question answer).
      * @return 課題-問題ページビュー(task-question page view)
      */
     @PostMapping(path = "question")
     public String question(@RequestParam String id, TaskForm form, Model model) {
 
-    	// 回答履歴からtaskForm.questionFormに回答を設定する
-    	
     	TaskForm taskForm = taskService.getQuestionForm(form, 0);
     	
     	model.addAttribute("taskForm", taskForm);
@@ -85,7 +91,7 @@ public class StudentTaskController {
     }
     
     /**
-     * 課題-問題回答(task-question answer).
+     * 前の課題-問題回答(prev task-question answer).
      * @return 課題-問題ページビュー(task-question page view)
      */
     @PostMapping(path = "question", params="prevBtn")
@@ -104,7 +110,7 @@ public class StudentTaskController {
     }
     
     /**
-     * 課題-問題回答(task-question answer).
+     * 次の課題-問題回答(next task-question answer).
      * @return 課題-問題ページビュー(task-question page view)
      */
     @PostMapping(path = "question", params="nextBtn")
@@ -120,5 +126,22 @@ public class StudentTaskController {
     	model.addAttribute("answerSelectedItems", taskService.getAnswerSelectedItems());
 
         return "student/task/question";
+    }
+    
+    /**
+     * 課題-問題回答終了(finish task-question answer).
+     * @return 課題-問題ページビュー(task-question page view)
+     */
+    @PostMapping(path = "question", params="finishBtn")
+    public String finishQuestion(TaskForm form, Model model) {
+
+    	// 前の問題の回答を回答履歴に保存する
+    	taskService.answerSave(form);
+
+    	// 提出処理
+    	taskService.submissionTask(form);
+    	
+    	// 課題-問題一覧画面に遷移する
+        return list(model);
     }
 }

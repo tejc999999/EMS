@@ -14,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import jp.ac.ems.bean.QuestionBean;
+import jp.ac.ems.bean.StudentTaskHistoryBean;
 import jp.ac.ems.bean.StudentTaskQuestionHistoryBean;
 import jp.ac.ems.bean.TaskBean;
 import jp.ac.ems.bean.UserBean;
@@ -56,10 +57,16 @@ public class StudentTaskServiceImpl implements StudentTaskService {
     QuestionRepository questionRepository;
 
     /**
-     * 課題履歴リポジトリ(task history repository).
+     * 課題-問題履歴リポジトリ(task-question history repository).
      */
     @Autowired
     StudentTaskQuestionHistoryRepository studentTaskQuestionTaskHistoryRepository;
+    
+    /**
+     * 課題履歴リポジトリ(task history repository).
+     */
+    @Autowired
+    StudentTaskHistoryRepository studentTaskHistoryRepository;
 
     /**
      * ユーザに紐づく全ての課題を取得する.
@@ -73,7 +80,7 @@ public class StudentTaskServiceImpl implements StudentTaskService {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userId = auth.getName();
 
-        List<TaskForm> list = new ArrayList<>();
+        List<TaskForm> taskFormList = new ArrayList<>();
 
         List<String> taskIdList = new ArrayList<String>();
         Optional<UserBean> optUser = userRepository.findByIdFetchUserTask(userId);
@@ -87,11 +94,27 @@ public class StudentTaskServiceImpl implements StudentTaskService {
             	taskForm.setId(String.valueOf(taskBean.getId()));
             	taskForm.setTitle(taskBean.getTitle());
             	taskForm.setDescription(taskBean.getDescription());
-                list.add(taskForm);
+            	taskForm.setQuestionSize(String.valueOf(taskBean.getQuestionSize()));
+            	taskFormList.add(taskForm);
             });
     	}
-
-        return list;
+    	
+    	// 回答済問題数を取得する
+    	for(TaskForm taskForm : taskFormList) {
+    		List<StudentTaskQuestionHistoryBean> studentTaskQuestionHistoryBeanList = studentTaskQuestionTaskHistoryRepository.findByUserIdAndTaskId(userId, Long.valueOf(taskForm.getId()));
+    		if(studentTaskQuestionHistoryBeanList == null || studentTaskQuestionHistoryBeanList.size() == 0) {
+    			taskForm.setAnsweredQuestionCnt("0");
+    		} else {
+    			int answeredQuestionCnt = 0;
+    			for(StudentTaskQuestionHistoryBean studentTaskQuestionHistoryBean : studentTaskQuestionHistoryBeanList) {
+    				if(studentTaskQuestionHistoryBean.getAnswer() != null && studentTaskQuestionHistoryBean.getAnswer() > 0) {
+    					answeredQuestionCnt++;
+    				}
+    			}
+    			taskForm.setAnsweredQuestionCnt(String.valueOf(answeredQuestionCnt));
+    		}
+    	}
+        return taskFormList;
     }
     
     /**
@@ -144,9 +167,19 @@ public class StudentTaskServiceImpl implements StudentTaskService {
     	});
 		String imagePath = questionForm.getYear() + "_" + questionForm.getTerm()
 			+ "\\" + String.format("%02d", Integer.parseInt(questionForm.getNumber())) + ".jpg";
-		
 		questionForm.setImagePath(imagePath);
 		
+		// 回答履歴がある場合、回答をコピーする
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String userId = auth.getName();
+		Optional<StudentTaskQuestionHistoryBean> optStudentTaskQuestionHistory
+			= studentTaskQuestionTaskHistoryRepository.findByUserIdAndTaskIdAndQuestionId(userId,
+															Long.valueOf(form.getId()),
+															Long.valueOf(questionId));
+		optStudentTaskQuestionHistory.ifPresent(bean->{
+			questionForm.setAnswer(String.valueOf(bean.getAnswer()));
+		});
+
     	form.setQuestionForm(questionForm);
 
     	// 問題情報文字列を作成し、Formにセットする
@@ -190,7 +223,10 @@ public class StudentTaskServiceImpl implements StudentTaskService {
         	// 問題履歴を更新する
             // IDを設定
     		StudentTaskQuestionHistoryBean studentTaskQuestionHistoryBean = new StudentTaskQuestionHistoryBean();
-    		Optional<StudentTaskQuestionHistoryBean> optStudentTaskQuestionHistory = studentTaskQuestionTaskHistoryRepository.findByUserIdAndTaskId(userId, Long.valueOf(form.getId()));
+    		Optional<StudentTaskQuestionHistoryBean> optStudentTaskQuestionHistory
+    			= studentTaskQuestionTaskHistoryRepository.findByUserIdAndTaskIdAndQuestionId(userId,
+    															Long.valueOf(form.getId()),
+    															Long.valueOf(form.getQuestionForm().getId()));
     		optStudentTaskQuestionHistory.ifPresent(bean->{
     			studentTaskQuestionHistoryBean.setId(bean.getId());
     		});
@@ -218,5 +254,24 @@ public class StudentTaskServiceImpl implements StudentTaskService {
         selectMap.put("3", "ウ");
         selectMap.put("4", "エ");
         return selectMap;
-    }  
+    }
+    
+    /**
+     * 課題提出(submission of task).
+     * 
+     * @param taskForm 課題Form(task form)
+     */
+    @Override
+    public void submissionTask(TaskForm task) {
+    	// 課題履歴を作成し、提出済みとする
+    	StudentTaskHistoryBean studenttaskHistoryBean = new StudentTaskHistoryBean();
+    	studenttaskHistoryBean.setTaskId(taskId);
+    	studenttaskHistoryBean.setUserId(userId);
+    	studenttaskHistoryBean.setUpdateDate(new Date());
+    	studenttaskHistoryBean.setAnswerFlg(true);
+    	studentTaskHistoryRepository.save(studenttaskHistoryBean);
+    	
+    	// 課題を提出済みにする
+    }
+    
 }
