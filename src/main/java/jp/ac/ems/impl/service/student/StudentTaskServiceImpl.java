@@ -27,6 +27,7 @@ import jp.ac.ems.form.student.TaskForm;
 import jp.ac.ems.repository.QuestionRepository;
 import jp.ac.ems.repository.StudentQuestionHistoryRepository;
 import jp.ac.ems.repository.StudentTaskQuestionHistoryRepository;
+//import jp.ac.ems.repository.StudentTaskQuestionHistoryRepository;
 import jp.ac.ems.repository.TaskRepository;
 import jp.ac.ems.repository.UserRepository;
 import jp.ac.ems.service.student.StudentTaskService;
@@ -104,7 +105,7 @@ public class StudentTaskServiceImpl implements StudentTaskService {
     	
     	// 回答済問題数を取得する
     	for(TaskForm taskForm : taskFormList) {
-    		List<StudentTaskQuestionHistoryBean> studentTaskQuestionHistoryBeanList = studentTaskQuestionHistoryRepository.findByUserIdAndTaskId(userId, Long.valueOf(taskForm.getId()));
+    		List<StudentTaskQuestionHistoryBean> studentTaskQuestionHistoryBeanList = studentTaskQuestionHistoryRepository.findAllByUserIdAndTaskId(userId, Long.valueOf(taskForm.getId()));
     		if(studentTaskQuestionHistoryBeanList == null || studentTaskQuestionHistoryBeanList.size() == 0) {
     			taskForm.setAnsweredQuestionCnt("0");
     		} else {
@@ -280,7 +281,7 @@ public class StudentTaskServiceImpl implements StudentTaskService {
     	});
     	
     	// 問題履歴を更新する
-    	List<StudentTaskQuestionHistoryBean> studentTaskQuestionHistoryBeanList = studentTaskQuestionHistoryRepository.findByUserIdAndTaskId(userId, Long.valueOf(taskForm.getId()));
+    	List<StudentTaskQuestionHistoryBean> studentTaskQuestionHistoryBeanList = studentTaskQuestionHistoryRepository.findAllByUserIdAndTaskId(userId, Long.valueOf(taskForm.getId()));
     	if(studentTaskQuestionHistoryBeanList != null) {
 	    	for(StudentTaskQuestionHistoryBean studentTaskQuestionHistoryBean : studentTaskQuestionHistoryBeanList) {
 	    		if(studentTaskQuestionHistoryBean.getAnswer() != null) {

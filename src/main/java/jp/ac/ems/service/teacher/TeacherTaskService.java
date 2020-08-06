@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import jp.ac.ems.form.teacher.TaskForm;
+import jp.ac.ems.form.teacher.TaskSubmissionForm;
 
 /**
  * 先生用課題Serviceクラス（teacher task Service Class）.
@@ -118,4 +119,10 @@ public interface TeacherTaskService {
      */
     public Map<String, String> findAllStudent(List<String> exclusionCourseList, List<String> exclusionClassList);
 
+    /**
+     * 課題提出状況リストを取得する
+     * @param taskId 課題ID(task id)
+     * @return 課題提出状況リスト
+     */
+    public List<TaskSubmissionForm> getAnswerdList(String taskId);
 }

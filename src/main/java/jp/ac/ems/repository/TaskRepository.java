@@ -23,6 +23,8 @@ public interface TaskRepository extends JpaRepository<TaskBean, Long> {
 	 */
     @Query("SELECT DISTINCT t FROM TaskBean t"
     		+ " LEFT JOIN FETCH t.taskQuestionBeans"
+//    		+ " LEFT JOIN FETCH t.studentTaskBeans"
+//    		+ " LEFT JOIN FETCH t.studentTaskQuestionHistoryBeans"
     		+ " WHERE t.id = :id")
     Optional<TaskBean> findByIdFetchTaskQuestion(@Param("id") Long id);
 

@@ -19,15 +19,18 @@ import jp.ac.ems.bean.TaskQuestionBean;
 import jp.ac.ems.bean.UserBean;
 import jp.ac.ems.bean.StudentCourseBean;
 import jp.ac.ems.bean.StudentTaskBean;
+import jp.ac.ems.bean.StudentTaskQuestionHistoryBean;
 import jp.ac.ems.config.FieldLarge;
 import jp.ac.ems.config.FieldMiddle;
 import jp.ac.ems.config.FieldSmall;
 import jp.ac.ems.config.ExamDivisionCodeProperties;
 import jp.ac.ems.config.ServerProperties;
 import jp.ac.ems.form.teacher.TaskForm;
+import jp.ac.ems.form.teacher.TaskSubmissionForm;
 import jp.ac.ems.repository.ClassRepository;
 import jp.ac.ems.repository.CourseRepository;
 import jp.ac.ems.repository.QuestionRepository;
+import jp.ac.ems.repository.StudentTaskQuestionHistoryRepository;
 import jp.ac.ems.repository.TaskRepository;
 import jp.ac.ems.repository.UserRepository;
 import jp.ac.ems.service.teacher.TeacherTaskService;
@@ -77,6 +80,12 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
      */
     @Autowired
     UserRepository userRepository;
+    
+    /**
+     * 学生：課題-問題履歴リポジトリ
+     */
+    @Autowired
+    StudentTaskQuestionHistoryRepository studentTaskQuestionHistoryRepository;
 
     /**
      * サーバー設定プロパティ.
@@ -525,5 +534,52 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
         }
     	
     	return userMap;
+    }
+    
+    /**
+     * 課題提出状況リストを取得する
+     * @param taskId 課題ID(task id)
+     * @return 課題提出状況リスト
+     */
+    @Override
+    public List<TaskSubmissionForm> getAnswerdList(String taskId) {
+    	List<TaskSubmissionForm> taskSubmissionFormList = new ArrayList<>();
+    	Map<String, Boolean> targetStudentAnsweredMap = new HashMap<>();
+    	// 課題の問題数を取得する
+    	List<Long> questionSizeList = new ArrayList<>();;
+    	Optional<TaskBean> optTask = taskRepository.findById(Long.valueOf(taskId));
+    	optTask.ifPresent(taskBean -> {
+    		questionSizeList.add(taskBean.getQuestionSize());
+    		targetStudentAnsweredMap.putAll(taskBean.getStudentAnsweredMap());
+    	});
+    	
+    	// 学生ごとの回答数を取得する
+    	Map<String, Integer> stqhMap = new HashMap<>();
+    	List<StudentTaskQuestionHistoryBean> stqhBeanList = studentTaskQuestionHistoryRepository.findAllByTaskId(Long.valueOf(taskId));
+    	for(StudentTaskQuestionHistoryBean stqhBean : stqhBeanList) {
+    		if(stqhBean.getAnswer() != null) {
+	    		String userId = stqhBean.getUserId();
+	    		if(stqhMap.containsKey(userId)) {
+	    			stqhMap.put(userId, stqhMap.get(userId) + 1);
+	    		} else {
+	    			stqhMap.put(userId, 1);
+	    		}
+    		}
+    	}
+
+    	// 提出状況を作成し、リストに格納する
+    	for(Map.Entry<String, Boolean> entry : targetStudentAnsweredMap.entrySet()) {
+        	TaskSubmissionForm form = new TaskSubmissionForm();
+        	if(stqhMap.containsKey(entry.getKey())) {
+        		form.setAnsweredCnt(String.valueOf(stqhMap.get(entry.getKey())));
+        	} else {
+        		form.setAnsweredCnt("0");
+        	}
+        	form.setAnsweredFlg(entry.getValue());
+        	form.setQuestionCnt(String.valueOf(questionSizeList.get(0)));
+        	form.setUserId(entry.getKey());
+        	taskSubmissionFormList.add(form);
+    	}
+    	return taskSubmissionFormList;
     }
 }

@@ -28,5 +28,13 @@ public interface StudentTaskQuestionHistoryRepository extends JpaRepository<Stud
      * @param taskId 課題ID（task id）
      * @return 回答履歴リスト（task question history list)
      */
-    List<StudentTaskQuestionHistoryBean> findByUserIdAndTaskId(String userId, Long taskId);
+    List<StudentTaskQuestionHistoryBean> findAllByUserIdAndTaskId(String userId, Long taskId);
+
+    /**
+     * 特定の課題に対する回答履歴を全て取得する()
+     * @param taskId 課題ID（task id）
+     * @return 回答履歴リスト（task question history list)
+     */
+    List<StudentTaskQuestionHistoryBean> findAllByTaskId(Long taskId);
+
 }

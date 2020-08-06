@@ -83,12 +83,22 @@ public class UserBean {
     private Set<StudentTaskBean> studentTaskBeans;
 
     /**
+     * 学生・課題・問題履歴Bean：相互参照オブジェクト(user・task・question history：cross reference object).
+     */
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private Set<StudentTaskQuestionHistoryBean> studentTaskQuestionHistoryBeans;
+    
+    /**
      * コンストラクタ(constructor).
      */
     public UserBean() {
         studentClassBeans = new HashSet<>();
         studentCourseBeans = new HashSet<>();
         studentTaskBeans = new HashSet<>();
+        studentTaskQuestionHistoryBeans = new HashSet<>();
     }
     
     /**

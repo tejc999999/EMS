@@ -1,11 +1,13 @@
 package jp.ac.ems.controller.teacher;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
 import jp.ac.ems.form.teacher.TaskForm;
+import jp.ac.ems.form.teacher.TaskSubmissionForm;
 import jp.ac.ems.impl.service.teacher.TeacherTaskServiceImpl;
 import jp.ac.ems.service.teacher.TeacherTaskService;
 
@@ -358,4 +360,23 @@ public class TeacherTaskController {
         
         return "/teacher/task/add_question";
     }
+    
+    
+    /**
+     * 分野別問題取得(Obtaining questions by field).
+     * @param form 課題Form(task form)
+     * @param result エラーチェック結果(error validate result)
+     * @param model モデル(model)
+     * @return 課題問題登録用ページビュー(task question add page view)
+     */
+    @PostMapping(path = "submissionlist")
+    public String submissionList(@RequestParam String id, Model model) {
+
+    	
+    	model.addAttribute("submissionTasks", taskService.getAnswerdList(id));
+    	
+
+        return "/teacher/task/submissionlist";
+    }
+    
 }

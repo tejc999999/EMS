@@ -69,6 +69,7 @@ public class TaskBean {
     public TaskBean() {
         taskQuestionBeans = new HashSet<>();
         studentTaskBeans = new HashSet<>();
+        studentTaskQuestionHistoryBeans = new HashSet<>();
     }
 
     /**
@@ -89,6 +90,16 @@ public class TaskBean {
     @JoinColumn(name = "task_id")
     private Set<StudentTaskBean> studentTaskBeans;
 
+    /**
+     * 学生・課題・問題履歴Bean：相互参照オブジェクト(user・task・question history：cross reference object).
+     */
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private Set<StudentTaskQuestionHistoryBean> studentTaskQuestionHistoryBeans;
+
+    
     /**
      * 課題・問題情報を追加する(add an info(task/question)).
      * @param userCourseBean 課題・問題Bean(task/question bean)
@@ -129,5 +140,19 @@ public class TaskBean {
             map.put(String.valueOf(taskQuestionBean.getSeqNumber()), String.valueOf(taskQuestionBean.getQuestionId()));
         });
         return map;
+    }
+    
+    /**
+     * 課題の対象となる学生と回答状況を取得する
+     * 
+     * @return 学生回答状況マップ
+     */
+    public Map<String, Boolean> getStudentAnsweredMap() {
+    	Map<String, Boolean> map = new HashMap<>(); 
+    	for(StudentTaskBean bean : studentTaskBeans) {
+    		map.put(bean.getUserId(), bean.isAnswerFlg());
+    	}
+    	
+    	return map;
     }
 }
