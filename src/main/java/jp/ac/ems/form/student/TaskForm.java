@@ -1,5 +1,6 @@
 package jp.ac.ems.form.student;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.validation.constraints.Max;
@@ -38,16 +39,6 @@ public class TaskForm {
     private boolean answeredFlg;
     
     /**
-     * 問題情報文字列
-     */
-    private String questionInfoStr;
-    
-    /**
-     * 問題分野情報文字列
-     */
-    private String questionFieldInfoStr;
-    
-    /**
      * 問題数
      */
     private String questionSize;
@@ -61,6 +52,11 @@ public class TaskForm {
      * 回答済問題数
      */
     private String answeredQuestionCnt;
+    
+    /**
+     * 更新日時
+     */
+    private Date updateDate;
     
     /**
      * 問題Form(question Form).

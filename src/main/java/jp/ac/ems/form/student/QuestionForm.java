@@ -74,4 +74,20 @@ public class QuestionForm {
      * 問題画像ファイルパス
      */
     private String imagePath;
+    
+    
+    /**
+     * 問題情報文字列
+     */
+    private String questionInfoStr;
+    
+    /**
+     * 問題分野情報文字列
+     */
+    private String questionFieldInfoStr;
+    
+    /**
+     * 課題番号
+     */
+    private String taskNumber;
 }

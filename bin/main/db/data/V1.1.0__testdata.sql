@@ -25,8 +25,10 @@ INSERT INTO t_student_course(id, user_id, course_id) VALUES(1, 'teststudent1', 1
 INSERT INTO t_class_course(id, class_id, course_id) VALUES(1, 2, 1);
 
 /* 課題 */
+/*
 INSERT INTO t_task(id, title, description) VALUES(1, 'AP対策テスト課題1', 'R01A_01-20');
 INSERT INTO t_task(id, title, description) VALUES(2, 'AP対策テスト課題2', 'H29H_10-19+H30H_01-05');
+*/
 
 /* 問題 */
 INSERT INTO t_question(id, division, year, term, number, field_l_id, field_m_id, field_s_id, correct) VALUES(1, 'AP', 'H21', 'H',1, 1, 1, 1, 2);
@@ -1791,6 +1793,7 @@ INSERT INTO t_question(id, division, year, term, number, field_l_id, field_m_id,
 INSERT INTO t_question(id, division, year, term, number, field_l_id, field_m_id, field_s_id, correct) VALUES(1760, 'AP', 'R01', 'A',80, 3, 10, 23, 2);
 
 /* 課題_問題 */
+/*
 INSERT INTO t_task_question(id, task_id, question_id) VALUES(1, 1, 1681);
 INSERT INTO t_task_question(id, task_id, question_id) VALUES(2, 1, 1682);
 INSERT INTO t_task_question(id, task_id, question_id) VALUES(3, 1, 1683);
@@ -1817,7 +1820,7 @@ INSERT INTO t_task_question(id, task_id, question_id) VALUES(22, 2, 1442);
 INSERT INTO t_task_question(id, task_id, question_id) VALUES(23, 2, 1443);
 INSERT INTO t_task_question(id, task_id, question_id) VALUES(24, 2, 1444);
 INSERT INTO t_task_question(id, task_id, question_id) VALUES(25, 2, 1445);
-
+*/
 /* コース_課題 */
 
 /* ユーザー_課題 */

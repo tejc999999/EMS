@@ -24,9 +24,15 @@
 			<td class="col-md-4" th:text="${task.description}">説明</td>
 			<td class="col-md-2" th:text="${task.answeredQuestionCnt + '/' + task.questionSize + '問'}">
 			</td>
-			<td class="col-md-2" >
+			<td th:if="${!task.answeredFlg}" class="col-md-2" >
 				<form th:action="@{/student/task/question}" method="post">
-					<input type="submit" name="form" th:value="開始" th:disabled="${task.answeredFlg}" />
+					<input type="submit" name="form" th:value="開始" />
+					<input type="hidden" name="id" th:value="${task.id}" />
+				</form>
+			</td>
+			<td th:if="${task.answeredFlg}" class="col-md-2" >
+				<form th:action="@{/student/task/question_answered_list}" method="post">
+					<input type="submit" name="form" th:value="確認" />
 					<input type="hidden" name="id" th:value="${task.id}" />
 				</form>
 			</td>

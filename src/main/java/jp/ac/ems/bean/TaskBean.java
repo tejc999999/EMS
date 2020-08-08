@@ -131,8 +131,8 @@ public class TaskBean {
     }
     
     /**
-     * 問題IDマップ（キーが順番）を取得する(get course id list).
-     * @return コースIDリスト(course id list)
+     * 問題IDマップ（キーが順番）を取得する(get question id map(key:seq number)).
+     * @return 問題IDマップ(question id map)
      */
     public Map<String, String> getQuestionIdSeqMap() {
         Map<String, String> map = new HashMap<>();
@@ -140,6 +140,18 @@ public class TaskBean {
             map.put(String.valueOf(taskQuestionBean.getSeqNumber()), String.valueOf(taskQuestionBean.getQuestionId()));
         });
         return map;
+    }
+    
+    /**
+     * 問題IDリストを取得する(get question id list).
+     * @return 問題IDリスト(question id list)
+     */
+    public List<String> getQuestionIdList() {
+        List<String> list = new ArrayList<>();
+        taskQuestionBeans.forEach(taskQuestionBean -> {
+            list.add(String.valueOf(taskQuestionBean.getQuestionId()));
+        });
+        return list;
     }
     
     /**

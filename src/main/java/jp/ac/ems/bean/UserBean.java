@@ -17,6 +17,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import lombok.AccessLevel;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -142,11 +143,14 @@ public class UserBean {
      * 
      * @return 課題回答済みマップ
      */
-    public Map<String, Boolean> getTaskAnsweredMap() {
-    	Map<String, Boolean> map = new HashMap<>();
+    public Map<String, AnswerFlgAndUpdateDate> getAnswerFlgAndTaskUpdateDateMap() {
+    	Map<String, AnswerFlgAndUpdateDate> map = new HashMap<>();
     	
     	for(StudentTaskBean studentTaskBean : studentTaskBeans) {
-    		map.put(String.valueOf(studentTaskBean.getTaskId()), studentTaskBean.isAnswerFlg());
+    		AnswerFlgAndUpdateDate answerFlgAndUpdateDate = new AnswerFlgAndUpdateDate();
+    		answerFlgAndUpdateDate.setAnswerFlg(studentTaskBean.isAnswerFlg());
+    		answerFlgAndUpdateDate.setUpdateDate(studentTaskBean.getUpdateDate());
+    		map.put(String.valueOf(studentTaskBean.getTaskId()), answerFlgAndUpdateDate);
     	}
     	
     	return map;
@@ -164,5 +168,11 @@ public class UserBean {
         		studentTaskBean.setUpdateDate(new Date());
         	}
         });
+    }
+    
+    @Data
+    public class AnswerFlgAndUpdateDate {
+    	private boolean answerFlg;
+    	private Date updateDate;
     }
 }

@@ -1,14 +1,6 @@
 package jp.ac.ems.controller.student;
 
-import java.util.Date;
 import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import jp.ac.ems.config.ExamDivisionCodeProperties;
+import jp.ac.ems.form.student.QuestionForm;
 import jp.ac.ems.form.student.TaskForm;
 import jp.ac.ems.repository.QuestionRepository;
 import jp.ac.ems.service.student.StudentTaskService;
@@ -67,7 +60,7 @@ public class StudentTaskController {
     @GetMapping
     String list(Model model) {
         
-        List<TaskForm> list = taskService.findAllByLoginStudentId();
+        List<TaskForm> list = taskService.getTaskList();
 
         model.addAttribute("tasks", list);
 
@@ -79,9 +72,9 @@ public class StudentTaskController {
      * @return 課題-問題ページビュー(task-question page view)
      */
     @PostMapping(path = "question")
-    public String question(@RequestParam String id, TaskForm form, Model model) {
+    public String question(@RequestParam String id, Model model) {
 
-    	TaskForm taskForm = taskService.getQuestionForm(form, 0);
+    	TaskForm taskForm = taskService.getTaskFormToSetQuestionForm(id, null, 0);
     	
     	model.addAttribute("taskForm", taskForm);
     	
@@ -98,10 +91,10 @@ public class StudentTaskController {
     public String prevQuestion(TaskForm form, Model model) {
 
     	// 前の問題の回答を回答履歴に保存する
-    	taskService.answerSave(form);
+    	taskService.answerSave(form.getId(), form.getQuestionForm().getId(), form.getQuestionForm().getAnswer());
 
     	// 次の問題をセットする
-    	TaskForm taskForm = taskService.getQuestionForm(form, -1);
+    	TaskForm taskForm = taskService.getTaskFormToSetQuestionForm(form.getId(), form.getQuestionForm().getId(), -1);
     	
     	model.addAttribute("taskForm", taskForm);
     	model.addAttribute("answerSelectedItems", taskService.getAnswerSelectedItems());
@@ -117,10 +110,10 @@ public class StudentTaskController {
     public String nextQuestion(TaskForm form, Model model) {
 
     	// 前の問題の回答を回答履歴に保存する
-    	taskService.answerSave(form);
+    	taskService.answerSave(form.getId(), form.getQuestionForm().getId(), form.getQuestionForm().getAnswer());
 
     	// 前の問題をセットする
-    	TaskForm taskForm = taskService.getQuestionForm(form, 1);
+    	TaskForm taskForm = taskService.getTaskFormToSetQuestionForm(form.getId(), form.getQuestionForm().getId(),  1);
     	
     	model.addAttribute("taskForm", taskForm);
     	model.addAttribute("answerSelectedItems", taskService.getAnswerSelectedItems());
@@ -136,12 +129,26 @@ public class StudentTaskController {
     public String finishQuestion(TaskForm form, Model model) {
 
     	// 前の問題の回答を回答履歴に保存する
-    	taskService.answerSave(form);
+    	taskService.answerSave(form.getId(), form.getQuestionForm().getId(), form.getQuestionForm().getAnswer());
 
     	// 提出処理
-    	taskService.submissionTask(form);
+    	taskService.submissionTask(form.getId());
     	
     	// 課題-問題一覧画面に遷移する
         return list(model);
+    }
+    
+    /**
+     * 課題-問題回答履歴一覧表示(show task-answered question list).
+     * @return 課題-問題回答履歴一覧ページビュー(task-answered question list page view)
+     */
+    @PostMapping(path = "question_answered_list")
+    public String questionAnsweredList(@RequestParam String id, Model model) {
+
+        List<QuestionForm> list = taskService.getAnsweredQuestionList(id);
+
+        model.addAttribute("questions", list);
+
+        return "student/task/question_list";
     }
 }

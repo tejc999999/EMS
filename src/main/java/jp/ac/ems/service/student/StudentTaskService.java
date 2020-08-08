@@ -3,8 +3,7 @@ package jp.ac.ems.service.student;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.stereotype.Service;
-
+import jp.ac.ems.form.student.QuestionForm;
 import jp.ac.ems.form.student.TaskForm;
 
 /**
@@ -15,25 +14,26 @@ public interface StudentTaskService {
 	
     /**
      * ユーザに紐づく全ての課題を取得する.
-     * @param userId ユーザID
-     * @return 全ての問題Formリスト
+     * @return 全ての課題Formリスト(all taskForm list)
      */
-    public List<TaskForm> findAllByLoginStudentId();
+    public List<TaskForm> getTaskList();
     
     /**
      * 課題Formに問題Formをセットする
      * 
-     * @param form 課題Form(task form)
+     * @param taskId 課題ID(task id)
      * @param position 位置情報(position info)
      * @return 課題Form(task form)
      */
-    public TaskForm getQuestionForm(TaskForm form, int position);
+    public TaskForm getTaskFormToSetQuestionForm(String taskId, String questionId,  int position);
 
     /**
      * 問題への回答を保存する(save answer for question).
-     * @param form 課題Form(task form)
+     * @param taskId 課題ID(task id)
+     * @param questionId 問題ID(question id)
+     * @param answerId 回答ID(answer id)
      */
-    public void answerSave(TaskForm form);
+    public void answerSave(String taskId, String questionId, String answerId);
     
     /**
      * 回答アイテム取得
@@ -45,7 +45,14 @@ public interface StudentTaskService {
     /**
      * 課題提出(submission of task).
      * 
-     * @param taskForm 課題Form(task form)
+     * @param taskId 課題ID(task id)
      */
-    public void submissionTask(TaskForm task);
+    public void submissionTask(String taskId);
+    
+    /**
+     * ユーザに紐づく課題全回答済み問題を取得する.
+     * @param taskId 課題ID(task id)
+     * @return 全ての問題Formリスト(all questionForm list)
+     */
+    public List<QuestionForm> getAnsweredQuestionList(String taskId);
 }

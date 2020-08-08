@@ -49,7 +49,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 /**
  * 学生Controllerテスト(question class controller).
- * @author t.kawana
+ * @author tejc999999
  *
  */
 //@Transactional
