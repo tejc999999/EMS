@@ -84,7 +84,7 @@ public class TeacherTaskController {
     @PostMapping(path = "editprocess")
     public String editprocess(TaskForm form, Model model) {
 
-    	taskService.save(form);
+    	taskService.save(form, true);
     	
         return "redirect:/teacher/task";
     }
@@ -163,7 +163,9 @@ public class TeacherTaskController {
     public String addSubmit(@Validated TaskForm form, BindingResult result,
             Model model) {
 
-    	// TODO:作成中
+    	if(form.getQuestionCheckedList() == null || form.getQuestionCheckedList().size() == 0) {
+            return addQuestion(form, result, model);
+    	}
     	// コース一覧
         Map<String, String> courseMap = taskService.findAllCourse();
         model.addAttribute("courseCheckItems", courseMap);
@@ -256,7 +258,7 @@ public class TeacherTaskController {
             Model model) {
 
         // コース情報をDBに保存する
-        taskService.save(form);
+        taskService.save(form, false);
         
         return "redirect:/teacher/task";
     }

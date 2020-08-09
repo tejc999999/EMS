@@ -141,9 +141,10 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
     /**
      * 課題を保存する.
      * @param form コースForm
+     * @param easySaveFlg 簡易保存フラグ(easy save flag)
      * @return 保存済みコースForm
      */
-    public TaskForm save(TaskForm form) {
+    public TaskForm save(TaskForm form, boolean easySaveFlg) {
         
         TaskBean taskBean = new TaskBean();
         // ID、タイトル、説明をBeanに設定する
@@ -155,73 +156,76 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
         taskBean.setTitle(form.getTitle());
         taskBean.setDescription(form.getDescription());
         
-        // 課題作成者（先生ID）を設定する
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        taskBean.setTeacherId(auth.getName());
+        if(!easySaveFlg) {
         
-        // 課題、問題中間情報をBeanに設定する
-    	taskBean.clearTaskQuestionBean();
-        List<String> questionCheckedList = form.getQuestionCheckedList();
-        if(questionCheckedList != null) {
-        	int i = 0;
-        	for(String questionId : questionCheckedList) {
-        		
-	            TaskQuestionBean taskQuestionBean = new TaskQuestionBean();
-
-	            Optional<QuestionBean> optQuestion = questionRepository.findById(Long.valueOf(questionId));
-	            optQuestion.ifPresent(questionBean -> {
-		            if (taskId != null && !taskId.equals("")) {
-		                taskQuestionBean.setTaskId(Long.valueOf(taskId));
-		            }
-		            taskQuestionBean.setQuestionId(questionBean.getId());
-	            });
-	            taskQuestionBean.setSeqNumber(Long.valueOf(i++));
-
-	            taskBean.addTaskQuestionBean(taskQuestionBean);
-        	}
-        }
-        // 問題数を設定する
-        taskBean.setQuestionSize(Long.valueOf(questionCheckedList.size()));
-        
-        // 提示先情報（ユーザ、課題中間情報）をBeanに設定する
-        taskBean.clearStudentTaskBeans();
-        Set<String> studentIdSet = new HashSet<String>();
-        Set<String> classIdSet = new HashSet<String>();
-        List<String> courseCheckedList = form.getCourseCheckedList();
-        if(courseCheckedList != null) {
-        	for(String courseId : courseCheckedList) {
-        		
-                Optional<CourseBean> optCourse = courseRepository.findById(Long.valueOf(courseId));
-	            optCourse.ifPresent(courseBean -> {
-	            	// コースに所属するクラスを取得
-	                classIdSet.addAll(courseBean.getClassIdList());
-	                // コースに所属する学生（クラス所属学生を除く）を取得
-	            	studentIdSet.addAll(courseBean.getPartStudentIdList());
-	            });
-        	}
-        }
-
-        // 選択したクラスと、選択したコースに所属するクラスを結合
-        classIdSet.addAll(form.getClassCheckedList());
-        
-        // クラスに所属する学生を登録
-        for(String classId : classIdSet) {
-            Optional<ClassBean> optClass = classRepository.findById(Long.valueOf(classId));
-            optClass.ifPresent(classBean -> studentIdSet.addAll(classBean.getUserIdList()));
-        }
+	        // 課題作成者（先生ID）を設定する
+	        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	        taskBean.setTeacherId(auth.getName());
+	        
+	        // 課題、問題中間情報をBeanに設定する
+	    	taskBean.clearTaskQuestionBean();
+	        List<String> questionCheckedList = form.getQuestionCheckedList();
+	        if(questionCheckedList != null) {
+	        	int i = 0;
+	        	for(String questionId : questionCheckedList) {
+	        		
+		            TaskQuestionBean taskQuestionBean = new TaskQuestionBean();
+	
+		            Optional<QuestionBean> optQuestion = questionRepository.findById(Long.valueOf(questionId));
+		            optQuestion.ifPresent(questionBean -> {
+			            if (taskId != null && !taskId.equals("")) {
+			                taskQuestionBean.setTaskId(Long.valueOf(taskId));
+			            }
+			            taskQuestionBean.setQuestionId(questionBean.getId());
+		            });
+		            taskQuestionBean.setSeqNumber(Long.valueOf(i++));
+	
+		            taskBean.addTaskQuestionBean(taskQuestionBean);
+	        	}
+	        }
+	        // 問題数を設定する
+	        taskBean.setQuestionSize(Long.valueOf(questionCheckedList.size()));
+	        
+	        // 提示先情報（ユーザ、課題中間情報）をBeanに設定する
+	        taskBean.clearStudentTaskBeans();
+	        Set<String> studentIdSet = new HashSet<String>();
+	        Set<String> classIdSet = new HashSet<String>();
+	        List<String> courseCheckedList = form.getCourseCheckedList();
+	        if(courseCheckedList != null) {
+	        	for(String courseId : courseCheckedList) {
+	        		
+	                Optional<CourseBean> optCourse = courseRepository.findById(Long.valueOf(courseId));
+		            optCourse.ifPresent(courseBean -> {
+		            	// コースに所属するクラスを取得
+		                classIdSet.addAll(courseBean.getClassIdList());
+		                // コースに所属する学生（クラス所属学生を除く）を取得
+		            	studentIdSet.addAll(courseBean.getPartStudentIdList());
+		            });
+	        	}
+	        }
+	
+	        // 選択したクラスと、選択したコースに所属するクラスを結合
+	        classIdSet.addAll(form.getClassCheckedList());
+	        
+	        // クラスに所属する学生を登録
+	        for(String classId : classIdSet) {
+	            Optional<ClassBean> optClass = classRepository.findById(Long.valueOf(classId));
+	            optClass.ifPresent(classBean -> studentIdSet.addAll(classBean.getUserIdList()));
+	        }
+		            
+	        // コース、クラスに所属する全学生と、選択した全学生を結合
+	        studentIdSet.addAll(form.getUserCheckedList());
+		            
+	        for(String studentId : studentIdSet) {
+	        	
+	        	StudentTaskBean studentTaskBean = new StudentTaskBean();
+	            if (taskId != null && !taskId.equals("")) {
+	            	studentTaskBean.setTaskId(Long.valueOf(taskId));
+	            }
+	            studentTaskBean.setUserId(studentId);
 	            
-        // コース、クラスに所属する全学生と、選択した全学生を結合
-        studentIdSet.addAll(form.getUserCheckedList());
-	            
-        for(String studentId : studentIdSet) {
-        	
-        	StudentTaskBean studentTaskBean = new StudentTaskBean();
-            if (taskId != null && !taskId.equals("")) {
-            	studentTaskBean.setTaskId(Long.valueOf(taskId));
-            }
-            studentTaskBean.setUserId(studentId);
-            
-            taskBean.addStudentTaskBean(studentTaskBean);
+	            taskBean.addStudentTaskBean(studentTaskBean);
+	        }
         }
         
         // DBに保存する
