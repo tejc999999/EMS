@@ -140,15 +140,65 @@ public class StudentTaskController {
     
     /**
      * 課題-問題回答履歴一覧表示(show task-answered question list).
+     * @pram id 課題ID(task id)
+     * @param model モデル
      * @return 課題-問題回答履歴一覧ページビュー(task-answered question list page view)
      */
     @PostMapping(path = "question_answered_list")
     public String questionAnsweredList(@RequestParam String id, Model model) {
 
+    	TaskForm taskForm = taskService.getTaskForm(id);
+    	model.addAttribute("taskForm", taskForm);
+    	
         List<QuestionForm> list = taskService.getAnsweredQuestionList(id);
-
         model.addAttribute("questions", list);
 
         return "student/task/question_list";
+    }
+    
+    /**
+     * 課題-問題回答:確認(first task-question answer:confirm).
+     * @return 課題-問題ページビュー(task-question page view)
+     */
+    @PostMapping(path = "question_confirm")
+    public String questionConfirm(@RequestParam String taskId, @RequestParam String questionId, Model model) {
+
+    	TaskForm taskForm = taskService.getTaskFormToSetQuestionForm(taskId, questionId, 0);
+    	model.addAttribute("taskForm", taskForm);
+    	model.addAttribute("answerSelectedItems", taskService.getAnswerSelectedItems());
+    	
+        return "student/task/question_confirm";
+    }
+    
+    /**
+     * 前の課題-問題回答:確認(prev task-question answer:conrim).
+     * @return 課題-問題ページビュー(task-question page view)
+     */
+    @PostMapping(path = "question_confirm", params="prevBtn")
+    public String prevQuestionConfirm(TaskForm form, Model model) {
+
+    	// 次の問題をセットする
+    	TaskForm taskForm = taskService.getTaskFormToSetQuestionForm(form.getId(), form.getQuestionForm().getId(), -1);
+    	
+    	model.addAttribute("taskForm", taskForm);
+    	model.addAttribute("answerSelectedItems", taskService.getAnswerSelectedItems());
+
+        return "student/task/question_confirm";
+    }
+    
+    /**
+     * 次の課題-問題回答:確認(next task-question answer:conrim).
+     * @return 課題-問題ページビュー(task-question page view)
+     */
+    @PostMapping(path = "question_confirm", params="nextBtn")
+    public String nextQuestionConfirm(TaskForm form, Model model) {
+
+    	// 前の問題をセットする
+    	TaskForm taskForm = taskService.getTaskFormToSetQuestionForm(form.getId(), form.getQuestionForm().getId(),  1);
+    	
+    	model.addAttribute("taskForm", taskForm);
+    	model.addAttribute("answerSelectedItems", taskService.getAnswerSelectedItems());
+
+        return "student/task/question_confirm";
     }
 }

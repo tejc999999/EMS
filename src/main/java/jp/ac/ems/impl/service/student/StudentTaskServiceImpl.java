@@ -73,6 +73,7 @@ public class StudentTaskServiceImpl implements StudentTaskService {
 
     /**
      * ユーザに紐づく全ての課題を取得する.
+     * 
      * @param userId ユーザID(user id)
      * @return 全ての問題Formリスト(list of all question forms)
      */
@@ -132,6 +133,27 @@ public class StudentTaskServiceImpl implements StudentTaskService {
     	
         return sortTaskFormList;
     }
+
+    /**
+     * 課題の情報をセットした課題Formを取得する.
+     * 
+     * @param taskId 課題ID(task id)
+     * @return 課題Form(task form)
+     */
+    @Override
+    public TaskForm getTaskForm(String taskId) {
+    	
+    	TaskForm taskForm = new TaskForm();
+    	
+    	Optional<TaskBean> optTask = taskRepository.findById(Long.valueOf(taskId));
+    	optTask.ifPresent(taskBean -> {
+    		taskForm.setId(String.valueOf(taskBean.getId()));
+    		taskForm.setTitle(taskBean.getTitle());
+    		taskForm.setDescription(taskBean.getDescription());
+    	});
+    	
+    	return taskForm;
+    }
     
     /**
      * 課題Formに問題Formをセットする
@@ -154,9 +176,11 @@ public class StudentTaskServiceImpl implements StudentTaskService {
     	});
 
     	// 指定位置情報の問題を取得する
- 		if(questionId == null || position == 0) {
+ 		if(questionId == null) {
+ 			
  			questionId = questionMap.get("0");
- 		} else {
+ 		} else if(position != 0) {
+ 			
  			String currenctQuestionId = questionId;
 	    	String currentPosition = questionMap
 	    									.entrySet()
@@ -169,7 +193,10 @@ public class StudentTaskServiceImpl implements StudentTaskService {
     	}
  		
  		QuestionForm questionForm = getAnsweredQuestionForm(taskId, questionId);
- 		form.setQuestionForm(questionForm);
+
+ 		questionForm.setCorrect(convertAnsweredIdToWord(questionForm.getCorrect()));
+		
+		form.setQuestionForm(questionForm);
 
     	return form;
     }
@@ -308,8 +335,6 @@ public class StudentTaskServiceImpl implements StudentTaskService {
 			questionForm.setAnswer(convertAnsweredIdToWord(questionForm.getAnswer()));
 			questionForm.setCorrect(convertAnsweredIdToWord(questionForm.getCorrect()));
 			
-			// TODO:未回答の回答Formが取得されない問題をどうするか
-			
 			list.add(questionForm);
 		}
 
@@ -416,7 +441,7 @@ public class StudentTaskServiceImpl implements StudentTaskService {
     			FieldLarge.getName(ExamDivisionCode.AP.getName(), Byte.valueOf(questionForm.getFieldLId())) + "/"
     			+ FieldMiddle.getName(ExamDivisionCode.AP.getName(), Byte.valueOf(questionForm.getFieldMId())) + "/"
     			+ FieldSmall.getName(ExamDivisionCode.AP.getName(), Byte.valueOf(questionForm.getFieldSId())));
-
+    	
     	return questionForm;
 	}
 }

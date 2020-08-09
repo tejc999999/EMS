@@ -40,14 +40,19 @@
 
   <div class="form-row">
     <div class="col-md-12">
-      <p th:inline="text">正解： [[${answerName]]</p>
+       <p th:inline="text" style="font-weight:bold; color: #ff0000;">正解： [[*{questionForm.correct}]]</p>
     </div>
   </div>
   
   <div class="form-row mt-5">
     <div class="form-check form-check-inline col-md-3 m-0 p-0" th:each="answerItem : ${answerSelectedItems}">
       <input class="form-check-input" type="radio" name="questionForm.answer" th:value="${answerItem.key}" th:checked="${answerItem.key.equals(taskForm.questionForm.answer)}" disabled />
-      <label class="form-check-label" th:text="${answerItem.value}"></label>
+      <font th:if="${answerItem.key.equals(taskForm.questionForm.answer)}" style="border-bottom: solid 4px red;">
+        <label class="form-check-label" th:text="${answerItem.value}"></label>
+      </font>
+      <font th:if="${!answerItem.key.equals(taskForm.questionForm.answer)}">
+        <label class="form-check-label" th:text="${answerItem.value}"></label>
+      </font>
     </div>
   </div>
   

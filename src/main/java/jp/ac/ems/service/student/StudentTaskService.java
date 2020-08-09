@@ -55,4 +55,12 @@ public interface StudentTaskService {
      * @return 全ての問題Formリスト(all questionForm list)
      */
     public List<QuestionForm> getAnsweredQuestionList(String taskId);
+    
+    /**
+     * 課題の情報をセットした課題Formを取得する.
+     * 
+     * @param taskId 課題ID(task id)
+     * @return 課題Form(task form)
+     */
+    public TaskForm getTaskForm(String taskId);
 }
