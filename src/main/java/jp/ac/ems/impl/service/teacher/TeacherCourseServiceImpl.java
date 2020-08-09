@@ -212,8 +212,9 @@ public class TeacherCourseServiceImpl implements TeacherCourseService {
      * @param id コースID
      */
     public void delete(String id) {
-        CourseBean courseBean = new CourseBean();
-        courseBean.setId(Long.valueOf(id));
-        courseRepository.delete(courseBean);
+        List<CourseBean> courseBeanList = new ArrayList<>();
+        Optional<CourseBean> optCourse = courseRepository.findById(Long.valueOf(id));
+        optCourse.ifPresent(courseBean -> courseBeanList.add(courseBean));
+        courseRepository.delete(courseBeanList.get(0));
     }
 }

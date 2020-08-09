@@ -133,9 +133,10 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
      * @param id 課題ID
      */
     public void delete(String id) {
-        TaskBean taskBean = new TaskBean();
-        taskBean.setId(Long.valueOf(id));
-        taskRepository.delete(taskBean);
+        List<TaskBean> taskBeanList = new ArrayList<>();
+        Optional<TaskBean> optTask = taskRepository.findById(Long.valueOf(id));
+        optTask.ifPresent(taskBean -> taskBeanList.add(taskBean));
+        taskRepository.delete(taskBeanList.get(0));
     }
 
     /**

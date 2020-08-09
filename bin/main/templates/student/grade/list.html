@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="layout :: common_layout(title = '全学生成績一覧', scripts = ~{::script}, links = ~{::link})">
+
+<script type="text/javascript"
+	th:src="@{/webjars/chart.js/2.9.3/dist/Chart.js}" ></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js"></script> -->
+<style>
+#ex_chart {max-width:640px;max-height:480px;}
+</style>
+</head>
+
+<body>
+
+<div th:replace="layout :: header"></div>
+
+
+<canvas id="ex_chart"></canvas>
+
+<script>
+var ctx = document.getElementById('ex_chart');
+
+var data = {
+    labels: ["Aさん", "Bさん", "Cさん", "Dさん", "Eさん"],
+    datasets: [
+    	{
+        	label: '合計',
+        	data: [880, 740, 900, 520, 930],
+        	backgroundColor: 'rgba(255, 100, 100, 1)'
+    	},{
+        	label: 'テクノロジ',
+        	data: [880, 740, 900, 520, 930],
+        	backgroundColor: 'rgba(255, 100, 100, 0.5)'
+    	},{
+        	label: 'マネジメント',
+        	data: [880, 740, 900, 520, 930],
+        	backgroundColor: 'rgba(100, 255, 100, 0.5)'
+    	},{
+        	label: 'ストラテジ',
+        	data: [880, 740, 900, 520, 930],
+        	backgroundColor: 'rgba(100, 100, 255, 0.5)'
+    	}
+    ]
+};
+
+var options = {
+	    scales: {
+	        xAxes: [{
+	            ticks: {
+	                min: 300
+	            }
+	        }]
+	    }
+	};
+
+	var ex_chart = new Chart(ctx, {
+	    type: 'horizontalBar',
+	    data: data,
+	    options: options
+	});
+</script>
+<div th:replace="layout :: footer"></div>
+  
+</body>
+</html>

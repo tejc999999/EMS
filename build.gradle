@@ -43,6 +43,7 @@ dependencies {
     implementation 'com.ninja-squad:DbSetup:2.1.0'
     implementation 'org.flywaydb:flyway-core:6.5.1'
     implementation 'org.webjars:bootstrap:4.5.0'
+    implementation 'org.webjars.npm:chart.js:2.9.3'
 //    implementation 'javax.persistence:persistence-api:1.0.2'
     
     runtimeOnly 'com.h2database:h2:1.4.200'

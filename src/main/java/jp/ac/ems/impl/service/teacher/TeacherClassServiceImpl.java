@@ -134,8 +134,9 @@ public class TeacherClassServiceImpl implements TeacherClassService {
      * @param id クラスID
      */
     public void delete(String id) {
-        ClassBean classBean = new ClassBean();
-        classBean.setId(Long.valueOf(id));
-        classRepository.delete(classBean);
+        List<ClassBean> classBeanList = new ArrayList<>();
+        Optional<ClassBean> optClass = classRepository.findById(Long.valueOf(id));
+        optClass.ifPresent(classBean -> classBeanList.add(classBean));
+        classRepository.delete(classBeanList.get(0));
     }
 }

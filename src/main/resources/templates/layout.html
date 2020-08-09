@@ -60,6 +60,14 @@
               <a class="dropdown-item" th:href="@{'/student/task'}">課題一覧</a>
           </div>
         </li>
+        <li class="nav-item dropdown" sec:authorize="hasRole('STUDENT')">
+          <a class="nav-link dropdown-toggle" href="#" id="studentTaskDropDown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+         進捗
+          </a>
+          <div class="dropdown-menu" aria-labelledby="taskDropDown">
+              <a class="dropdown-item" th:href="@{'/student/grade'}">進捗一覧</a>
+          </div>
+        </li>
         <li class="nav-item dropdown" sec:authorize="hasRole('TEACHER')">
           <a class="nav-link dropdown-toggle" href="#" id="taskDropDown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           課題
@@ -110,7 +118,7 @@
 <footer th:fragment="footer">
   <div class="pusth" style="height:10px"></div>
   <div class="fixed-bottom bg-dark">
-    <span class="text-light" style="height:10px; margin-bottom:-10px">固定フッター</span>
+    <span class="text-light text-right" style="height:10px; margin-bottom:-10px">ver.0.0.1</span>
   </div>
 </footer>
 </html>
