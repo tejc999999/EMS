@@ -286,16 +286,21 @@ public class StudentTaskServiceImpl implements StudentTaskService {
 	    		boolean correctFlg = (studentTaskQuestionHistoryBean.getAnswer() == studentTaskQuestionHistoryBean.getCorrect());
 	    		Optional<StudentQuestionHistoryBean> optStudentQHBean = studentQuestionHistoryRepository.findByUserIdAndQuestionId(userId, studentTaskQuestionHistoryBean.getQuestionId());
 	    		optStudentQHBean.ifPresentOrElse(studentQuestionHistoryBean -> {
-	    			if(correctFlg) {
-	    				studentQuestionHistoryBean.setCorrectCnt((short)(studentQuestionHistoryBean.getCorrectCnt() + 1));
-	    			} else {
-	    				studentQuestionHistoryBean.setIncorrectCnt((short)(studentQuestionHistoryBean.getIncorrectCnt() + 1));
+	    			if(studentTaskQuestionHistoryBean.getAnswer() != null && !studentTaskQuestionHistoryBean.getAnswer().equals("")) {
+		    			if(correctFlg) {
+		    				studentQuestionHistoryBean.setCorrectCnt((short)(studentQuestionHistoryBean.getCorrectCnt() + 1));
+		    			} else {
+		    				studentQuestionHistoryBean.setIncorrectCnt((short)(studentQuestionHistoryBean.getIncorrectCnt() + 1));
+		    			}
 	    			}
 	    			studentQuestionHistoryRepository.save(studentQuestionHistoryBean);
 	    		},
 	    		() -> {
     	    		StudentQuestionHistoryBean studentQuestionHistoryBean = new StudentQuestionHistoryBean();
-	    			if(correctFlg) {
+	    			if(studentTaskQuestionHistoryBean.getAnswer() == null || studentTaskQuestionHistoryBean.getAnswer().equals("")) {
+	    				studentQuestionHistoryBean.setCorrectCnt((short)0);
+	    				studentQuestionHistoryBean.setIncorrectCnt((short)0);
+	    			} else if(correctFlg) {
 	    				studentQuestionHistoryBean.setCorrectCnt((short)1);
 	    				studentQuestionHistoryBean.setIncorrectCnt((short)0);
 	    			} else {

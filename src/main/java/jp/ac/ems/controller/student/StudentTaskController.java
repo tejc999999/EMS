@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import jp.ac.ems.config.ExamDivisionCodeProperties;
 import jp.ac.ems.form.student.QuestionForm;
 import jp.ac.ems.form.student.TaskForm;
-import jp.ac.ems.repository.QuestionRepository;
 import jp.ac.ems.service.student.StudentTaskService;
 
 /**
@@ -36,13 +35,7 @@ public class StudentTaskController {
      */
 	@Autowired
 	ExamDivisionCodeProperties examDivisionCodeProperties;
-	
-    /**
-     * 問題リポジトリ
-     */
-    @Autowired
-    QuestionRepository questionRepository;
-    
+	    
     /**
      * モデルにフォームをセットする(set form the model).
      * @return 課題Form(task form)

@@ -11,6 +11,7 @@ import jp.ac.ems.repository.UserRepository;
 import jp.ac.ems.service.teacher.TeacherStudentService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 /**
@@ -69,7 +70,9 @@ public class TeacherStudentServiceImpl implements TeacherStudentService {
             saveUserBean = new UserBean();
         }
         saveUserBean.setId(form.getId());
-        saveUserBean.setPassword(form.getPassword());
+        // エンコード
+        saveUserBean.setPassword(new BCryptPasswordEncoder().encode(form.getPassword()));
+//        saveUserBean.setPassword(form.getPassword());
         saveUserBean.setName(form.getName());
         saveUserBean.setRoleId(form.getRoleId());
         
