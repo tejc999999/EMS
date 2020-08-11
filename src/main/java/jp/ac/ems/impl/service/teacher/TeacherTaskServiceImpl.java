@@ -260,7 +260,7 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
     }
 
     /**
-     * 年度ごとの問題を取得する(Get yearly question).
+     * 分野ごとの問題を取得する(Get fiealdly question).
      * @param fieldY 大分類(large field)
      * @param fieldM 中分類(middle field)
      * @param fieldS 小分類(small field)

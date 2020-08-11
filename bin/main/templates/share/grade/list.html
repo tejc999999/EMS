@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="layout :: common_layout(title = '全学生成績一覧', scripts = ~{::script}, links = ~{::link})">
+
+<script type="text/javascript"
+	th:src="@{/webjars/chart.js/2.9.3/dist/Chart.js}" ></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js"></script> -->
+<style>
+</style>
+<style th:inline="css">
+#ex_chart {max-width:100%;max-height: /*[[${gradeForm.canvasHeight}]]*/ 100%;}
+</style>
+</head>
+
+<body>
+
+<div th:replace="layout :: header"></div>
+
+<h2>■進捗一覧</h2>
+<div class="container-fluid no-gutters pb-5">
+<form th:action="@{/share/grade/list}" th:object="${gradeForm}" method="post">
+
+  <div class="form-row">
+    <div class="form-group col-md-2">
+      <div class="form-group">
+		<select class="form-control" id="selectYear" name="selectYear">
+		     <option value="">---</option>
+		     <option th:each="item : ${yearDropItems}" th:value="${item.value}" th:text="${item.value}" th:selected="${item.value} == *{selectYear}">pulldown</option>
+		</select>
+      </div>
+    </div>
+   	<div class="form-group col-md-2">
+		<input type="submit" name="selectYearBtn" class="btn btn-info btn-block" th:value="選択">
+    </div>
+    <div class="form-group col-md-2">
+    </div>
+    <div class="form-group col-md-6">
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group col-md-2">
+      <div class="form-group">
+	    <select class="form-control" id="selectFieldL" name="selectFieldL">
+	      <option value="">---</option>
+	      <option th:each="item : ${fieldLDropItemsItems}" th:value="${item.value}" th:text="${item.value}" th:selected="${item.value} == *{selectFieldL}">pulldown</option>
+	    </select>
+      </div>
+    </div>
+    <div class="form-group col-md-1">
+      <input type="submit" name="selectFieldLargeBtn" class="btn btn-info btn-block" th:value="'>'">
+    </div>
+    <div class="form-group col-md-2">
+      <div class="form-group">
+	    <select class="form-control" id="selectFieldM" name="selectFieldM">
+	      <option value="">---</option>
+	      <option th:each="item : ${fieldMDropItems}" th:value="${item.value}" th:text="${item.value}" th:selected="${item.value} == *{selectFieldM}">pulldown</option>
+	    </select>
+      </div>
+    </div>
+    <div class="form-group col-md-1">
+      <input type="submit" name="selectFieldMiddleBtn" class="btn btn-info btn-block" th:value="'>'">
+    </div>
+    <div class="form-group col-md-2">
+      <div class="form-group">
+	    <select class="form-control" id="selectFieldS" name="selectFieldS">
+	      <option value="">---</option>
+	      <option th:each="item : ${fieldSDropItems}" th:value="${item.value}" th:text="${item.value}" th:selected="${item.value} == *{selectFieldS}">pulldown</option>
+	    </select>
+      </div>
+    </div>
+    <div class="form-group col-md-2">
+      <input type="submit" name="selectFieldBtn" class="btn btn-info btn-block" th:value="選択">
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-md-12">
+      <canvas id="ex_chart"></canvas>
+    </div>
+  </div>
+
+<script th:inline="javascript">
+
+var ctx = document.getElementById('ex_chart');
+var data = {
+    labels: /*[[${gradeForm.userIdList}]]*/ ["学生A", "学生B", "学生C", "学生D", "学生E"],
+    datasets: [
+    	{
+        	label: '正解数',
+        	data: /*[[${gradeForm.correctGradeList}]]*/ [880, 740, 900, 520, 930],
+        	backgroundColor: 'rgba(100, 255, 100, 1)'
+    	},
+    	{
+        	label: '不正解数',
+        	data: /*[[${gradeForm.incorrectGradeList}]]*/ [880, 740, 900, 520, 930],
+        	backgroundColor: 'rgba(100, 100, 100, 1)'
+    	}
+    ],
+    borderWidth: 0.1
+};
+
+var options = {
+    scales: {
+        yAxes: [{ 
+            stacked: true,              //積み上げ棒グラフの設定
+            xbarThickness: 10,        //棒グラフの幅
+            scaleLabel: {            // 軸ラベル
+                display: true,          // 表示設定
+                labelString: 'ユーザ名',  // ラベル
+//                fontSize: 16         // フォントサイズ
+            }
+       }],
+       xAxes: [{
+           stacked: true,               //積み上げ棒グラフにする設定
+           scaleLabel: {             // 軸ラベル
+               display: false,          // 表示設定
+               labelString: '回答数',  // ラベル
+//               fontSize: 16          // フォントサイズ
+           },
+    	   ticks: {
+               min: 0,
+               stepSize: /*[[${gradeForm.xStepSize}]]*/ 0.5
+           }
+       }]
+    },
+    legend: {
+        labels: {
+            boxWidth:30,
+            padding:20        //凡例の各要素間の距離
+        },
+        display: true
+    },
+    tooltips: {
+        mode: "label"
+    }
+};
+
+var ex_chart = new Chart(ctx, {
+    type: 'horizontalBar',
+    data: data,
+    options: options
+});
+</script> 
+</form>
+</div>
+
+<div th:replace="layout :: footer"></div>
+  
+</body>
+</html>

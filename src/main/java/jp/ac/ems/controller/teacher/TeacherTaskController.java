@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import jp.ac.ems.form.student.GradeForm;
 import jp.ac.ems.form.teacher.TaskForm;
 import jp.ac.ems.form.teacher.TaskSubmissionForm;
 import jp.ac.ems.impl.service.teacher.TeacherTaskServiceImpl;
@@ -277,21 +278,8 @@ public class TeacherTaskController {
     	Map<String, String> questionMap = taskService.findAllQuestionByYearAndTerm(form.getSelectYear());
     	model.addAttribute("questionCheckItems", questionMap);
     	
-    	// 年度取得
-        Map<String, String> yearMap = taskService.findAllYearMap();
-        model.addAttribute("yearDropItems", yearMap);
-    	
-    	// 大分類取得
-        Map<String, String> fieldLMap = taskService.findAllFieldLMap();
-        model.addAttribute("fieldLDropItemsItems", fieldLMap);
-    	
-    	// 中分類取得
-        Map<String, String> fieldMMap = taskService.findAllFieldMMap(form.getSelectFieldL());
-        model.addAttribute("fieldMDropItems", fieldMMap);
-    	
-    	// 小分類取得
-        Map<String, String> fieldSMap = taskService.findAllFieldSMap(form.getSelectFieldM());
-        model.addAttribute("fieldSDropItems", fieldSMap);
+    	// ドロップダウン項目設定
+    	setSelectData(form, model);
     	
         // 入力状態保持のため
         model.addAttribute("courseForm", form);
@@ -341,21 +329,8 @@ public class TeacherTaskController {
     	Map<String, String> questionMap = taskService.findAllQuestionByField(form.getSelectFieldL(), form.getSelectFieldM(), form.getSelectFieldS());
     	model.addAttribute("questionCheckItems", questionMap);
     	
-    	// 年度取得
-        Map<String, String> yearMap = taskService.findAllYearMap();
-        model.addAttribute("yearDropItems", yearMap);
-    	
-    	// 大分類取得
-        Map<String, String> fieldLMap = taskService.findAllFieldLMap();
-        model.addAttribute("fieldLDropItemsItems", fieldLMap);
-    	
-    	// 中分類取得
-        Map<String, String> fieldMMap = taskService.findAllFieldMMap(form.getSelectFieldL());
-        model.addAttribute("fieldMDropItems", fieldMMap);
-    	
-    	// 小分類取得
-        Map<String, String> fieldSMap = taskService.findAllFieldSMap(form.getSelectFieldM());
-        model.addAttribute("fieldSDropItems", fieldSMap);
+    	// ドロップダウン項目設定
+    	setSelectData(form, model);
     	
         // 入力状態保持のため
         model.addAttribute("courseForm", form);
@@ -380,5 +355,29 @@ public class TeacherTaskController {
 
         return "/teacher/task/submissionlist";
     }
-    
+
+    /**
+     * ドロップダウン項目設定(Set dropdown param).
+     * @param form 課題Form(task form)
+     * @param model モデル(model)
+     */
+    private void setSelectData(TaskForm form, Model model) {
+    	
+    	// 年度取得
+        Map<String, String> yearMap = taskService.findAllYearMap();
+        model.addAttribute("yearDropItems", yearMap);
+    	
+    	// 大分類取得
+        Map<String, String> fieldLMap = taskService.findAllFieldLMap();
+        model.addAttribute("fieldLDropItemsItems", fieldLMap);
+    	
+    	// 中分類取得
+        Map<String, String> fieldMMap = taskService.findAllFieldMMap(form.getSelectFieldL());
+        model.addAttribute("fieldMDropItems", fieldMMap);
+    	
+    	// 小分類取得
+        Map<String, String> fieldSMap = taskService.findAllFieldSMap(form.getSelectFieldM());
+        model.addAttribute("fieldSDropItems", fieldSMap);
+    	
+    }
 }

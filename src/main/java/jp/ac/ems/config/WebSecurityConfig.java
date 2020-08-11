@@ -67,6 +67,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
 					.antMatchers("/login").permitAll()
 					.antMatchers("/student/**").hasRole(RoleCode.ROLE_STUDENT.getCode())
 					.antMatchers("/teacher/**").hasRole(RoleCode.ROLE_TEACHER.getCode())
+					.antMatchers("/share/**").hasAnyRole(RoleCode.ROLE_TEACHER.getCode(), RoleCode.ROLE_STUDENT.getCode())
 					.antMatchers("/admin/**").hasRole(RoleCode.ROLE_ADMIN.getCode())
 					.anyRequest().authenticated()
 				.and()
