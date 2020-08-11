@@ -15,8 +15,14 @@ import jp.ac.ems.bean.StudentTaskQuestionHistoryBean;
 public interface StudentQuestionHistoryRepository extends JpaRepository<StudentQuestionHistoryBean, Long> {
 
 	/**
-	 * 
-	 * @return
+	 * 学生から履歴Beanを取得する
+	 * @return 学生-問題履歴Beanリスト
+	 */
+	List<StudentQuestionHistoryBean> findAllByUserId(String userId);
+
+	/**
+	 * 学生と問題から履歴Beanを取得する
+	 * @return 学生-問題履歴Bean(Optional)
 	 */
 	Optional<StudentQuestionHistoryBean> findByUserIdAndQuestionId(String userId, Long questionId);
 }

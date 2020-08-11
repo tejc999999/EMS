@@ -1,4 +1,4 @@
-package jp.ac.ems.form.student;
+package jp.ac.ems.form;
 
 import java.util.List;
 import java.util.Map;
@@ -20,8 +20,14 @@ public class GradeForm {
 	 */
 	private List<String> userIdList;
 	
+	/**
+	 * 正解数リスト
+	 */
 	private List<String> correctGradeList;
 	
+	/**
+	 * 不正解数リスト
+	 */
 	private List<String> incorrectGradeList;
 	
 	/**
@@ -53,24 +59,4 @@ public class GradeForm {
      * 選択小分類（select small field).
      */
     private String selectFieldS;
-    
-    /**
-     * 年度リスト(year list).
-     */
-    private List<String> yearList;
-
-    /**
-     * 大分類リスト(large field list).
-     */
-    private List<String> fieldLList;
-
-    /**
-     * 中分類リスト(middle field list).
-     */
-    private List<String> fieldMList;
-
-    /**
-     * 小分類リスト(small field list).
-     */
-    private List<String> fieldSList;
 }

@@ -42,7 +42,7 @@
   <!-- /* サブコンポーネント */ -->
 <!-- <div class="container">-->
     <!-- /* ブランド */ -->
-    <a class="navbar-brand" th:href="@{'/top' }">課題管理サイト</a>
+    <a class="navbar-brand" th:href="@{'/top'}">課題管理サイト</a>
     <!-- /* 切替ボタン */ -->
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-content"
        aria-controls="navbar-content" aria-expanded="false" aria-label="Toggle navigation">
@@ -52,20 +52,22 @@
     <!-- /* ナビゲーション */ -->
     <div class="collapse navbar-collapse justify-content-around" id="navbar-content" ontouchstart="">
       <ul class="navbar-nav mr-auto ">
+        <li class="nav-item" sec:authorize="hasRole('STUDENT')">
+          <a class="nav-link" th:href="@{'/student/selfstudy/select'}" >
+          自習
+          </a>
+        </li>
         <li class="nav-item dropdown" sec:authorize="hasRole('STUDENT')">
-          <a class="nav-link dropdown-toggle" href="#" id="studentTaskDropDown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <a class="nav-link" th:href="@{'/student/task'}">
           課題
           </a>
-          <div class="dropdown-menu" aria-labelledby="taskDropDown">
-              <a class="dropdown-item" th:href="@{'/student/task'}">課題一覧</a>
-          </div>
         </li>
         <li class="nav-item dropdown" sec:authorize="hasRole('STUDENT') or hasRole('TEACHER')">
           <a class="nav-link dropdown-toggle" href="#" id="studentTaskDropDown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
          進捗
           </a>
           <div class="dropdown-menu" aria-labelledby="taskDropDown">
-              <a class="dropdown-item" th:href="@{'/share/grade/list'}">進捗一覧</a>
+              <a class="dropdown-item" th:href="@{'/share/grade/list'}">全体進捗一覧</a>
           </div>
         </li>
         <li class="nav-item dropdown" sec:authorize="hasRole('TEACHER')">

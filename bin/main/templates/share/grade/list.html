@@ -5,8 +5,6 @@
 <script type="text/javascript"
 	th:src="@{/webjars/chart.js/2.9.3/dist/Chart.js}" ></script>
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js"></script> -->
-<style>
-</style>
 <style th:inline="css">
 #ex_chart {max-width:100%;max-height: /*[[${gradeForm.canvasHeight}]]*/ 100%;}
 </style>
@@ -25,7 +23,7 @@
       <div class="form-group">
 		<select class="form-control" id="selectYear" name="selectYear">
 		     <option value="">---</option>
-		     <option th:each="item : ${yearDropItems}" th:value="${item.value}" th:text="${item.value}" th:selected="${item.value} == *{selectYear}">pulldown</option>
+		     <option th:each="item : ${yearDropItems}" th:value="${item.key}" th:text="${item.value}" th:selected="${item.key} == *{selectYear}">pulldown</option>
 		</select>
       </div>
     </div>
@@ -43,7 +41,7 @@
       <div class="form-group">
 	    <select class="form-control" id="selectFieldL" name="selectFieldL">
 	      <option value="">---</option>
-	      <option th:each="item : ${fieldLDropItemsItems}" th:value="${item.value}" th:text="${item.value}" th:selected="${item.value} == *{selectFieldL}">pulldown</option>
+	      <option th:each="item : ${fieldLDropItemsItems}" th:value="${item.key}" th:text="${item.value}" th:selected="${item.key} == *{selectFieldL}">pulldown</option>
 	    </select>
       </div>
     </div>
@@ -54,7 +52,7 @@
       <div class="form-group">
 	    <select class="form-control" id="selectFieldM" name="selectFieldM">
 	      <option value="">---</option>
-	      <option th:each="item : ${fieldMDropItems}" th:value="${item.value}" th:text="${item.value}" th:selected="${item.value} == *{selectFieldM}">pulldown</option>
+	      <option th:each="item : ${fieldMDropItems}" th:value="${item.key}" th:text="${item.value}" th:selected="${item.key} == *{selectFieldM}">pulldown</option>
 	    </select>
       </div>
     </div>
@@ -65,7 +63,7 @@
       <div class="form-group">
 	    <select class="form-control" id="selectFieldS" name="selectFieldS">
 	      <option value="">---</option>
-	      <option th:each="item : ${fieldSDropItems}" th:value="${item.value}" th:text="${item.value}" th:selected="${item.value} == *{selectFieldS}">pulldown</option>
+	      <option th:each="item : ${fieldSDropItems}" th:value="${item.key}" th:text="${item.value}" th:selected="${item.key} == *{selectFieldS}">pulldown</option>
 	    </select>
       </div>
     </div>

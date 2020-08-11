@@ -44,6 +44,33 @@ public interface QuestionRepository extends
 	 */
 	List<QuestionBean> findByFieldSId(Byte field_s_id);
 
+	/**
+	 * 年度、期、大分類を指定した全問取得(get all question by specifying the year and term and large field).
+	 * @param year 年度(ex).R01)
+	 * @param term 期（'A' or 'H')
+	 * @param field_l_id 大分類(large field)
+	 * @return 問題Beanリスト
+	 */
+	List<QuestionBean> findByYearAndTermAndFieldLId(String year, String term, Byte field_l_id);
+	
+	/**
+	 * 年度、期、中分類を指定した全問取得(get all question by specifying the year and term and middle field).
+	 * @param year 年度(ex).R01)
+	 * @param term 期（'A' or 'H')
+	 * @param field_m_id 中分類(middle field)
+	 * @return 問題Beanリスト
+	 */
+	List<QuestionBean> findByYearAndTermAndFieldMId(String year, String term, Byte field_m_id);
+
+	/**
+	 * 年度、期、小分類を指定した全問取得(get all question by specifying the year and term and small field).
+	 * @param year 年度(ex).R01)
+	 * @param term 期（'A' or 'H')
+	 * @param field_s_id 小分類(small field)
+	 * @return 問題Beanリスト
+	 */
+	List<QuestionBean> findByYearAndTermAndFieldSId(String year, String term, Byte field_s_id);
+	
 	  /**
 	  * 年度、期、タイトルと説明文に検索文字列が含まれることを条件とした取得.
 	  * 

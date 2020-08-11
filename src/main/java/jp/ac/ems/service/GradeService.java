@@ -2,7 +2,9 @@ package jp.ac.ems.service;
 
 import java.util.Map;
 
-import jp.ac.ems.form.student.GradeForm;
+import org.springframework.ui.Model;
+
+import jp.ac.ems.form.GradeForm;
 
 /**
  * 学生用成績Serviceクラス（student grade Service Class）.
@@ -11,33 +13,30 @@ import jp.ac.ems.form.student.GradeForm;
 public interface GradeService {
 
     /**
-     * 画面用年度マップ取得
-     * @return 画面用年度マップ（key:ドロップダウンリストID、value：年度ラベル）
+     * ドロップダウン項目設定(Set dropdown param).
+     * @param form 成績Form(grade form)
+     * @param model モデル(model)
      */
-    public Map<String, String> findAllYearMap();
+    public void setSelectData(GradeForm form, Model model);
     
-    /**
-     * 画面用大分類マップ取得(Get large  map for screen).
-     * @return 画面用大分類マップ（key:ドロップダウンリストID、value：大分類ラベル）
-     */
-    public Map<String, String> findAllFieldLMap();
-    
-    /**
-     * 画面用中分類マップ取得(Get middle filed map for screen).
-     * @param parentName 大分類ID(large field name)
-     * @return 画面用中分類マップ（key:ドロップダウンリストID、value：中分類ラベル）
-     */
-    public Map<String, String> findAllFieldMMap(String parentName);
-    
-    /**
-     * 画面用小分類マップ取得(Get small filed map for screen).
-     * @param parentId 中分類名(middle field name)
-     * @return 画面用小分類マップ（key:ドロップダウンリストID、value：小分類ラベル）
-     */
-    public Map<String, String> findAllFieldSMap(String parentName);
-    
+	/**
+	 * 全問題の成績を取得する.
+	 * @param form 成績Form(grad form)
+	 * @return 成績Form(grad form)
+	 */
     public GradeForm getGradeFormDefault(GradeForm form);
+    
+	/**
+	 * 特定年度の成績を取得する.
+	 * @param form 成績Form(grad form)
+	 * @return 成績Form(grad form)
+	 */
 	public GradeForm getGradeFormByField(GradeForm form);
-	public GradeForm getGradeFormByYear(GradeForm form);
 
+	/**
+	 * 特定分類の成績を取得する.
+	 * @param form 成績Form(grad form)
+	 * @return 成績Form(grad form)
+	 */
+	public GradeForm getGradeFormByYear(GradeForm form);
 }

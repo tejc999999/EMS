@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import jp.ac.ems.form.student.GradeForm;
+import jp.ac.ems.form.GradeForm;
 import jp.ac.ems.service.GradeService;
 
 /**
@@ -54,11 +54,10 @@ public class GradeController {
     	model.addAttribute("gradeForm", gradeForm);    	
     	
     	// ドロップダウン項目設定
-        setSelectData(form, model);
+    	gradeService.setSelectData(form, model);
 
         return "share/grade/list";
     }
-    
     
     /**
      * 中分類取得(get field middle list).
@@ -103,9 +102,9 @@ public class GradeController {
     	model.addAttribute("gradeForm", gradeForm);
     	
     	// ドロップダウン項目設定
-        setSelectData(form, model);
+    	gradeService.setSelectData(form, model);
         
-        return "/share/grade/list";
+        return "share/grade/list";
     }
     
     /**
@@ -123,32 +122,9 @@ public class GradeController {
     	model.addAttribute("gradeForm", gradeForm);
     	
     	// ドロップダウン項目設定
-        setSelectData(form, model);
+    	gradeService.setSelectData(form, model);
         
-        return "/share/grade/list";
+        return "share/grade/list";
     }
     
-    /**
-     * ドロップダウン項目設定(Set dropdown param).
-     * @param form 成績Form(grade form)
-     * @param model モデル(model)
-     */
-    private void setSelectData(GradeForm form, Model model) {
-    	// 年度取得
-        Map<String, String> yearMap = gradeService.findAllYearMap();
-        model.addAttribute("yearDropItems", yearMap);
-    	
-    	// 大分類取得
-        Map<String, String> fieldLMap = gradeService.findAllFieldLMap();
-        model.addAttribute("fieldLDropItemsItems", fieldLMap);
-    	
-    	// 中分類取得
-        Map<String, String> fieldMMap = gradeService.findAllFieldMMap(form.getSelectFieldL());
-        model.addAttribute("fieldMDropItems", fieldMMap);
-    	
-    	// 小分類取得
-        Map<String, String> fieldSMap = gradeService.findAllFieldSMap(form.getSelectFieldM());
-        model.addAttribute("fieldSDropItems", fieldSMap);
-    	
-    }
 }

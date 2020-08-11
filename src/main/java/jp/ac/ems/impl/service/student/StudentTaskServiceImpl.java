@@ -84,7 +84,6 @@ public class StudentTaskServiceImpl implements StudentTaskService {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userId = auth.getName();
 
-
         List<String> taskIdList = new ArrayList<String>();
         Map<String, UserBean.AnswerFlgAndUpdateDate> taskAnswerFlgAndUpdateDateMap = new HashMap<>();
         Optional<UserBean> optUser = userRepository.findByIdFetchUserTask(userId);

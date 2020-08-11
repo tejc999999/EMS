@@ -3,6 +3,8 @@ package jp.ac.ems.service.teacher;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.ui.Model;
+
 import jp.ac.ems.form.teacher.TaskForm;
 import jp.ac.ems.form.teacher.TaskSubmissionForm;
 
@@ -54,32 +56,6 @@ public interface TeacherTaskService {
      * @return 画面用問題マップ（key:チェックボックスID、value：問題ラベル）
      */
     public Map<String, String> findAllQuestionByField(String fieldL, String fieldM, String fieldS);
-
-    /**
-     * 画面用年度マップ取得
-     * @return 画面用年度マップ（key:ドロップダウンリストID、value：年度ラベル）
-     */
-    public Map<String, String> findAllYearMap();
-    
-    /**
-     * 画面用大分類マップ取得(Get large  map for screen).
-     * @return 画面用大分類マップ（key:ドロップダウンリストID、value：大分類ラベル）
-     */
-    public Map<String, String> findAllFieldLMap();
-
-    /**
-     * 画面用中分類マップ取得(Get middle filed map for screen).
-     * @param parentName 大分類ID(large field name)
-     * @return 画面用中分類マップ（key:ドロップダウンリストID、value：中分類ラベル）
-     */
-    public Map<String, String> findAllFieldMMap(String parentName);
-    
-    /**
-     * 画面用小分類マップ取得(Get small filed map for screen).
-     * @param parentId 中分類名(middle field name)
-     * @return 画面用小分類マップ（key:ドロップダウンリストID、value：小分類ラベル）
-     */
-    public Map<String, String> findAllFieldSMap(String parentName);
     
     /**
      * 画面用問題マップ取得
@@ -126,4 +102,11 @@ public interface TeacherTaskService {
      * @return 課題提出状況リスト
      */
     public List<TaskSubmissionForm> getAnswerdList(String taskId);
+    
+    /**
+     * ドロップダウン項目設定(Set dropdown param).
+     * @param form 課題Form(task form)
+     * @param model モデル(model)
+     */
+    public void setSelectData(TaskForm form, Model model);
 }

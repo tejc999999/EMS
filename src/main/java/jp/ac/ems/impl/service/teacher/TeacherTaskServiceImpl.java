@@ -41,6 +41,7 @@ import org.springframework.data.domain.Sort.Order;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 
@@ -97,6 +98,7 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
      * 全ての問題を取得する.
      * @return 全ての問題Formリスト
      */
+    @Override
     public List<TaskForm> findAll() {
         List<TaskForm> list = new ArrayList<>();
 
@@ -115,6 +117,7 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
      * 課題情報を取得する.
      * @return 課題Form
      */
+    @Override
     public TaskForm findById(String id) {
         
         TaskForm taskForm = new TaskForm();
@@ -132,6 +135,7 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
      * 課題削除.
      * @param id 課題ID
      */
+    @Override
     public void delete(String id) {
         List<TaskBean> taskBeanList = new ArrayList<>();
         Optional<TaskBean> optTask = taskRepository.findById(Long.valueOf(id));
@@ -145,6 +149,7 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
      * @param easySaveFlg 簡易保存フラグ(easy save flag)
      * @return 保存済みコースForm
      */
+    @Override
     public TaskForm save(TaskForm form, boolean easySaveFlg) {
         
         TaskBean taskBean = new TaskBean();
@@ -246,14 +251,11 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
      * @param yearId 年度Id(year id)
      * @return 画面用問題マップ（key:チェックボックスID、value：問題ラベル）
      */
+    @Override
     public Map<String, String> findAllQuestionByYearAndTerm(String yearId) {
         
         String year = yearId.substring(0, 3);
-        String term = "H";
-        if("秋".equals(yearId.substring(3, 4))) {
-        	term = "A";
-        }
-    	
+        String term = yearId.substring(3, 4);
         Map<String, String> map = convertQuestionMap(questionRepository.findByYearAndTerm(year, term));
         
         return map;
@@ -266,26 +268,25 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
      * @param fieldS 小分類(small field)
      * @return 画面用問題マップ（key:チェックボックスID、value：問題ラベル）
      */
+    @Override
     public Map<String, String> findAllQuestionByField(String fieldL, String fieldM, String fieldS) {
                 	
         List<QuestionBean> questionBeanList = null;
 
         if(fieldS != null && !"".equals(fieldS)) {
-        	// 小分類名をIDに変換
-        	Byte id = FieldSmall.getId("AP", fieldS);
+        	// 小分類IDで取得
         	
-        	questionBeanList = questionRepository.findByFieldSId(id);
+        	questionBeanList = questionRepository.findByFieldSId(Byte.valueOf(fieldS));
         } else if(fieldM != null && !"".equals(fieldM)) {
-        	// 中分類名をIDに変換
-        	Byte id = FieldMiddle.getId("AP", fieldM);
+        	// 中分類IDで取得
         	
-        	questionBeanList = questionRepository.findByFieldMId(id);
+        	questionBeanList = questionRepository.findByFieldMId(Byte.valueOf(fieldM));
         } else if(fieldL != null && !"".equals(fieldL)) {
-        	// 大分類名をIDに変換
-        	Byte id = FieldLarge.getId("AP", fieldL);
+        	// 大分類IDで取得
         	
-        	questionBeanList = questionRepository.findByFieldLId(id);
+        	questionBeanList = questionRepository.findByFieldLId(Byte.valueOf(fieldL));
         } else {
+        	
         	questionBeanList = questionRepository.findAll();
         }
     	
@@ -294,93 +295,11 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
         return map;
     }
 
-    
-    /**
-     * 画面用年度マップ取得
-     * @return 画面用年度マップ（key:ドロップダウンリストID、value：年度ラベル）
-     */
-    public Map<String, String> findAllYearMap() {
-    	
-    	Map<String, String> map = new LinkedHashMap<String, String>();
-    	
-    	for(QuestionBean questionBean : questionRepository.findDistinctYearAndTerm()) {
-    		StringBuffer keyBuff = new StringBuffer();
-    		StringBuffer valueBuff = new StringBuffer();
-    		// 年度
-    		keyBuff.append(questionBean.getYear());
-    		valueBuff.append(questionBean.getYear());
-    		// 期
-    		if("H".equals(questionBean.getTerm())) {
-    			keyBuff.append("H");
-    			valueBuff.append("春");
-    		} else {
-    			keyBuff.append("A");
-    			valueBuff.append("秋");
-    		}
-   			
-   			map.put(keyBuff.toString(), valueBuff.toString());
-    	}
-    	return map;
-    }
-    
-    /**
-     * 画面用大分類マップ取得(Get large  map for screen).
-     * @return 画面用大分類マップ（key:ドロップダウンリストID、value：大分類ラベル）
-     */
-    public Map<String, String> findAllFieldLMap() {
-    	
-    	Map<String, String> map = new LinkedHashMap<String, String>();
-
-    	EnumSet.allOf(FieldLarge.class)
-    	  .forEach(fieldL -> map.put(String.valueOf(fieldL.getId()), fieldL.getName()));
-    	
-    	return map;
-    }
-    
-    /**
-     * 画面用中分類マップ取得(Get middle filed map for screen).
-     * @param parentName 大分類ID(large field name)
-     * @return 画面用中分類マップ（key:ドロップダウンリストID、value：中分類ラベル）
-     */
-    public Map<String, String> findAllFieldMMap(String parentName) {
-
-    	Byte byteParentId = 0;
-    	if(parentName != null && !"".equals(parentName)) {
-    		// 親分類名をIDに変換
-    		Byte id = FieldLarge.getId("AP", parentName);
-    		
-    		byteParentId = Byte.valueOf(id);
-    	}
-    	
-    	Map<String, String> map = FieldMiddle.getMap(byteParentId);
-    	
-    	return map;
-    }
-    
-    /**
-     * 画面用小分類マップ取得(Get small filed map for screen).
-     * @param parentId 中分類名(middle field name)
-     * @return 画面用小分類マップ（key:ドロップダウンリストID、value：小分類ラベル）
-     */
-    public Map<String, String> findAllFieldSMap(String parentName) {
-    	
-    	Byte byteParentId = 0;
-    	if(parentName != null && !"".equals(parentName)) {
-    		// 親分類名をIDに変換
-    		Byte id = FieldMiddle.getId("AP", parentName);
-
-    		byteParentId = Byte.valueOf(id);
-    	}
-    	
-    	Map<String, String> map = FieldSmall.getMap(byteParentId);
-    	
-    	return map;
-    }
-    
     /**
      * 画面用問題マップ取得
      * @return 画面用問題マップ（key:チェックボックスID、value：問題ラベル）
      */
+    @Override
     public Map<String, String> findAllMap() {
     	
     	// 年度で並べ替え（Order by time)
@@ -396,47 +315,12 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
     	
     	return map;
     }
-    
-    /**
-     * 問題Beanリストを画面用Mapに変換(convert question bean to map for monitor).
-     * @param questionBeanList 問題Beanリスト(question baen list)
-     * @return 画面用問題Map(question map for monitor)
-     */
-    private Map<String, String> convertQuestionMap(List<QuestionBean> questionBeanList) {
-    	Map<String, String> map = new LinkedHashMap<String, String>();
-    	
-    	for(QuestionBean questionBean : questionBeanList) {
-    		StringBuffer valueBuff = new StringBuffer();
-    		// 年度
-    		valueBuff.append(questionBean.getYear());
-    		// 期
-    		if("H".equals(questionBean.getTerm())) {
-    			valueBuff.append("春");
-    		} else {
-    			valueBuff.append("秋");
-    		}
-    		// 問番
-   			valueBuff.append("問" + questionBean.getNumber());
-   			
-   			// 大分類名称
-   			valueBuff.append(" - " + FieldLarge.getName("AP", questionBean.getFieldLId()) + " / ");
-   			
-   			// 中分類名称
-   			valueBuff.append(FieldMiddle.getName("AP", questionBean.getFieldMId()) + " / ");
-   			
-   			// 小分類名称
-   			valueBuff.append(FieldSmall.getName("AP", questionBean.getFieldSId()));
-   			
-   			map.put(String.valueOf(questionBean.getId())/*keyBuff.toString()*/, valueBuff.toString());
-    	}
-
-    	return map;
-    }
 
     /**
      * 全コースMap取得
      * @return 全コースMap
      */
+    @Override
     public Map<String, String> findAllCourse() {
     	Map<String, String> map = new HashMap<String, String>();
     	
@@ -451,6 +335,7 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
      * 全クラスMap取得
      * @return 全クラスMap
      */
+    @Override
     public Map<String, String> findAllClass() {
     	Map<String, String> map = new HashMap<String, String>();
     	
@@ -466,6 +351,7 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
      * @param exclusionCourseList 除外コースリスト
      * @return 全クラスMap（該当コース所属クラス除外）
      */
+    @Override
     public Map<String, String> findAllClass(List<String> exclusionCourseList) {
     	
         // 全てのクラスの情報をマップに取得
@@ -491,6 +377,7 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
      * 全学生Map取得
      * @return 全クラスMap
      */
+    @Override
     public Map<String, String> findAllStudent() {
     	Map<String, String> map = new HashMap<String, String>();
     	
@@ -507,6 +394,7 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
      * @param exclutionClassList 除外クラスリスト
      * @return 全クラスMap
      */
+    @Override
     public Map<String, String> findAllStudent(List<String> exclusionCourseList, List<String> exclusionClassList) {
     	
         // 全てのユーザの情報をマップに取得
@@ -586,5 +474,139 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
         	taskSubmissionFormList.add(form);
     	}
     	return taskSubmissionFormList;
+    }
+    
+    /**
+     * ドロップダウン項目設定(Set dropdown param).
+     * @param form 課題Form(task form)
+     * @param model モデル(model)
+     */
+    @Override
+    public void setSelectData(TaskForm form, Model model) {
+    	
+    	// 年度取得
+        Map<String, String> yearMap = findAllYearMap();
+        model.addAttribute("yearDropItems", yearMap);
+    	
+    	// 大分類取得
+        Map<String, String> fieldLMap = findAllFieldLMap();
+        model.addAttribute("fieldLDropItemsItems", fieldLMap);
+    	
+    	// 中分類取得
+        Map<String, String> fieldMMap = findAllFieldMMap(form.getSelectFieldL());
+        model.addAttribute("fieldMDropItems", fieldMMap);
+    	
+    	// 小分類取得
+        Map<String, String> fieldSMap = findAllFieldSMap(form.getSelectFieldM());
+        model.addAttribute("fieldSDropItems", fieldSMap);
+    	
+    }
+    
+    /**
+     * 画面用年度マップ取得
+     * @return 画面用年度マップ（key:ドロップダウンリストID、value：年度ラベル）
+     */
+    private Map<String, String> findAllYearMap() {
+    	
+    	Map<String, String> map = new LinkedHashMap<String, String>();
+    	
+    	for(QuestionBean questionBean : questionRepository.findDistinctYearAndTerm()) {
+    		StringBuffer keyBuff = new StringBuffer();
+    		StringBuffer valueBuff = new StringBuffer();
+    		// 年度
+    		keyBuff.append(questionBean.getYear());
+    		valueBuff.append(questionBean.getYear());
+    		// 期
+    		if("H".equals(questionBean.getTerm())) {
+    			keyBuff.append("H");
+    			valueBuff.append("春");
+    		} else {
+    			keyBuff.append("A");
+    			valueBuff.append("秋");
+    		}
+   			
+   			map.put(keyBuff.toString(), valueBuff.toString());
+    	}
+    	return map;
+    }
+    
+    /**
+     * 画面用大分類マップ取得(Get large  map for screen).
+     * @return 画面用大分類マップ（key:ドロップダウンリストID、value：大分類ラベル）
+     */
+    private Map<String, String> findAllFieldLMap() {
+    	
+    	Map<String, String> map = new LinkedHashMap<String, String>();
+
+    	EnumSet.allOf(FieldLarge.class)
+    	  .forEach(fieldL -> map.put(String.valueOf(fieldL.getId()), fieldL.getName()));
+    	
+    	return map;
+    }
+    
+    /**
+     * 画面用中分類マップ取得(Get middle filed map for screen).
+     * @param parentId 大分類ID(large field id)
+     * @return 画面用中分類マップ（key:ドロップダウンリストID、value：中分類ラベル）
+     */
+    private Map<String, String> findAllFieldMMap(String parentId) {
+
+    	Map<String, String> map = new LinkedHashMap<String, String>();
+    	if(parentId != null && !parentId.equals("")) {
+    		map.putAll(FieldMiddle.getMap(Byte.valueOf(parentId)));
+    	}
+    	return map;
+    }
+    
+    /**
+     * 画面用小分類マップ取得(Get small filed map for screen).
+     * @param parentId 中分類ID(middle field id)
+     * @return 画面用小分類マップ（key:ドロップダウンリストID、value：小分類ラベル）
+     */
+    private Map<String, String> findAllFieldSMap(String parentId) {
+    	
+    	
+    	Map<String, String> map = new LinkedHashMap<String, String>();
+    	if(parentId != null && !parentId.equals("")) {
+    		map.putAll(FieldSmall.getMap(Byte.valueOf(parentId)));
+    	}
+    	return map;
+    }
+
+    
+    /**
+     * 問題Beanリストを画面用Mapに変換(convert question bean to map for monitor).
+     * @param questionBeanList 問題Beanリスト(question baen list)
+     * @return 画面用問題Map(question map for monitor)
+     */
+    private Map<String, String> convertQuestionMap(List<QuestionBean> questionBeanList) {
+    	Map<String, String> map = new LinkedHashMap<String, String>();
+    	
+    	for(QuestionBean questionBean : questionBeanList) {
+    		StringBuffer valueBuff = new StringBuffer();
+    		// 年度
+    		valueBuff.append(questionBean.getYear());
+    		// 期
+    		if("H".equals(questionBean.getTerm())) {
+    			valueBuff.append("春");
+    		} else {
+    			valueBuff.append("秋");
+    		}
+    		// 問番
+   			valueBuff.append("問" + questionBean.getNumber());
+   			
+   			// 大分類名称
+   			valueBuff.append(" - " + FieldLarge.getName("AP", questionBean.getFieldLId()) + " / ");
+   			
+   			// 中分類名称
+   			valueBuff.append(FieldMiddle.getName("AP", questionBean.getFieldMId()) + " / ");
+   			
+   			// 小分類名称
+   			valueBuff.append(FieldSmall.getName("AP", questionBean.getFieldSId()));
+   			
+   			map.put(String.valueOf(questionBean.getId())/*keyBuff.toString()*/, valueBuff.toString());
+    	}
+
+    	return map;
     }
 }

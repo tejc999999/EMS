@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import com.mysql.cj.result.Field;
 
@@ -20,7 +21,7 @@ import jp.ac.ems.bean.StudentQuestionHistoryBean;
 import jp.ac.ems.config.FieldLarge;
 import jp.ac.ems.config.FieldMiddle;
 import jp.ac.ems.config.FieldSmall;
-import jp.ac.ems.form.student.GradeForm;
+import jp.ac.ems.form.GradeForm;
 import jp.ac.ems.form.student.TaskForm;
 import jp.ac.ems.repository.QuestionRepository;
 import jp.ac.ems.repository.StudentQuestionHistoryRepository;
@@ -50,100 +51,22 @@ public class GradeServiceImpl  implements GradeService {
 	 */
 	@Autowired
 	private QuestionRepository questionRepository;
-	
-    /**
-     * 画面用年度マップ取得
-     * @return 画面用年度マップ（key:ドロップダウンリストID、value：年度ラベル）
-     */
-	@Override
-    public Map<String, String> findAllYearMap() {
-    	
-    	Map<String, String> map = new LinkedHashMap<String, String>();
-    	
-    	for(QuestionBean questionBean : questionRepository.findDistinctYearAndTerm()) {
-    		StringBuffer keyBuff = new StringBuffer();
-    		StringBuffer valueBuff = new StringBuffer();
-    		// 年度
-    		keyBuff.append(questionBean.getYear());
-    		valueBuff.append(questionBean.getYear());
-    		// 期
-    		if("H".equals(questionBean.getTerm())) {
-    			keyBuff.append("H");
-    			valueBuff.append("春");
-    		} else {
-    			keyBuff.append("A");
-    			valueBuff.append("秋");
-    		}
-   			
-   			map.put(keyBuff.toString(), valueBuff.toString());
-    	}
-    	return map;
-    }
-    
-    /**
-     * 画面用大分類マップ取得(Get large  map for screen).
-     * @return 画面用大分類マップ（key:ドロップダウンリストID、value：大分類ラベル）
-     */
-	@Override
-    public Map<String, String> findAllFieldLMap() {
-    	
-    	Map<String, String> map = new LinkedHashMap<String, String>();
 
-    	EnumSet.allOf(FieldLarge.class)
-    	  .forEach(fieldL -> map.put(String.valueOf(fieldL.getId()), fieldL.getName()));
-    	
-    	return map;
-    }
-    
-    /**
-     * 画面用中分類マップ取得(Get middle filed map for screen).
-     * @param parentName 大分類ID(large field name)
-     * @return 画面用中分類マップ（key:ドロップダウンリストID、value：中分類ラベル）
-     */
-	@Override
-    public Map<String, String> findAllFieldMMap(String parentName) {
-
-    	Byte byteParentId = 0;
-    	if(parentName != null && !"".equals(parentName)) {
-    		// 親分類名をIDに変換
-    		Byte id = FieldLarge.getId("AP", parentName);
-    		
-    		byteParentId = Byte.valueOf(id);
-    	}
-    	
-    	Map<String, String> map = new LinkedHashMap<String, String>();
-    	map.putAll(FieldMiddle.getMap(byteParentId));
-    	
-    	return map;
-    }
-    
-    /**
-     * 画面用小分類マップ取得(Get small filed map for screen).
-     * @param parentId 中分類名(middle field name)
-     * @return 画面用小分類マップ（key:ドロップダウンリストID、value：小分類ラベル）
-     */
-	@Override
-    public Map<String, String> findAllFieldSMap(String parentName) {
-    	
-    	Byte byteParentId = 0;
-    	if(parentName != null && !"".equals(parentName)) {
-    		// 親分類名をIDに変換
-    		Byte id = FieldMiddle.getId("AP", parentName);
-
-    		byteParentId = Byte.valueOf(id);
-    	}
-    	
-    	Map<String, String> map = new LinkedHashMap<String, String>();
-    	map.putAll(FieldSmall.getMap(byteParentId));
-    	
-    	return map;
-    }
-
+	/**
+	 * 全問題の成績を取得する.
+	 * @param form 成績Form(grad form)
+	 * @return 成績Form(grad form)
+	 */
     public GradeForm getGradeFormDefault(GradeForm form) {
 
     	return getGradeForm(form);
 	}
     
+	/**
+	 * 特定年度の成績を取得する.
+	 * @param form 成績Form(grad form)
+	 * @return 成績Form(grad form)
+	 */
 	public GradeForm getGradeFormByField(GradeForm form) {
 		
 		form.setSelectYear(null);;
@@ -151,7 +74,11 @@ public class GradeServiceImpl  implements GradeService {
 		return getGradeForm(form);
 	}
 
-
+	/**
+	 * 特定分類の成績を取得する.
+	 * @param form 成績Form(grad form)
+	 * @return 成績Form(grad form)
+	 */
 	public GradeForm getGradeFormByYear(GradeForm form) {
 		
 		form.setSelectFieldL(null);
@@ -163,6 +90,7 @@ public class GradeServiceImpl  implements GradeService {
 	
 	/**
 	 * 成績Formを取得する(get grade form).
+	 * 
 	 * @param form 成績Form（grade form）
 	 * @return 成績Form(grade form)
 	 */
@@ -189,33 +117,30 @@ public class GradeServiceImpl  implements GradeService {
 					grade.setCorrectCnt(grade.getCorrectCnt() + sqhBean.getCorrectCnt());
 					grade.setIncorrectCnt(grade.getIncorrectCnt() + sqhBean.getIncorrectCnt());
 				} else {
-					String year = questionBean.getYear() + questionBean.getTerm().replace("A", "秋").replace("H", "春");
+					String year = questionBean.getYear() + questionBean.getTerm();
 					if(form.getSelectYear() != null && !form.getSelectYear().equals("") && form.getSelectYear().equals(year)) {
 						// (1)年度による抽出
 					
 						grade.setCorrectCnt(grade.getCorrectCnt() + sqhBean.getCorrectCnt());
 						grade.setIncorrectCnt(grade.getIncorrectCnt() + sqhBean.getIncorrectCnt());
 					} else {
-						String fieldLName = FieldLarge.getName("AP", questionBean.getFieldLId());
-						String fieldMName = FieldMiddle.getName("AP", questionBean.getFieldMId());
-						String fieldSName = FieldSmall.getName("AP", questionBean.getFieldSId());
 	
 						// 分類による抽出
 						if(form.getSelectFieldS() != null && !form.getSelectFieldS().equals("")) {
 							// 小分類による抽出
-							if(form.getSelectFieldS().equals(fieldSName)) {
+							if(form.getSelectFieldS().equals(String.valueOf(questionBean.getFieldSId()))) {
 								grade.setCorrectCnt(grade.getCorrectCnt() + sqhBean.getCorrectCnt());
 								grade.setIncorrectCnt(grade.getIncorrectCnt() + sqhBean.getIncorrectCnt());
 							}
 						} else if(form.getSelectFieldM() != null && !form.getSelectFieldM().equals("")) {
 							// 中分類による抽出
-							if(form.getSelectFieldM().equals(fieldMName)) {
+							if(form.getSelectFieldM().equals(String.valueOf(questionBean.getFieldMId()))) {
 								grade.setCorrectCnt(grade.getCorrectCnt() + sqhBean.getCorrectCnt());
 								grade.setIncorrectCnt(grade.getIncorrectCnt() + sqhBean.getIncorrectCnt());
 							}
 						} else if(form.getSelectFieldL() != null && !form.getSelectFieldL().equals("")) {
 							// 大分類による抽出
-							if(form.getSelectFieldL().equals(fieldLName)) {
+							if(form.getSelectFieldL().equals(String.valueOf(questionBean.getFieldLId()))) {
 								grade.setCorrectCnt(grade.getCorrectCnt() + sqhBean.getCorrectCnt());
 								grade.setIncorrectCnt(grade.getIncorrectCnt() + sqhBean.getIncorrectCnt());
 							}
@@ -258,7 +183,100 @@ public class GradeServiceImpl  implements GradeService {
 		return form;
 	}
 	
-	
+    /**
+     * ドロップダウン項目設定(Set dropdown param).
+     * @param form 成績Form(grade form)
+     * @param model モデル(model)
+     */
+	@Override
+    public void setSelectData(GradeForm form, Model model) {
+    	// 年度取得
+        Map<String, String> yearMap = findAllYearMap();
+        model.addAttribute("yearDropItems", yearMap);
+    	
+    	// 大分類取得
+        Map<String, String> fieldLMap = findAllFieldLMap();
+        model.addAttribute("fieldLDropItemsItems", fieldLMap);
+    	
+    	// 中分類取得
+        Map<String, String> fieldMMap = findAllFieldMMap(form.getSelectFieldL());
+        model.addAttribute("fieldMDropItems", fieldMMap);
+    	
+    	// 小分類取得
+        Map<String, String> fieldSMap = findAllFieldSMap(form.getSelectFieldM());
+        model.addAttribute("fieldSDropItems", fieldSMap);
+    }
+
+    /**
+     * 画面用年度マップ取得
+     * @return 画面用年度マップ（key:ドロップダウンリストID、value：年度ラベル）
+     */
+    private Map<String, String> findAllYearMap() {
+    	
+    	Map<String, String> map = new LinkedHashMap<String, String>();
+    	
+    	for(QuestionBean questionBean : questionRepository.findDistinctYearAndTerm()) {
+    		StringBuffer keyBuff = new StringBuffer();
+    		StringBuffer valueBuff = new StringBuffer();
+    		// 年度
+    		keyBuff.append(questionBean.getYear());
+    		valueBuff.append(questionBean.getYear());
+    		// 期
+    		if("H".equals(questionBean.getTerm())) {
+    			keyBuff.append("H");
+    			valueBuff.append("春");
+    		} else {
+    			keyBuff.append("A");
+    			valueBuff.append("秋");
+    		}
+   			
+   			map.put(keyBuff.toString(), valueBuff.toString());
+    	}
+    	return map;
+    }
+    
+    /**
+     * 画面用大分類マップ取得(Get large  map for screen).
+     * @return 画面用大分類マップ（key:ドロップダウンリストID、value：大分類ラベル）
+     */
+    private Map<String, String> findAllFieldLMap() {
+    	
+    	Map<String, String> map = new LinkedHashMap<String, String>();
+
+    	EnumSet.allOf(FieldLarge.class)
+    	  .forEach(fieldL -> map.put(String.valueOf(fieldL.getId()), fieldL.getName()));
+    	
+    	return map;
+    }
+    
+    /**
+     * 画面用中分類マップ取得(Get middle filed map for screen).
+     * @param parentId 大分類ID(large field id)
+     * @return 画面用中分類マップ（key:ドロップダウンリストID、value：中分類ラベル）
+     */
+    private Map<String, String> findAllFieldMMap(String parentId) {
+
+    	Map<String, String> map = new LinkedHashMap<String, String>();
+    	if(parentId != null && !parentId.equals("")) {
+    		map.putAll(FieldMiddle.getMap(Byte.valueOf(parentId)));
+    	}
+    	return map;
+    }
+    
+    /**
+     * 画面用小分類マップ取得(Get small filed map for screen).
+     * @param parentId 中分類ID(middle field id)
+     * @return 画面用小分類マップ（key:ドロップダウンリストID、value：小分類ラベル）
+     */
+    private Map<String, String> findAllFieldSMap(String parentId) {
+    	
+    	
+    	Map<String, String> map = new LinkedHashMap<String, String>();
+    	if(parentId != null && !parentId.equals("")) {
+    		map.putAll(FieldSmall.getMap(Byte.valueOf(parentId)));
+    	}
+    	return map;
+    }
 
 	/**
 	 * 内部処理用成績クラス

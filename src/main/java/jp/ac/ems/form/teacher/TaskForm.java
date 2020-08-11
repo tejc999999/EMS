@@ -58,26 +58,6 @@ public class TaskForm {
     private String selectFieldS;
     
     /**
-     * 年度リスト(year list).
-     */
-    private List<String> yearList;
-
-    /**
-     * 大分類リスト(large field list).
-     */
-    private List<String> fieldLList;
-
-    /**
-     * 中分類リスト(middle field list).
-     */
-    private List<String> fieldMList;
-
-    /**
-     * 小分類リスト(small field list).
-     */
-    private List<String> fieldSList;
-    
-    /**
      * 対象コースIDリスト(target course list).
      */
     private List<String> courseCheckedList;
