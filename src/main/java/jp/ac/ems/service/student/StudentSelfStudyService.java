@@ -29,4 +29,12 @@ public interface StudentSelfStudyService {
 	 * @return 自習Form(self study form)
 	 */
 	public SelfStudyForm getQuestionList(SelfStudyForm form);
+	
+	/**
+	 * 自習問題リストをソートする
+	 * 
+	 * @param selfStudyForm 自習Form(self study form)
+	 * @return 自習Form(self study form)
+	 */
+	public SelfStudyForm sortQuestionList(SelfStudyForm form);
 }

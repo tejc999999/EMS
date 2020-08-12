@@ -10,7 +10,7 @@
 
 <h2>■自習課題選択</h2>
 <div class="container-fluid no-gutters pb-5">
-<form th:action="@{/student/selfstudy/select}" th:object="${selfStudyForm}" method="post">
+<form id="form" th:action="@{/student/selfstudy/select}" th:object="${selfStudyForm}" method="post">
   <div class="form-row">
     <div class="form-group col-md-2">
       <div class="form-group">
@@ -64,7 +64,7 @@
   </div>
 
   <div class="row form-group">
-    <label class="col-form-label col-md-12">条件</label>
+    <label class="col-form-label col-md-12">【条件】</label>
   </div>
   <div class="row form-inline pb-3">
     <div class="col-md-3" th:each="item : ${conditionCheckItems}">
@@ -84,36 +84,60 @@
 
   <div class="form-row">
    	<div class="form-group col-md-12">
-		<input type="submit" name="selectBtn" class="btn btn-info btn-block" th:value="選択">
-    </div>t
+		<input type="submit" name="selectBtn" class="btn btn-info btn-block" th:value="条件設定">
+    </div>
   </div>
 
   <div class="form-row">
     <div class="form-group col-md-12">
-    <label class="col-form-label">選択結果</label>
+    <label class="col-form-label">【選択結果】</label>
       <p th:if="${selfStudyForm.questionList != null}" th:text="${'該当数：' + selfStudyForm.questionList.size() + '問'}"></p>
     </div>
   </div>
 
   <div class="row form-group">
-    <label class="col-form-label col-md-12">出題順</label>
+    <label class="col-form-label col-md-12">【出題順】</label>
   </div>
   <div class="row form-inline pb-3">
-    <div class="col-md-6" th:each="item : ${sortCheckItems}">
-      <label class="checkbox-inline float-left">
-        <input type="checkbox" name="sortCheckedList" th:value="${item.key}" th:text="${item.value}" th:field="*{sortCheckedList}" />
+    <div class="col-md-4" th:each="item : ${sortCheckItems}">
+      <label class="radio-inline float-left">
+        <input type="radio" name="sortChecked" th:value="${item.key}" th:text="${item.value}" th:field="*{sortChecked}" />
       </label>
     </div>
   </div>
 
   <div class="form-row">
    	<div class="form-group col-md-12">
-		<input type="submit" name="startBtn" class="btn btn-info btn-block" th:value="開始">
+		<input type="button" id="dummyStartBtn" name="startBtn" class="btn btn-info btn-block" th:value="開始">
     </div>
   </div>
 
+  <div th:each="questionId : *{questionList}">
+    <input type="hidden" name="questionList" th:value="${questionId}" />
+  </div>
 </form>
 </div>
+
+<script th:inline="javascript">
+window.onload = function() {
+    var allcheckobj = document.getElementById("dummyStartBtn");
+	allcheckobj.addEventListener('click', function () {
+		var questionList = /*[[${selfStudyForm.questionList}]]*/ null;
+		if(questionList != null && questionList.length != 0) {
+			var form = document.getElementById("form");
+			
+			var input = document.createElement('input');
+			input.setAttribute('type', 'hidden');
+			input.setAttribute('name', 'startBtn');
+			form.appendChild(input);
+			
+			form.submit();
+		} else {
+			alert("問題が選択されていません。");
+		}
+  	});
+}
+</script>
 
 <div th:replace="layout :: footer"></div>
   

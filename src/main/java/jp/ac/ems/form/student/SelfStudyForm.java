@@ -4,8 +4,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * 自習Form(self study form for student).
@@ -14,6 +17,63 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class SelfStudyForm {
+	
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+	public static final String CONDITION_1_KEY_UNANSWERED = "1";
+
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+	public static final String CONDITION_2_KEY_LOW_ACC_RATE = "2";
+
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+	public static final String CONDITION_3_KEY_MIX = "3";
+
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+	public static final String CONDITION_4_KEY_ALL = "4";
+
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+	public static final String CONDITION_1_VALUE_UNANSWERED = "未回答";
+
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+	public static final String CONDITION_2_VALUE_LOW_ACC_RATE = "低正解率(50%未満)";
+
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+	public static final String CONDITION_3_VALUE_MIX = "未回答＋低正解率";
+    
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+	public static final String CONDITION_4_VALUE_ALL = "全て";
+
+
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+	public static final String SORT_1_KEY_LATEST = "1";
+
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+	public static final String SORT_2_KEY_PREVIOUS = "2";
+
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+	public static final String SORT_3_KEY_RANDOM = "3";
+
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+	public static final String SORT_1_VALUE_LATEST = "新しい年度優先";
+
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+	public static final String SORT_2_VALUE_PREVIOUS = "古い年度優先";
+
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+	public static final String SORT_3_VALUE_RANDOM = "ランダム";
 	
     /**
      * 選択年度(select year).
@@ -48,5 +108,5 @@ public class SelfStudyForm {
     
     private boolean latestFlg;
 
-    private List<String> sortCheckedList;
+    private String sortChecked;
 }

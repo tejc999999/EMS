@@ -1,11 +1,15 @@
 package jp.ac.ems.impl.service.student;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -20,6 +24,7 @@ import jp.ac.ems.config.FieldLarge;
 import jp.ac.ems.config.FieldMiddle;
 import jp.ac.ems.config.FieldSmall;
 import jp.ac.ems.form.student.SelfStudyForm;
+import jp.ac.ems.form.student.TaskForm;
 import jp.ac.ems.repository.QuestionRepository;
 import jp.ac.ems.repository.StudentQuestionHistoryRepository;
 import jp.ac.ems.repository.UserRepository;
@@ -78,15 +83,16 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 	@Override
 	public void setCheckItems(SelfStudyForm form, Model model) {
 		Map<String, String> conditionCheckMap = new LinkedHashMap<>();
-		conditionCheckMap.put("1", "未回答");
-		conditionCheckMap.put("2", "低正解率(50%未満)");
-		conditionCheckMap.put("3", "未回答＋低正解率");
-		conditionCheckMap.put("4", "全て");
+		conditionCheckMap.put(SelfStudyForm.CONDITION_1_KEY_UNANSWERED, SelfStudyForm.CONDITION_1_VALUE_UNANSWERED);
+		conditionCheckMap.put(SelfStudyForm.CONDITION_2_KEY_LOW_ACC_RATE, SelfStudyForm.CONDITION_2_VALUE_LOW_ACC_RATE);
+		conditionCheckMap.put(SelfStudyForm.CONDITION_3_KEY_MIX, SelfStudyForm.CONDITION_3_VALUE_MIX);
+		conditionCheckMap.put(SelfStudyForm.CONDITION_4_KEY_ALL, SelfStudyForm.CONDITION_4_VALUE_ALL);
 		model.addAttribute("conditionCheckItems", conditionCheckMap);
 		
 		Map<String, String> sortCheckMap = new LinkedHashMap<>();
-		sortCheckMap.put("1", "年度が新しい");
-		sortCheckMap.put("2", "ランダム");
+		sortCheckMap.put(SelfStudyForm.SORT_1_KEY_LATEST, SelfStudyForm.SORT_1_VALUE_LATEST);
+		sortCheckMap.put(SelfStudyForm.SORT_2_KEY_PREVIOUS, SelfStudyForm.SORT_2_VALUE_PREVIOUS);
+		sortCheckMap.put(SelfStudyForm.SORT_3_KEY_RANDOM, SelfStudyForm.SORT_3_VALUE_RANDOM);
 		model.addAttribute("sortCheckItems", sortCheckMap);
 	}
 	
@@ -156,19 +162,21 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 		// 条件による除外
 		List<String> questionIdForIncorrect50 = new ArrayList<>();
 		List<String> tempRemoveQuetionId = new ArrayList<>();
-		if(form.getConditionChecked() != null && !form.getConditionChecked().equals("4")) {
+		if(form.getConditionChecked() != null && !form.getConditionChecked().equals(SelfStudyForm.CONDITION_4_KEY_ALL)) {
 
 	        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 	        String userId = auth.getName();
 	        List<StudentQuestionHistoryBean> sqhBeanList = studentQuestionHistoryRepository.findAllByUserId(userId);
 	        for(StudentQuestionHistoryBean bean : sqhBeanList) {
 	
-				if(form.getConditionChecked().equals("1") || form.getConditionChecked().equals("3")) {
+				if(form.getConditionChecked().equals(SelfStudyForm.CONDITION_1_KEY_UNANSWERED)
+						|| form.getConditionChecked().equals(SelfStudyForm.CONDITION_3_KEY_MIX)) {
 		        	// 回答済み除外（未回答のみ）
 					
 					tempRemoveQuetionId.add(String.valueOf(bean.getQuestionId()));
 				}
-				if(form.getConditionChecked().equals("2") || form.getConditionChecked().equals("3")) {
+				if(form.getConditionChecked().equals(SelfStudyForm.CONDITION_2_KEY_LOW_ACC_RATE)
+						|| form.getConditionChecked().equals(SelfStudyForm.CONDITION_3_KEY_MIX)) {
 					// 低回答率（50%未満）のみを別リストに退避する
 					
 					if(((bean.getCorrectCnt() + bean.getIncorrectCnt()) != 0)
@@ -182,9 +190,9 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 	        // 低回答率が含まれるか検証するため、検証後にリストから除外する
 	        questionIdList.removeAll(tempRemoveQuetionId);
 	        
-	        if(form.getConditionChecked().equals("2")) {
+	        if(form.getConditionChecked().equals(SelfStudyForm.CONDITION_2_KEY_LOW_ACC_RATE)) {
 	        	questionIdList = questionIdForIncorrect50;
-	        } else if(form.getConditionChecked().equals("3")) {
+	        } else if(form.getConditionChecked().equals(SelfStudyForm.CONDITION_3_KEY_MIX)) {
 	        	questionIdList.addAll(questionIdForIncorrect50);
 	        }
 		}
@@ -210,6 +218,65 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 		
 		form.setQuestionList(questionIdList);
 		
+		return form;
+	}
+
+	/**
+	 * 自習問題リストをソートする
+	 * 
+	 * @param selfStudyForm 自習Form(self study form)
+	 * @return 自習Form(self study form)
+	 */
+	@Override
+	public SelfStudyForm sortQuestionList(SelfStudyForm form) {
+		
+		if(form.getConditionChecked() != null) {
+			List<String> questionIdList = form.getQuestionList();
+			
+			if(form.getSortChecked().equals(SelfStudyForm.SORT_3_KEY_RANDOM)) {
+				// ランダムでソート
+			
+				Collections.shuffle(questionIdList);
+				
+				form.setQuestionList(questionIdList);
+			} else {
+	
+				List<QuestionBean> sortQuestionBeanList = new ArrayList<>();
+				List<QuestionBean> questionBeanList = questionRepository.findAll();
+				for(QuestionBean bean : questionBeanList) {
+					if(questionIdList.contains(String.valueOf(bean.getId()))) {
+						sortQuestionBeanList.add(bean);
+					}
+				}
+	
+				List<QuestionBean> sortedQuestionBeanList = new ArrayList<>();
+				if(form.getSortChecked().equals(SelfStudyForm.SORT_1_KEY_LATEST)) {
+					// 新しい順でソート
+		
+			    	sortedQuestionBeanList = sortQuestionBeanList.stream()
+			    	        .sorted(Comparator.comparing(QuestionBean::getYear, Comparator.reverseOrder())
+			    	        		.thenComparing(QuestionBean::getTerm, Comparator.naturalOrder()))
+			    	        .collect(Collectors.toList());
+		
+				} else if(form.getSortChecked().equals(SelfStudyForm.SORT_2_KEY_PREVIOUS)) {
+					// 古い順でソート
+					
+			    	sortedQuestionBeanList = sortQuestionBeanList.stream()
+			    	        .sorted(Comparator.comparing(QuestionBean::getYear, Comparator.naturalOrder())
+			    	        		.thenComparing(QuestionBean::getTerm, Comparator.reverseOrder()))
+			    	        .collect(Collectors.toList());
+			
+				}
+				
+				List<String> sortedQuestionIdList = new ArrayList<>();
+				for(QuestionBean bean : sortedQuestionBeanList) {
+					sortedQuestionIdList.add(String.valueOf(bean.getId()));
+				}
+	
+				form.setQuestionList(sortedQuestionIdList);
+			}
+		}
+			
 		return form;
 	}
 	
@@ -283,6 +350,4 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
     	}
     	return map;
     }
-
-
 }

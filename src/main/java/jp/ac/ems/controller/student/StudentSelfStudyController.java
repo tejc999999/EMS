@@ -115,5 +115,32 @@ public class StudentSelfStudyController {
 
         return "student/selfstudy/select";
     }
+    
+    /**
+     * 出題順をソートし、自習を開始する.
+     * 
+     * @param form 自習Form(self study form)
+     * @param result エラーチェック結果(error validate result)
+     * @param model モデル(model)
+     * @return 自習問題選択用ページビュー(select self study question page view)
+     */
+    @PostMapping(path = "select", params = "startBtn")
+    String startSelfStudy(@Validated SelfStudyForm form, BindingResult result,
+            Model model) {
+
+    	// 出題順序をソートする
+    	SelfStudyForm selfStudyForm = studentSelfStudyService.sortQuestionList(form);
+    	model.addAttribute("selfStudyForm", selfStudyForm);
+    	
+    	// ドロップダウン項目設定
+    	studentSelfStudyService.setSelectData(form, model);
+    	
+    	// チェックボックス項目設定
+    	studentSelfStudyService.setCheckItems(form, model);
+
+    	
+    	// 問題回答画面へ
+        return "student/selfstudy/select";
+    }
 
 }
