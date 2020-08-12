@@ -62,5 +62,5 @@ public class TaskForm {
      * 問題Form(question Form).
      */
     // 1問ずつ表示するためコレクションを使用しない
-    private QuestionForm questionForm;
+    private KadaiQuestionForm questionForm;
 }

@@ -3,7 +3,7 @@ package jp.ac.ems.service.student;
 import java.util.List;
 import java.util.Map;
 
-import jp.ac.ems.form.student.QuestionForm;
+import jp.ac.ems.form.student.KadaiQuestionForm;
 import jp.ac.ems.form.student.TaskForm;
 
 /**
@@ -54,7 +54,7 @@ public interface StudentTaskService {
      * @param taskId 課題ID(task id)
      * @return 全ての問題Formリスト(all questionForm list)
      */
-    public List<QuestionForm> getAnsweredQuestionList(String taskId);
+    public List<KadaiQuestionForm> getAnsweredQuestionList(String taskId);
     
     /**
      * 課題の情報をセットした課題Formを取得する.

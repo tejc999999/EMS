@@ -24,7 +24,7 @@ import jp.ac.ems.config.ExamDivisionCode;
 import jp.ac.ems.config.FieldLarge;
 import jp.ac.ems.config.FieldMiddle;
 import jp.ac.ems.config.FieldSmall;
-import jp.ac.ems.form.student.QuestionForm;
+import jp.ac.ems.form.student.KadaiQuestionForm;
 import jp.ac.ems.form.student.TaskForm;
 import jp.ac.ems.repository.QuestionRepository;
 import jp.ac.ems.repository.StudentQuestionHistoryRepository;
@@ -191,7 +191,7 @@ public class StudentTaskServiceImpl implements StudentTaskService {
 	    	questionId = questionMap.get(positionStr);
     	}
  		
- 		QuestionForm questionForm = getAnsweredQuestionForm(taskId, questionId);
+ 		KadaiQuestionForm questionForm = getAnsweredQuestionForm(taskId, questionId);
 
  		questionForm.setCorrect(convertAnsweredIdToWord(questionForm.getCorrect()));
 		
@@ -325,16 +325,16 @@ public class StudentTaskServiceImpl implements StudentTaskService {
      * @param taskId 課題ID(task id)
      */
 	@Override
-	public List<QuestionForm> getAnsweredQuestionList(String taskId) {
+	public List<KadaiQuestionForm> getAnsweredQuestionList(String taskId) {
 		
-		List<QuestionForm> list = new ArrayList<>();
+		List<KadaiQuestionForm> list = new ArrayList<>();
 		
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userId = auth.getName();
         
 		List<StudentTaskQuestionHistoryBean> stqhlist = studentTaskQuestionHistoryRepository.findAllByUserIdAndTaskId(userId, Long.valueOf(taskId));
 		for(StudentTaskQuestionHistoryBean stqhBean : stqhlist) {
-			QuestionForm questionForm = getAnsweredQuestionForm(taskId, String.valueOf(stqhBean.getQuestionId()));
+			KadaiQuestionForm questionForm = getAnsweredQuestionForm(taskId, String.valueOf(stqhBean.getQuestionId()));
 			// 回答IDを語句に置き換える
 			questionForm.setAnswer(convertAnsweredIdToWord(questionForm.getAnswer()));
 			questionForm.setCorrect(convertAnsweredIdToWord(questionForm.getCorrect()));
@@ -378,8 +378,8 @@ public class StudentTaskServiceImpl implements StudentTaskService {
 	 * @param questionId 問題ID(question id)
 	 * @return 回答済み課題Form(answered question form)
 	 */
-	private QuestionForm getAnsweredQuestionForm(String taskId, String questionId) {
-    	QuestionForm questionForm = new QuestionForm();
+	private KadaiQuestionForm getAnsweredQuestionForm(String taskId, String questionId) {
+    	KadaiQuestionForm questionForm = new KadaiQuestionForm();
     	Optional<QuestionBean> optQuestion = questionRepository.findById(Long.valueOf(questionId));
     	optQuestion.ifPresent(questionBean -> {
     		// 問題の情報をセットする
@@ -422,21 +422,30 @@ public class StudentTaskServiceImpl implements StudentTaskService {
 			questionForm.setAnswer(String.valueOf(bean.getAnswer()));
 		});
 
-    	// 問題情報文字列を作成し、Formにセットする
+    	// 問題情報文字列を作成し、Formにセットする    	
     	StringBuffer questionInfoStrBuff = new StringBuffer();
-    	String yearStr = questionForm.getYear().substring(0, 1);
-    	if("H".equals(yearStr)) {
-    		questionInfoStrBuff.append("平成");
-    	} else if("R".equals(yearStr)) {
-    		questionInfoStrBuff.append("令和");
-    	}
-		questionInfoStrBuff.append(questionForm.getYear().substring(1, 3) + "年");
+    	int yearInt = Integer.valueOf(questionForm.getYear());
     	String termStr = questionForm.getTerm();
+    	if(yearInt < 2019) {
+    		questionInfoStrBuff.append("平成");
+    		questionInfoStrBuff.append(yearInt - 1988 + "年");
+    	} else if(yearInt == 2019) {
+    		if("H".equals(termStr)) {
+        		questionInfoStrBuff.append("平成");
+        		questionInfoStrBuff.append(yearInt - 1988 + "年");
+    		} else if("A".equals(termStr)) {
+        		questionInfoStrBuff.append("令和元年");
+    		}
+    	} else if(yearInt > 2020) {
+    		questionInfoStrBuff.append("令和");
+    		questionInfoStrBuff.append(yearInt - 2019 + "年");
+    	}
     	if("H".equals(termStr)) {
     		questionInfoStrBuff.append("春");
     	} else if("A".equals(termStr)) {
     		questionInfoStrBuff.append("秋");
     	}
+    	
 		questionInfoStrBuff.append("期 第" + questionForm.getNumber() + "問");
     	questionForm.setQuestionInfoStr(questionInfoStrBuff.toString());
     	

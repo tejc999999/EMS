@@ -1,9 +1,11 @@
 package jp.ac.ems.impl.service.student;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.EnumSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -20,10 +22,12 @@ import org.springframework.ui.Model;
 import jp.ac.ems.bean.QuestionBean;
 import jp.ac.ems.bean.StudentQuestionHistoryBean;
 import jp.ac.ems.bean.UserBean;
+import jp.ac.ems.config.ExamDivisionCode;
 import jp.ac.ems.config.FieldLarge;
 import jp.ac.ems.config.FieldMiddle;
 import jp.ac.ems.config.FieldSmall;
 import jp.ac.ems.form.student.SelfStudyForm;
+import jp.ac.ems.form.student.SelfStudyQuestionForm;
 import jp.ac.ems.form.student.TaskForm;
 import jp.ac.ems.repository.QuestionRepository;
 import jp.ac.ems.repository.StudentQuestionHistoryRepository;
@@ -116,8 +120,8 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 		} else {
 			if((form.getSelectYear() != null && !form.getSelectYear().equals(""))) {
 				// 年度条件あり
-				String yearStr = form.getSelectYear().substring(0, 3);
-				String termStr = form.getSelectYear().substring(3, 4);
+				String yearStr = form.getSelectYear().substring(0, 4);
+				String termStr = form.getSelectYear().substring(4, 5);
 
 				if(form.getSelectFieldS() != null && !form.getSelectFieldS().equals("")) {
 					// 年度＋小分野条件
@@ -205,12 +209,47 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 				// 直近6回より前の問題を除外する
 				Optional<QuestionBean> optQuestion = questionRepository.findById(Long.valueOf(questionId));
 				optQuestion.ifPresent(questionBean -> {
-					// TODO:ハードコードで除外
-					// R01A, H31H, H30A, H30H, H29A, H29H
-					if(!questionBean.getYear().equals("R01") && !questionBean.getYear().equals("H31")
-							&& !questionBean.getYear().equals("H30") && !questionBean.getYear().equals("H29")) {
-						removeQuestionIdList.add(String.valueOf(questionBean.getId()));
-					}
+					// ※中止試験があった場合、コード修正が必要
+					int yearInt = Integer.valueOf(questionBean.getYear());
+					String termStr = questionBean.getTerm();
+					int nowYearInt = Calendar.getInstance().get(Calendar.YEAR);
+					int nowMonthInt = Calendar.getInstance().get(Calendar.MONTH);
+					if(nowYearInt >= 2013 && nowMonthInt > 10) {
+						// 2020春試験（中止）の影響なし
+						if(nowMonthInt < 5) {
+							// (1-4月)春試験：年度後
+							if((nowYearInt - yearInt) > 3) {
+								removeQuestionIdList.add(String.valueOf(questionBean.getId()));
+							}
+						} else if(nowMonthInt > 10) {
+							// (11-12月)春試験：年度前
+							if((nowYearInt - yearInt) > 2) {
+								removeQuestionIdList.add(String.valueOf(questionBean.getId()));
+							}
+						} else if(nowMonthInt < 11) {
+							// (5-10月)秋試験:
+							if(((nowYearInt - yearInt) > 3) || ((nowYearInt - yearInt) == 3) && "H".equals(termStr)) {
+								removeQuestionIdList.add(String.valueOf(questionBean.getId()));
+							}
+						}
+					} else {
+						// 2020春試験（中止）の影響あり
+						if(nowMonthInt < 5) {
+							// (1-4月)春試験：年度後
+							if(((nowYearInt - yearInt) > 4) || ((nowYearInt - yearInt) == 4) && "H".equals(termStr)) {
+								removeQuestionIdList.add(String.valueOf(questionBean.getId()));
+							}
+						} else if(nowMonthInt > 10) {
+							// (11-12月)春試験：年度前
+							if(((nowYearInt - yearInt) > 3) || ((nowYearInt - yearInt) == 3) && "H".equals(termStr)) {
+								removeQuestionIdList.add(String.valueOf(questionBean.getId()));
+							}
+						} else if(nowMonthInt < 11) {
+							// (5-10月)秋試験:
+							if((nowYearInt - yearInt) > 3) {
+								removeQuestionIdList.add(String.valueOf(questionBean.getId()));
+							}
+						}					}
 				});
 			}
 			questionIdList.removeAll(removeQuestionIdList);
@@ -230,7 +269,7 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 	@Override
 	public SelfStudyForm sortQuestionList(SelfStudyForm form) {
 		
-		if(form.getConditionChecked() != null) {
+		if(form.getSortChecked() != null) {
 			List<String> questionIdList = form.getQuestionList();
 			
 			if(form.getSortChecked().equals(SelfStudyForm.SORT_3_KEY_RANDOM)) {
@@ -280,6 +319,127 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 		return form;
 	}
 	
+	/**
+	 * 特定の問題の自習問題Formを取得する.
+	 * 
+	 * @param selfStudyForm 自習Form(self study form)
+	 * @param number 問題番号(question number)
+	 * @return 自習問題Form(self study question form)
+	 */
+	@Override
+	public SelfStudyQuestionForm getSelfStudyQuestionForm(SelfStudyQuestionForm form, int number) {
+		
+		SelfStudyQuestionForm selfStudyQuestionForm = new SelfStudyQuestionForm();
+		
+		// 自習用の問題情報をセットする
+		selfStudyQuestionForm.setQuestionList(form.getQuestionList());
+		selfStudyQuestionForm.setSelectQuestionNumber(number);
+		
+		selfStudyQuestionForm.setAnswer(form.getAnswer());
+
+        String questionId = form.getQuestionList().get(number);
+        
+		Optional<QuestionBean> optQuestion = questionRepository.findById(Long.valueOf(questionId));
+		optQuestion.ifPresent(questionBean -> {
+    		// 問題の情報をセットする
+			selfStudyQuestionForm.setCorrect(String.valueOf(questionBean.getCorrect()));
+			selfStudyQuestionForm.setDivision(questionBean.getDivision());
+			selfStudyQuestionForm.setFieldLId(String.valueOf(questionBean.getFieldLId()));
+			selfStudyQuestionForm.setFieldMId(String.valueOf(questionBean.getFieldMId()));
+			selfStudyQuestionForm.setFieldSId(String.valueOf(questionBean.getFieldSId()));
+			selfStudyQuestionForm.setId(String.valueOf(questionBean.getId()));
+			selfStudyQuestionForm.setNumber(String.valueOf(questionBean.getNumber()));
+			selfStudyQuestionForm.setTerm(questionBean.getTerm());
+			selfStudyQuestionForm.setYear(questionBean.getYear());
+    	});
+		String imagePath = selfStudyQuestionForm.getYear() + "_" + selfStudyQuestionForm.getTerm()
+			+ "\\" + String.format("%02d", Integer.parseInt(selfStudyQuestionForm.getNumber())) + ".png";
+		selfStudyQuestionForm.setImagePath(imagePath);
+		
+    	// 問題情報文字列を作成し、Formにセットする
+    	StringBuffer questionInfoStrBuff = new StringBuffer();
+    	int yearInt = Integer.valueOf(selfStudyQuestionForm.getYear());
+    	String termStr = selfStudyQuestionForm.getTerm();
+    	if(yearInt < 2019) {
+    		questionInfoStrBuff.append("平成");
+    		questionInfoStrBuff.append(yearInt - 1988 + "年");
+    	} else if(yearInt == 2019) {
+    		if("H".equals(termStr)) {
+        		questionInfoStrBuff.append("平成");
+        		questionInfoStrBuff.append(yearInt - 1988 + "年");
+    		} else if("A".equals(termStr)) {
+        		questionInfoStrBuff.append("令和元年");
+    		}
+    	} else if(yearInt > 2020) {
+    		questionInfoStrBuff.append("令和");
+    		questionInfoStrBuff.append(yearInt - 2019 + "年");
+    	}
+    	if("H".equals(termStr)) {
+    		questionInfoStrBuff.append("春");
+    	} else if("A".equals(termStr)) {
+    		questionInfoStrBuff.append("秋");
+    	}
+		questionInfoStrBuff.append("期 第" + selfStudyQuestionForm.getNumber() + "問");
+		selfStudyQuestionForm.setQuestionInfoStr(questionInfoStrBuff.toString());
+    	
+    	// 問題分野情報文字列を作成し、Formにセットする
+		selfStudyQuestionForm.setQuestionFieldInfoStr(
+    			FieldLarge.getName(ExamDivisionCode.AP.getName(), Byte.valueOf(selfStudyQuestionForm.getFieldLId())) + "/"
+    			+ FieldMiddle.getName(ExamDivisionCode.AP.getName(), Byte.valueOf(selfStudyQuestionForm.getFieldMId())) + "/"
+    			+ FieldSmall.getName(ExamDivisionCode.AP.getName(), Byte.valueOf(selfStudyQuestionForm.getFieldSId())));
+		
+		// 回答履歴を保存する
+		if(form.getAnswer() != null && !form.getAnswer().equals("")) {
+	        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	        String userId = auth.getName();
+	
+	        Optional<StudentQuestionHistoryBean> optStudentQuestionHistory = studentQuestionHistoryRepository.findByUserIdAndQuestionId(userId, Long.valueOf(questionId));
+			optStudentQuestionHistory.ifPresentOrElse(sqhBean -> {
+				if(selfStudyQuestionForm.getCorrect().equals(form.getAnswer())) {
+					sqhBean.setCorrectCnt((short) (sqhBean.getCorrectCnt() + 1));
+					sqhBean.setUpdateDate(new Date());
+				} else {
+					sqhBean.setIncorrectCnt((short) (sqhBean.getIncorrectCnt() + 1));
+					sqhBean.setUpdateDate(new Date());
+				}
+				studentQuestionHistoryRepository.save(sqhBean);
+			},
+			() -> {
+				StudentQuestionHistoryBean newSqhBean = new StudentQuestionHistoryBean();
+				if(selfStudyQuestionForm.getCorrect().equals(form.getAnswer())) {
+					newSqhBean.setCorrectCnt((short)1);
+					newSqhBean.setIncorrectCnt((short)0);
+				} else {
+					newSqhBean.setCorrectCnt((short)0);
+					newSqhBean.setIncorrectCnt((short)1);
+				}
+				newSqhBean.setQuestionId(Long.valueOf(questionId));
+				newSqhBean.setUserId(userId);
+				newSqhBean.setUpdateDate(new Date());
+				studentQuestionHistoryRepository.save(newSqhBean);
+			});
+		}
+		// 履歴保存後に回答を語句に変換
+		selfStudyQuestionForm.setCorrect(convertAnsweredIdToWord(selfStudyQuestionForm.getCorrect()));
+		
+		return selfStudyQuestionForm;
+	}
+	
+    /**
+     * 回答アイテム取得
+     * 
+     * @return 回答アイテムマップ
+     */
+    @Override
+    public Map<String,String> getAnswerSelectedItems(){
+        Map<String, String> selectMap = new LinkedHashMap<String, String>();
+        selectMap.put("1", "ア");
+        selectMap.put("2", "イ");
+        selectMap.put("3", "ウ");
+        selectMap.put("4", "エ");
+        return selectMap;
+    }
+	
     /**
      * 画面用年度マップ取得
      * @return 画面用年度マップ（key:ドロップダウンリストID、value：年度ラベル）
@@ -293,9 +453,25 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
     		StringBuffer valueBuff = new StringBuffer();
     		// 年度
     		keyBuff.append(questionBean.getYear());
-    		valueBuff.append(questionBean.getYear());
+    		
+    		int yearInt = Integer.valueOf(questionBean.getYear());
+    		String termStr = questionBean.getTerm();
+        	if(yearInt < 2019) {
+        		valueBuff.append("平成");
+        		valueBuff.append(yearInt - 1988 + "年");
+        	} else if(yearInt == 2019) {
+        		if("H".equals(termStr)) {
+        			valueBuff.append("平成");
+        			valueBuff.append(yearInt - 1988 + "年");
+        		} else if("A".equals(termStr)) {
+        			valueBuff.append("令和元年");
+        		}
+        	} else if(yearInt > 2020) {
+        		valueBuff.append("令和");
+        		valueBuff.append(yearInt - 2019 + "年");
+        	}
     		// 期
-    		if("H".equals(questionBean.getTerm())) {
+    		if("H".equals(termStr)) {
     			keyBuff.append("H");
     			valueBuff.append("春");
     		} else {
@@ -350,4 +526,31 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
     	}
     	return map;
     }
+    
+	/**
+	 * 回答IDを語句に置き換える(Convert answered id to word).
+	 * @param answeredId 回答ID(answered id)
+	 * @return 回答語句(answered word)
+	 */
+	private String convertAnsweredIdToWord(String answeredId) {
+		String answeredWord = answeredId;
+		switch(answeredId) {
+			case "1":
+				answeredWord = "ア";
+				break;
+			case "2":
+				answeredWord = "イ";
+				break;
+			case "3":
+				answeredWord = "ウ";
+				break;
+			case "4":
+				answeredWord = "エ";
+				break;
+			default:
+				answeredWord = "";
+				break;
+		}
+		return answeredWord;
+	}
 }

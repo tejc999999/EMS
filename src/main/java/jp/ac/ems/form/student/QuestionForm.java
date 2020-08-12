@@ -1,6 +1,9 @@
 package jp.ac.ems.form.student;
 
+import java.util.List;
+
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
@@ -37,7 +40,6 @@ public class QuestionForm {
      * 問番(question number).
      */
     private String number;
-
     
     /**
      * 大分類(large field).
@@ -50,7 +52,6 @@ public class QuestionForm {
      * 
      */
     private String fieldMId;
-    
     
     /**
      * 小分類(small field).
@@ -85,9 +86,4 @@ public class QuestionForm {
      * 問題分野情報文字列
      */
     private String questionFieldInfoStr;
-    
-    /**
-     * 課題番号
-     */
-    private String taskNumber;
 }

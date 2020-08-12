@@ -1,6 +1,6 @@
 /* MySQL用 */
-/* CREATE DATABASE IF NOT EXISTS algolearn; */
-/* GRANT ALL PRIVILEGES ON algolearn.* TO algolearnadmin@localhost IDENTIFIED BY 'algolearnpass' WITH GRANT OPTION; */
+/* CREATE DATABASE IF NOT EXISTS ems; */
+/* GRANT ALL PRIVILEGES ON ems.* TO emsadmin@localhost IDENTIFIED BY 'emspass' WITH GRANT OPTION; */
 
 CREATE TABLE t_user(
     id VARCHAR(20) NOT NULL,
@@ -74,7 +74,7 @@ CREATE TABLE t_student_task(
 CREATE TABLE t_question(
     id BIGINT AUTO_INCREMENT,
     division VARCHAR(2),
-    year VARCHAR(3),
+    year VARCHAR(4),
     term VARCHAR(1),
     number TINYINT,
     field_l_id TINYINT,

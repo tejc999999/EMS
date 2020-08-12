@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import jp.ac.ems.config.ExamDivisionCodeProperties;
-import jp.ac.ems.form.student.QuestionForm;
+import jp.ac.ems.form.student.KadaiQuestionForm;
 import jp.ac.ems.form.student.TaskForm;
 import jp.ac.ems.service.student.StudentTaskService;
 
@@ -36,14 +36,14 @@ public class StudentTaskController {
 	@Autowired
 	ExamDivisionCodeProperties examDivisionCodeProperties;
 	    
-    /**
-     * モデルにフォームをセットする(set form the model).
-     * @return 課題Form(task form)
-     */
-    @ModelAttribute
-    TaskForm setupForm() {
-        return new TaskForm();
-    }
+//    /**
+//     * モデルにフォームをセットする(set form the model).
+//     * @return 課題Form(task form)
+//     */
+//    @ModelAttribute
+//    TaskForm setupForm() {
+//        return new TaskForm();
+//    }
     
     /**
      * 課題一覧(question list).
@@ -143,7 +143,7 @@ public class StudentTaskController {
     	TaskForm taskForm = taskService.getTaskForm(id);
     	model.addAttribute("taskForm", taskForm);
     	
-        List<QuestionForm> list = taskService.getAnsweredQuestionList(id);
+        List<KadaiQuestionForm> list = taskService.getAnsweredQuestionList(id);
         model.addAttribute("questions", list);
 
         return "student/task/question_list";

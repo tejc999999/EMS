@@ -515,9 +515,25 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
     		StringBuffer valueBuff = new StringBuffer();
     		// 年度
     		keyBuff.append(questionBean.getYear());
-    		valueBuff.append(questionBean.getYear());
+    		
+    		int yearInt = Integer.valueOf(questionBean.getYear());
+    		String termStr = questionBean.getTerm();
+        	if(yearInt < 2019) {
+        		valueBuff.append("平成");
+        		valueBuff.append(yearInt - 1988 + "年");
+        	} else if(yearInt == 2019) {
+        		if("H".equals(termStr)) {
+        			valueBuff.append("平成");
+        			valueBuff.append(yearInt - 1988 + "年");
+        		} else if("A".equals(termStr)) {
+        			valueBuff.append("令和元年");
+        		}
+        	} else if(yearInt > 2020) {
+        		valueBuff.append("令和");
+        		valueBuff.append(yearInt - 2019 + "年");
+        	}
     		// 期
-    		if("H".equals(questionBean.getTerm())) {
+    		if("H".equals(termStr)) {
     			keyBuff.append("H");
     			valueBuff.append("春");
     		} else {
@@ -585,7 +601,22 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
     	for(QuestionBean questionBean : questionBeanList) {
     		StringBuffer valueBuff = new StringBuffer();
     		// 年度
-    		valueBuff.append(questionBean.getYear());
+    		int yearInt = Integer.valueOf(questionBean.getYear());
+    		String termStr = questionBean.getTerm();
+        	if(yearInt < 2019) {
+        		valueBuff.append("平成");
+        		valueBuff.append(yearInt - 1988 + "年");
+        	} else if(yearInt == 2019) {
+        		if("H".equals(termStr)) {
+        			valueBuff.append("平成");
+        			valueBuff.append(yearInt - 1988 + "年");
+        		} else if("A".equals(termStr)) {
+        			valueBuff.append("令和元年");
+        		}
+        	} else if(yearInt > 2020) {
+        		valueBuff.append("令和");
+        		valueBuff.append(yearInt - 2019 + "年");
+        	}
     		// 期
     		if("H".equals(questionBean.getTerm())) {
     			valueBuff.append("春");
