@@ -42,7 +42,7 @@ spring:
 
 ap:
   question:
-    imagefilepath: F://AP_AM
+    imagefilepath: file:/F://AP_AM
 
 server:
 #  charactercode: utf-8

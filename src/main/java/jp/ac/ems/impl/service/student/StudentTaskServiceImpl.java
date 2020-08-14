@@ -394,7 +394,7 @@ public class StudentTaskServiceImpl implements StudentTaskService {
     		questionForm.setFieldSId(String.valueOf(questionBean.getFieldSId()));
     	});
 		String imagePath = questionForm.getYear() + "_" + questionForm.getTerm()
-			+ "\\" + String.format("%02d", Integer.parseInt(questionForm.getNumber())) + ".png";
+			+ "/" + String.format("%02d", Integer.parseInt(questionForm.getNumber())) + ".png";
 		questionForm.setImagePath(imagePath);
 
 		// 課題上の問題番号をセットする
