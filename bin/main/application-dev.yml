@@ -5,6 +5,7 @@
 # SＱＬファイルに日本語を使う：spring.datasource.sql-script-encoding=UTF-8
 # JDBCデータソースurlの後方に?useUnicode=true&characterEncoding=utf8を付与することでUnicode(文字)を使ってUTF-8(符号化)を指定しないと文字化ける
 
+
 spring:
   batch:
     # db initialize enable(always/embedded/never)
