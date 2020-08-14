@@ -67,7 +67,6 @@ public class TeacherClassController {
     public String add(Model model) {
         
         Map<String, String> userMap = classService.getUserIdMap();
-
         model.addAttribute("userCheckItems", userMap);
 
         return "teacher/class_/add";
@@ -81,6 +80,13 @@ public class TeacherClassController {
     public String addProcess(@Validated ClassForm form, BindingResult result,
             Model model) {
 
+    	if(result.hasErrors()) {
+    		
+    		model.addAttribute("classForm", form);
+            Map<String, String> userMap = classService.getUserIdMap();
+            model.addAttribute("userCheckItems", userMap);
+    		return "teacher/class_/add";
+    	}
         classService.save(form);
 
         return "redirect:/teacher/class_";
@@ -99,7 +105,6 @@ public class TeacherClassController {
 
         // クラス選択情報を設定する
         ClassForm classForm = classService.findById(id);
-
         model.addAttribute("classForm", classForm);
 
         return "teacher/class_/edit";
@@ -110,8 +115,18 @@ public class TeacherClassController {
      * @return クラス一覧ページリダイレクト(class list page redirect)
      */
     @PostMapping(path = "editprocess")
-    public String editProcess(ClassForm form, Model model) {
+    public String editProcess(@Validated ClassForm form, BindingResult result, Model model) {
 
+    	if(result.hasErrors()) {
+    		
+            // チェックボックスのユーザー一覧を取得する
+            Map<String, String> userMap = classService.getUserIdMap();
+            model.addAttribute("userCheckItems", userMap);
+            
+            model.addAttribute("classForm", form);
+            
+            return "teacher/class_/edit";
+    	}
         classService.save(form);
 
         return "redirect:/teacher/class_";

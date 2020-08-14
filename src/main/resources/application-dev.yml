@@ -1,41 +1,3 @@
-# テスト用
-#spring:
-#  jpa:
-#    hibernate:
-#      ddl-auto: create-drop
-#  datasource:
-#    url: jdbc:h2:mem:algolearn;DB_CLOSE_DELAY=-1
-#    username: 
-#    password: 
-#    driverClassName: org.h2.Driver
-#    spring.jpa.database-platform: org.hibernate.dialect.H2Dialect
-#prglanguage: 
-#  java: 
-#    fileName: Test.java
-#    buildFileName: Test
-#    buildCmdPath: F:\\dev\\AdoptOpenJDK\\jdk-8.0.202.08\\bin\\javac
-#    executeCmdPath: F:\\dev\\AdoptOpenJDK\\jdk-8.0.202.08\\bin\\java
-#    workFolderPath: F:\\workfolder
-#  ccpp: 
-#    fileName: 
-#    buildFileName: 
-#    buildCmdPath: 
-#    executeCmdPath:
-#    workFolderPath:
-#  python: 
-#    fileName: 
-#    buildFileName: 
-#    buildCmdPath:
-#    executeCmdPath:
-#    workFolderPath:
-#server:
-#  charactercode: utf-8
-
-
-
-
-
-
 # スキーマ作成の出力：org.hibernate.SQL
 # JPAベースのアプリでは以下無効にしないとshema.sqlが動かない？
 # Hibernateの自動データベース初期化機能：spring.jpa.hibernate.ddl-auto
@@ -52,7 +14,7 @@ spring:
 #    url: jdbc:h2:mem:algolearn;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=TRUE
 #    username: algolearnadmin
 #    password:
-    locations: classpath:db/migration
+    locations: classpath:db/migration, classpath:db/data
   h2:
     console:
       settings:
@@ -67,39 +29,21 @@ spring:
       ddl-auto: update
   datasource:
 #    initialization-mode: always
-    url: jdbc:mysql://localhost/algolearn?serverTimezone=JST&useUnicode=true&characterEncoding=utf8
+    url: jdbc:mysql://localhost/ems?serverTimezone=JST&useUnicode=true&characterEncoding=utf8
 #    url: jdbc:h2:mem:algolearn
 #   url: jdbc:h2:file:./h2db/sampledb2
-    username: algolearnadmin
-    password: algolearnpass
+    username: emsadmin
+    password: emspassword
 #    username: sa
 #   password:
 #    driverClassName: com.mysql.cj.jdbc.Driver
     # platform data(product/develop/test)
     platform: test
 
+ap:
+  question:
+    imagefilepath: F://AP_AM
 
-prglanguage: 
-  java: 
-    fileName: TestClass.java
-    buildFileName: TestClass
-    checkFileName: CheckClass.java
-    buildCheckFileName: CheckClass
-    buildCmdPath: F:\\dev_team\\jdk-13.0.2\\bin\\javac
-    executeCmdPath: F:\\dev_team\\jdk-13.0.2\\bin\\java
-    workFolderPath: F:\\workfolder
-  ccpp: 
-    fileName: 
-    buildFileName: 
-    buildCmdPath: 
-    executeCmdPath:
-    workFolderPath:
-  python: 
-    fileName: 
-    buildFileName: 
-    buildCmdPath:
-    executeCmdPath:
-    workFolderPath:
 server:
 #  charactercode: utf-8
   charactercode: SJIS
@@ -110,15 +54,15 @@ server:
 #    org.hibernate: TRACE 
 #      springframework.web: TRACE
 
-logging:
-  file.name: logfile
-  level: 
-    root: ERROR
-    org:
-      springframework.web: ERROR
-      hibernate:
-        SQL: ERROR
-        type.descriptor.sql.BasicBinder: ERROR
+#logging:
+#  file.name: logfile
+#  level: 
+#    root: INFO
+#    org:
+#      springframework.web: INFO
+#      hibernate:
+#        SQL: INFO
+#        type.descriptor.sql.BasicBinder: INFO
 #  jpa:
 #    properties:
 #      hibernate:

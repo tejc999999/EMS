@@ -29,11 +29,11 @@ spring:
       ddl-auto: update
   datasource:
 #    initialization-mode: always
-    url: jdbc:mysql://localhost/ems?serverTimezone=JST&useUnicode=true&characterEncoding=utf8
+    url: ${EMS_DATABASE_URL}
 #    url: jdbc:h2:mem:algolearn
 #   url: jdbc:h2:file:./h2db/sampledb2
-    username: emsadmin
-    password: emspass
+    username: ${EMS_DATABASE_USERNAME}
+    password: ${EMS_DATABASE_PASSWORD}
 #    username: sa
 #   password:
 #    driverClassName: com.mysql.cj.jdbc.Driver
@@ -42,7 +42,7 @@ spring:
 
 ap:
   question:
-    imagefilepath: F:\\AP_AM
+    imagefilepath: ${AP_QUESTION_IMAGEPATH}
 
 server:
 #  charactercode: utf-8
@@ -54,15 +54,15 @@ server:
 #    org.hibernate: TRACE 
 #      springframework.web: TRACE
 
-logging:
-  file.name: logfile
-  level: 
-    root: INFO
-    org:
-      springframework.web: INFO
-      hibernate:
-        SQL: INFO
-        type.descriptor.sql.BasicBinder: INFO
+#logging:
+#  file.name: logfile
+#  level: 
+#    root: INFO
+#    org:
+#      springframework.web: INFO
+#      hibernate:
+#        SQL: INFO
+#        type.descriptor.sql.BasicBinder: INFO
 #  jpa:
 #    properties:
 #      hibernate:

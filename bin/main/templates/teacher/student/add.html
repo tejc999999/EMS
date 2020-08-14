@@ -2,33 +2,39 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity">
 <head th:replace="layout :: common_layout(title = '学生登録画面', scripts = ~{::script}, links = ~{::link})">
- </head>
+</head>
 <body>
 
 <div th:replace="layout :: header"></div>
 
 <h2>■学生登録</h2>
 <div class="container-fluid no-gutters pb-5">
-    <form th:action="@{/teacher/student/add}" th:object="${stuentForm}" method="post">
+     <div th:if="${errorMsg}" class="alert alert-danger">
+       <p th:text="${errorMsg}">error message.</p>
+    </div>
+    <form th:action="@{/teacher/student/add}" th:object="${studentForm}" method="post">
     <div class="form-row">
         <div class="form-group col-md-12">
           <label for="id" class="col-form-label">ユーザーID</label>
-          <input type="text" class="form-control" name="id"  aria-label="ユーザーID" />
+          <input type="text" class="form-control" name="id"  aria-label="ユーザーID" th:value=*{id} th:errorclass="error-input" />
         </div>
+        <span th:if="${#fields.hasErrors('id')}" th:errors="*{id}" class="error-messages">error!</span>
     </div>
 
     <div class="form-row">
         <div class="form-group col-md-12">
             <label for="password" class="col-form-label">パスワード</label>
-                <input type="password" class="form-control" name="password" aria-label="パスワード" />
+                <input type="password" class="form-control" name="password" aria-label="パスワード" th:value="*{password}" th:errorclass="error-input" />
         </div>
+        <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error-messages">error!</span>
     </div>
 
     <div class="form-row">
         <div class="form-group col-md-12">
             <label for="name" class="col-form-label">名前</label>
-            <input type="text" class="form-control" name="name"  aria-label="名前" />
+            <input type="text" class="form-control" name="name"  aria-label="名前" th:value="*{name}" th:errorclass="error-input" />
         </div>
+        <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="error-messages">error!</span>
     </div>
     <div class="form-row">
         <div class="col-md-12">

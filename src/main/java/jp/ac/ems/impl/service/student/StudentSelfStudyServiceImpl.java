@@ -353,7 +353,7 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 			selfStudyQuestionForm.setYear(questionBean.getYear());
     	});
 		String imagePath = selfStudyQuestionForm.getYear() + "_" + selfStudyQuestionForm.getTerm()
-			+ "\\" + String.format("%02d", Integer.parseInt(selfStudyQuestionForm.getNumber())) + ".png";
+			+ "/" + String.format("%02d", Integer.parseInt(selfStudyQuestionForm.getNumber())) + ".png";
 		selfStudyQuestionForm.setImagePath(imagePath);
 		
     	// 問題情報文字列を作成し、Formにセットする

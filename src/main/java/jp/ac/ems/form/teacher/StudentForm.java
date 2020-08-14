@@ -34,10 +34,15 @@ public class StudentForm {
 	@Size(min=6, max=100)
     String password;
 
+	/**
+	 * パスワード変更なしフラグ（true:変更なし, false:変更あり）
+	 */
+	Boolean passwordNoChangeFlg;
+	
     /**
      * 学生名(student name).
      */
-	@Max(50)
+	@Size(max=50)
     String name;
 
     /**

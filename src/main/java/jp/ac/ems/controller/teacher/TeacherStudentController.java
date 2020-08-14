@@ -2,6 +2,7 @@ package jp.ac.ems.controller.teacher;
 
 import java.util.List;
 
+import jp.ac.ems.form.teacher.CourseForm;
 import jp.ac.ems.form.teacher.StudentForm;
 import jp.ac.ems.impl.service.teacher.TeacherStudentServiceImpl;
 import jp.ac.ems.service.teacher.TeacherStudentService;
@@ -12,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,6 +33,15 @@ public class TeacherStudentController {
     @Autowired
     TeacherStudentService studentService;
 
+    /**
+     * モデルにフォームをセットする(set form the model).
+     * @return 学生Form(student form)
+     */
+    @ModelAttribute
+    StudentForm setupForm() {
+        return new StudentForm();
+    }
+    
     /**
      * 学生一覧ページ表示(show student list page).
      * @param model 学生一覧保存用モデル(model to save student list)
@@ -63,10 +74,21 @@ public class TeacherStudentController {
     @PostMapping(path = "add")
     public String addProcess(@Validated StudentForm form, BindingResult result,
             Model model) {
+    	
+    	if(result.hasErrors()) {
 
-        studentService.save(form);
-
-        return "redirect:/teacher/student";
+    		model.addAttribute("studentForm", form);
+            return "teacher/student/add";
+    	} else if(studentService.checkDupulicate(form)) {
+    		
+    		model.addAttribute("studentForm", form);
+    		model.addAttribute("errorMsg", "ユーザーIDが重複しています");
+            return "teacher/student/add";
+    	} else {
+    		
+    		studentService.save(form);
+            return "redirect:/teacher/student";
+    	}
     }
 
     /**
@@ -88,10 +110,17 @@ public class TeacherStudentController {
      * @return 学生一覧ページリダイレクト(student list page redirect)
      */
     @PostMapping(path = "editprocess")
-    public String editProcess(StudentForm form, Model model) {
-        
-        studentService.save(form);
+    public String editProcess(@Validated StudentForm form, BindingResult result, Model model) {
 
+    	if(result.hasErrors()) {
+    		// パスワードを変更しない場合、パスワードのエラーを無視する
+        	if(!form.getPasswordNoChangeFlg() ||  !result.hasFieldErrors("password")) {
+    			return "teacher/student/edit";
+        	}
+    	}
+    	
+    	studentService.save(form);
+    	
         return "redirect:/teacher/student";
     }
 

@@ -5,42 +5,39 @@
 	th:replace="layout :: common_layout(title = '課題登録画面', scripts = ~{::script}, links = ~{::link})">
 </head>
 <body>
-
-	<div th:replace="layout :: header"></div>
-
-	<h2>■課題登録</h2>
-	<div class="container-fluid no-gutters pb-5">
-		<form th:action="@{/teacher/task/add_question}" th:object="${taskForm}"
-			method="post">
-			<div class="form-row">
-				<div class="form-group col-md-12">
-					<label for="title" class="col-form-label">課題名</label> <input
-						type="text" class="form-control" name="title" placeholder="課題の名前"
-						aria-label="課題の名前" th:value="*{title}" />
-				</div>
-			</div>
-			<div class="form-row">
-				<div class="form-group col-md-12">
-					<label for="description" class="col-form-label">説明文</label>
-					<textarea class="form-control" name="description"
-						placeholder="課題の説明文" aria-label="課題の説明文" th:field="*{description}"></textarea>
-				</div>
-			</div>
-
-			<div class="form-row">
-				<div class="col-md-12">
-					<input type="submit" class="btn btn-info btn-block" th:value="次へ">
-				</div>
-			</div>
-            <input type="hidden" name="questionCheckedList" th:value="*{questionCheckedList}" >
-            <input type="hidden" name="selectYear" th:value="*{selectYear}" >
-            <input type="hidden" name="selectFieldL" th:value="*{selectFieldL}" >
-            <input type="hidden" name="selectFieldM" th:value="*{selectFieldM}" >
-            <input type="hidden" name="selectFieldS" th:value="*{selectFieldS}" >
-		</form>
-	</div>
-
-	<div th:replace="layout :: footer"></div>
-
+  <div th:replace="layout :: header"></div>
+  <h2>■課題登録</h2>
+  <div class="container-fluid no-gutters pb-5">
+    <div th:if="${errorMsg}" class="alert alert-danger">
+      <p th:text="${errorMsg}">error message.</p>
+    </div>
+    <form th:action="@{/teacher/task/add_question}" th:object="${taskForm}" method="post">
+      <div class="form-row">
+        <div class="form-group col-md-12">
+          <label for="title" class="col-form-label">課題名</label>
+          <input type="text" class="form-control" name="title" placeholder="課題の名前" aria-label="課題の名前" th:value="*{title}" th:errorclass="error-input" />
+        </div>
+        <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="error-messages">error!</span>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-12">
+          <label for="description" class="col-form-label">説明文</label>
+          <textarea class="form-control" name="description" placeholder="課題の説明文" aria-label="課題の説明文" th:field="*{description}" th:errorclass="error-input" /></textarea>
+        </div>
+        <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="error-messages">error!</span>
+      </div>
+      <div class="form-row">
+        <div class="col-md-12">
+          <input type="submit" class="btn btn-info btn-block" th:value="次へ">
+        </div>
+      </div>
+      <input type="hidden" name="questionCheckedList" th:value="*{questionCheckedList}" >
+      <input type="hidden" name="selectYear" th:value="*{selectYear}" >
+      <input type="hidden" name="selectFieldL" th:value="*{selectFieldL}" >
+      <input type="hidden" name="selectFieldM" th:value="*{selectFieldM}" >
+      <input type="hidden" name="selectFieldS" th:value="*{selectFieldS}" >
+    </form>
+  </div>
+  <div th:replace="layout :: footer"></div>
 </body>
 </html>

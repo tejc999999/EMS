@@ -6,12 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import jp.ac.ems.config.ExamDivisionCodeProperties;
 import jp.ac.ems.form.student.KadaiQuestionForm;
 import jp.ac.ems.form.student.TaskForm;
 import jp.ac.ems.service.student.StudentTaskService;
@@ -29,12 +27,6 @@ public class StudentTaskController {
 	 */
     @Autowired
     StudentTaskService taskService;
-    
-    /**
-     * ローカル設定関連プロパティファイル設定値
-     */
-	@Autowired
-	ExamDivisionCodeProperties examDivisionCodeProperties;
 	    
 //    /**
 //     * モデルにフォームをセットする(set form the model).

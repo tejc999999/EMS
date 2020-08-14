@@ -11,6 +11,7 @@ import jp.ac.ems.repository.UserRepository;
 import jp.ac.ems.service.teacher.TeacherStudentService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +34,7 @@ public class TeacherStudentServiceImpl implements TeacherStudentService {
      * 全ての学生を取得する.
      * @return 全ての学生Formリスト
      */
+    @Override
     public List<StudentForm> findAll() {
 
         List<StudentForm> studentFormList = new ArrayList<StudentForm>();
@@ -49,10 +51,29 @@ public class TeacherStudentServiceImpl implements TeacherStudentService {
     }
     
     /**
+    * 学生の重複を検証する
+    * @param form 学生Form
+    * @return 重複有無（true:重複あり、false:重複なし）
+    */
+    @Override
+    public boolean checkDupulicate(StudentForm form) {
+
+    	boolean dupulicateFlg = true;
+    	
+       Optional<UserBean> opt = userRepository.findById(form.getId());
+       if(opt.orElse(null) == null) {
+    	   dupulicateFlg = false;
+       }
+	   
+	   return dupulicateFlg;
+   }
+    
+    /**
      * 学生を保存する.
      * @param form 学生Form
      * @return 登録済み学生Form
      */
+    @Override
     public StudentForm save(StudentForm form) {
 
         UserBean saveUserBean;
@@ -70,9 +91,11 @@ public class TeacherStudentServiceImpl implements TeacherStudentService {
             saveUserBean = new UserBean();
         }
         saveUserBean.setId(form.getId());
-        // エンコード
-        saveUserBean.setPassword(new BCryptPasswordEncoder().encode(form.getPassword()));
-//        saveUserBean.setPassword(form.getPassword());
+        if(form.getPasswordNoChangeFlg() == null || !form.getPasswordNoChangeFlg()) {
+        	// パスワードを変更する場合のみ、パスワードを設定する
+	        // エンコード
+	        saveUserBean.setPassword(new BCryptPasswordEncoder().encode(form.getPassword()));
+        }
         saveUserBean.setName(form.getName());
         saveUserBean.setRoleId(form.getRoleId());
         
@@ -90,6 +113,7 @@ public class TeacherStudentServiceImpl implements TeacherStudentService {
      * @param id ユーザーID
      * @return 学生Form
      */
+   @Override
     public StudentForm findById(String id) {
 
         StudentForm studentForm = new StudentForm();
@@ -97,7 +121,6 @@ public class TeacherStudentServiceImpl implements TeacherStudentService {
         Optional<UserBean> optUser = userRepository.findById(id);
         optUser.ifPresent(userBean -> {
             studentForm.setId(userBean.getId());
-            studentForm.setPassword(userBean.getPassword());
             studentForm.setName(userBean.getName());
         });
         
@@ -108,6 +131,7 @@ public class TeacherStudentServiceImpl implements TeacherStudentService {
      * 学生を削除する.
      * @param id ユーザーID
      */
+   @Override
     public void delete(String id) {
         Optional<UserBean> optUser = userRepository.findById(id);
         optUser.ifPresent(userBean -> userRepository.delete(userBean));

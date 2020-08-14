@@ -1,15 +1,9 @@
 package jp.ac.ems.controller.teacher;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpSession;
-
-import jp.ac.ems.form.GradeForm;
 import jp.ac.ems.form.teacher.TaskForm;
-import jp.ac.ems.form.teacher.TaskSubmissionForm;
-import jp.ac.ems.impl.service.teacher.TeacherTaskServiceImpl;
 import jp.ac.ems.service.teacher.TeacherTaskService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,12 +27,6 @@ public class TeacherTaskController {
 
     @Autowired
     TeacherTaskService taskService;
-
-//    @Autowired
-//    HttpSession session;
-    
-//    @Autowired
-//    QuestionService questionService;
 
     /**
      * モデルにフォームをセットする(set form the model).
@@ -72,19 +60,27 @@ public class TeacherTaskController {
     public String edit(@RequestParam String id, Model model) {
 
         TaskForm taskForm = taskService.findById(id);
-
         model.addAttribute("taskForm", taskForm);
     	
-        return "/teacher/task/edit";
+        return "teacher/task/edit";
     }
     
     /**
      * 課題編集処理(edit process for task).
+     * @param form 課題Form(task form)
+     * @param result エラーチェック結果(error validate result)
+     * @param model モデル(model to save xxx)
      * @return 課題一覧ページリダイレクト(task list page redirect)
      */
     @PostMapping(path = "editprocess")
-    public String editprocess(TaskForm form, Model model) {
+    public String editprocess(@Validated TaskForm form, BindingResult result, Model model) {
 
+    	if(result.hasErrors()) {
+    		
+            model.addAttribute("taskForm", form);
+            return "teacher/task/edit";
+    	}
+    	
     	taskService.save(form, true);
     	
         return "redirect:/teacher/task";
@@ -110,12 +106,9 @@ public class TeacherTaskController {
      */
     @GetMapping(path = "add")
     public String add() {
-
-//    	session.removeAttribute("taskForm");
     	
-        return "/teacher/task/add";
+        return "teacher/task/add";
     }
-
     
     /**
      * 課題登録 - 問題追加(task add/question add).
@@ -128,6 +121,11 @@ public class TeacherTaskController {
     public String addQuestion(@Validated TaskForm form, BindingResult result,
             Model model) {
     	
+    	if(result.hasErrors()) {
+    		
+    		model.addAttribute("taskForm", form);
+            return "teacher/task/add";
+    	}
     	// ドロップダウン項目設定
     	taskService.setSelectData(form, model);
     	
@@ -135,9 +133,7 @@ public class TeacherTaskController {
         Map<String, String> questionMap = taskService.findAllMap();
         model.addAttribute("questionCheckItems", questionMap);
         
-//    	session.setAttribute("taskForm", form);
-        
-        return "/teacher/task/add_question";
+        return "teacher/task/add_question";
     }
 
     /**
@@ -166,9 +162,7 @@ public class TeacherTaskController {
         Map<String, String> userMap = taskService.findAllStudent();
         model.addAttribute("userCheckItems", userMap);
         
-//    	session.setAttribute("taskForm", form);
-        
-        return "/teacher/task/add_submit";
+        return "teacher/task/add_submit";
     }
     
 
@@ -182,10 +176,8 @@ public class TeacherTaskController {
     @PostMapping(path = "add_submit", params = "backBtn")
     public String addSubmitBack(@Validated TaskForm form, BindingResult result,
             Model model) {
-        
-//    	model.addAttribute("taskForm", form);
     	
-        return "/teacher/task/add";
+        return "teacher/task/add";
     }
     
     /**
@@ -198,8 +190,6 @@ public class TeacherTaskController {
     @PostMapping(path = "add_process", params = "backBtn")
     public String addProcessBack(@Validated TaskForm form, BindingResult result,
             Model model) {
-        
-//    	model.addAttribute("taskForm", form);
     	
         return addQuestion(form, result, model);
     }
@@ -226,10 +216,8 @@ public class TeacherTaskController {
         // コース（所属クラス）とクラスを除外した全ユーザを取得する
         Map<String, String> userMap = taskService.findAllStudent(form.getCourseCheckedList(), form.getClassCheckedList());
         model.addAttribute("userCheckItems", userMap);
-
-//    	model.addAttribute("taskForm", form);
     	
-        return "/teacher/task/add_submit";
+        return "teacher/task/add_submit";
     }
     
     /**
@@ -269,7 +257,7 @@ public class TeacherTaskController {
         // 入力状態保持のため
         model.addAttribute("courseForm", form);
         
-        return "/teacher/task/add_question";
+        return "teacher/task/add_question";
     }
     
     /**
@@ -320,7 +308,7 @@ public class TeacherTaskController {
         // 入力状態保持のため
         model.addAttribute("courseForm", form);
         
-        return "/teacher/task/add_question";
+        return "teacher/task/add_question";
     }
     
     
@@ -338,6 +326,6 @@ public class TeacherTaskController {
     	model.addAttribute("submissionTasks", taskService.getAnswerdList(id));
     	
 
-        return "/teacher/task/submissionlist";
+        return "teacher/task/submissionlist";
     }
 }

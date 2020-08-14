@@ -3,7 +3,6 @@ package jp.ac.ems.impl.service;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,24 +13,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-import com.mysql.cj.result.Field;
-
 import jp.ac.ems.bean.QuestionBean;
 import jp.ac.ems.bean.StudentQuestionHistoryBean;
+import jp.ac.ems.bean.UserBean;
 import jp.ac.ems.config.FieldLarge;
 import jp.ac.ems.config.FieldMiddle;
 import jp.ac.ems.config.FieldSmall;
 import jp.ac.ems.form.GradeForm;
-import jp.ac.ems.form.student.TaskForm;
 import jp.ac.ems.repository.QuestionRepository;
 import jp.ac.ems.repository.StudentQuestionHistoryRepository;
+import jp.ac.ems.repository.UserRepository;
 import jp.ac.ems.service.GradeService;
-import jp.ac.ems.service.student.StudentTaskService;
-import lombok.AccessLevel;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import net.bytebuddy.dynamic.DynamicType.Builder.FieldDefinition.Optional.Valuable;
 
 /**
  * 学生用成績Serviceクラス（student grade Service Class）.
@@ -39,6 +32,12 @@ import net.bytebuddy.dynamic.DynamicType.Builder.FieldDefinition.Optional.Valuab
  */
 @Service
 public class GradeServiceImpl  implements GradeService {
+	
+	/**
+	 * ユーザーリポジトリ（user repository)
+	 */
+	@Autowired
+	private UserRepository userRepository;
 	
 	/**
 	 * 問題回答履歴リポジトリ(question answer history repository)
@@ -156,24 +155,30 @@ public class GradeServiceImpl  implements GradeService {
     	        .sorted(Comparator.comparingInt(Grade::getTotalCnt).reversed())
     	        .collect(Collectors.toList());
 		
-		List<String> userIdList = new ArrayList<>();
+		List<String> userNameList = new ArrayList<>();
 		List<String> correctList = new ArrayList<>();
 		List<String> incorrectList = new ArrayList<>();
 		for(Grade grade : sortGradeList) {
-			
-			userIdList.add(grade.getUserId());
+
+	    	// ユーザ名を設定する
+			Optional<UserBean> optUser = userRepository.findById(grade.getUserId());
+			optUser.ifPresent(userBean -> grade.setUserName(userBean.getName()));
+			userNameList.add(grade.getUserName());
 			correctList.add(String.valueOf(grade.getCorrectCnt()));
 			incorrectList.add(String.valueOf(grade.getIncorrectCnt()));
 		}
-		form.setUserIdList(userIdList);
+		form.setUserNameList(userNameList);
 		form.setCorrectGradeList(correctList);
 		form.setIncorrectGradeList(incorrectList);
 		
 		// グラフ描画領域縦幅設定
-		form.setCanvasHeight(String.valueOf(form.getUserIdList().size() * 50));
+		form.setCanvasHeight(String.valueOf(form.getUserNameList().size() * 50));
 
 		// グラフ横目盛り幅設定
-		int length = String.valueOf(sortGradeList.get(0).getTotalCnt()).length();
+		int length = 10;
+		if(sortGradeList != null && sortGradeList.size() > 0) {
+			length = String.valueOf(sortGradeList.get(0).getTotalCnt()).length();
+		}
 		int xStepSize = 1;
 		if(length > 2) {
 			xStepSize = (int) Math.pow(Double.valueOf(10), Double.valueOf(length - 2));
@@ -303,6 +308,8 @@ public class GradeServiceImpl  implements GradeService {
 	class Grade {
 		
 		private String userId;
+		
+		private String userName;
 		
 		private int correctCnt = 0;
 

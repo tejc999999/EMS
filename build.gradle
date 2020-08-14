@@ -12,7 +12,7 @@ plugins {
 // プロジェクトのグループID
 group = 'jp.spring.boot.ems'
 // プロジェクトのバージョン
-version = '0.0.1-SNAPSHOT'
+version = '1.0.0-SNAPSHOT'
 // プロジェクトの説明
 description = 'EMS'
 // JDKバージョン（変数を上書きする事で実行時にバージョンを変えることが可能）
@@ -22,6 +22,13 @@ sourceCompatibility = '1.8'
 repositories {
 	// Maven Repository
 	mavenCentral()
+}
+
+// 実行可能Jarファイル作成
+jar {
+    manifest {
+        attributes 'Main-Class': 'jp.ac.ems.EMSApplication'
+    }
 }
 
 // 必要なライブラリ（Maven Repositpry）
@@ -45,6 +52,8 @@ dependencies {
     implementation 'org.webjars:bootstrap:4.5.0'
     implementation 'org.webjars.npm:chart.js:2.9.3'
 //    implementation 'javax.persistence:persistence-api:1.0.2'
+    
+    annotationProcessor 'org.projectlombok:lombok:1.18.12'
     
     runtimeOnly 'com.h2database:h2:1.4.200'
     runtimeOnly 'mysql:mysql-connector-java:8.0.20'
@@ -78,7 +87,7 @@ tasks.withType(JavaCompile) {
 */
 
 // テスト処理
-test {
-	// JUnitプラットフォームを使用（？）
-	useJUnitPlatform()
-}
+//test {
+//	// JUnitプラットフォームを使用（？）
+//	useJUnitPlatform()
+//}

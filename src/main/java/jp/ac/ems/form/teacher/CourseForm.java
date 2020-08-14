@@ -3,6 +3,7 @@ package jp.ac.ems.form.teacher;
 import java.util.List;
 
 import javax.validation.constraints.Max;
+import javax.validation.constraints.Size;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,7 +24,7 @@ public class CourseForm {
     /**
      * コース名(course name).
      */
-    @Max(100)
+    @Size(max=100)
     private String name;
 
     /**

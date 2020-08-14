@@ -82,6 +82,21 @@ public class TeacherCourseController {
     public String addProcess(@Validated CourseForm form, BindingResult result,
             Model model) {
 
+    	if(result.hasErrors()) {
+    		
+            // 全クラス取得
+            Map<String, String> classMap = courseService.findAllClass();
+            model.addAttribute("classCheckItems", classMap);
+
+            // 全学生取得
+            Map<String, String> userMap = courseService.findAllStudent();
+            model.addAttribute("userCheckItems", userMap);
+            
+            model.addAttribute("courseForm", form);
+
+            return "teacher/course/add";
+    	}
+    	
         // コース情報をDBに保存する
         courseService.save(form);
         
@@ -137,8 +152,22 @@ public class TeacherCourseController {
      * @return コース一覧ページリダイレクト(course list page redirect)
      */
     @PostMapping(path = "editprocess")
-    public String editProcess(CourseForm form, Model model) {
+    public String editProcess(@Validated CourseForm form, BindingResult result, Model model) {
 
+    	if(result.hasErrors()) {
+    		
+            // 全クラス取得
+            Map<String, String> classMap = courseService.findAllClass();
+            model.addAttribute("classCheckItems", classMap);
+
+            // 全ユーザ取得
+            Map<String, String> userMap = courseService.findAllStudent();
+            model.addAttribute("userCheckItems", userMap);
+            
+            model.addAttribute("courseForm", form);
+
+            return "teacher/course/edit";
+    	}
         courseService.save(form);
         
         return "redirect:/teacher/course";

@@ -1,6 +1,5 @@
 /* MySQL用 */
-/* CREATE DATABASE IF NOT EXISTS ems; */
-/* GRANT ALL PRIVILEGES ON ems.* TO emsadmin@localhost IDENTIFIED BY 'emspass' WITH GRANT OPTION; */
+/* 事前にDBと接続ユーザーを作成しておく */
 
 CREATE TABLE t_user(
     id VARCHAR(20) NOT NULL,

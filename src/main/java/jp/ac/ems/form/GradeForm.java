@@ -18,7 +18,7 @@ public class GradeForm {
 	/**
 	 * ユーザーIDリスト
 	 */
-	private List<String> userIdList;
+	private List<String> userNameList;
 	
 	/**
 	 * 正解数リスト
