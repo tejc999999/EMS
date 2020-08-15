@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
-<head th:replace="layout :: common_layout(title = '全学生成績一覧', scripts = ~{::script}, links = ~{::link})">
+<head th:replace="layout :: common_layout(title = '進捗一覧画面', scripts = ~{::script}, links = ~{::link})">
 
 <script type="text/javascript"
 	th:src="@{/webjars/chart.js/2.9.3/dist/Chart.js}" ></script>
@@ -84,11 +84,13 @@ var data = {
     labels: /*[[${gradeForm.userNameList}]]*/ ["学生A", "学生B", "学生C", "学生D", "学生E"],
     datasets: [
     	{
+        	maxBarThickness: 40,
         	label: '正解数',
         	data: /*[[${gradeForm.correctGradeList}]]*/ [880, 740, 900, 520, 930],
         	backgroundColor: 'rgba(100, 255, 100, 1)'
     	},
     	{
+        	maxBarThickness: 40,
         	label: '不正解数',
         	data: /*[[${gradeForm.incorrectGradeList}]]*/ [880, 740, 900, 520, 930],
         	backgroundColor: 'rgba(100, 100, 100, 1)'

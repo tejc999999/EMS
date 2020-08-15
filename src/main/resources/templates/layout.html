@@ -67,6 +67,8 @@
          進捗
           </a>
           <div class="dropdown-menu" aria-labelledby="taskDropDown">
+              <a sec:authorize="hasRole('TEACHER')" class="dropdown-item" th:href="@{'/share/personalgrade/list'}">個人進捗</a>
+              <a sec:authorize="hasRole('STUDENT')" class="dropdown-item" th:href="@{'/share/personalgrade/list'}">個人進捗</a>
               <a class="dropdown-item" th:href="@{'/share/grade/list'}">全体進捗一覧</a>
           </div>
         </li>
@@ -106,16 +108,7 @@
               <a class="dropdown-item" th:href="@{'/teacher/student'}">学生一覧</a>
           </div>
         </li>
-        
-        <li class="nav-item dropdown" sec:authorize="hasRole('STUDENT') or hasRole('TEACHER') or hasRole('ADMIN')">
-          <a class="nav-link dropdown-toggle" href="#" id="studentTaskDropDown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-         設定
-          </a>
-          <div class="dropdown-menu" aria-labelledby="settingDropDown">
-              <a class="dropdown-item" th:href="@{'/share/selfsetting/passwordchange'}">パスワード変更</a>
-          </div>
-        </li>
-        
+                
         <li class="nav-item dropdown dmenu" sec:authorize="hasRole('ADMIN')">
           <a class="nav-link dropdown-toggle" href="#" id="studentDropDown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           管理者
@@ -133,6 +126,15 @@
           <div class="dropdown-menu sm-menu" aria-labelledby="teacherDropDown">
               <a class="dropdown-item" th:href="@{'/admin/teacher/add'}">先生登録</a>
               <a class="dropdown-item" th:href="@{'/admin/teacher'}">先生一覧</a>
+          </div>
+        </li>
+        
+        <li class="nav-item dropdown" sec:authorize="hasRole('STUDENT') or hasRole('TEACHER') or hasRole('ADMIN')">
+          <a class="nav-link dropdown-toggle" href="#" id="studentTaskDropDown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+         設定
+          </a>
+          <div class="dropdown-menu" aria-labelledby="settingDropDown">
+              <a class="dropdown-item" th:href="@{'/share/selfsetting/passwordchange'}">パスワード変更</a>
           </div>
         </li>
         

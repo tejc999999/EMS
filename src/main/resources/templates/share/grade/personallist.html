@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
-<head th:replace="layout :: common_layout(title = '進捗一覧画面', scripts = ~{::script}, links = ~{::link})">
+<head th:replace="layout :: common_layout(title = '個人進捗画面', scripts = ~{::script}, links = ~{::link})">
 
 <script type="text/javascript"
 	th:src="@{/webjars/chart.js/2.9.3/dist/Chart.js}" ></script>
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js"></script> -->
 <style th:inline="css">
-#ex_chart {max-width:100%;max-height: /*[[${gradeForm.canvasHeight}]]*/ 100%;}
+#ex_chart {max-width:100%;max-height: /*[[${personalGradeForm.canvasHeight}]]*/ 100%;}
 </style>
 </head>
 
@@ -14,9 +14,24 @@
 
 <div th:replace="layout :: header"></div>
 
-<h2>■進捗一覧</h2>
+<h2>■個人進捗</h2>
 <div class="container-fluid no-gutters pb-5">
-<form th:action="@{/share/grade/list}" th:object="${gradeForm}" method="post">
+<form th:action="@{/share/personalgrade/list}" th:object="${personalGradeForm}" method="post">
+
+  <div class="form-row" sec:authorize="hasRole('TEACHER')">
+    <div class="form-group col-md-2">
+      <input type="text" class="form-control" name="userId" id="userId" aria-label="ユーザーID" th:value=*{userId} th:errorclass="error-input" placeholder="ユーザーID"/>
+    </div>
+    <div class="form-group col-md-2">
+      <input type="submit" class="btn btn-info btn-block" name="targetIdSelectBtn" value="選択">
+    </div>
+    <span th:if="${#fields.hasErrors('userId')}" th:errors="*{userId}" class="error-messages">error!</span>
+    <div class="form-group col-md-8">
+    </div>
+  </div>
+  <div sec:authorize="hasRole('STUDENT')">
+    <input type="hidden" name="userId" th:value="${#authentication.principal.username}" >
+  </div>
 
   <div class="form-row">
     <div class="form-group col-md-2">
@@ -76,23 +91,23 @@
       <canvas id="ex_chart"></canvas>
     </div>
   </div>
-
+  
 <script th:inline="javascript">
 
 var ctx = document.getElementById('ex_chart');
 var data = {
-    labels: /*[[${gradeForm.userNameList}]]*/ ["学生A", "学生B", "学生C", "学生D", "学生E"],
+    labels: /*[[${personalGradeForm.userNameList}]]*/ "",
     datasets: [
     	{
         	maxBarThickness: 40,
         	label: '正解数',
-        	data: /*[[${gradeForm.correctGradeList}]]*/ [880, 740, 900, 520, 930],
+        	data: /*[[${personalGradeForm.correctGradeList}]]*/ 0,
         	backgroundColor: 'rgba(100, 255, 100, 1)'
     	},
     	{
         	maxBarThickness: 40,
         	label: '不正解数',
-        	data: /*[[${gradeForm.incorrectGradeList}]]*/ [880, 740, 900, 520, 930],
+        	data: /*[[${personalGradeForm.incorrectGradeList}]]*/ 0,
         	backgroundColor: 'rgba(100, 100, 100, 1)'
     	}
     ],
@@ -100,6 +115,7 @@ var data = {
 };
 
 var options = {
+//	responsive: true,
     scales: {
         yAxes: [{ 
             stacked: true,              //積み上げ棒グラフの設定
@@ -119,7 +135,7 @@ var options = {
            },
     	   ticks: {
                min: 0,
-               stepSize: /*[[${gradeForm.xStepSize}]]*/ 0.5
+               stepSize: /*[[${personalGradeForm.xStepSize}]]*/ 0.5
            }
        }]
     },

@@ -260,15 +260,25 @@ public class StudentTaskServiceImpl implements StudentTaskService {
     @Override
     public void submissionTask(String taskId) {
     	
-    	// 未回答の問題IDを保持するためのリスト
+    	// 未回答の課題問題を空欄回答で保存する
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String userId = auth.getName();
     	List<String> unsubmitQuestionList = new ArrayList<>();
     	Optional<TaskBean> optTask = taskRepository.findByIdFetchTaskQuestion(Long.valueOf(taskId));
     	optTask.ifPresent(taskBean -> unsubmitQuestionList.addAll(taskBean.getQuestionIdList()));
+    	List<StudentTaskQuestionHistoryBean> studentTaskQuestionHistoryBeanList = studentTaskQuestionHistoryRepository.findAllByUserIdAndTaskId(userId, Long.valueOf(taskId));
+    	if(studentTaskQuestionHistoryBeanList != null) {
+	    	for(StudentTaskQuestionHistoryBean studentTaskQuestionHistoryBean : studentTaskQuestionHistoryBeanList) {
+	    		// 提出済み課題をマップから除外する
+	    		unsubmitQuestionList.remove(String.valueOf(studentTaskQuestionHistoryBean.getQuestionId()));
+	    	}
+    	}
+    	// 未回答の課題問題履歴を作成する
+    	for(String questionId : unsubmitQuestionList) {
+    		answerSave(taskId, questionId, "");
+    	}
     	
     	// 課題を提出済みとする
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String userId = auth.getName();
-
     	Optional<UserBean> optUser = userRepository.findById(userId);
     	optUser.ifPresent(userBean -> {
     		userBean.updateStudentTaskAnswerd(Long.valueOf(taskId));
@@ -276,11 +286,8 @@ public class StudentTaskServiceImpl implements StudentTaskService {
     	});
     	
     	// 問題履歴を更新する
-    	List<StudentTaskQuestionHistoryBean> studentTaskQuestionHistoryBeanList = studentTaskQuestionHistoryRepository.findAllByUserIdAndTaskId(userId, Long.valueOf(taskId));
     	if(studentTaskQuestionHistoryBeanList != null) {
 	    	for(StudentTaskQuestionHistoryBean studentTaskQuestionHistoryBean : studentTaskQuestionHistoryBeanList) {
-	    		// 提出済み課題をマップから除外する
-	    		unsubmitQuestionList.remove(String.valueOf(studentTaskQuestionHistoryBean.getQuestionId()));
 	    		
 	    		boolean correctFlg = (studentTaskQuestionHistoryBean.getAnswer() == studentTaskQuestionHistoryBean.getCorrect());
 	    		Optional<StudentQuestionHistoryBean> optStudentQHBean = studentQuestionHistoryRepository.findByUserIdAndQuestionId(userId, studentTaskQuestionHistoryBean.getQuestionId());
@@ -296,10 +303,7 @@ public class StudentTaskServiceImpl implements StudentTaskService {
 	    		},
 	    		() -> {
     	    		StudentQuestionHistoryBean studentQuestionHistoryBean = new StudentQuestionHistoryBean();
-	    			if(studentTaskQuestionHistoryBean.getAnswer() == null || studentTaskQuestionHistoryBean.getAnswer().equals("")) {
-	    				studentQuestionHistoryBean.setCorrectCnt((short)0);
-	    				studentQuestionHistoryBean.setIncorrectCnt((short)0);
-	    			} else if(correctFlg) {
+	    			if(correctFlg) {
 	    				studentQuestionHistoryBean.setCorrectCnt((short)1);
 	    				studentQuestionHistoryBean.setIncorrectCnt((short)0);
 	    			} else {
@@ -312,11 +316,6 @@ public class StudentTaskServiceImpl implements StudentTaskService {
 	    			studentQuestionHistoryRepository.save(studentQuestionHistoryBean);
 	    		});
 	    	}
-    	}
-    	
-    	// 未回答の課題問題履歴を作成する
-    	for(String questionId : unsubmitQuestionList) {
-    		answerSave(taskId, questionId, "");
     	}
     }
 

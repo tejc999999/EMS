@@ -1,15 +1,18 @@
 package jp.ac.ems.impl.service;
 
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.Collection;
 import java.util.EnumSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -19,11 +22,11 @@ import jp.ac.ems.bean.UserBean;
 import jp.ac.ems.config.FieldLarge;
 import jp.ac.ems.config.FieldMiddle;
 import jp.ac.ems.config.FieldSmall;
-import jp.ac.ems.form.GradeForm;
+import jp.ac.ems.form.PersonalGradeForm;
 import jp.ac.ems.repository.QuestionRepository;
 import jp.ac.ems.repository.StudentQuestionHistoryRepository;
 import jp.ac.ems.repository.UserRepository;
-import jp.ac.ems.service.GradeService;
+import jp.ac.ems.service.PersonalGradeService;
 import lombok.Data;
 
 /**
@@ -31,7 +34,7 @@ import lombok.Data;
  * @author tejc999999
  */
 @Service
-public class GradeServiceImpl  implements GradeService {
+public class PersonalGradeServiceImpl  implements PersonalGradeService {
 	
 	/**
 	 * ユーザーリポジトリ（user repository)
@@ -52,12 +55,41 @@ public class GradeServiceImpl  implements GradeService {
 	private QuestionRepository questionRepository;
 
 	/**
+	 * ログインユーザの全問題の成績を取得する.
+	 * @param form 成績Form(grad form)
+	 * @return 成績Form(grad form)
+	 */
+    @Override
+    public PersonalGradeForm getGradeFormDefaultLogin(PersonalGradeForm form) {
+
+    	// 学生の場合のみ、ログインユーザのIDをセットする
+    	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
+        boolean authorized = authorities.contains(new SimpleGrantedAuthority("ROLE_STUDENT"));
+        if(!authorized) {
+        	
+    		// グラフ描画領域縦幅設定
+    		form.setCanvasHeight(String.valueOf(1 * 50));
+    		// グラフ横目盛り幅設定
+    		form.setXStepSize(String.valueOf(1));
+
+        } else {
+        	String userId = auth.getName();
+        	form.setUserId(userId);
+
+        	form = getGradeForm(form);
+        }
+        
+        return form;
+	}
+    
+	/**
 	 * 全問題の成績を取得する.
 	 * @param form 成績Form(grad form)
 	 * @return 成績Form(grad form)
 	 */
     @Override
-    public GradeForm getGradeFormDefault(GradeForm form) {
+    public PersonalGradeForm getGradeFormDefault(PersonalGradeForm form) {
 
     	return getGradeForm(form);
 	}
@@ -68,7 +100,7 @@ public class GradeServiceImpl  implements GradeService {
 	 * @return 成績Form(grad form)
 	 */
     @Override
-	public GradeForm getGradeFormByField(GradeForm form) {
+	public PersonalGradeForm getGradeFormByField(PersonalGradeForm form) {
 		
 		form.setSelectYear(null);;
 		
@@ -81,7 +113,7 @@ public class GradeServiceImpl  implements GradeService {
 	 * @return 成績Form(grad form)
 	 */
     @Override
-	public GradeForm getGradeFormByYear(GradeForm form) {
+	public PersonalGradeForm getGradeFormByYear(PersonalGradeForm form) {
 		
 		form.setSelectFieldL(null);
 		form.setSelectFieldM(null);
@@ -97,7 +129,7 @@ public class GradeServiceImpl  implements GradeService {
      * @param model モデル(model)
      */
 	@Override
-    public void setSelectData(GradeForm form, Model model) {
+    public void setSelectData(PersonalGradeForm form, Model model) {
     	// 年度取得
         Map<String, String> yearMap = findAllYearMap();
         model.addAttribute("yearDropItems", yearMap);
@@ -121,25 +153,19 @@ public class GradeServiceImpl  implements GradeService {
 	 * @param form 成績Form（grade form）
 	 * @return 成績Form(grade form)
 	 */
-	private GradeForm getGradeForm(GradeForm form) {
-		Map<String, Grade> gradeMap = new LinkedHashMap<>();
+	private PersonalGradeForm getGradeForm(PersonalGradeForm form) {
 		
-		List<StudentQuestionHistoryBean> studentQuestHistoryBeanList = studentQuestionHistoryRepository.findAll();
+		Grade grade = new Grade();
+		grade.setUserId(form.getUserId());
+		
+		List<StudentQuestionHistoryBean> studentQuestHistoryBeanList = studentQuestionHistoryRepository.findAllByUserId(form.getUserId());
 		for(StudentQuestionHistoryBean sqhBean : studentQuestHistoryBeanList) {
-			String userId = sqhBean.getUserId();
 			Long questionId = sqhBean.getQuestionId();
 			Optional<QuestionBean> optQuestion = questionRepository.findById(questionId);
 			optQuestion.ifPresent(questionBean -> {
-				Grade grade = null;
-				if(gradeMap.containsKey(userId)) {
-					grade = gradeMap.get(userId);
-				} else {
-					grade = new Grade();
-					grade.setUserId(userId);
-					gradeMap.put(userId, grade);
-				}
 				
-				if(form.getSelectYear() == null && form.getSelectFieldL() == null && form.getSelectFieldM() == null && form.getSelectFieldS() == null) {
+				if((form.getSelectYear() == null || form.getSelectYear().equals("")) && (form.getSelectFieldL() == null || form.getSelectFieldL().equals(""))
+						&& (form.getSelectFieldM() == null || form.getSelectFieldM().equals("")) && (form.getSelectFieldS() == null || form.getSelectFieldS().equals(""))) {
 				// 標準抽出（全問：全年度：全分野）
 					grade.setCorrectCnt(grade.getCorrectCnt() + sqhBean.getCorrectCnt());
 					grade.setIncorrectCnt(grade.getIncorrectCnt() + sqhBean.getIncorrectCnt());
@@ -176,37 +202,26 @@ public class GradeServiceImpl  implements GradeService {
 				}
 			});
 		}
-		
-		// 合計カウントの降順でソート
-		List<Grade> gradeList = new ArrayList<>(gradeMap.values());
-    	List<Grade> sortGradeList = gradeList.stream()
-    	        .sorted(Comparator.comparingInt(Grade::getTotalCnt).reversed())
-    	        .collect(Collectors.toList());
-		
-		List<String> userNameList = new ArrayList<>();
-		List<String> correctList = new ArrayList<>();
-		List<String> incorrectList = new ArrayList<>();
-		for(Grade grade : sortGradeList) {
 
-	    	// ユーザ名を設定する
-			Optional<UserBean> optUser = userRepository.findById(grade.getUserId());
-			optUser.ifPresent(userBean -> grade.setUserName(userBean.getName()));
-			userNameList.add(grade.getUserName());
-			correctList.add(String.valueOf(grade.getCorrectCnt()));
-			incorrectList.add(String.valueOf(grade.getIncorrectCnt()));
-		}
+    	// ユーザ名を設定する
+		Optional<UserBean> optUser = userRepository.findById(form.getUserId());
+		optUser.ifPresent(userBean -> grade.setUserName(userBean.getName()));
+
+		List<String> userNameList = new ArrayList<>();
+		userNameList.add(grade.getUserName());
 		form.setUserNameList(userNameList);
-		form.setCorrectGradeList(correctList);
-		form.setIncorrectGradeList(incorrectList);
+		List<String> correctGradeList = new ArrayList<>();
+		correctGradeList.add(String.valueOf(grade.getCorrectCnt()));
+		form.setCorrectGradeList(correctGradeList);
+		List<String> incorrectGradeList = new ArrayList<>();
+		incorrectGradeList.add(String.valueOf(grade.getIncorrectCnt()));
+		form.setIncorrectGradeList(incorrectGradeList);
 		
 		// グラフ描画領域縦幅設定
-		form.setCanvasHeight(String.valueOf(form.getUserNameList().size() * 50));
+		form.setCanvasHeight(String.valueOf(1 * 50));
 
 		// グラフ横目盛り幅設定
-		int length = 10;
-		if(sortGradeList != null && sortGradeList.size() > 0) {
-			length = String.valueOf(sortGradeList.get(0).getTotalCnt()).length();
-		}
+		int length = String.valueOf(grade.getTotalCnt()).length();
 		int xStepSize = 1;
 		if(length > 2) {
 			xStepSize = (int) Math.pow(Double.valueOf(10), Double.valueOf(length - 2));

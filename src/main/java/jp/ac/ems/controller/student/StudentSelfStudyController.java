@@ -136,7 +136,7 @@ public class StudentSelfStudyController {
     	// 1問目の問題情報を設定
     	SelfStudyQuestionForm selfStudyQuestionForm = new SelfStudyQuestionForm();
     	selfStudyQuestionForm.setQuestionList(form.getQuestionList());
-    	model.addAttribute("selfStudyQuestionForm", studentSelfStudyService.getSelfStudyQuestionForm(selfStudyQuestionForm, 0));
+    	model.addAttribute("selfStudyQuestionForm", studentSelfStudyService.getQuestion(selfStudyQuestionForm, 0));
     	// 解答群を設定
     	model.addAttribute("answerSelectedItems", studentSelfStudyService.getAnswerSelectedItems());
 
@@ -145,6 +145,7 @@ public class StudentSelfStudyController {
     }
     
     /**
+     * 次の問題画面に遷移する.
      * 
      * @param form
      * @param result
@@ -157,7 +158,7 @@ public class StudentSelfStudyController {
     	
     	// 次の問題情報を設定
     	model.addAttribute("selfStudyQuestionForm", studentSelfStudyService
-    			.getSelfStudyQuestionForm(form, form.getSelectQuestionNumber() + 1));
+    			.getQuestion(form, form.getSelectQuestionNumber() + 1));
     	// 解答群を設定
     	model.addAttribute("answerSelectedItems", studentSelfStudyService.getAnswerSelectedItems());
     	
@@ -165,6 +166,7 @@ public class StudentSelfStudyController {
     }
 
     /**
+     * 問題回答画面に遷移する.
      * 
      * @param form
      * @param result
@@ -176,7 +178,7 @@ public class StudentSelfStudyController {
             Model model) {
     	
     	// 問題情報を設定
-    	model.addAttribute("selfStudyQuestionForm", studentSelfStudyService.getSelfStudyQuestionForm(form, form.getSelectQuestionNumber()));
+    	model.addAttribute("selfStudyQuestionForm", studentSelfStudyService.getQuestionAndAnswer(form, form.getSelectQuestionNumber()));
     	// 解答群を設定
     	model.addAttribute("answerSelectedItems", studentSelfStudyService.getAnswerSelectedItems());
 

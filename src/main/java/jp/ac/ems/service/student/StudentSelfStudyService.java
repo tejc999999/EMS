@@ -47,8 +47,17 @@ public interface StudentSelfStudyService {
 	 * @param number 問題番号(question number)
 	 * @return 自習問題Form(self study question form)
 	 */
-	public SelfStudyQuestionForm getSelfStudyQuestionForm(SelfStudyQuestionForm form, int number);
-		
+	public SelfStudyQuestionForm getQuestion(SelfStudyQuestionForm form, int number);
+
+	/**
+	 * 回答処理を行い、特定の問題の自習問題Formを取得する.
+	 * 
+	 * @param selfStudyForm 自習Form(self study form)
+	 * @param number 問題番号(question number)
+	 * @return 自習問題Form(self study question form)
+	 */
+	public SelfStudyQuestionForm getQuestionAndAnswer(SelfStudyQuestionForm form, int number);
+
     /**
      * 回答アイテム取得
      * 

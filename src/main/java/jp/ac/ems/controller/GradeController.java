@@ -55,7 +55,7 @@ public class GradeController {
 
         return "share/grade/list";
     }
-    
+
     /**
      * 中分類取得(get field middle list).
      * @param form 課題Form(task form)
@@ -123,5 +123,4 @@ public class GradeController {
         
         return "share/grade/list";
     }
-    
 }

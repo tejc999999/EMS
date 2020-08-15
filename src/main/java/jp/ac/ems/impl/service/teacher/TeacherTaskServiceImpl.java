@@ -249,8 +249,8 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
     @Override
     public Map<String, String> findAllQuestionByYearAndTerm(String yearId) {
         
-        String year = yearId.substring(0, 3);
-        String term = yearId.substring(3, 4);
+        String year = yearId.substring(0, 4);
+        String term = yearId.substring(4, 5);
         Map<String, String> map = convertQuestionMap(questionRepository.findByYearAndTerm(year, term));
         
         return map;

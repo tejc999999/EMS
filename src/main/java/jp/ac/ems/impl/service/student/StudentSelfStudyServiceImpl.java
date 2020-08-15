@@ -323,8 +323,88 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 	 * @return 自習問題Form(self study question form)
 	 */
 	@Override
-	public SelfStudyQuestionForm getSelfStudyQuestionForm(SelfStudyQuestionForm form, int number) {
+	public SelfStudyQuestionForm getQuestion(SelfStudyQuestionForm form, int number) {
 		
+		SelfStudyQuestionForm selfStudyQuestionForm = getSelfStudyQuestionForm(form, number);
+		
+		// 回答を語句に変換
+		selfStudyQuestionForm.setCorrect(convertAnsweredIdToWord(selfStudyQuestionForm.getCorrect()));
+		
+		return selfStudyQuestionForm;
+	}
+	
+	/**
+	 * 回答処理を行い、特定の問題の自習問題Formを取得する.
+	 * 
+	 * @param selfStudyForm 自習Form(self study form)
+	 * @param number 問題番号(question number)
+	 * @return 自習問題Form(self study question form)
+	 */
+	@Override
+	public SelfStudyQuestionForm getQuestionAndAnswer(SelfStudyQuestionForm form, int number) {
+		
+		SelfStudyQuestionForm selfStudyQuestionForm = getSelfStudyQuestionForm(form, number);
+        String questionId = form.getQuestionList().get(number);
+
+		// 回答履歴を保存する
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String userId = auth.getName();
+
+        Optional<StudentQuestionHistoryBean> optStudentQuestionHistory = studentQuestionHistoryRepository.findByUserIdAndQuestionId(userId, Long.valueOf(questionId));
+		optStudentQuestionHistory.ifPresentOrElse(sqhBean -> {
+			if(selfStudyQuestionForm.getCorrect().equals(form.getAnswer())) {
+				sqhBean.setCorrectCnt((short) (sqhBean.getCorrectCnt() + 1));
+				sqhBean.setUpdateDate(new Date());
+			} else {
+				sqhBean.setIncorrectCnt((short) (sqhBean.getIncorrectCnt() + 1));
+				sqhBean.setUpdateDate(new Date());
+			}
+			studentQuestionHistoryRepository.save(sqhBean);
+		},
+		() -> {
+			StudentQuestionHistoryBean newSqhBean = new StudentQuestionHistoryBean();
+			if(selfStudyQuestionForm.getCorrect().equals(form.getAnswer())) {
+				newSqhBean.setCorrectCnt((short)1);
+				newSqhBean.setIncorrectCnt((short)0);
+			} else {
+				newSqhBean.setCorrectCnt((short)0);
+				newSqhBean.setIncorrectCnt((short)1);
+			}
+			newSqhBean.setQuestionId(Long.valueOf(questionId));
+			newSqhBean.setUserId(userId);
+			newSqhBean.setUpdateDate(new Date());
+			studentQuestionHistoryRepository.save(newSqhBean);
+		});
+		
+		// 履歴保存後に回答を語句に変換
+		selfStudyQuestionForm.setCorrect(convertAnsweredIdToWord(selfStudyQuestionForm.getCorrect()));
+		
+		return selfStudyQuestionForm;
+	}
+	
+    /**
+     * 回答アイテム取得
+     * 
+     * @return 回答アイテムマップ
+     */
+    @Override
+    public Map<String,String> getAnswerSelectedItems(){
+        Map<String, String> selectMap = new LinkedHashMap<String, String>();
+        selectMap.put("1", "ア");
+        selectMap.put("2", "イ");
+        selectMap.put("3", "ウ");
+        selectMap.put("4", "エ");
+        return selectMap;
+    }
+    
+    /**
+     * 
+     * @param form
+     * @param number
+     * @return
+     */
+    private SelfStudyQuestionForm getSelfStudyQuestionForm(SelfStudyQuestionForm form, int number) {
+    	
 		SelfStudyQuestionForm selfStudyQuestionForm = new SelfStudyQuestionForm();
 		
 		// 自習用の問題情報をセットする
@@ -384,56 +464,7 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
     			+ FieldMiddle.getName(ExamDivisionCode.AP.getName(), Byte.valueOf(selfStudyQuestionForm.getFieldMId())) + "/"
     			+ FieldSmall.getName(ExamDivisionCode.AP.getName(), Byte.valueOf(selfStudyQuestionForm.getFieldSId())));
 		
-		// 回答履歴を保存する
-		if(form.getAnswer() != null && !form.getAnswer().equals("")) {
-	        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-	        String userId = auth.getName();
-	
-	        Optional<StudentQuestionHistoryBean> optStudentQuestionHistory = studentQuestionHistoryRepository.findByUserIdAndQuestionId(userId, Long.valueOf(questionId));
-			optStudentQuestionHistory.ifPresentOrElse(sqhBean -> {
-				if(selfStudyQuestionForm.getCorrect().equals(form.getAnswer())) {
-					sqhBean.setCorrectCnt((short) (sqhBean.getCorrectCnt() + 1));
-					sqhBean.setUpdateDate(new Date());
-				} else {
-					sqhBean.setIncorrectCnt((short) (sqhBean.getIncorrectCnt() + 1));
-					sqhBean.setUpdateDate(new Date());
-				}
-				studentQuestionHistoryRepository.save(sqhBean);
-			},
-			() -> {
-				StudentQuestionHistoryBean newSqhBean = new StudentQuestionHistoryBean();
-				if(selfStudyQuestionForm.getCorrect().equals(form.getAnswer())) {
-					newSqhBean.setCorrectCnt((short)1);
-					newSqhBean.setIncorrectCnt((short)0);
-				} else {
-					newSqhBean.setCorrectCnt((short)0);
-					newSqhBean.setIncorrectCnt((short)1);
-				}
-				newSqhBean.setQuestionId(Long.valueOf(questionId));
-				newSqhBean.setUserId(userId);
-				newSqhBean.setUpdateDate(new Date());
-				studentQuestionHistoryRepository.save(newSqhBean);
-			});
-		}
-		// 履歴保存後に回答を語句に変換
-		selfStudyQuestionForm.setCorrect(convertAnsweredIdToWord(selfStudyQuestionForm.getCorrect()));
-		
 		return selfStudyQuestionForm;
-	}
-	
-    /**
-     * 回答アイテム取得
-     * 
-     * @return 回答アイテムマップ
-     */
-    @Override
-    public Map<String,String> getAnswerSelectedItems(){
-        Map<String, String> selectMap = new LinkedHashMap<String, String>();
-        selectMap.put("1", "ア");
-        selectMap.put("2", "イ");
-        selectMap.put("3", "ウ");
-        selectMap.put("4", "エ");
-        return selectMap;
     }
 	
     /**
