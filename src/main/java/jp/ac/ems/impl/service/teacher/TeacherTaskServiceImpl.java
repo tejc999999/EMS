@@ -11,19 +11,16 @@ import java.util.Optional;
 import java.util.Set;
 
 import jp.ac.ems.bean.ClassBean;
-import jp.ac.ems.bean.ClassCourseBean;
 import jp.ac.ems.bean.CourseBean;
 import jp.ac.ems.bean.QuestionBean;
 import jp.ac.ems.bean.TaskBean;
 import jp.ac.ems.bean.TaskQuestionBean;
 import jp.ac.ems.bean.UserBean;
-import jp.ac.ems.bean.StudentCourseBean;
 import jp.ac.ems.bean.StudentTaskBean;
 import jp.ac.ems.bean.StudentTaskQuestionHistoryBean;
 import jp.ac.ems.config.FieldLarge;
 import jp.ac.ems.config.FieldMiddle;
 import jp.ac.ems.config.FieldSmall;
-import jp.ac.ems.config.ExamDivisionCodeProperties;
 import jp.ac.ems.config.ServerProperties;
 import jp.ac.ems.form.teacher.TaskForm;
 import jp.ac.ems.form.teacher.TaskSubmissionForm;
@@ -42,8 +39,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
-
-import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 
 /**
  * 先生用課題Serviceクラス（teacher task Service Class）.

@@ -2,7 +2,6 @@ package jp.ac.ems.impl.service.student;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -21,17 +20,14 @@ import org.springframework.ui.Model;
 
 import jp.ac.ems.bean.QuestionBean;
 import jp.ac.ems.bean.StudentQuestionHistoryBean;
-import jp.ac.ems.bean.UserBean;
 import jp.ac.ems.config.ExamDivisionCode;
 import jp.ac.ems.config.FieldLarge;
 import jp.ac.ems.config.FieldMiddle;
 import jp.ac.ems.config.FieldSmall;
 import jp.ac.ems.form.student.SelfStudyForm;
 import jp.ac.ems.form.student.SelfStudyQuestionForm;
-import jp.ac.ems.form.student.TaskForm;
 import jp.ac.ems.repository.QuestionRepository;
 import jp.ac.ems.repository.StudentQuestionHistoryRepository;
-import jp.ac.ems.repository.UserRepository;
 import jp.ac.ems.service.student.StudentSelfStudyService;
 
 /**

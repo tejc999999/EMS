@@ -5,8 +5,6 @@ import java.util.Map;
 
 import jp.ac.ems.form.teacher.ClassForm;
 
-import org.springframework.stereotype.Service;
-
 /**
  * 先生用クラスServiceインターフェース（teacher class Service interface）.
  * @author tejc999999

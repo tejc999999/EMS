@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import jp.ac.ems.form.teacher.ClassForm;
-import jp.ac.ems.impl.service.teacher.TeacherClassServiceImpl;
 import jp.ac.ems.service.teacher.TeacherClassService;
 
 import org.springframework.beans.factory.annotation.Autowired;

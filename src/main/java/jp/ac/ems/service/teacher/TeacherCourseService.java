@@ -1,24 +1,9 @@
 package jp.ac.ems.service.teacher;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
-import jp.ac.ems.bean.ClassBean;
-import jp.ac.ems.bean.ClassCourseBean;
-import jp.ac.ems.bean.CourseBean;
-import jp.ac.ems.bean.UserBean;
-import jp.ac.ems.bean.StudentCourseBean;
-import jp.ac.ems.config.RoleCode;
 import jp.ac.ems.form.teacher.CourseForm;
-import jp.ac.ems.repository.ClassRepository;
-import jp.ac.ems.repository.CourseRepository;
-import jp.ac.ems.repository.UserRepository;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 /**
  * 先生用コースerviceクラス（teacher course Service Class）.

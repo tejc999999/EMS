@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import jp.ac.ems.bean.StudentQuestionHistoryBean;
-import jp.ac.ems.bean.StudentTaskQuestionHistoryBean;
 
 /**
  * 学生-問題履歴用リポジトリ(student question history repository).

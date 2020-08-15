@@ -1,35 +1,19 @@
 package jp.ac.ems.impl.service;
 
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.EnumSet;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 
-import jp.ac.ems.bean.QuestionBean;
-import jp.ac.ems.bean.StudentQuestionHistoryBean;
 import jp.ac.ems.bean.UserBean;
-import jp.ac.ems.config.FieldLarge;
-import jp.ac.ems.config.FieldMiddle;
-import jp.ac.ems.config.FieldSmall;
-import jp.ac.ems.form.GradeForm;
 import jp.ac.ems.form.SelfSettingForm;
-import jp.ac.ems.repository.QuestionRepository;
-import jp.ac.ems.repository.StudentQuestionHistoryRepository;
 import jp.ac.ems.repository.UserRepository;
-import jp.ac.ems.service.GradeService;
 import jp.ac.ems.service.SelfSettingService;
-import lombok.Data;
 
 /**
  * 個人設定Serviceクラス（self setting Service Class）.

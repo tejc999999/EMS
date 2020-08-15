@@ -2,7 +2,6 @@ package jp.ac.ems.form.teacher;
 
 import java.util.List;
 
-import javax.validation.constraints.Max;
 import javax.validation.constraints.Size;
 
 import lombok.Data;

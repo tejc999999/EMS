@@ -1,7 +1,6 @@
 package jp.ac.ems.form.student;
 
 import java.util.Date;
-import java.util.List;
 
 import javax.validation.constraints.Max;
 
