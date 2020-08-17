@@ -87,75 +87,81 @@
     </div>
   </div>
   <div class="form-row">
-    <div class="form-group col-md-12">
+    <div id="chart" class="chart-container form-group col-md-12">
       <canvas id="ex_chart"></canvas>
     </div>
   </div>
   
 <script th:inline="javascript">
-
-var ctx = document.getElementById('ex_chart');
-var data = {
-    labels: /*[[${personalGradeForm.userNameList}]]*/ "",
-    datasets: [
-    	{
-        	maxBarThickness: 40,
-        	label: '正解数',
-        	data: /*[[${personalGradeForm.correctGradeList}]]*/ 0,
-        	backgroundColor: 'rgba(100, 255, 100, 1)'
-    	},
-    	{
-        	maxBarThickness: 40,
-        	label: '不正解数',
-        	data: /*[[${personalGradeForm.incorrectGradeList}]]*/ 0,
-        	backgroundColor: 'rgba(100, 100, 100, 1)'
-    	}
-    ],
-    borderWidth: 0.1
-};
-
-var options = {
-//	responsive: true,
-    scales: {
-        yAxes: [{ 
-            stacked: true,              //積み上げ棒グラフの設定
-            xbarThickness: 10,        //棒グラフの幅
-            scaleLabel: {            // 軸ラベル
-                display: true,          // 表示設定
-                labelString: 'ユーザ名',  // ラベル
-//                fontSize: 16         // フォントサイズ
-            }
-       }],
-       xAxes: [{
-           stacked: true,               //積み上げ棒グラフにする設定
-           scaleLabel: {             // 軸ラベル
-               display: false,          // 表示設定
-               labelString: '回答数',  // ラベル
-//               fontSize: 16          // フォントサイズ
-           },
-    	   ticks: {
-               min: 0,
-               stepSize: /*[[${personalGradeForm.xStepSize}]]*/ 0.5
-           }
-       }]
-    },
-    legend: {
-        labels: {
-            boxWidth:30,
-            padding:20        //凡例の各要素間の距離
-        },
-        display: true
-    },
-    tooltips: {
-        mode: "label"
-    }
-};
-
-var ex_chart = new Chart(ctx, {
-    type: 'horizontalBar',
-    data: data,
-    options: options
-});
+window.onload = function() {
+	var ctx = document.getElementById('ex_chart');
+	var data = {
+	    labels: /*[[${personalGradeForm.userNameList}]]*/ "",
+	    datasets: [
+	    	{
+	        	maxBarThickness: 40,
+	        	label: '正解数',
+	        	data: /*[[${personalGradeForm.correctGradeList}]]*/ 0,
+	        	backgroundColor: 'rgba(100, 255, 100, 1)'
+	    	},
+	    	{
+	        	maxBarThickness: 40,
+	        	label: '不正解数',
+	        	data: /*[[${personalGradeForm.incorrectGradeList}]]*/ 0,
+	        	backgroundColor: 'rgba(100, 100, 100, 1)'
+	    	}
+	    ],
+	    borderWidth: 0.1
+	};
+	
+	var options = {
+		maintainAspectRatio: false,
+	//	responsive: true,
+	    scales: {
+	        yAxes: [{ 
+	            stacked: true,              //積み上げ棒グラフの設定
+	            xbarThickness: 10,        //棒グラフの幅
+	            scaleLabel: {            // 軸ラベル
+	                display: true,          // 表示設定
+	                labelString: 'ユーザ名',  // ラベル
+	//                fontSize: 16         // フォントサイズ
+	            }
+	       }],
+	       xAxes: [{
+	           stacked: true,               //積み上げ棒グラフにする設定
+	           scaleLabel: {             // 軸ラベル
+	               display: false,          // 表示設定
+	               labelString: '回答数',  // ラベル
+	//               fontSize: 16          // フォントサイズ
+	           },
+	    	   ticks: {
+	               min: 0,
+	               stepSize: /*[[${personalGradeForm.xStepSize}]]*/ 0.5
+	           }
+	       }]
+	    },
+	    legend: {
+	        labels: {
+	            boxWidth:30,
+	            padding:20        //凡例の各要素間の距離
+	        },
+	        display: true
+	    },
+	    tooltips: {
+	        mode: "label"
+	    }
+	};
+	
+	var ex_chart = new Chart(ctx, {
+	    type: 'horizontalBar',
+	    data: data,
+	    options: options
+	});
+	var heightparam = window.innerHeight * 0.1 * 1;	
+	// 凡例などのぶん固定幅を付与
+	heightparam = heightparam + (window.innerHeight * 0.1);
+	ctx.parentNode.style.height = heightparam + 'px';
+}
 </script> 
 </form>
 </div>
