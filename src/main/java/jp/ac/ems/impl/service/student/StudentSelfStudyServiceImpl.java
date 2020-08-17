@@ -177,10 +177,10 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 				}
 				if(form.getConditionChecked().equals(SelfStudyForm.CONDITION_2_KEY_LOW_ACC_RATE)
 						|| form.getConditionChecked().equals(SelfStudyForm.CONDITION_3_KEY_MIX)) {
-					// 低回答率（50%未満）のみを別リストに退避する
+					// 低回答率（50%未満）のみを別リストに退避する（正解数ゼロ、不正解数１以上の正解率0%を含む）
 					
 					if(((bean.getCorrectCnt() + bean.getIncorrectCnt()) != 0)
-							&& ((bean.getCorrectCnt() / (bean.getCorrectCnt() + bean.getIncorrectCnt())) < 0.5)) {
+							&& ((bean.getCorrectCnt() < bean.getIncorrectCnt()))) {
 			        	if(questionIdList.contains(String.valueOf(bean.getQuestionId()))) {
 			        		questionIdForIncorrect50.add(String.valueOf(bean.getQuestionId()));
 			        	}
