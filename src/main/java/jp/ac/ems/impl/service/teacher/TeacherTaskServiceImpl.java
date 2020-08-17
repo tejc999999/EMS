@@ -141,24 +141,28 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
     /**
      * 課題を保存する.
      * @param form コースForm
-     * @param easySaveFlg 簡易保存フラグ(easy save flag)
      * @return 保存済みコースForm
      */
     @Override
-    public TaskForm save(TaskForm form, boolean easySaveFlg) {
-        
-        TaskBean taskBean = new TaskBean();
-        // ID、タイトル、説明をBeanに設定する
+    public TaskForm save(TaskForm form) {
+
+    	TaskBean taskBean;
+
         String taskId = form.getId();
         if (taskId != null && !taskId.equals("")) {
-            taskBean.setId(Long.valueOf(taskId));
-        }
-        
-        taskBean.setTitle(form.getTitle());
-        taskBean.setDescription(form.getDescription());
-        
-        if(!easySaveFlg) {
-        
+        	// 更新時
+        	// TODO：関連テーブル（課題-ユーザー）等の変更を伴う場合は、一旦taskBeanを消して再登録する方が関連テーブル不整合の問題がなくてよい
+        	
+            List<TaskBean> taskBeanList = new ArrayList<>();
+        	
+        	Optional<TaskBean> optTask = taskRepository.findById(Long.valueOf(taskId));
+        	optTask.ifPresent(bean -> taskBeanList.add(bean));
+        	taskBean = taskBeanList.get(0);
+        } else {
+        	// 新規登録時
+
+        	taskBean = new TaskBean();
+
 	        // 課題作成者（先生ID）を設定する
 	        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 	        taskBean.setTeacherId(auth.getName());
@@ -230,6 +234,8 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
         }
         
         // DBに保存する
+        taskBean.setTitle(form.getTitle());
+        taskBean.setDescription(form.getDescription());
         taskBean = taskRepository.save(taskBean);
         
         // BeanのデータをFormにコピーする

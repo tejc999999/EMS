@@ -35,10 +35,9 @@ public interface TeacherTaskService {
     /**
      * 課題を保存する.
      * @param form コースForm
-     * @param easySaveFlg 簡易保存フラグ(easy save flag)
      * @return 保存済みコースForm
      */
-    public TaskForm save(TaskForm form, boolean easySaveFlg);
+    public TaskForm save(TaskForm form);
 
     
     /**

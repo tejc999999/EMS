@@ -81,7 +81,7 @@ public class TeacherTaskController {
             return "teacher/task/edit";
     	}
     	
-    	taskService.save(form, true);
+    	taskService.save(form);
     	
         return "redirect:/teacher/task";
     }
@@ -232,7 +232,7 @@ public class TeacherTaskController {
             Model model) {
 
         // コース情報をDBに保存する
-        taskService.save(form, false);
+        taskService.save(form);
         
         return "redirect:/teacher/task";
     }

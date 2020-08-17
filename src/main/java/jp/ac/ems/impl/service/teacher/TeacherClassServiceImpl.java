@@ -81,25 +81,30 @@ public class TeacherClassServiceImpl implements TeacherClassService {
     public ClassForm save(ClassForm form) {
 
         // Formの値を（クラスの情報）Beanにコピーする
-        ClassBean classBean = new ClassBean();
         if (form.getId() != null && !form.getId().equals("")) {
-            classBean.setId(Long.valueOf(form.getId()));
+        	// 更新時
+        	
+        	// 一旦、削除を行う（関連情報を個別に削除する必要があるため）
+        	List<ClassBean> classBeanList = new ArrayList<>();
+        	Optional<ClassBean> optClass = classRepository.findById(Long.valueOf(form.getId()));
+        	optClass.ifPresent(bean -> classBeanList.add(bean));
+        	classRepository.delete(classBeanList.get(0));
         }
-        classBean.setName(form.getName());
-        
+        	
+        ClassBean classBean = new ClassBean();
         // Formの値（クラスに所属するユーザーの情報）をBeanにコピーする
         List<String> userIdList = form.getUserCheckedList();
         if (userIdList != null) {
             for (int i = 0; i < userIdList.size(); i++) {
                 StudentClassBean userClassBean = new StudentClassBean();
                 userClassBean.setUserId(userIdList.get(i));
-                if (form.getId() != null && !form.getId().equals("")) {
-                    userClassBean.setClassId(Long.valueOf(form.getId()));
-                }
+                // 新規登録なので、クラスIDはセットしない
                 classBean.addUserClassBean(userClassBean);
             }
         }
+	        
         // DBに保存する
+    	classBean.setName(form.getName());
         classBean = classRepository.save(classBean);
         
         // Beanの値をFormにコピーする

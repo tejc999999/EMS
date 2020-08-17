@@ -129,14 +129,18 @@ public class TeacherCourseServiceImpl implements TeacherCourseService {
      */
     public CourseForm save(CourseForm form) {
         
-        CourseBean courseBean = new CourseBean();
         // ID、名前をBeanに設定する
-        String courseId = form.getId();
-        if (courseId != null && !courseId.equals("")) {
-            courseBean.setId(Long.valueOf(courseId));
+        if (form.getId() != null && !form.getId().equals("")) {
+        	// 更新時
+        	
+        	List<CourseBean> courseBeanList = new ArrayList<>();
+        	Optional<CourseBean> optCourse = courseRepository.findById(Long.valueOf(form.getId()));
+        	optCourse.ifPresent(bean -> courseBeanList.add(bean));
+        	courseRepository.delete(courseBeanList.get(0));
         }
-        courseBean.setName(form.getName());
 
+        CourseBean courseBean = new CourseBean();
+        
         // クラス、コース中間情報をBeanに設定する
         courseBean.clearClassCourseBean();
         List<String> classIdList = form.getClassCheckedList();
@@ -149,9 +153,7 @@ public class TeacherCourseServiceImpl implements TeacherCourseService {
                     idList.add(classBean.getId());
                 });
                 ClassCourseBean classCourseBean = new ClassCourseBean();
-                if (courseId != null && !courseId.equals("")) {
-                    classCourseBean.setCourseId(Long.valueOf(courseId));
-                }
+                // 新規登録なので、コースIDはセットしない
                 classCourseBean.setClassId(idList.get(0));
                 courseBean.addClassCourseBean(classCourseBean);
             }
@@ -167,15 +169,14 @@ public class TeacherCourseServiceImpl implements TeacherCourseService {
                     idList.add(userBean.getId());
                 });
                 StudentCourseBean userCourseBean = new StudentCourseBean();
-                if (courseId != null && !courseId.equals("")) {
-                    userCourseBean.setCourseId(Long.valueOf(courseId));
-                }
+                // 新規登録なので、コースIDはセットしない
                 userCourseBean.setUserId(idList.get(0));
                 courseBean.addUserCourseBean(userCourseBean);
             }
         }
 
         // DBに保存する
+        courseBean.setName(form.getName());
         courseBean = courseRepository.save(courseBean);
         
         // BeanのデータをFormにコピーする

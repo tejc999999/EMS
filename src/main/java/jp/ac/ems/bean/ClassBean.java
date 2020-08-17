@@ -3,6 +3,7 @@ package jp.ac.ems.bean;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -76,7 +77,7 @@ public class ClassBean {
     public void addUserClassBean(StudentClassBean userClassBean) {
         userClassBeans.add(userClassBean);
     }
-
+    
     /**
      * 学生所属クラス：相互参照オブジェクトを削除する(delete an object(class belonging student)).
      */
