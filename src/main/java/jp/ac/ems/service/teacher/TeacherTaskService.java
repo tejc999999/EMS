@@ -40,22 +40,15 @@ public interface TeacherTaskService {
      */
     public TaskForm save(TaskForm form);
 
-    
     /**
      * 年度ごとの問題を取得する(Get yearly question).
-     * @param yearId 年度Id(year id)
-     * @return 画面用問題マップ（key:チェックボックスID、value：問題ラベル）
-     */
-    public Map<String, String> findAllQuestionByYearAndTerm(String yearId);
-
-    /**
-     * 年度ごとの問題を取得する(Get yearly question).
+     * @param yearId 年度ID(year id)
      * @param fieldY 大分類(large field)
      * @param fieldM 中分類(middle field)
      * @param fieldS 小分類(small field)
      * @return 画面用問題マップ（key:チェックボックスID、value：問題ラベル）
      */
-    public Map<String, String> findAllQuestionByField(String fieldL, String fieldM, String fieldS);
+    public Map<String, String> findAllQuestionByYearAndField(String yearId, String fieldL, String fieldM, String fieldS);
     
     /**
      * 画面用問題マップ取得
