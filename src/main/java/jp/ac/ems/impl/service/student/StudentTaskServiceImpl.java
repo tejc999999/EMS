@@ -104,6 +104,10 @@ public class StudentTaskServiceImpl implements StudentTaskService {
             	taskForm.setQuestionSize(String.valueOf(taskBean.getQuestionSize()));
             	taskForm.setAnsweredFlg(taskAnswerFlgAndUpdateDateMap.get(String.valueOf(taskBean.getId())).isAnswerFlg());
             	taskForm.setUpdateDate(taskAnswerFlgAndUpdateDateMap.get(String.valueOf(taskBean.getId())).getUpdateDate());
+            	// 課題未回答の場合、更新日時がNULLのため現在日時をセットして最優先ソートとする（NULLのままだとソート時エラー）
+            	if(taskForm.getUpdateDate() == null) {
+            		taskForm.setUpdateDate(new Date());
+            	}
             	taskFormList.add(taskForm);
             });
     	}
