@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import jp.ac.ems.form.teacher.TaskForm;
+import jp.ac.ems.form.teacher.ConfirmTaskForm;
 import jp.ac.ems.service.teacher.TeacherTaskService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,8 @@ public class TeacherTaskController {
         List<TaskForm> list = taskService.findAll();
 
         model.addAttribute("tasks", list);
+        
+        model.addAttribute("taskTaskForm", new ConfirmTaskForm());
 
         return "teacher/task/list";
     }
@@ -311,7 +314,6 @@ public class TeacherTaskController {
         return "teacher/task/add_question";
     }
     
-    
     /**
      * 分野別問題取得(Obtaining questions by field).
      * @param form 課題Form(task form)
@@ -328,4 +330,62 @@ public class TeacherTaskController {
 
         return "teacher/task/submissionlist";
     }
+    
+    /**
+     * 課題-問題回答:確認(first task-question answer:confirm).
+     * @return 課題-問題ページビュー(task-question page view)
+     */
+    @PostMapping(path = "question_confirm")
+    public String questionAnsweredList(@RequestParam String id, Model model) {
+
+    	ConfirmTaskForm confirmTaskForm = taskService.getTaskFormToSetQuestionForm(id, null, 0);
+    	model.addAttribute("confirmTaskForm", confirmTaskForm);
+    	model.addAttribute("answerSelectedItems", taskService.getAnswerSelectedItems());
+    	
+        return "teacher/task/question_confirm";
+    }
+    
+    /**
+     * 前の課題-問題回答:確認(prev task-question answer:conrim).
+     * @return 課題-問題ページビュー(task-question page view)
+     */
+    @PostMapping(path = "question_confirm", params="prevBtn")
+    public String prevQuestionConfirm(ConfirmTaskForm form, Model model) {
+
+    	// 次の問題をセットする
+    	ConfirmTaskForm confirmTaskForm = taskService.getTaskFormToSetQuestionForm(form.getId(), form.getQuestionForm().getId(), -1);
+    	
+    	model.addAttribute("confirmTaskForm", confirmTaskForm);
+    	model.addAttribute("answerSelectedItems", taskService.getAnswerSelectedItems());
+
+        return "teacher/task/question_confirm";
+    }
+    
+    /**
+     * 次の課題-問題回答:確認(next task-question answer:conrim).
+     * @return 課題-問題ページビュー(task-question page view)
+     */
+    @PostMapping(path = "question_confirm", params="nextBtn")
+    public String nextQuestionConfirm(ConfirmTaskForm form, Model model) {
+
+    	// 前の問題をセットする
+    	ConfirmTaskForm confirmTaskForm = taskService.getTaskFormToSetQuestionForm(form.getId(), form.getQuestionForm().getId(),  1);
+    	
+    	model.addAttribute("confirmTaskForm", confirmTaskForm);
+    	model.addAttribute("answerSelectedItems", taskService.getAnswerSelectedItems());
+
+        return "teacher/task/question_confirm";
+    }
+    
+    /**
+     * 戻るボタン：課題-問題回答:確認(back btn:task-question answer:conrim).
+     * @return 課題一覧ページビュー(task list page view)
+     */
+    @PostMapping(path = "question_confirm", params="backPageBtn")
+    public String backBtnQuestionConfirm(ConfirmTaskForm form, Model model) {
+
+    	// 課題一覧画面に戻る
+        return list(model);
+    }
+
 }

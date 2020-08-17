@@ -24,7 +24,7 @@ import jp.ac.ems.config.ExamDivisionCode;
 import jp.ac.ems.config.FieldLarge;
 import jp.ac.ems.config.FieldMiddle;
 import jp.ac.ems.config.FieldSmall;
-import jp.ac.ems.form.student.KadaiQuestionForm;
+import jp.ac.ems.form.student.TaskQuestionForm;
 import jp.ac.ems.form.student.TaskForm;
 import jp.ac.ems.repository.QuestionRepository;
 import jp.ac.ems.repository.StudentQuestionHistoryRepository;
@@ -191,7 +191,7 @@ public class StudentTaskServiceImpl implements StudentTaskService {
 	    	questionId = questionMap.get(positionStr);
     	}
  		
- 		KadaiQuestionForm questionForm = getAnsweredQuestionForm(taskId, questionId);
+ 		TaskQuestionForm questionForm = getAnsweredQuestionForm(taskId, questionId);
 
  		questionForm.setCorrect(convertAnsweredIdToWord(questionForm.getCorrect()));
 		
@@ -324,16 +324,16 @@ public class StudentTaskServiceImpl implements StudentTaskService {
      * @param taskId 課題ID(task id)
      */
 	@Override
-	public List<KadaiQuestionForm> getAnsweredQuestionList(String taskId) {
+	public List<TaskQuestionForm> getAnsweredQuestionList(String taskId) {
 		
-		List<KadaiQuestionForm> list = new ArrayList<>();
+		List<TaskQuestionForm> list = new ArrayList<>();
 		
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userId = auth.getName();
         
 		List<StudentTaskQuestionHistoryBean> stqhlist = studentTaskQuestionHistoryRepository.findAllByUserIdAndTaskId(userId, Long.valueOf(taskId));
 		for(StudentTaskQuestionHistoryBean stqhBean : stqhlist) {
-			KadaiQuestionForm questionForm = getAnsweredQuestionForm(taskId, String.valueOf(stqhBean.getQuestionId()));
+			TaskQuestionForm questionForm = getAnsweredQuestionForm(taskId, String.valueOf(stqhBean.getQuestionId()));
 			// 回答IDを語句に置き換える
 			questionForm.setAnswer(convertAnsweredIdToWord(questionForm.getAnswer()));
 			questionForm.setCorrect(convertAnsweredIdToWord(questionForm.getCorrect()));
@@ -377,8 +377,8 @@ public class StudentTaskServiceImpl implements StudentTaskService {
 	 * @param questionId 問題ID(question id)
 	 * @return 回答済み課題Form(answered question form)
 	 */
-	private KadaiQuestionForm getAnsweredQuestionForm(String taskId, String questionId) {
-    	KadaiQuestionForm questionForm = new KadaiQuestionForm();
+	private TaskQuestionForm getAnsweredQuestionForm(String taskId, String questionId) {
+    	TaskQuestionForm questionForm = new TaskQuestionForm();
     	Optional<QuestionBean> optQuestion = questionRepository.findById(Long.valueOf(questionId));
     	optQuestion.ifPresent(questionBean -> {
     		// 問題の情報をセットする

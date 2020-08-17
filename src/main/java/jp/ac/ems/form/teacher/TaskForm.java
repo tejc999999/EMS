@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.constraints.Size;
 
+import jp.ac.ems.form.teacher.ConfirmQuestionForm;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -71,5 +72,4 @@ public class TaskForm {
      * 対象ユーザIDリスト(target user list).
      */
     private List<String> userCheckedList;
-
 }

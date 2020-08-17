@@ -18,12 +18,15 @@ import jp.ac.ems.bean.TaskQuestionBean;
 import jp.ac.ems.bean.UserBean;
 import jp.ac.ems.bean.StudentTaskBean;
 import jp.ac.ems.bean.StudentTaskQuestionHistoryBean;
+import jp.ac.ems.config.ExamDivisionCode;
 import jp.ac.ems.config.FieldLarge;
 import jp.ac.ems.config.FieldMiddle;
 import jp.ac.ems.config.FieldSmall;
 import jp.ac.ems.config.ServerProperties;
 import jp.ac.ems.form.teacher.TaskForm;
 import jp.ac.ems.form.teacher.TaskSubmissionForm;
+import jp.ac.ems.form.teacher.ConfirmQuestionForm;
+import jp.ac.ems.form.teacher.ConfirmTaskForm;
 import jp.ac.ems.repository.ClassRepository;
 import jp.ac.ems.repository.CourseRepository;
 import jp.ac.ems.repository.QuestionRepository;
@@ -502,6 +505,170 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
         model.addAttribute("fieldSDropItems", fieldSMap);
     	
     }
+    
+    /**
+     * 課題Formに問題Formをセットする
+     * 
+     * @param taskId 課題ID(task id)
+     * @param position 位置情報(position info)
+     * @return 課題Form(task form)
+     */
+    @Override
+    public ConfirmTaskForm getTaskFormToSetQuestionForm(String taskId, String questionId,  int position) {
+    	
+    	ConfirmTaskForm form = new ConfirmTaskForm();
+    	form.setId(taskId);
+
+    	Map<String, String> questionMap = new HashMap<>();
+    	Optional<TaskBean> optTask = taskRepository.findByIdFetchTaskQuestion(Long.valueOf(taskId));
+    	optTask.ifPresent(taskBean -> {
+    		form.setTitle(taskBean.getTitle());
+    		form.setQuestionSize(String.valueOf(taskBean.getQuestionSize()));
+    		questionMap.putAll(taskBean.getQuestionIdSeqMap());
+    	});
+
+    	// 指定位置情報の問題を取得する
+ 		if(questionId == null) {
+ 			
+ 			questionId = questionMap.get("0");
+ 		} else if(position != 0) {
+ 			
+ 			String currenctQuestionId = questionId;
+	    	String currentPosition = questionMap
+	    									.entrySet()
+	    									.stream()
+	    									.filter(entry -> currenctQuestionId.equals(entry.getValue()))
+	    									.map(Map.Entry::getKey)
+	    									.findFirst().get();
+	    	String positionStr = String.valueOf(Integer.valueOf(currentPosition) + position);
+	    	questionId = questionMap.get(positionStr);
+    	}
+ 		
+ 		ConfirmQuestionForm questionForm = getAnsweredQuestionForm(taskId, questionId);
+
+ 		questionForm.setCorrect(convertAnsweredIdToWord(questionForm.getCorrect()));
+		
+		form.setQuestionForm(questionForm);
+
+    	return form;
+    }
+    
+    /**
+     * 回答アイテム取得
+     * 
+     * @return 回答アイテムマップ
+     */
+    @Override
+    public Map<String,String> getAnswerSelectedItems(){
+        Map<String, String> selectMap = new LinkedHashMap<String, String>();
+        selectMap.put("1", "ア");
+        selectMap.put("2", "イ");
+        selectMap.put("3", "ウ");
+        selectMap.put("4", "エ");
+        return selectMap;
+    }
+    
+	/**
+	 * 回答IDを語句に置き換える(Convert answered id to word).
+	 * @param answeredId 回答ID(answered id)
+	 * @return 回答語句(answered word)
+	 */
+	private String convertAnsweredIdToWord(String answeredId) {
+		String answeredWord = answeredId;
+		switch(answeredId) {
+			case "1":
+				answeredWord = "ア";
+				break;
+			case "2":
+				answeredWord = "イ";
+				break;
+			case "3":
+				answeredWord = "ウ";
+				break;
+			case "4":
+				answeredWord = "エ";
+				break;
+			default:
+				answeredWord = "";
+				break;
+		}
+		return answeredWord;
+	}
+    
+	/**
+	 * 回答済みの課題Formを取得する(Get answered question form).
+	 * @param taskId 課題ID(task id)
+	 * @param questionId 問題ID(question id)
+	 * @return 回答済み課題Form(answered question form)
+	 */
+	private ConfirmQuestionForm getAnsweredQuestionForm(String taskId, String questionId) {
+    	ConfirmQuestionForm questionForm = new ConfirmQuestionForm();
+    	Optional<QuestionBean> optQuestion = questionRepository.findById(Long.valueOf(questionId));
+    	optQuestion.ifPresent(questionBean -> {
+    		// 問題の情報をセットする
+    		questionForm.setId(String.valueOf(questionBean.getId()));
+    		questionForm.setCorrect(String.valueOf(questionBean.getCorrect()));
+    		questionForm.setDivision(questionBean.getDivision());
+    		questionForm.setYear(questionBean.getYear());
+    		questionForm.setTerm(questionBean.getTerm());
+    		questionForm.setNumber(String.valueOf(questionBean.getNumber()));
+    		questionForm.setFieldLId(String.valueOf(questionBean.getFieldLId()));
+    		questionForm.setFieldMId(String.valueOf(questionBean.getFieldMId()));
+    		questionForm.setFieldSId(String.valueOf(questionBean.getFieldSId()));
+    	});
+		String imagePath = questionForm.getYear() + "_" + questionForm.getTerm()
+			+ "/" + String.format("%02d", Integer.parseInt(questionForm.getNumber())) + ".png";
+		questionForm.setImagePath(imagePath);
+
+		// 課題上の問題番号をセットする
+    	Map<String, String> questionMap = new HashMap<>();
+    	Optional<TaskBean> optTask = taskRepository.findByIdFetchTaskQuestion(Long.valueOf(taskId));
+    	optTask.ifPresent(taskBean -> {
+    		questionMap.putAll(taskBean.getQuestionIdSeqMap());
+    	});
+    	String position = questionMap
+    									.entrySet()
+    									.stream()
+    									.filter(entry -> questionId.equals(entry.getValue()))
+    									.map(Map.Entry::getKey)
+    									.findFirst().get();
+		questionForm.setTaskNumber(String.valueOf(Integer.parseInt(position) + 1));
+
+    	// 問題情報文字列を作成し、Formにセットする    	
+    	StringBuffer questionInfoStrBuff = new StringBuffer();
+    	int yearInt = Integer.valueOf(questionForm.getYear());
+    	String termStr = questionForm.getTerm();
+    	if(yearInt < 2019) {
+    		questionInfoStrBuff.append("平成");
+    		questionInfoStrBuff.append(yearInt - 1988 + "年");
+    	} else if(yearInt == 2019) {
+    		if("H".equals(termStr)) {
+        		questionInfoStrBuff.append("平成");
+        		questionInfoStrBuff.append(yearInt - 1988 + "年");
+    		} else if("A".equals(termStr)) {
+        		questionInfoStrBuff.append("令和元年");
+    		}
+    	} else if(yearInt > 2020) {
+    		questionInfoStrBuff.append("令和");
+    		questionInfoStrBuff.append(yearInt - 2019 + "年");
+    	}
+    	if("H".equals(termStr)) {
+    		questionInfoStrBuff.append("春");
+    	} else if("A".equals(termStr)) {
+    		questionInfoStrBuff.append("秋");
+    	}
+    	
+		questionInfoStrBuff.append("期 第" + questionForm.getNumber() + "問");
+    	questionForm.setQuestionInfoStr(questionInfoStrBuff.toString());
+    	
+    	// 問題分野情報文字列を作成し、Formにセットする
+    	questionForm.setQuestionFieldInfoStr(
+    			FieldLarge.getName(ExamDivisionCode.AP.getName(), Byte.valueOf(questionForm.getFieldLId())) + "/"
+    			+ FieldMiddle.getName(ExamDivisionCode.AP.getName(), Byte.valueOf(questionForm.getFieldMId())) + "/"
+    			+ FieldSmall.getName(ExamDivisionCode.AP.getName(), Byte.valueOf(questionForm.getFieldSId())));
+    	
+    	return questionForm;
+	}
     
     /**
      * 画面用年度マップ取得

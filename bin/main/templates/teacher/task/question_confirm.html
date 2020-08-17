@@ -8,7 +8,7 @@
 
 <h2>■課題</h2>
 <div class="able-responsive-md container">
-<form th:action="@{/student/task/question_confirm}" th:object="${taskForm}"  method="post">
+<form th:action="@{/teacher/task/question_confirm}" th:object="${confirmTaskForm}"  method="post">
   <div class="form-row">
     <div class="form-group col-md-12">
       <h3 th:text="*{title}"></h3>
@@ -24,7 +24,7 @@
   </div>
   <div class="form-row">
     <div class="form-group col-md-12">
-      <h4 th:text="${'課題 第' + taskForm.questionForm.taskNumber + ' / ' + taskForm.questionSize + '問'}"></h4>
+      <h4 th:text="${'課題 第' + confirmTaskForm.questionForm.taskNumber + ' / ' + confirmTaskForm.questionSize + '問'}"></h4>
     </div>
   </div>
   <div class="form-row">
@@ -46,31 +46,28 @@
   
   <div class="form-row mt-5">
     <div class="form-check form-check-inline col-md-3 m-0 p-0" th:each="answerItem : ${answerSelectedItems}">
-      <input class="form-check-input" type="radio" name="questionForm.answer" th:value="${answerItem.key}" th:checked="${answerItem.key.equals(taskForm.questionForm.answer)}" disabled />
-      <font th:if="${answerItem.key.equals(taskForm.questionForm.answer)}" style="border-bottom: solid 4px red;">
-        <label class="form-check-label" th:text="${answerItem.value}"></label>
-      </font>
-      <font th:if="${!answerItem.key.equals(taskForm.questionForm.answer)}">
+      <input class="form-check-input" type="radio" th:value="${answerItem.key}" disabled />
+      <font>
         <label class="form-check-label" th:text="${answerItem.value}"></label>
       </font>
     </div>
   </div>
   
   <div class="form-row  mt-5">
-  	<div th:if="${!taskForm.questionForm.taskNumber.equals('1')}" class="form-group col-md-4">
+  	<div th:if="${!confirmTaskForm.questionForm.taskNumber.equals('1')}" class="form-group col-md-4">
       <input type="submit" class="btn btn-info btn-block" name="prevBtn" value="前へ">
     </div>
-  	<div th:if="${taskForm.questionForm.taskNumber.equals('1')}" class="form-group col-md-4">
+  	<div th:if="${confirmTaskForm.questionForm.taskNumber.equals('1')}" class="form-group col-md-4">
     </div>
     
   	<div class="form-group col-md-4">
       <input type="submit" class="btn btn-info btn-block" name="backPageBtn" value="一覧へ">
     </div>
     
-  	<div th:if="${!taskForm.questionSize.equals(taskForm.questionForm.taskNumber)}" class="form-group col-md-4">
+  	<div th:if="${!confirmTaskForm.questionSize.equals(confirmTaskForm.questionForm.taskNumber)}" class="form-group col-md-4">
       <input type="submit" class="btn btn-info btn-block" name="nextBtn" value="次へ">
     </div>
-  	<div th:if="${taskForm.questionSize.equals(taskForm.questionForm.taskNumber)}" class="form-group col-md-4">
+  	<div th:if="${confirmTaskForm.questionSize.equals(confirmTaskForm.questionForm.taskNumber)}" class="form-group col-md-4">
     </div>
   </div>
   </form>

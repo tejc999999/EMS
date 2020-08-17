@@ -43,19 +43,26 @@
 			<thead class="thead-dark">
 				<tr class="row">
 					<th class="col-md-3 text-nowrap" scope="col" th:text="タイトル">タイトル</th>
-					<th class="col-md-6 text-nowrap" scope="col" th:text="説明文">説明文</th>
-					<th class="col-md-1" scope="col"></th>
-					<th class="col-md-1" scope="col"></th>
-					<th class="col-md-1" scope="col"></th>
+					<th class="col-md-5 text-nowrap" scope="col" th:text="説明文">説明文</th>
+					<th class="col-md-1" scope="col" th:text="進捗"></th>
+					<th class="col-md-1" scope="col" th:text="回答"></th>
+					<th class="col-md-1" scope="col" th:text="編集"></th>
+					<th class="col-md-1" scope="col" th:text="削除"></th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr class="row" th:each="task : ${tasks}">
 					<td class="col-md-3" th:text="${task.title}">タイトル</td>
-					<td class="col-md-6" th:text="${task.description}">説明文</td>
+					<td class="col-md-5" th:text="${task.description}">説明文</td>
 					<td class="col-md-1">
 						<form th:action="@{/teacher/task/submissionlist}" method="post">
 							<input type="submit" name="form" th:value="進捗" /> <input
+								type="hidden" name="id" th:value="${task.id}" />
+						</form>
+					</td>
+					<td class="col-md-1">
+						<form th:action="@{/teacher/task/question_confirm}" method="post">
+							<input type="submit" name="form" th:value="回答" /> <input
 								type="hidden" name="id" th:value="${task.id}" />
 						</form>
 					</td>

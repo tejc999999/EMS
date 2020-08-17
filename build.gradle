@@ -16,7 +16,7 @@ version = '1.0.0-SNAPSHOT'
 // プロジェクトの説明
 description = 'EMS'
 // JDKバージョン（変数を上書きする事で実行時にバージョンを変えることが可能）
-sourceCompatibility = '1.8'
+sourceCompatibility = '11'
 
 // ライブラリ探索場所
 repositories {
@@ -25,11 +25,17 @@ repositories {
 }
 
 // 実行可能Jarファイル作成
-jar {
-    manifest {
-        attributes 'Main-Class': 'jp.ac.ems.EMSApplication'
-    }
+bootJar {
+	manifest {
+		attributes 'Start-Class': 'jp.ac.ems.EMSApplication'
+	}
 }
+//jar {
+//	enabled=true
+//    manifest {
+//        attributes 'Main-Class': 'jp.ac.ems.EMSApplication'
+//    }
+//}
 
 // 必要なライブラリ（Maven Repositpry）
 dependencies {

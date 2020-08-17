@@ -57,15 +57,20 @@
   </div>
   
   <div class="form-row  mt-5">
-  	<div th:if="${!taskForm.questionForm.taskNumber.equals('1')}" class="form-group col-md-6">
+  	<div th:if="${!taskForm.questionForm.taskNumber.equals('1')}" class="form-group col-md-4">
       <input type="submit" class="btn btn-info btn-block" name="prevBtn" value="前へ">
     </div>
-  	<div th:if="${taskForm.questionForm.taskNumber.equals('1')}" class="form-group col-md-6">
+  	<div th:if="${taskForm.questionForm.taskNumber.equals('1')}" class="form-group col-md-4">
     </div>
-  	<div th:if="${!taskForm.questionSize.equals(taskForm.questionForm.taskNumber)}" class="form-group col-md-6">
+    
+  	<div class="form-group col-md-4">
+      <input type="submit" class="btn btn-info btn-block" name="backPageBtn" value="一覧へ">
+    </div>
+    
+  	<div th:if="${!taskForm.questionSize.equals(taskForm.questionForm.taskNumber)}" class="form-group col-md-4">
       <input type="submit" class="btn btn-info btn-block" name="nextBtn" value="次へ">
     </div>
-  	<div th:if="${taskForm.questionSize.equals(taskForm.questionForm.taskNumber)}" class="form-group col-md-6">
+  	<div th:if="${taskForm.questionSize.equals(taskForm.questionForm.taskNumber)}" class="form-group col-md-4">
     </div>
   </div>
   </form>

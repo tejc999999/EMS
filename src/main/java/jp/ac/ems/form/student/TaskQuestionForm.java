@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @EqualsAndHashCode(callSuper=true)
 @NoArgsConstructor
-public class KadaiQuestionForm extends QuestionForm {
+public class TaskQuestionForm extends QuestionForm {
     
     /**
      * 課題番号

@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 
 import jp.ac.ems.form.teacher.TaskForm;
 import jp.ac.ems.form.teacher.TaskSubmissionForm;
+import jp.ac.ems.form.teacher.ConfirmTaskForm;
 
 /**
  * 先生用課題Serviceクラス（teacher task Service Class）.
@@ -108,4 +109,20 @@ public interface TeacherTaskService {
      * @param model モデル(model)
      */
     public void setSelectData(TaskForm form, Model model);
+    
+    /**
+     * 課題Formに問題Formをセットする
+     * 
+     * @param taskId 課題ID(task id)
+     * @param position 位置情報(position info)
+     * @return 課題Form(task form)
+     */
+    public ConfirmTaskForm getTaskFormToSetQuestionForm(String taskId, String questionId,  int position);
+    
+    /**
+     * 回答アイテム取得
+     * 
+     * @return 回答アイテムマップ
+     */
+    public Map<String,String> getAnswerSelectedItems();
 }

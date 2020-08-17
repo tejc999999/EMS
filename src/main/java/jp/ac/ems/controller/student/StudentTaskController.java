@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import jp.ac.ems.form.student.KadaiQuestionForm;
+import jp.ac.ems.form.student.TaskQuestionForm;
 import jp.ac.ems.form.student.TaskForm;
 import jp.ac.ems.service.student.StudentTaskService;
 
@@ -135,7 +135,7 @@ public class StudentTaskController {
     	TaskForm taskForm = taskService.getTaskForm(id);
     	model.addAttribute("taskForm", taskForm);
     	
-        List<KadaiQuestionForm> list = taskService.getAnsweredQuestionList(id);
+        List<TaskQuestionForm> list = taskService.getAnsweredQuestionList(id);
         model.addAttribute("questions", list);
 
         return "student/task/question_list";
@@ -185,5 +185,16 @@ public class StudentTaskController {
     	model.addAttribute("answerSelectedItems", taskService.getAnswerSelectedItems());
 
         return "student/task/question_confirm";
+    }
+    
+    /**
+     * 戻るボタン：課題-問題回答:確認(back btn:task-question answer:conrim).
+     * @return 課題-問題一覧ページビュー(task-question list page view)
+     */
+    @PostMapping(path = "question_confirm", params="backPageBtn")
+    public String backBtnQuestionConfirm(TaskForm form, Model model) {
+
+    	// 課題-問題一覧画面に戻る
+        return questionAnsweredList(form.getId(), model);
     }
 }
