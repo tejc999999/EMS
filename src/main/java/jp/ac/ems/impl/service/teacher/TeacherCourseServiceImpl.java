@@ -111,7 +111,12 @@ public class TeacherCourseServiceImpl implements TeacherCourseService {
             List<String> removeUserLlist = new ArrayList<>();
             classIdList.forEach(classId -> {
                 Optional<ClassBean> opt = classRepository.findById(Long.valueOf(classId));
-                opt.ifPresent(classBean -> removeUserLlist.addAll(classBean.getUserIdList()));
+                opt.ifPresent(classBean -> {
+                	List<String> list = classBean.getUserIdList();
+                	if(list != null) {
+                		removeUserLlist.addAll(list);
+                	}
+                });
             });
             // 選択済みクラス所属ユーザを除外
             if (removeUserLlist != null && userMap != null) {

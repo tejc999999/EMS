@@ -269,7 +269,12 @@ public class StudentTaskServiceImpl implements StudentTaskService {
         String userId = auth.getName();
     	List<String> unsubmitQuestionList = new ArrayList<>();
     	Optional<TaskBean> optTask = taskRepository.findByIdFetchTaskQuestion(Long.valueOf(taskId));
-    	optTask.ifPresent(taskBean -> unsubmitQuestionList.addAll(taskBean.getQuestionIdList()));
+    	optTask.ifPresent(taskBean -> {
+    		List<String> list = taskBean.getQuestionIdList();
+    		if(list != null) {
+    			unsubmitQuestionList.addAll(list);
+    		}
+    	});
     	List<StudentTaskQuestionHistoryBean> studentTaskQuestionHistoryBeanList = studentTaskQuestionHistoryRepository.findAllByUserIdAndTaskId(userId, Long.valueOf(taskId));
     	if(studentTaskQuestionHistoryBeanList != null) {
 	    	for(StudentTaskQuestionHistoryBean studentTaskQuestionHistoryBean : studentTaskQuestionHistoryBeanList) {

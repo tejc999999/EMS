@@ -112,7 +112,10 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 				&& (form.getSelectFieldS() == null || form.getSelectFieldS().equals(""))
 						&& (form.getSelectFieldM() == null || form.getSelectFieldM().equals(""))
 								&& (form.getSelectFieldL() == null || form.getSelectFieldL().equals(""))) {
-			questionBeanList.addAll(questionRepository.findAll());
+			List<QuestionBean> list = questionRepository.findAll();
+			if(list != null) {
+				questionBeanList.addAll(list);
+			}
 		} else {
 			if((form.getSelectYear() != null && !form.getSelectYear().equals(""))) {
 				// 年度条件あり
@@ -121,35 +124,49 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 
 				if(form.getSelectFieldS() != null && !form.getSelectFieldS().equals("")) {
 					// 年度＋小分野条件
-					
-					questionBeanList.addAll(questionRepository.findByYearAndTermAndFieldSId(yearStr, termStr, Byte.valueOf(form.getSelectFieldS())));
+					List<QuestionBean> list = questionRepository.findByYearAndTermAndFieldSId(yearStr, termStr, Byte.valueOf(form.getSelectFieldS()));
+					if(list != null) {
+						questionBeanList.addAll(list);
+					}
 				} else if(form.getSelectFieldM() != null && !form.getSelectFieldM().equals("")) {
 					// 年度＋中分野条件
-					
-					questionBeanList.addAll(questionRepository.findByYearAndTermAndFieldMId(yearStr, termStr, Byte.valueOf(form.getSelectFieldM())));
+					List<QuestionBean> list = questionRepository.findByYearAndTermAndFieldMId(yearStr, termStr, Byte.valueOf(form.getSelectFieldM()));
+					if(list != null) {
+						questionBeanList.addAll(list);
+					}
 				} else if((form.getSelectFieldL() != null && !form.getSelectFieldL().equals(""))) {
 					// 年度＋大分野条件
-					
-					questionBeanList.addAll(questionRepository.findByYearAndTermAndFieldLId(yearStr, termStr, Byte.valueOf(form.getSelectFieldL())));
+					List<QuestionBean> list = questionRepository.findByYearAndTermAndFieldLId(yearStr, termStr, Byte.valueOf(form.getSelectFieldL()));
+					if(list != null) {
+						questionBeanList.addAll(list);
+					}
 				} else {
 					// 年度条件のみ
-					questionBeanList.addAll(questionRepository.findByYearAndTerm(yearStr, termStr));
+					List<QuestionBean> list = questionRepository.findByYearAndTerm(yearStr, termStr);
+					if(list != null) {
+						questionBeanList.addAll(list);
+					}
 				}
-
 			} else {
 				// 年度条件なし
 				if(form.getSelectFieldS() != null && !form.getSelectFieldS().equals("")) {
 					// 小分野条件
-					
-					questionBeanList.addAll(questionRepository.findByFieldSId(Byte.valueOf(form.getSelectFieldS())));
+					List<QuestionBean> list = questionRepository.findByFieldSId(Byte.valueOf(form.getSelectFieldS()));
+					if(list != null) {
+						questionBeanList.addAll(list);
+					}
 				} else if(form.getSelectFieldM() != null && !form.getSelectFieldM().equals("")) {
 					// 中分野条件
-					
-					questionBeanList.addAll(questionRepository.findByFieldMId(Byte.valueOf(form.getSelectFieldM())));
+					List<QuestionBean> list = questionRepository.findByFieldMId(Byte.valueOf(form.getSelectFieldM()));
+					if(list != null) {
+						questionBeanList.addAll(list);
+					}
 				} else if((form.getSelectFieldL() != null && !form.getSelectFieldL().equals(""))) {
 					// 大分野条件
-					
-					questionBeanList.addAll(questionRepository.findByFieldLId(Byte.valueOf(form.getSelectFieldL())));
+					List<QuestionBean> list = questionRepository.findByFieldLId(Byte.valueOf(form.getSelectFieldL()));
+					if(list != null) {
+						questionBeanList.addAll(list);
+					}
 				}
 			}
 		}
@@ -193,7 +210,9 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 	        if(form.getConditionChecked().equals(SelfStudyForm.CONDITION_2_KEY_LOW_ACC_RATE)) {
 	        	questionIdList = questionIdForIncorrect50;
 	        } else if(form.getConditionChecked().equals(SelfStudyForm.CONDITION_3_KEY_MIX)) {
-	        	questionIdList.addAll(questionIdForIncorrect50);
+	        	if(questionIdForIncorrect50 != null) {
+	        		questionIdList.addAll(questionIdForIncorrect50);
+	        	}
 	        }
 		}
 		
