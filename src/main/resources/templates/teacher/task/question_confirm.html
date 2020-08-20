@@ -44,6 +44,12 @@
     </div>
   </div>
   
+  <div class="form-row">
+    <div class="col-md-12">
+       <a th:href="*{'https://www.google.com/search?safe=off&hl=ja&q=応用情報技術者 解説 午前' + questionForm.questionInfoStr}" target="_blank">解説を検索</a>
+    </div>
+  </div>
+  
   <div class="form-row mt-5">
     <div class="form-check form-check-inline col-md-3 m-0 p-0" th:each="answerItem : ${answerSelectedItems}">
       <input class="form-check-input" type="radio" th:value="${answerItem.key}" disabled />

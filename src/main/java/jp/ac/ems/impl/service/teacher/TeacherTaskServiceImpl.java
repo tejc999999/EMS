@@ -716,7 +716,7 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
     		questionInfoStrBuff.append("秋");
     	}
     	
-		questionInfoStrBuff.append("期 第" + questionForm.getNumber() + "問");
+		questionInfoStrBuff.append("期 問" + questionForm.getNumber());
     	questionForm.setQuestionInfoStr(questionInfoStrBuff.toString());
     	
     	// 問題分野情報文字列を作成し、Formにセットする

@@ -474,7 +474,7 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
     	} else if("A".equals(termStr)) {
     		questionInfoStrBuff.append("秋");
     	}
-		questionInfoStrBuff.append("期 第" + selfStudyQuestionForm.getNumber() + "問");
+		questionInfoStrBuff.append("期 問" + selfStudyQuestionForm.getNumber());
 		selfStudyQuestionForm.setQuestionInfoStr(questionInfoStrBuff.toString());
     	
     	// 問題分野情報文字列を作成し、Formにセットする
