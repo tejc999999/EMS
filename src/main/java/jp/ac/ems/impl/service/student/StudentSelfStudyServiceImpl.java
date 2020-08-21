@@ -222,6 +222,7 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 			List<String> removeQuestionIdList = new ArrayList<>();
 			for(String questionId : questionIdList) {
 				// 直近6回より前の問題を除外する
+				// TODO:問い合わせ回数軽減策検討
 				Optional<QuestionBean> optQuestion = questionRepository.findById(Long.valueOf(questionId));
 				optQuestion.ifPresent(questionBean -> {
 					// ※中止試験があった場合、コード修正が必要

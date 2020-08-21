@@ -3,6 +3,7 @@ package jp.ac.ems.impl.service;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -124,57 +125,60 @@ public class GradeServiceImpl  implements GradeService {
 	private GradeForm getGradeForm(GradeForm form) {
 		Map<String, Grade> gradeMap = new LinkedHashMap<>();
 		
+		// 始めに全手の問題情報を取得する（履歴ごとに問題情報を取得するとクエリ回数が増大し、クラウド料金が増えるため）
+		List<QuestionBean> questionBeanList =  questionRepository.findAll();
+	    Map<Long, QuestionBean> questionBeanMap = questionBeanList.stream().collect(HashMap::new, (m, d) -> m.put(d.getId(), d), Map::putAll);
+	    
 		List<StudentQuestionHistoryBean> studentQuestHistoryBeanList = studentQuestionHistoryRepository.findAll();
 		for(StudentQuestionHistoryBean sqhBean : studentQuestHistoryBeanList) {
 			String userId = sqhBean.getUserId();
 			Long questionId = sqhBean.getQuestionId();
-			Optional<QuestionBean> optQuestion = questionRepository.findById(questionId);
-			optQuestion.ifPresent(questionBean -> {
-				Grade grade = null;
-				if(gradeMap.containsKey(userId)) {
-					grade = gradeMap.get(userId);
-				} else {
-					grade = new Grade();
-					grade.setUserId(userId);
-					gradeMap.put(userId, grade);
-				}
+			
+			QuestionBean questionBean = questionBeanMap.get(questionId);
+			Grade grade = null;
+			if(gradeMap.containsKey(userId)) {
+				grade = gradeMap.get(userId);
+			} else {
+				grade = new Grade();
+				grade.setUserId(userId);
+				gradeMap.put(userId, grade);
+			}
+			
+			if(form.getSelectYear() == null && form.getSelectFieldL() == null && form.getSelectFieldM() == null && form.getSelectFieldS() == null) {
+			// 標準抽出（全問：全年度：全分野）
+				grade.setCorrectCnt(grade.getCorrectCnt() + sqhBean.getCorrectCnt());
+				grade.setIncorrectCnt(grade.getIncorrectCnt() + sqhBean.getIncorrectCnt());
+			} else {
+				String year = questionBean.getYear() + questionBean.getTerm();
+				if(form.getSelectYear() != null && !form.getSelectYear().equals("") && form.getSelectYear().equals(year)) {
+					// (1)年度による抽出
 				
-				if(form.getSelectYear() == null && form.getSelectFieldL() == null && form.getSelectFieldM() == null && form.getSelectFieldS() == null) {
-				// 標準抽出（全問：全年度：全分野）
 					grade.setCorrectCnt(grade.getCorrectCnt() + sqhBean.getCorrectCnt());
 					grade.setIncorrectCnt(grade.getIncorrectCnt() + sqhBean.getIncorrectCnt());
 				} else {
-					String year = questionBean.getYear() + questionBean.getTerm();
-					if(form.getSelectYear() != null && !form.getSelectYear().equals("") && form.getSelectYear().equals(year)) {
-						// (1)年度による抽出
-					
-						grade.setCorrectCnt(grade.getCorrectCnt() + sqhBean.getCorrectCnt());
-						grade.setIncorrectCnt(grade.getIncorrectCnt() + sqhBean.getIncorrectCnt());
-					} else {
-	
-						// 分類による抽出
-						if(form.getSelectFieldS() != null && !form.getSelectFieldS().equals("")) {
-							// 小分類による抽出
-							if(form.getSelectFieldS().equals(String.valueOf(questionBean.getFieldSId()))) {
-								grade.setCorrectCnt(grade.getCorrectCnt() + sqhBean.getCorrectCnt());
-								grade.setIncorrectCnt(grade.getIncorrectCnt() + sqhBean.getIncorrectCnt());
-							}
-						} else if(form.getSelectFieldM() != null && !form.getSelectFieldM().equals("")) {
-							// 中分類による抽出
-							if(form.getSelectFieldM().equals(String.valueOf(questionBean.getFieldMId()))) {
-								grade.setCorrectCnt(grade.getCorrectCnt() + sqhBean.getCorrectCnt());
-								grade.setIncorrectCnt(grade.getIncorrectCnt() + sqhBean.getIncorrectCnt());
-							}
-						} else if(form.getSelectFieldL() != null && !form.getSelectFieldL().equals("")) {
-							// 大分類による抽出
-							if(form.getSelectFieldL().equals(String.valueOf(questionBean.getFieldLId()))) {
-								grade.setCorrectCnt(grade.getCorrectCnt() + sqhBean.getCorrectCnt());
-								grade.setIncorrectCnt(grade.getIncorrectCnt() + sqhBean.getIncorrectCnt());
-							}
+
+					// 分類による抽出
+					if(form.getSelectFieldS() != null && !form.getSelectFieldS().equals("")) {
+						// 小分類による抽出
+						if(form.getSelectFieldS().equals(String.valueOf(questionBean.getFieldSId()))) {
+							grade.setCorrectCnt(grade.getCorrectCnt() + sqhBean.getCorrectCnt());
+							grade.setIncorrectCnt(grade.getIncorrectCnt() + sqhBean.getIncorrectCnt());
+						}
+					} else if(form.getSelectFieldM() != null && !form.getSelectFieldM().equals("")) {
+						// 中分類による抽出
+						if(form.getSelectFieldM().equals(String.valueOf(questionBean.getFieldMId()))) {
+							grade.setCorrectCnt(grade.getCorrectCnt() + sqhBean.getCorrectCnt());
+							grade.setIncorrectCnt(grade.getIncorrectCnt() + sqhBean.getIncorrectCnt());
+						}
+					} else if(form.getSelectFieldL() != null && !form.getSelectFieldL().equals("")) {
+						// 大分類による抽出
+						if(form.getSelectFieldL().equals(String.valueOf(questionBean.getFieldLId()))) {
+							grade.setCorrectCnt(grade.getCorrectCnt() + sqhBean.getCorrectCnt());
+							grade.setIncorrectCnt(grade.getIncorrectCnt() + sqhBean.getIncorrectCnt());
 						}
 					}
 				}
-			});
+			}
 		}
 		
 		// 合計カウントの降順でソート
@@ -186,10 +190,14 @@ public class GradeServiceImpl  implements GradeService {
 		List<String> userNameList = new ArrayList<>();
 		List<String> correctList = new ArrayList<>();
 		List<String> incorrectList = new ArrayList<>();
+
+		List<UserBean> allUserList = userRepository.findAllStudent();
 		for(Grade grade : sortGradeList) {
 
 	    	// ユーザ名を設定する
-			Optional<UserBean> optUser = userRepository.findById(grade.getUserId());
+			Optional<UserBean> optUser = allUserList.stream()
+	        	.filter(i -> i.getId().equals(grade.getUserId()))
+	        	.findFirst();
 			optUser.ifPresent(userBean -> grade.setUserName(userBean.getName()));
 			userNameList.add(grade.getUserName());
 			correctList.add(String.valueOf(grade.getCorrectCnt()));

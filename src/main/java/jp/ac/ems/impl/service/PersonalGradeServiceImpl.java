@@ -3,6 +3,7 @@ package jp.ac.ems.impl.service;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -158,49 +159,51 @@ public class PersonalGradeServiceImpl  implements PersonalGradeService {
 		Grade grade = new Grade();
 		grade.setUserId(form.getUserId());
 		
+		// 始めに全手の問題情報を取得する（履歴ごとに問題情報を取得するとクエリ回数が増大し、クラウド料金が増えるため）
+		List<QuestionBean> questionBeanList =  questionRepository.findAll();
+	    Map<Long, QuestionBean> questionBeanMap = questionBeanList.stream().collect(HashMap::new, (m, d) -> m.put(d.getId(), d), Map::putAll);
+		
 		List<StudentQuestionHistoryBean> studentQuestHistoryBeanList = studentQuestionHistoryRepository.findAllByUserId(form.getUserId());
 		for(StudentQuestionHistoryBean sqhBean : studentQuestHistoryBeanList) {
 			Long questionId = sqhBean.getQuestionId();
-			Optional<QuestionBean> optQuestion = questionRepository.findById(questionId);
-			optQuestion.ifPresent(questionBean -> {
+			
+			QuestionBean questionBean = questionBeanMap.get(questionId);
+			if((form.getSelectYear() == null || form.getSelectYear().equals("")) && (form.getSelectFieldL() == null || form.getSelectFieldL().equals(""))
+					&& (form.getSelectFieldM() == null || form.getSelectFieldM().equals("")) && (form.getSelectFieldS() == null || form.getSelectFieldS().equals(""))) {
+			// 標準抽出（全問：全年度：全分野）
+				grade.setCorrectCnt(grade.getCorrectCnt() + sqhBean.getCorrectCnt());
+				grade.setIncorrectCnt(grade.getIncorrectCnt() + sqhBean.getIncorrectCnt());
+			} else {
+				String year = questionBean.getYear() + questionBean.getTerm();
+				if(form.getSelectYear() != null && !form.getSelectYear().equals("") && form.getSelectYear().equals(year)) {
+					// (1)年度による抽出
 				
-				if((form.getSelectYear() == null || form.getSelectYear().equals("")) && (form.getSelectFieldL() == null || form.getSelectFieldL().equals(""))
-						&& (form.getSelectFieldM() == null || form.getSelectFieldM().equals("")) && (form.getSelectFieldS() == null || form.getSelectFieldS().equals(""))) {
-				// 標準抽出（全問：全年度：全分野）
 					grade.setCorrectCnt(grade.getCorrectCnt() + sqhBean.getCorrectCnt());
 					grade.setIncorrectCnt(grade.getIncorrectCnt() + sqhBean.getIncorrectCnt());
 				} else {
-					String year = questionBean.getYear() + questionBean.getTerm();
-					if(form.getSelectYear() != null && !form.getSelectYear().equals("") && form.getSelectYear().equals(year)) {
-						// (1)年度による抽出
-					
-						grade.setCorrectCnt(grade.getCorrectCnt() + sqhBean.getCorrectCnt());
-						grade.setIncorrectCnt(grade.getIncorrectCnt() + sqhBean.getIncorrectCnt());
-					} else {
-	
-						// 分類による抽出
-						if(form.getSelectFieldS() != null && !form.getSelectFieldS().equals("")) {
-							// 小分類による抽出
-							if(form.getSelectFieldS().equals(String.valueOf(questionBean.getFieldSId()))) {
-								grade.setCorrectCnt(grade.getCorrectCnt() + sqhBean.getCorrectCnt());
-								grade.setIncorrectCnt(grade.getIncorrectCnt() + sqhBean.getIncorrectCnt());
-							}
-						} else if(form.getSelectFieldM() != null && !form.getSelectFieldM().equals("")) {
-							// 中分類による抽出
-							if(form.getSelectFieldM().equals(String.valueOf(questionBean.getFieldMId()))) {
-								grade.setCorrectCnt(grade.getCorrectCnt() + sqhBean.getCorrectCnt());
-								grade.setIncorrectCnt(grade.getIncorrectCnt() + sqhBean.getIncorrectCnt());
-							}
-						} else if(form.getSelectFieldL() != null && !form.getSelectFieldL().equals("")) {
-							// 大分類による抽出
-							if(form.getSelectFieldL().equals(String.valueOf(questionBean.getFieldLId()))) {
-								grade.setCorrectCnt(grade.getCorrectCnt() + sqhBean.getCorrectCnt());
-								grade.setIncorrectCnt(grade.getIncorrectCnt() + sqhBean.getIncorrectCnt());
-							}
+
+					// 分類による抽出
+					if(form.getSelectFieldS() != null && !form.getSelectFieldS().equals("")) {
+						// 小分類による抽出
+						if(form.getSelectFieldS().equals(String.valueOf(questionBean.getFieldSId()))) {
+							grade.setCorrectCnt(grade.getCorrectCnt() + sqhBean.getCorrectCnt());
+							grade.setIncorrectCnt(grade.getIncorrectCnt() + sqhBean.getIncorrectCnt());
+						}
+					} else if(form.getSelectFieldM() != null && !form.getSelectFieldM().equals("")) {
+						// 中分類による抽出
+						if(form.getSelectFieldM().equals(String.valueOf(questionBean.getFieldMId()))) {
+							grade.setCorrectCnt(grade.getCorrectCnt() + sqhBean.getCorrectCnt());
+							grade.setIncorrectCnt(grade.getIncorrectCnt() + sqhBean.getIncorrectCnt());
+						}
+					} else if(form.getSelectFieldL() != null && !form.getSelectFieldL().equals("")) {
+						// 大分類による抽出
+						if(form.getSelectFieldL().equals(String.valueOf(questionBean.getFieldLId()))) {
+							grade.setCorrectCnt(grade.getCorrectCnt() + sqhBean.getCorrectCnt());
+							grade.setIncorrectCnt(grade.getIncorrectCnt() + sqhBean.getIncorrectCnt());
 						}
 					}
 				}
-			});
+			}
 		}
 
     	// ユーザ名を設定する
