@@ -93,7 +93,7 @@ public class StudentTopServiceImpl implements StudentTopService {
         	for(StudentQuestionHistoryBean historyBean : sqhBeanList) {
 
         		// 問題情報取得
-        		QuestionBean questionBean = questionBeanMap.get(historyBean.getId());
+        		QuestionBean questionBean = questionBeanMap.get(historyBean.getQuestionId());
         		// 比較用に日付を変換
         		LocalDate convertDate = historyBean.getUpdateDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         		
