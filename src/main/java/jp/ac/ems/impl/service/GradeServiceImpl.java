@@ -55,12 +55,13 @@ public class GradeServiceImpl  implements GradeService {
 	/**
 	 * 全問題の成績を取得する.
 	 * @param form 成績Form(grad form)
+	 * @param correctSortFlg 正解率順ソートフラグ(sort correct rate flag)
 	 * @return 成績Form(grad form)
 	 */
     @Override
     public GradeForm getGradeFormDefault(GradeForm form) {
 
-    	return getGradeForm(form);
+		return getGradeForm(form);
 	}
     
 	/**
@@ -99,10 +100,11 @@ public class GradeServiceImpl  implements GradeService {
      */
 	@Override
     public void setSelectData(GradeForm form, Model model) {
+		
     	// 年度取得
         Map<String, String> yearMap = findAllYearMap();
-        model.addAttribute("yearDropItems", yearMap);
-    	
+        model.addAttribute("yearDropItems", yearMap);        
+        
     	// 大分類取得
         Map<String, String> fieldLMap = findAllFieldLMap();
         model.addAttribute("fieldLDropItemsItems", fieldLMap);
@@ -114,13 +116,18 @@ public class GradeServiceImpl  implements GradeService {
     	// 小分類取得
         Map<String, String> fieldSMap = findAllFieldSMap(form.getSelectFieldM());
         model.addAttribute("fieldSDropItems", fieldSMap);
+        
+    	// ソートキー取得
+        Map<String, String> sortKeyMap = findAllSortKeyMap();
+        model.addAttribute("sortKeyItems", sortKeyMap);
+
     }
 
 	/**
 	 * 成績Formを取得する(get grade form).
 	 * 
 	 * @param form 成績Form（grade form）
-	 * @return 成績Form(grade form)
+	 * @return 成績マップ(grade map)
 	 */
 	private GradeForm getGradeForm(GradeForm form) {
 		Map<String, Grade> gradeMap = new LinkedHashMap<>();
@@ -144,7 +151,8 @@ public class GradeServiceImpl  implements GradeService {
 				gradeMap.put(userId, grade);
 			}
 			
-			if(form.getSelectYear() == null && form.getSelectFieldL() == null && form.getSelectFieldM() == null && form.getSelectFieldS() == null) {
+			if((form.getSelectYear() == null || form.getSelectYear().equals("")) && (form.getSelectFieldL() == null || form.getSelectFieldL().equals(""))
+					&& (form.getSelectFieldM() == null || form.getSelectFieldM().equals("")) && (form.getSelectFieldS() == null || form.getSelectFieldS().equals(""))) {
 			// 標準抽出（全問：全年度：全分野）
 				grade.setCorrectCnt(grade.getCorrectCnt() + sqhBean.getCorrectCnt());
 				grade.setIncorrectCnt(grade.getIncorrectCnt() + sqhBean.getIncorrectCnt());
@@ -181,11 +189,33 @@ public class GradeServiceImpl  implements GradeService {
 			}
 		}
 		
-		// 合計カウントの降順でソート
-		List<Grade> gradeList = new ArrayList<>(gradeMap.values());
-    	List<Grade> sortGradeList = gradeList.stream()
-    	        .sorted(Comparator.comparingInt(Grade::getTotalCnt).reversed())
-    	        .collect(Collectors.toList());
+		return gradeSortAndSetting(form, gradeMap);
+	}
+	
+	/**
+	 * 成績を並べ替えて、グラフ情報をセットする
+	 * 
+	 * @param form 成績Form(grade form)
+	 * @param gradeMap 成績Map(grade map)
+	 * @return 成績Form(grade map)
+	 */
+	private GradeForm gradeSortAndSetting(GradeForm form, Map<String, Grade> gradeMap) {
+		
+    	List<Grade> sortGradeList = null;
+		if(GradeForm.SORT_CORRECT_KEY.equals(form.getSelectSortKey())) {
+			// 正解率でソート
+			List<Grade> gradeList = new ArrayList<>(gradeMap.values());
+	    	sortGradeList = gradeList.stream()
+	    	        .sorted(Comparator.comparingDouble(Grade::getCorrectRate).reversed())
+	    	        .collect(Collectors.toList());
+			
+		} else {
+			// 合計カウントの降順でソート
+			List<Grade> gradeList = new ArrayList<>(gradeMap.values());
+	    	sortGradeList = gradeList.stream()
+	    	        .sorted(Comparator.comparingInt(Grade::getTotalCnt).reversed())
+	    	        .collect(Collectors.toList());
+		}
 		
 		List<String> userNameList = new ArrayList<>();
 		List<String> correctList = new ArrayList<>();
@@ -195,13 +225,17 @@ public class GradeServiceImpl  implements GradeService {
 		for(Grade grade : sortGradeList) {
 
 	    	// ユーザ名を設定する
+			// 削除済みユーザーは全ユーザーリストに存在しないため、成績から除外する）
 			Optional<UserBean> optUser = allUserList.stream()
 	        	.filter(i -> i.getId().equals(grade.getUserId()))
 	        	.findFirst();
-			optUser.ifPresent(userBean -> grade.setUserName(userBean.getName()));
-			userNameList.add(grade.getUserName());
-			correctList.add(String.valueOf(grade.getCorrectCnt()));
-			incorrectList.add(String.valueOf(grade.getIncorrectCnt()));
+			optUser.ifPresent(userBean -> {
+				
+				grade.setUserName(userBean.getName());
+				userNameList.add(grade.getUserName());
+				correctList.add(String.valueOf(grade.getCorrectCnt()));
+				incorrectList.add(String.valueOf(grade.getIncorrectCnt()));
+			});
 		}
 		form.setUserNameList(userNameList);
 		form.setCorrectGradeList(correctList);
@@ -311,6 +345,20 @@ public class GradeServiceImpl  implements GradeService {
     	return map;
     }
 
+    /**
+     * ソートキーマップ取得
+     * @return ソートキーマップ（key:ソート条件キー、value：ソート条件ラベル）
+     */
+    private Map<String, String> findAllSortKeyMap() {
+    	
+    	Map<String, String> map = new LinkedHashMap<String, String>();
+    	
+    	map.put(GradeForm.SORT_COUNT_KEY, "回答数順表示");
+    	map.put(GradeForm.SORT_CORRECT_KEY, "正解率順表示");
+
+    	return map;
+    }
+    
 	/**
 	 * 内部処理用成績クラス
 	 * 
@@ -329,6 +377,17 @@ public class GradeServiceImpl  implements GradeService {
 		
 		private int getTotalCnt() {
 			return correctCnt + incorrectCnt;
+		}
+		
+		private double getCorrectRate() {
+			double returnVal;
+			if((correctCnt + incorrectCnt) == 0) {
+				returnVal =  0;
+			} else {
+				returnVal = (double) correctCnt / (correctCnt + incorrectCnt);
+			}
+			
+			return returnVal;
 		}
 	}
 }

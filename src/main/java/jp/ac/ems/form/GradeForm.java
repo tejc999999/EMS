@@ -1,9 +1,13 @@
 package jp.ac.ems.form;
 
 import java.util.List;
+import java.util.Map;
 
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * 学生用成績Form(grade form for student).
@@ -14,17 +18,31 @@ import lombok.NoArgsConstructor;
 public class GradeForm {
 
 	/**
-	 * ユーザーIDリスト
+	 * ソートキー「正解率」用固定文字
+	 */
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+	public static final String SORT_CORRECT_KEY = "correct";
+
+	/**
+	 * ソートキー「回答数」用固定文字
+	 */
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+	public static final String SORT_COUNT_KEY = "count";
+
+	/**
+	 * ユーザーIDリスト(user id list).
 	 */
 	private List<String> userNameList;
 	
 	/**
-	 * 正解数リスト
+	 * 正解数リスト(correct count list).
 	 */
 	private List<String> correctGradeList;
 	
 	/**
-	 * 不正解数リスト
+	 * 不正解数リスト(incorrect count list).
 	 */
 	private List<String> incorrectGradeList;
 	
@@ -57,4 +75,9 @@ public class GradeForm {
      * 選択小分類（select small field).
      */
     private String selectFieldS;
+    
+    /**
+     * ソート条件(sort key).
+     */
+    private String selectSortKey = GradeForm.SORT_COUNT_KEY;
 }

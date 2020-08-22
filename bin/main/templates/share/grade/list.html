@@ -71,6 +71,17 @@
       <input type="submit" name="selectFieldBtn" class="btn btn-info btn-block" th:value="選択">
     </div>
   </div>
+
+  <div class="row form-inline pb-3">
+    <div class="col-md-4" th:each="item : ${sortKeyItems}">
+      <label class="radio-inline float-left">
+        <input type="radio" name="selectSortKey" th:value="${item.key}" th:text="${item.value}" th:field="*{selectSortKey}" />
+      </label>
+    </div>
+    <div class="col-md-4">
+    </div>
+  </div>
+  
   <div class="form-row">
     <div id="chart" class="chart-container form-group col-md-12">
       <canvas id="ex_chart"></canvas>
