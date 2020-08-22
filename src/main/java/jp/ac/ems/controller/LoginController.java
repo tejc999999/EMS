@@ -10,9 +10,4 @@ public class LoginController {
 	String login() {
 		return "login";
 	}
-
-	@GetMapping(path="top")
-	String top() {
-		return "top";
-	}
 }

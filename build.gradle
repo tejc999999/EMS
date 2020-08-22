@@ -12,7 +12,7 @@ plugins {
 // プロジェクトのグループID
 group = 'jp.spring.boot.ems'
 // プロジェクトのバージョン
-version = '1.0.2-SNAPSHOT'
+version = '1.0.3-SNAPSHOT'
 // プロジェクトの説明
 description = 'EMS'
 // JDKバージョン（変数を上書きする事で実行時にバージョンを変えることが可能）

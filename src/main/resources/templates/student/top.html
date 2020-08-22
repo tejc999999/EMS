@@ -1,0 +1,51 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<!-- xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"> -->
+<head th:replace="layout :: common_layout(title = 'トップ画面', scripts = ~{::script}, links = ~{::link})">
+ </head>
+<body>
+
+<div th:replace="layout :: header"></div>
+
+<div class="able-responsive-md container">
+  <div th:object="${topForm}">
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        <p>■累計</p>
+        <p>全期間</p>
+        <p th:text="${'回答数：' + topForm.totalAnswerCnt + '問(' + topForm.totalCorrectRate + '%正解)'}">
+        <p th:text="${'回答数：' + topForm.totalAnswerCnt + '問(' + topForm.totalCorrectRate + '%正解)'}">
+        <p>【内訳】</p>
+        <p th:text="${'　・テクノロジ系/回答数：' + topForm.totalTechnorogyAnswerCnt + '問(' + topForm.totalTechnorogyCorrectRate + '%正解)'}">
+        <p th:text="${'　・マネジメント系/回答数：' + topForm.totalManagementAnswerCnt + '問(' + topForm.totalManagementCorrectRate + '%正解)'}">
+        <p th:text="*{'　・ストラテジ系/回答数：' + totalStrategyAnswerCnt + '問(' + totalStrategyCorrectRate + '%正解)'}">
+      </div>
+      <div class="form-group col-md-4">
+        <p>■今週</p>
+        <p th:if="*{weekPeriod}" th:text="*{'期間:' + weekPeriod}">
+        <p th:text="${'回答数：' + topForm.weekAnswerCnt + '問(' + topForm.weekCorrectRate + '%正解)'}">
+        <p th:text="${'回答数：' + topForm.weekAnswerCnt + '問(' + topForm.weekCorrectRate + '%正解)'}">
+        <p>【内訳】</p>
+        <p th:text="${'　・テクノロジ系/回答数：' + topForm.weekTechnorogyAnswerCnt + '問(' + topForm.weekTechnorogyCorrectRate + '%正解)'}">
+        <p th:text="${'　・マネジメント系/回答数：' + topForm.weekManagementAnswerCnt + '問(' + topForm.weekManagementCorrectRate + '%正解)'}">
+        <p th:text="*{'　・ストラテジ系/回答数：' + weekStrategyAnswerCnt + '問(' + weekStrategyCorrectRate + '%正解)'}">
+      </div>
+      <div class="form-group col-md-4">
+        <p>■前週</p>
+        <p th:if="*{prevWeekPeriod}" th:text="*{'期間:' + prevWeekPeriod}">
+        <p th:text="${'回答数：' + topForm.prevWeekAnswerCnt + '問(' + topForm.prevWeekCorrectRate + '%正解)'}">
+        <p th:text="${'回答数：' + topForm.prevWeekAnswerCnt + '問(' + topForm.prevWeekCorrectRate + '%正解)'}">
+        <p>【内訳】</p>
+        <p th:text="${'　・テクノロジ系/回答数：' + topForm.prevWeekTechnorogyAnswerCnt + '問(' + topForm.prevWeekTechnorogyCorrectRate + '%正解)'}">
+        <p th:text="${'　・マネジメント系/回答数：' + topForm.prevWeekManagementAnswerCnt + '問(' + topForm.prevWeekManagementCorrectRate + '%正解)'}">
+        <p th:text="*{'　・ストラテジ系/回答数：' + prevWeekStrategyAnswerCnt + '問(' + prevWeekStrategyCorrectRate + '%正解)'}">
+      </div>
+    </div>
+  </div>
+</div>
+
+ <div th:replace="layout :: footer"></div>
+  
+</body>
+</html>

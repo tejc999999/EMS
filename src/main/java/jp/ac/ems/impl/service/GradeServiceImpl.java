@@ -132,7 +132,7 @@ public class GradeServiceImpl  implements GradeService {
 	private GradeForm getGradeForm(GradeForm form) {
 		Map<String, Grade> gradeMap = new LinkedHashMap<>();
 		
-		// 始めに全手の問題情報を取得する（履歴ごとに問題情報を取得するとクエリ回数が増大し、クラウド料金が増えるため）
+		// 始めに全手の問題情報を取得する（履歴ごとに問題情報を取得するとクエリ回数が増大し、特にクラウド上では応答が悪化するため）
 		List<QuestionBean> questionBeanList =  questionRepository.findAll();
 	    Map<Long, QuestionBean> questionBeanMap = questionBeanList.stream().collect(HashMap::new, (m, d) -> m.put(d.getId(), d), Map::putAll);
 	    
