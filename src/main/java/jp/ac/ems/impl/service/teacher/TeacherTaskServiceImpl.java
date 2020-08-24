@@ -91,24 +91,30 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
      */
     @Autowired
     ServerProperties serverProperties;
-
+    
     /**
      * 全ての問題を取得する.
      * @return 全ての問題Formリスト
      */
     @Override
-    public List<TaskForm> findAll() {
-        List<TaskForm> list = new ArrayList<>();
-
-        for (TaskBean taskBean : taskRepository.findAll()) {
-            TaskForm taskForm = new TaskForm();
-            taskForm.setId(String.valueOf(taskBean.getId()));
-            taskForm.setTitle(taskBean.getTitle());
-            taskForm.setDescription(taskBean.getDescription());
-            list.add(taskForm);
+    public List<TaskForm> findAllByCreateUser() {
+    	
+        // 課題作成者（先生ID）を設定する
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String userId = auth.getName();
+    	
+        List<TaskForm> formList = new ArrayList<>();
+        List<TaskBean> beanList = taskRepository.findAllByTeacherId(userId);
+        if(beanList != null) {
+	        for (TaskBean taskBean : beanList) {
+	            TaskForm taskForm = new TaskForm();
+	            taskForm.setId(String.valueOf(taskBean.getId()));
+	            taskForm.setTitle(taskBean.getTitle());
+	            taskForm.setDescription(taskBean.getDescription());
+	            formList.add(taskForm);
+	        }
         }
-
-        return list;
+        return formList;
     }
     
     /**

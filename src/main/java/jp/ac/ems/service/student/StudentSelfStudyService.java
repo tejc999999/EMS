@@ -64,4 +64,10 @@ public interface StudentSelfStudyService {
      * @return 回答アイテムマップ
      */
     public Map<String,String> getAnswerSelectedItems();
+    
+    /**
+     * 自習用課題作成.
+     * @param form 自習Form
+     */
+    public void createSelfTask(SelfStudyForm form);
 }

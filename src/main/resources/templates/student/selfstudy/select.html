@@ -112,6 +112,12 @@
     </div>
   </div>
 
+  <div class="form-row">
+   	<div class="form-group col-md-12">
+		<input type="button" id="dummyCreateTaskBtn" name="createTaskBtn" class="btn btn-info btn-block" th:value="課題作成">
+    </div>
+  </div>
+
   <div th:each="questionId : *{questionList}">
     <input type="hidden" name="questionList" th:value="${questionId}" />
   </div>
@@ -120,8 +126,8 @@
 
 <script th:inline="javascript">
 window.onload = function() {
-    var allcheckobj = document.getElementById("dummyStartBtn");
-	allcheckobj.addEventListener('click', function () {
+    var startbtnobj = document.getElementById("dummyStartBtn");
+	startbtnobj.addEventListener('click', function () {
 		var questionList = /*[[${selfStudyForm.questionList}]]*/ null;
 		if(questionList != null && questionList.length != 0) {
 			var form = document.getElementById("form");
@@ -129,6 +135,22 @@ window.onload = function() {
 			var input = document.createElement('input');
 			input.setAttribute('type', 'hidden');
 			input.setAttribute('name', 'startBtn');
+			form.appendChild(input);
+			
+			form.submit();
+		} else {
+			alert("問題が選択されていません。");
+		}
+  	});
+    var createtaskobj = document.getElementById("dummyCreateTaskBtn");
+    createtaskobj.addEventListener('click', function () {
+		var questionList = /*[[${selfStudyForm.questionList}]]*/ null;
+		if(questionList != null && questionList.length != 0) {
+			var form = document.getElementById("form");
+			
+			var input = document.createElement('input');
+			input.setAttribute('type', 'hidden');
+			input.setAttribute('name', 'createTaskBtn');
 			form.appendChild(input);
 			
 			form.submit();

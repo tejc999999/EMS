@@ -1,5 +1,6 @@
 package jp.ac.ems.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -27,5 +28,12 @@ public interface TaskRepository extends JpaRepository<TaskBean, Long> {
 //    		+ " LEFT JOIN FETCH t.studentTaskQuestionHistoryBeans"
     		+ " WHERE t.id = :id")
     Optional<TaskBean> findByIdFetchTaskQuestion(@Param("id") Long id);
+    
+    /**
+     * 作成者のIDに該当する全問題リストを取得する.
+     * @param teacherId 作成者（先生）ID
+     * @return 問題リスト
+     */
+    List<TaskBean> findAllByTeacherId(String teacherId);
 
 }

@@ -1,15 +1,18 @@
 package jp.ac.ems.impl.service.student;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,16 +21,23 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
+import jp.ac.ems.bean.ClassBean;
+import jp.ac.ems.bean.CourseBean;
 import jp.ac.ems.bean.QuestionBean;
 import jp.ac.ems.bean.StudentQuestionHistoryBean;
+import jp.ac.ems.bean.StudentTaskBean;
+import jp.ac.ems.bean.TaskBean;
+import jp.ac.ems.bean.TaskQuestionBean;
 import jp.ac.ems.config.ExamDivisionCode;
 import jp.ac.ems.config.FieldLarge;
 import jp.ac.ems.config.FieldMiddle;
 import jp.ac.ems.config.FieldSmall;
 import jp.ac.ems.form.student.SelfStudyForm;
 import jp.ac.ems.form.student.SelfStudyQuestionForm;
+import jp.ac.ems.form.teacher.TaskForm;
 import jp.ac.ems.repository.QuestionRepository;
 import jp.ac.ems.repository.StudentQuestionHistoryRepository;
+import jp.ac.ems.repository.TaskRepository;
 import jp.ac.ems.service.student.StudentSelfStudyService;
 import lombok.Data;
 
@@ -50,7 +60,13 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 	 */
 	@Autowired
 	private StudentQuestionHistoryRepository studentQuestionHistoryRepository;
-	
+
+	/**
+	 * 課題リポジトリ(task repository)
+	 */
+	@Autowired
+	private TaskRepository taskRepository;
+
     /**
      * ドロップダウン項目設定(Set dropdown param).
      * @param form 自習Form(self study form)
@@ -420,6 +436,53 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
         selectMap.put("3", "ウ");
         selectMap.put("4", "エ");
         return selectMap;
+    }
+    
+    /**
+     * 自習用課題作成.
+     * @param form 自習Form
+     */
+    public void createSelfTask(SelfStudyForm form) {
+    	
+    	TaskBean taskBean = new TaskBean();
+
+        // 課題作成者（自身のID）を設定する
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String userId = auth.getName();
+        taskBean.setTeacherId(userId);
+        
+        // 課題、問題中間情報をBeanに設定する
+    	taskBean.clearTaskQuestionBean();
+        List<String> questionList = form.getQuestionList();
+        if(questionList != null) {
+        	int i = 0;
+        	for(String questionId : questionList) {
+        		
+	            TaskQuestionBean taskQuestionBean = new TaskQuestionBean();
+
+	            Optional<QuestionBean> optQuestion = questionRepository.findById(Long.valueOf(questionId));
+	            optQuestion.ifPresent(questionBean -> {
+
+		            taskQuestionBean.setQuestionId(questionBean.getId());
+	            });
+	            taskQuestionBean.setSeqNumber(Long.valueOf(i++));
+
+	            taskBean.addTaskQuestionBean(taskQuestionBean);
+        	}
+        }
+        // 問題数を設定する
+        taskBean.setQuestionSize(Long.valueOf(questionList.size()));
+        
+        // 提示先情報（ユーザ、課題中間情報）をBeanに設定する
+    	StudentTaskBean studentTaskBean = new StudentTaskBean();
+        studentTaskBean.setUserId(userId);
+        
+        taskBean.addStudentTaskBean(studentTaskBean);
+    
+	    // DBに保存する
+	    taskBean.setTitle("【自習問題】");
+	    taskBean.setDescription("【作成日】" + new SimpleDateFormat("yyyy年MM月dd日(E) H時mm分").format(new Date()));
+	    taskBean = taskRepository.save(taskBean);
     }
     
     /**

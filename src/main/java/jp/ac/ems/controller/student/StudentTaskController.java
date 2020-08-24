@@ -138,6 +138,8 @@ public class StudentTaskController {
         List<TaskQuestionForm> list = taskService.getAnsweredQuestionList(id);
         model.addAttribute("questions", list);
 
+        taskService.setGrade(model, list);
+        
         return "student/task/question_list";
     }
     

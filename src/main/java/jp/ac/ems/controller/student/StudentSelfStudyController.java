@@ -129,10 +129,10 @@ public class StudentSelfStudyController {
     	SelfStudyForm selfStudyForm = studentSelfStudyService.sortQuestionList(form);
     	model.addAttribute("selfStudyForm", selfStudyForm);
     	
-    	// ドロップダウン項目設定
-    	studentSelfStudyService.setSelectData(form, model);
-    	// チェックボックス項目設定
-    	studentSelfStudyService.setCheckItems(form, model);
+//    	// ドロップダウン項目設定
+//    	studentSelfStudyService.setSelectData(form, model);
+//    	// チェックボックス項目設定
+//    	studentSelfStudyService.setCheckItems(form, model);
     	// 1問目の問題情報を設定
     	SelfStudyQuestionForm selfStudyQuestionForm = new SelfStudyQuestionForm();
     	selfStudyQuestionForm.setQuestionList(form.getQuestionList());
@@ -143,6 +143,35 @@ public class StudentSelfStudyController {
     	// 問題回答画面へ
         return "student/selfstudy/question";
     }
+    
+    /**
+     * 出題順をソートし、課題を作成する.
+     * 
+     * @param form 自習Form(self study form)
+     * @param result エラーチェック結果(error validate result)
+     * @param model モデル(model)
+     * @return 自習問題選択用ページビュー(select self study question page view)
+     */
+    @PostMapping(path = "select", params = "createTaskBtn")
+    String createTask(@Validated SelfStudyForm form, BindingResult result,
+            Model model) {
+
+    	// 出題順序をソートする
+    	SelfStudyForm selfStudyForm = studentSelfStudyService.sortQuestionList(form);
+    	model.addAttribute("selfStudyForm", selfStudyForm);
+    	
+//    	// ドロップダウン項目設定
+//    	studentSelfStudyService.setSelectData(form, model);
+//    	// チェックボックス項目設定
+//    	studentSelfStudyService.setCheckItems(form, model);
+    	
+    	// 課題を作成
+    	studentSelfStudyService.createSelfTask(form);
+
+    	// 課題一覧画面へ
+        return "redirect:/student/task";
+    }
+    
     
     /**
      * 次の問題画面に遷移する.

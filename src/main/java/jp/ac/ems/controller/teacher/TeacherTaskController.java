@@ -47,7 +47,7 @@ public class TeacherTaskController {
     @GetMapping
     String list(Model model) {
 
-        List<TaskForm> list = taskService.findAll();
+        List<TaskForm> list = taskService.findAllByCreateUser();
 
         model.addAttribute("tasks", list);
         

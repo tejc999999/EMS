@@ -15,12 +15,18 @@ import jp.ac.ems.form.teacher.ConfirmTaskForm;
  */
 public interface TeacherTaskService {
 
-    /**
-     * 全ての問題を取得する.
-     * @return 全ての問題Formリスト
-     */
-    public List<TaskForm> findAll();
+//    /**
+//     * 全ての問題を取得する.
+//     * @return 全ての問題Formリスト
+//     */
+//    public List<TaskForm> findAll();
 
+	  /**
+	  * 作成者の問題を全て取得する.
+	  * @return 作成者の全問題Formリスト
+	  */
+	 public List<TaskForm> findAllByCreateUser();
+	
     /**
      * 課題情報を取得する.
      * @return 課題Form

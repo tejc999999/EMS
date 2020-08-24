@@ -1,7 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head th:replace="layout :: common_layout(title = '課題:問題一覧画面', scripts = ~{::script}, links = ~{::link})">
- </head>
+  <script type="text/javascript"
+	  th:src="@{/webjars/chart.js/2.9.3/dist/Chart.js}" ></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js"></script> -->
+  <style th:inline="css">
+    #ex_chart {max-width:100%;max-height: /*[[${canvasHeight}]]*/ 100%;}
+  </style>
+</head>
 <body>
 
 <div th:replace="layout :: header"></div>
@@ -9,6 +15,97 @@
 <h2>■課題:問題一覧</h2>
 <div class="able-responsive-md container">
   <div class="form-row">
+    <div id="chart" class="chart-container form-group col-md-12">
+      <canvas id="ex_chart"></canvas>
+    </div>
+  </div>
+
+<script th:inline="javascript">
+window.onload = function() {
+	var ctx = document.getElementById('ex_chart');
+	var data = {
+//	    labels: /*[[${userNameList}]]*/ ["学生A", "学生B", "学生C", "学生D", "学生E"],
+	    datasets: [
+	    	{
+	        	maxBarThickness: 40,
+	        	label: '正解数',
+	        	data: /*[[${correctGradeList}]]*/ [880, 740, 900, 520, 930],
+	        	backgroundColor: 'rgba(100, 255, 100, 1)'
+	    	},
+	    	{
+	        	maxBarThickness: 40,
+	        	label: '不正解数',
+	        	data: /*[[${incorrectGradeList}]]*/ [880, 740, 900, 520, 930],
+	        	backgroundColor: 'rgba(100, 100, 100, 1)'
+	    	}
+	    ],
+	    borderWidth: 0.1
+	};
+	
+	var options = {
+		maintainAspectRatio: false,
+	    scales: {
+	        yAxes: [{ 
+	            stacked: true,              //積み上げ棒グラフの設定
+	            xbarThickness: 10,        //棒グラフの幅
+	            scaleLabel: {            // 軸ラベル
+	                display: true,          // 表示設定
+//	                labelString: 'ユーザ名',  // ラベル
+	//                fontSize: 16         // フォントサイズ
+	            }
+	       }],
+	       xAxes: [{
+	           stacked: true,               //積み上げ棒グラフにする設定
+	           scaleLabel: {             // 軸ラベル
+	               display: false,          // 表示設定
+	               labelString: '回答数',  // ラベル
+	//               fontSize: 16          // フォントサイズ
+	           },
+	    	   ticks: {
+	               min: 0,
+	               stepSize: /*[[${xStepSize}]]*/ 0.5
+	           }
+	       }]
+	    },
+	    legend: {
+	        labels: {
+	            boxWidth:30,
+	            padding:20        //凡例の各要素間の距離
+	        },
+	        display: true
+	    },
+	    tooltips: {
+	        mode: "label",
+	        callbacks: {
+	            label: function (tooltipItem, data){
+	                var totalValue = 0;
+	                for (var i = 0; i < data.datasets.length; i++) {
+	                     totalValue += Number(data.datasets[i].data[tooltipItem.index]);
+	            	}
+	                
+	                return data.datasets[tooltipItem.datasetIndex].label
+                    + ": "
+                    + (data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] / totalValue * 100).toFixed(2)
+                    + " % ("
+                    + data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]
+                    + ")";
+	            }
+	        }
+	    }
+	};
+	
+	var ex_chart = new Chart(ctx, {
+	    type: 'horizontalBar',
+	    data: data,
+	    options: options
+	});
+	var heightparam = window.innerHeight * 0.1 * 1;	
+	// 凡例などのぶん固定幅を付与
+	heightparam = heightparam + (window.innerHeight * 0.1);
+	ctx.parentNode.style.height = heightparam + 'px';
+}
+</script> 
+    <div class="form-row">
     <div class="form-group col-md-4">
       <h3 th:text="${taskForm.title}"></h3>
     </div>
@@ -16,6 +113,7 @@
       <h3 th:text="${taskForm.description}"></h3>
     </div>
   </div>
+  
 	<table class="table table-hover table-striped">
 		<thead class="thead-dark">
           	<tr class="row">

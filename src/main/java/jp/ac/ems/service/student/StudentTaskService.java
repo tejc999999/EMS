@@ -3,6 +3,8 @@ package jp.ac.ems.service.student;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.ui.Model;
+
 import jp.ac.ems.form.student.TaskQuestionForm;
 import jp.ac.ems.form.student.TaskForm;
 
@@ -63,4 +65,12 @@ public interface StudentTaskService {
      * @return 課題Form(task form)
      */
     public TaskForm getTaskForm(String taskId);
+    
+    /**
+     * 成績グラフ情報設定.
+     * @param model モデル
+     * 
+     * @param list 課題問題Formリスト
+     */
+    public void setGrade(Model model, List<TaskQuestionForm> list);
 }

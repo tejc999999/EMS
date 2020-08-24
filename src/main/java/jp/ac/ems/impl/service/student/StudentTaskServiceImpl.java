@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import jp.ac.ems.bean.QuestionBean;
 import jp.ac.ems.bean.StudentQuestionHistoryBean;
@@ -25,6 +26,7 @@ import jp.ac.ems.config.FieldLarge;
 import jp.ac.ems.config.FieldMiddle;
 import jp.ac.ems.config.FieldSmall;
 import jp.ac.ems.form.student.TaskQuestionForm;
+import jp.ac.ems.form.GradeForm;
 import jp.ac.ems.form.student.TaskForm;
 import jp.ac.ems.repository.QuestionRepository;
 import jp.ac.ems.repository.StudentQuestionHistoryRepository;
@@ -336,6 +338,58 @@ public class StudentTaskServiceImpl implements StudentTaskService {
 		}
 
 		return list;
+	}
+	
+    /**
+     * 成績グラフ情報設定.
+     * @param model モデル
+     * 
+     * @param list 課題問題Formリスト
+     */
+	@Override
+    public void setGrade(Model model, List<TaskQuestionForm> list) {
+		
+		int correctCnt = 0;
+		int incorrectCnt = 0;
+		if(list != null) {
+			for(TaskQuestionForm taskQuestionForm : list) {
+				
+				if(taskQuestionForm.getCorrect().equals(taskQuestionForm.getAnswer())) {
+					correctCnt++;
+				} else {
+					incorrectCnt++;
+				}
+			}
+		}
+		List<String> userNameList = new ArrayList<>();
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        String userId = auth.getName();
+//		Optional<UserBean> optUser = userRepository.findById(userId);
+//		optUser.ifPresent(userBean -> {
+//			userNameList.add(userBean.getName());
+//		});
+		
+		List<String> correctList = new ArrayList<>();
+		correctList.add(String.valueOf(correctCnt));
+		List<String> incorrectList = new ArrayList<>();
+		incorrectList.add(String.valueOf(incorrectCnt));
+//		model.addAttribute("userNameList", userNameList);
+		model.addAttribute("correctGradeList", correctList);
+		model.addAttribute("incorrectGradeList", incorrectList);
+		
+		// グラフ描画領域縦幅設定
+		model.addAttribute("canvasHeight", String.valueOf(userNameList.size() * 50));
+
+		// グラフ横目盛り幅設定
+		int length = 10;
+		if((correctCnt + incorrectCnt) > 0) {
+			length = String.valueOf(correctCnt + incorrectCnt).length();
+		}
+		int xStepSize = 1;
+		if(length > 2) {
+			xStepSize = (int) Math.pow(Double.valueOf(10), Double.valueOf(length - 2));
+		}
+		model.addAttribute("xStepSize", String.valueOf(xStepSize));
 	}
 	
 	/**
