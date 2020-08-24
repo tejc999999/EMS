@@ -294,36 +294,21 @@ public class StudentTaskServiceImpl implements StudentTaskService {
     		userRepository.save(userBean);
     	});
     	
-    	// 問題履歴を更新する
+    	// 更新後の問題履歴を取得し、全ての回答について回答履歴に保存する
+    	studentTaskQuestionHistoryBeanList = studentTaskQuestionHistoryRepository.findAllByUserIdAndTaskId(userId, Long.valueOf(taskId));
     	if(studentTaskQuestionHistoryBeanList != null) {
 	    	for(StudentTaskQuestionHistoryBean studentTaskQuestionHistoryBean : studentTaskQuestionHistoryBeanList) {
-	    		
-	    		boolean correctFlg = (studentTaskQuestionHistoryBean.getAnswer() == studentTaskQuestionHistoryBean.getCorrect());
-	    		Optional<StudentQuestionHistoryBean> optStudentQHBean = studentQuestionHistoryRepository.findByUserIdAndQuestionId(userId, studentTaskQuestionHistoryBean.getQuestionId());
-	    		optStudentQHBean.ifPresentOrElse(studentQuestionHistoryBean -> {
-	    			if(studentTaskQuestionHistoryBean.getAnswer() != null && !studentTaskQuestionHistoryBean.getAnswer().equals("")) {
-		    			if(correctFlg) {
-		    				studentQuestionHistoryBean.setCorrectCnt((short)(studentQuestionHistoryBean.getCorrectCnt() + 1));
-		    			} else {
-		    				studentQuestionHistoryBean.setIncorrectCnt((short)(studentQuestionHistoryBean.getIncorrectCnt() + 1));
-		    			}
-	    			}
-	    			studentQuestionHistoryRepository.save(studentQuestionHistoryBean);
-	    		},
-	    		() -> {
-    	    		StudentQuestionHistoryBean studentQuestionHistoryBean = new StudentQuestionHistoryBean();
-	    			if(correctFlg) {
-	    				studentQuestionHistoryBean.setCorrectCnt((short)1);
-	    				studentQuestionHistoryBean.setIncorrectCnt((short)0);
-	    			} else {
-	    				studentQuestionHistoryBean.setCorrectCnt((short)0);
-	    				studentQuestionHistoryBean.setIncorrectCnt((short)1);
-	    			}
-    				studentQuestionHistoryBean.setUserId(userId);
-    				studentQuestionHistoryBean.setQuestionId(studentTaskQuestionHistoryBean.getQuestionId());
-    				studentQuestionHistoryBean.setUpdateDate(new Date());
-	    			studentQuestionHistoryRepository.save(studentQuestionHistoryBean);
-	    		});
+
+	    		StudentQuestionHistoryBean studentQuestionHistoryBean = new StudentQuestionHistoryBean();
+    			if(studentTaskQuestionHistoryBean.getAnswer() == studentTaskQuestionHistoryBean.getCorrect()) {
+    				studentQuestionHistoryBean.setCorrectFlg(true);
+    			} else {
+    				studentQuestionHistoryBean.setCorrectFlg(false);
+    			}
+				studentQuestionHistoryBean.setUserId(userId);
+				studentQuestionHistoryBean.setQuestionId(studentTaskQuestionHistoryBean.getQuestionId());
+				studentQuestionHistoryBean.setUpdateDate(new Date());
+    			studentQuestionHistoryRepository.save(studentQuestionHistoryBean);
 	    	}
     	}
     }

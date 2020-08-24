@@ -29,6 +29,7 @@ import jp.ac.ems.form.student.SelfStudyQuestionForm;
 import jp.ac.ems.repository.QuestionRepository;
 import jp.ac.ems.repository.StudentQuestionHistoryRepository;
 import jp.ac.ems.service.student.StudentSelfStudyService;
+import lombok.Data;
 
 /**
  * 学生用自習サービスクラス(self study service class for student).
@@ -177,7 +178,7 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 		}
 
 		// 条件による除外
-		List<String> questionIdForIncorrect50 = new ArrayList<>();
+		Map<String, RateData> questionIdForIncorrect50 = new LinkedHashMap<>();
 		List<String> tempRemoveQuetionId = new ArrayList<>();
 		if(form.getConditionChecked() != null && !form.getConditionChecked().equals(SelfStudyForm.CONDITION_4_KEY_ALL)) {
 
@@ -194,24 +195,43 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 				}
 				if(form.getConditionChecked().equals(SelfStudyForm.CONDITION_2_KEY_LOW_ACC_RATE)
 						|| form.getConditionChecked().equals(SelfStudyForm.CONDITION_3_KEY_MIX)) {
-					// 低回答率（50%未満）のみを別リストに退避する（正解数ゼロ、不正解数１以上の正解率0%を含む）
+					// 低回答率（50%以下）のみを別リストに退避する（正解数ゼロ、不正解数１以上の正解率0%を含む）
 					
-					if(((bean.getCorrectCnt() + bean.getIncorrectCnt()) != 0)
-							&& ((bean.getCorrectCnt() < bean.getIncorrectCnt()))) {
 			        	if(questionIdList.contains(String.valueOf(bean.getQuestionId()))) {
-			        		questionIdForIncorrect50.add(String.valueOf(bean.getQuestionId()));
+			        		
+			        		RateData rateData = null;
+			        		if(questionIdForIncorrect50.containsKey(String.valueOf(bean.getQuestionId()))) {
+			        			rateData = questionIdForIncorrect50.get(String.valueOf(bean.getQuestionId()));
+			        		} else {
+			        			rateData = new RateData();
+			        		}
+			        		if(bean.getCorrectFlg()) {
+			        			rateData.setCorrectCnt(rateData.getCorrectCnt() + 1);
+			        		} else {
+			        			rateData.setIncorrectCnt(rateData.getIncorrectCnt() + 1);
+			        		}
+			        		questionIdForIncorrect50.put(String.valueOf(bean.getQuestionId()), rateData);
 			        	}
-					}
 				}
-	        }
+			}
 	        // 低回答率が含まれるか検証するため、検証後にリストから除外する
 	        questionIdList.removeAll(tempRemoveQuetionId);
 	        
 	        if(form.getConditionChecked().equals(SelfStudyForm.CONDITION_2_KEY_LOW_ACC_RATE)) {
-	        	questionIdList = questionIdForIncorrect50;
+	        	// 一旦リストを空にする
+	        	questionIdList = new ArrayList<>();
+	        	if(questionIdForIncorrect50 != null) {
+	        		for(Map.Entry<String, RateData> entry : questionIdForIncorrect50.entrySet()) {
+	        			if(entry.getValue().getCorrectCnt() <= entry.getValue().getIncorrectCnt())
+	        				questionIdList.add(entry.getKey());
+	        		}
+	        	}
 	        } else if(form.getConditionChecked().equals(SelfStudyForm.CONDITION_3_KEY_MIX)) {
 	        	if(questionIdForIncorrect50 != null) {
-	        		questionIdList.addAll(questionIdForIncorrect50);
+	        		for(Map.Entry<String, RateData> entry : questionIdForIncorrect50.entrySet()) {
+	        			if(entry.getValue().getCorrectCnt() <= entry.getValue().getIncorrectCnt())
+	        				questionIdList.add(entry.getKey());
+	        		}
 	        	}
 	        }
 		}
@@ -369,32 +389,17 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 		// 回答履歴を保存する
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userId = auth.getName();
-
-        Optional<StudentQuestionHistoryBean> optStudentQuestionHistory = studentQuestionHistoryRepository.findByUserIdAndQuestionId(userId, Long.valueOf(questionId));
-		optStudentQuestionHistory.ifPresentOrElse(sqhBean -> {
-			if(selfStudyQuestionForm.getCorrect().equals(form.getAnswer())) {
-				sqhBean.setCorrectCnt((short) (sqhBean.getCorrectCnt() + 1));
-				sqhBean.setUpdateDate(new Date());
-			} else {
-				sqhBean.setIncorrectCnt((short) (sqhBean.getIncorrectCnt() + 1));
-				sqhBean.setUpdateDate(new Date());
-			}
-			studentQuestionHistoryRepository.save(sqhBean);
-		},
-		() -> {
-			StudentQuestionHistoryBean newSqhBean = new StudentQuestionHistoryBean();
-			if(selfStudyQuestionForm.getCorrect().equals(form.getAnswer())) {
-				newSqhBean.setCorrectCnt((short)1);
-				newSqhBean.setIncorrectCnt((short)0);
-			} else {
-				newSqhBean.setCorrectCnt((short)0);
-				newSqhBean.setIncorrectCnt((short)1);
-			}
-			newSqhBean.setQuestionId(Long.valueOf(questionId));
-			newSqhBean.setUserId(userId);
-			newSqhBean.setUpdateDate(new Date());
-			studentQuestionHistoryRepository.save(newSqhBean);
-		});
+        
+		StudentQuestionHistoryBean newSqhBean = new StudentQuestionHistoryBean();
+		if(selfStudyQuestionForm.getCorrect().equals(form.getAnswer())) {
+			newSqhBean.setCorrectFlg(true);
+		} else {
+			newSqhBean.setCorrectFlg(false);
+		}
+		newSqhBean.setQuestionId(Long.valueOf(questionId));
+		newSqhBean.setUserId(userId);
+		newSqhBean.setUpdateDate(new Date());
+		studentQuestionHistoryRepository.save(newSqhBean);
 		
 		// 履歴保存後に回答を語句に変換
 		selfStudyQuestionForm.setCorrect(convertAnsweredIdToWord(selfStudyQuestionForm.getCorrect()));
@@ -599,5 +604,18 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 				break;
 		}
 		return answeredWord;
+	}
+	
+	/**
+	 * 内部処理用クラス
+	 * @author user01
+	 *
+	 */
+	@Data
+	private class RateData {
+		
+		private int correctCnt = 0;
+		
+		private int incorrectCnt = 0;
 	}
 }

@@ -154,35 +154,50 @@ public class GradeServiceImpl  implements GradeService {
 			if((form.getSelectYear() == null || form.getSelectYear().equals("")) && (form.getSelectFieldL() == null || form.getSelectFieldL().equals(""))
 					&& (form.getSelectFieldM() == null || form.getSelectFieldM().equals("")) && (form.getSelectFieldS() == null || form.getSelectFieldS().equals(""))) {
 			// 標準抽出（全問：全年度：全分野）
-				grade.setCorrectCnt(grade.getCorrectCnt() + sqhBean.getCorrectCnt());
-				grade.setIncorrectCnt(grade.getIncorrectCnt() + sqhBean.getIncorrectCnt());
+				if(sqhBean.getCorrectFlg()) {
+					grade.setCorrectCnt(grade.getCorrectCnt() + 1);
+				} else {
+					grade.setIncorrectCnt(grade.getIncorrectCnt() + 1);
+				}
 			} else {
 				String year = questionBean.getYear() + questionBean.getTerm();
 				if(form.getSelectYear() != null && !form.getSelectYear().equals("") && form.getSelectYear().equals(year)) {
 					// (1)年度による抽出
 				
-					grade.setCorrectCnt(grade.getCorrectCnt() + sqhBean.getCorrectCnt());
-					grade.setIncorrectCnt(grade.getIncorrectCnt() + sqhBean.getIncorrectCnt());
+					if(sqhBean.getCorrectFlg()) {
+						grade.setCorrectCnt(grade.getCorrectCnt() + 1);
+					} else {
+						grade.setIncorrectCnt(grade.getIncorrectCnt() + 1);
+					}
 				} else {
 
 					// 分類による抽出
 					if(form.getSelectFieldS() != null && !form.getSelectFieldS().equals("")) {
 						// 小分類による抽出
 						if(form.getSelectFieldS().equals(String.valueOf(questionBean.getFieldSId()))) {
-							grade.setCorrectCnt(grade.getCorrectCnt() + sqhBean.getCorrectCnt());
-							grade.setIncorrectCnt(grade.getIncorrectCnt() + sqhBean.getIncorrectCnt());
+							if(sqhBean.getCorrectFlg()) {
+								grade.setCorrectCnt(grade.getCorrectCnt() + 1);
+							} else {
+								grade.setIncorrectCnt(grade.getIncorrectCnt() + 1);
+							}
 						}
 					} else if(form.getSelectFieldM() != null && !form.getSelectFieldM().equals("")) {
 						// 中分類による抽出
 						if(form.getSelectFieldM().equals(String.valueOf(questionBean.getFieldMId()))) {
-							grade.setCorrectCnt(grade.getCorrectCnt() + sqhBean.getCorrectCnt());
-							grade.setIncorrectCnt(grade.getIncorrectCnt() + sqhBean.getIncorrectCnt());
+							if(sqhBean.getCorrectFlg()) {
+								grade.setCorrectCnt(grade.getCorrectCnt() + 1);
+							} else {
+								grade.setIncorrectCnt(grade.getIncorrectCnt() + 1);
+							}
 						}
 					} else if(form.getSelectFieldL() != null && !form.getSelectFieldL().equals("")) {
 						// 大分類による抽出
 						if(form.getSelectFieldL().equals(String.valueOf(questionBean.getFieldLId()))) {
-							grade.setCorrectCnt(grade.getCorrectCnt() + sqhBean.getCorrectCnt());
-							grade.setIncorrectCnt(grade.getIncorrectCnt() + sqhBean.getIncorrectCnt());
+							if(sqhBean.getCorrectFlg()) {
+								grade.setCorrectCnt(grade.getCorrectCnt() + 1);
+							} else {
+								grade.setIncorrectCnt(grade.getIncorrectCnt() + 1);
+							}
 						}
 					}
 				}

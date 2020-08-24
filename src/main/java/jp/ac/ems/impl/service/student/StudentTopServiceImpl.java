@@ -170,22 +170,35 @@ public class StudentTopServiceImpl implements StudentTopService {
 		
 		if(fieldLId == FieldLarge.AP_FL_1_TECHNOLOGY.getId()) {
 			// テクノロジ系の場合
-			
-			data.setTechnologyCorrectCnt(data.getTechnologyCorrectCnt() + bean.getCorrectCnt());
-			data.setTechnologyIncorrectCnt(data.getTechnologyIncorrectCnt() + bean.getIncorrectCnt());
+
+			if(bean.getCorrectFlg()) {
+				data.setTechnologyCorrectCnt(data.getTechnologyCorrectCnt() + 1);
+			} else {
+				data.setTechnologyIncorrectCnt(data.getTechnologyIncorrectCnt() + 1);
+			}
 		} else if(fieldLId == FieldLarge.AP_FL_2_MANAGEMENT.getId()) {
 			// マネジメント系の場合
 			
-			data.setManagementCorrectCnt(data.getManagementCorrectCnt() + bean.getCorrectCnt());
-			data.setManagementIncorrectCnt(data.getManagementIncorrectCnt() + bean.getIncorrectCnt());
+			if(bean.getCorrectFlg()) {
+				data.setManagementCorrectCnt(data.getManagementCorrectCnt() + 1);
+			} else {
+				data.setManagementIncorrectCnt(data.getManagementIncorrectCnt() + 1);
+			}
 		} else if(fieldLId == FieldLarge.AP_FL_3_STRATEGY.getId()) {
 			// ストラテジ系の場合
 			
-			data.setStrategyCorrectCnt(data.getStrategyCorrectCnt() + bean.getCorrectCnt());
-			data.setStrategyIncorrectCnt(data.getStrategyIncorrectCnt() + bean.getIncorrectCnt());
+			if(bean.getCorrectFlg()) {
+				data.setStrategyCorrectCnt(data.getStrategyCorrectCnt() + 1);
+			} else {
+				data.setStrategyIncorrectCnt(data.getStrategyIncorrectCnt() + 1);
+			}
 		}
-		data.setCorrectCnt(data.getCorrectCnt() + bean.getCorrectCnt());
-		data.setIncorrectCnt(data.getIncorrectCnt() + bean.getIncorrectCnt());
+		
+		if(bean.getCorrectFlg()) {
+			data.setCorrectCnt(data.getCorrectCnt() + 1);
+		} else {
+			data.setIncorrectCnt(data.getIncorrectCnt() + 1);
+		}
 		
 		return data;
 	}

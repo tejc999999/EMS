@@ -46,16 +46,22 @@ public class StudentQuestionHistoryBean {
     private Long questionId;
 
     /**
-     * 正解数(correct count).
+     * 正解フラグ(correct flag).
      */
-    @Column(name = "correct_cnt")
-    private Short correctCnt;
+    @Column(name = "correct_flg")
+    private Boolean correctFlg;
     
-    /**
-     * 不正解数(incorrect count).
-     */
-    @Column(name = "incorrect_cnt")
-    private Short incorrectCnt;
+//    /**
+//     * 正解数(correct count).
+//     */
+//    @Column(name = "correct_cnt")
+//    private Short correctCnt;
+//    
+//    /**
+//     * 不正解数(incorrect count).
+//     */
+//    @Column(name = "incorrect_cnt")
+//    private Short incorrectCnt;
     
     /**
      * 更新日時(update date time).

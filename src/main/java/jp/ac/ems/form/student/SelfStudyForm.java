@@ -39,7 +39,7 @@ public class SelfStudyForm {
 
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
-	public static final String CONDITION_2_VALUE_LOW_ACC_RATE = "低正解率(50%未満)";
+	public static final String CONDITION_2_VALUE_LOW_ACC_RATE = "低正解率(50%以下)";
 
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
