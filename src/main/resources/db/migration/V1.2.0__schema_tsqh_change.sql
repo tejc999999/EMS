@@ -40,3 +40,5 @@ delimiter ;
 
 SELECT @maxid:=MAX(id) FROM t_student_question_history_temp;
 CALL insertloop(0, @maxid);
+
+DROP TABLE t_student_question_history;
