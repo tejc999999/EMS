@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head th:replace="layout :: common_layout(title = '課題回答画面', scripts = ~{::script}, links = ~{::link})">
- </head>
+  <script th:src="@{/js/canvaspen.js}"></script> 
+</head>
 <body>
 
 <div th:replace="layout :: header"></div>
@@ -45,10 +46,10 @@
   </div>
   
   <div class="form-row">
-    <div id="canvas-container" class="form-group col-md-12">
+    <div id="canvas-container" class="form-group">
       <canvas id="canvas">
-        <img id="image" th:src="@{'/images/question/' + *{questionForm.imagePath}}" alt="問題画像" class="border border-info" width=100% border=10>
       </canvas>
+      <img id="image" th:src="@{'/images/question/' + *{questionForm.imagePath}}" alt="問題画像" class="border border-info" width=100% border=10>
 	  <input type="hidden" name="id" th:value="*{id}">
 	  <input type="hidden" name="questionForm.id" th:value="*{questionForm.id}">
 	  <input type="hidden" name="questionForm.fieldLId" th:value="*{questionForm.fieldLId}">
@@ -79,108 +80,6 @@
   </div>
   </form>
 </div>
-
-<script th:inline="javascript">
-/*<![CDATA[*/
-function change_pen_color(color) {
-  let ctx = document.getElementById('canvas').getContext('2d');
-  ctx.strokeStyle = color;
-  if(color == "black") {
-    document.getElementById('btn_pen_black').style.color="#FFFFFF";
-    document.getElementById('btn_pen_blue').style.color="#000000";
-    document.getElementById('btn_pen_red').style.color="#000000";
-    document.getElementById('btn_pen_black').style.backgroundColor="#000080";
-    document.getElementById('btn_pen_blue').style.backgroundColor="#b0c4de";
-    document.getElementById('btn_pen_red').style.backgroundColor="#b0c4de";
-  } else if(color == "blue") {
-    document.getElementById('btn_pen_black').style.color="#000000";
-    document.getElementById('btn_pen_blue').style.color="#FFFFFF";
-    document.getElementById('btn_pen_red').style.color="#000000";
-    document.getElementById('btn_pen_black').style.backgroundColor="#b0c4de";
-    document.getElementById('btn_pen_blue').style.backgroundColor="#000080";
-    document.getElementById('btn_pen_red').style.backgroundColor="#b0c4de";
-  } else if(color == "red") {
-    document.getElementById('btn_pen_black').style.color="#000000";
-    document.getElementById('btn_pen_blue').style.color="#000000";
-    document.getElementById('btn_pen_red').style.color="#FFFFFF";
-    document.getElementById('btn_pen_black').style.backgroundColor="#b0c4de";
-    document.getElementById('btn_pen_blue').style.backgroundColor="#b0c4de";
-    document.getElementById('btn_pen_red').style.backgroundColor="#000080";
-  }
-}
-	
-function canvas_init() {
-  let container = document.getElementById('canvas-container');
-  let canvas = document.getElementById('canvas');
-  let ctx = canvas.getContext('2d');
-  let image = new Image(); 
-  image.src=document.getElementById('image').src;
-  canvas.width = container.clientWidth;
-  canvas.height = image.height*(canvas.width/image.width);
-  ctx.drawImage(image, 0, 0, image.width, image.height,
-  		 0, 0, canvas.width, image.height*(canvas.width/image.width));
-  ctx.rect(0, 0, canvas.width, canvas.height);
-  ctx.strokeStyle = "blue";
-  ctx.lineWidth = 1;
-  ctx.stroke();
-  change_pen_color('black');
-  document.getElementById('font_bold_pt').innerText=ctx.lineWidth+"pt";
-}
-
-window.onload = function() {
-  let ctx = document.getElementById('canvas').getContext('2d');
-  
-  canvas_init();
-
-  let isDrag = false;
-  function draw(x, y) {
-    if (!isDrag) {
-      return;
-    }
-    ctx.lineTo(x, y);
-    ctx.stroke();
-  }
-  canvas.addEventListener("mousedown", () => {
-	    ctx.globalAlpha = 0.5;
-    ctx.beginPath();
-    isDrag = true;
-  });
-  canvas.addEventListener("mouseup", () => {
-    ctx.closePath();
-    isDrag = false;
-  });
-  canvas.addEventListener("mousemove", event => {
-    draw(event.layerX, event.layerY);
-  });
-  canvas.addEventListener("touchstart", () => {
-    context.beginPath();
-    isDrag = true;
-  });
-  canvas.addEventListener("touchend", () => {
-  context.closePath();
-    isDrag = false;
-  });
-  canvas.addEventListener("touchmove", event => {
-    draw(event.layerX, event.layerY);
-  });
-}
-
-function canvas_pen_thin() {
-  let ctx = document.getElementById('canvas').getContext('2d');
-  if(ctx.lineWidth > 1) {
-    ctx.lineWidth = ctx.lineWidth - 1;
-  }
-  document.getElementById('font_bold_pt').innerText=ctx.lineWidth+"pt";
-}
-function canvas_pen_bold() {
-  let ctx = document.getElementById('canvas').getContext('2d');
-  if(ctx.lineWidth < 10) {
-    ctx.lineWidth = ctx.lineWidth + 1;
-  }
-  document.getElementById('font_bold_pt').innerText=ctx.lineWidth+"pt";
-}
-/*]]>*/
-</script>
 
 <div th:replace="layout :: footer"></div>
 </body>
