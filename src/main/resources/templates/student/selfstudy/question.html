@@ -124,7 +124,6 @@ window.onload = function() {
     ctx.stroke();
   }
   canvas.addEventListener("mousedown", () => {
-	    ctx.globalAlpha = 0.5;
     ctx.beginPath();
     isDrag = true;
   });
@@ -135,7 +134,18 @@ window.onload = function() {
   canvas.addEventListener("mousemove", event => {
     draw(event.layerX, event.layerY);
   });
-}
+  canvas.addEventListener("touchstart", () => {
+    context.beginPath();
+    isDrag = true;
+  });
+  canvas.addEventListener("touchend", () => {
+    context.closePath();
+    isDrag = false;
+  });
+  canvas.addEventListener("touchmove", event => {
+	  draw(event.layerX, event.layerY);
+  });
+ }
 
 function canvas_pen_thin() {
   let ctx = document.getElementById('canvas').getContext('2d');

@@ -152,6 +152,17 @@ window.onload = function() {
   canvas.addEventListener("mousemove", event => {
     draw(event.layerX, event.layerY);
   });
+  canvas.addEventListener("touchstart", () => {
+    context.beginPath();
+    isDrag = true;
+  });
+  canvas.addEventListener("touchend", () => {
+  context.closePath();
+    isDrag = false;
+  });
+  canvas.addEventListener("touchmove", event => {
+    draw(event.layerX, event.layerY);
+  });
 }
 
 function canvas_pen_thin() {
