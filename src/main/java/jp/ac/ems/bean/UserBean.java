@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -16,6 +17,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
+import jp.ac.ems.config.QuestionTag;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
@@ -91,7 +96,16 @@ public class UserBean {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private Set<StudentTaskQuestionHistoryBean> studentTaskQuestionHistoryBeans;
-    
+
+    /**
+     * 学生・問題タグBean：相互参照オブジェクト(user・question tag：cross reference object).
+     */
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private Set<StudentQuestionTagBean> studentQuestionTagBeans;
+
     /**
      * コンストラクタ(constructor).
      */
@@ -139,6 +153,43 @@ public class UserBean {
     }
 
     /**
+     * 特定の問題のタグ情報を取得する.
+     * 
+     * @param questionId 問題ID 
+     * @return タグIDリスト
+     */
+    public List<String> getQuestionTagList(String questionId) {
+        List<String> list = new ArrayList<>();
+        if(questionId != null) {
+	        studentQuestionTagBeans.forEach(studentQuestionTagBean -> {
+	        	if(studentQuestionTagBean.getQuestionId() != null && Long.valueOf(questionId) == studentQuestionTagBean.getQuestionId()) {
+	                list.add(String.valueOf(studentQuestionTagBean.getTagId()));
+	        	}
+	        });
+        }
+        return list;
+    }
+    
+    /**
+     * 特定のタグの問題IDリストを取得する.
+     * 
+     * @param tagId タグID 
+     * @return 問題IDリスト
+     */
+    public List<String> getQuestionIdListByTagId(Long tagId) {
+        List<String> list = new ArrayList<>();
+        if(tagId != null) {
+	        studentQuestionTagBeans.forEach(studentQuestionTagBean -> {
+	        	if(studentQuestionTagBean.getTagId() != null && tagId == studentQuestionTagBean.getTagId()) {
+	                list.add(String.valueOf(studentQuestionTagBean.getQuestionId()));
+	        	}
+	        });
+        }
+        return list;
+    }
+
+
+    /**
      * 課題回答済みマップを取得する
      * 
      * @return 課題回答済みマップ
@@ -169,7 +220,46 @@ public class UserBean {
         	}
         });
     }
+
+    /**
+     * 問題タグを更新する
+     * 
+     * @param questionId 問題ID(question id)
+     * @param tagIdList タグIDリスト(tag id list)
+     */
+    public void updateQuestionTagId(String questionId, List<String> tagIdList) {
+    	if(questionId != null) {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            String userId = auth.getName();
+
+            // 既存の該当問題タグ情報を削除する
+	    	List<StudentQuestionTagBean> removeQuestionTagBeanList = studentQuestionTagBeans
+	    		.stream()
+	    		.filter(entry -> Long.valueOf(questionId) == entry.getQuestionId())
+	    		.collect(Collectors.toList()); 
+	    	for(StudentQuestionTagBean bean : removeQuestionTagBeanList) {
+	    		studentQuestionTagBeans.remove(bean);
+    		}
+	    	// 新しく問題タグ情報を追加する
+	    	if(tagIdList != null && tagIdList.size() > 0) {
+	    		for(String tagId : tagIdList) {
+	    			StudentQuestionTagBean bean = new StudentQuestionTagBean();
+	    			bean.setUserId(userId);
+	    			bean.setQuestionId(Long.valueOf(questionId));
+	    			bean.setTagId(Long.valueOf(tagId));
+	    			studentQuestionTagBeans.add(bean);
+	    		}
+	    	}
+    	}
+    }
     
+    
+    /**
+     * 回答済み課題取得用内部クラス
+     * 
+     * @author user01-m
+     *
+     */
     @Data
     public class AnswerFlgAndUpdateDate {
     	private boolean answerFlg;

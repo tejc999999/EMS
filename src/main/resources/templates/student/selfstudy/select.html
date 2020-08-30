@@ -69,17 +69,23 @@
   <div class="row form-inline pb-3">
     <div class="col-md-3" th:each="item : ${conditionCheckItems}">
       <label class="radio-inline float-left">
-        <input type="radio" name="conditionChecked" th:value="${item.key}" th:text="${item.value}" th:field="*{conditionChecked}" />
+        <input type="radio" name="conditionChecked" th:value="${item.key}" th:text="${item.value}" th:field="*{conditionChecked}" th:checked="${item.key.equals(selfStudyForm.conditionChecked)}" />
       </label>
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-md-12">
+  <div class="row form-inline pb-3">
+    <div class="col-md-2" th:each="item : ${questionTagItems}">
+      <label class="checkbox-inline float-left" th:id="${'tag' + item.key}">
+        <input type="checkbox" name="questionTag" th:value="${item.key}" th:text="${item.value}" th:field="*{questionTag}"/>
+      </label>
+    </div>    
+    <div class="col-md-2">
       <label class="float-left">
         <input type="checkbox" name="latestFlg" th:value="${true}" th:text="'直近6回'" th:field="*{latestFlg}" />
       </label>
     </div>
+    
   </div>
 
   <div class="form-row">
@@ -158,9 +164,12 @@ window.onload = function() {
 			alert("問題が選択されていません。");
 		}
   	});
+
+	document.getElementById("tag1").style.color = "red";
+	document.getElementById("tag2").style.color = "green";
+	document.getElementById("tag3").style.color = "blue";
 }
 </script>
-
 <div th:replace="layout :: footer"></div>
   
 </body>

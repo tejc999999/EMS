@@ -99,13 +99,33 @@ public class SelfStudyForm {
      */
     private List<String> questionList;
     
+    /**
+     * ソート順
+     */
     private Map<String, String> sortCheckItems;
     
+    /**
+     * 選択条件
+     */
     private Map<String, String> conditionCheckItems;
     
-    private String conditionChecked;
+    /**
+     * 選択条件：選択
+     */
+    private String conditionChecked = CONDITION_4_KEY_ALL;
     
+    /**
+     * 最新フラグ
+     */
     private boolean latestFlg;
 
+    /**
+     * ソート順：選択
+     */
     private String sortChecked;
+    
+    /**
+     * 問題タグ
+     */
+    private List<String> questionTag;
 }

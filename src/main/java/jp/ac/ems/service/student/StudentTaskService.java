@@ -6,6 +6,8 @@ import java.util.Map;
 import org.springframework.ui.Model;
 
 import jp.ac.ems.form.student.TaskQuestionForm;
+import jp.ac.ems.form.student.SelfStudyForm;
+import jp.ac.ems.form.student.SelfStudyQuestionForm;
 import jp.ac.ems.form.student.TaskForm;
 
 /**
@@ -73,4 +75,18 @@ public interface StudentTaskService {
      * @param list 課題問題Formリスト
      */
     public void setGrade(Model model, List<TaskQuestionForm> list);
+    
+    /**
+     * 問題タグアイテム取得.
+     * 
+     * @return 問題タグアイテムマップ
+     */
+    public Map<String, String> getQuestionTagSelectedItems();
+
+    /**
+     * 問題タグ情報保存.
+     * 
+     * @param form 課題Form
+     */
+    public void saveQuestionTag(TaskForm form);
 }

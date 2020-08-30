@@ -153,7 +153,10 @@ public class StudentTaskController {
     	TaskForm taskForm = taskService.getTaskFormToSetQuestionForm(taskId, questionId, 0);
     	model.addAttribute("taskForm", taskForm);
     	model.addAttribute("answerSelectedItems", taskService.getAnswerSelectedItems());
-    	
+
+    	// タグ情報をセット
+    	model.addAttribute("questionTagItems", taskService.getQuestionTagSelectedItems());
+
         return "student/task/question_confirm";
     }
     
@@ -164,11 +167,16 @@ public class StudentTaskController {
     @PostMapping(path = "question_confirm", params="prevBtn")
     public String prevQuestionConfirm(TaskForm form, Model model) {
 
+    	// 確認画面から次の問題を描画する場合、タグの更新を行う
+    	taskService.saveQuestionTag(form);
+    	
     	// 次の問題をセットする
     	TaskForm taskForm = taskService.getTaskFormToSetQuestionForm(form.getId(), form.getQuestionForm().getId(), -1);
     	
     	model.addAttribute("taskForm", taskForm);
     	model.addAttribute("answerSelectedItems", taskService.getAnswerSelectedItems());
+    	// タグ情報をセット
+    	model.addAttribute("questionTagItems", taskService.getQuestionTagSelectedItems());
 
         return "student/task/question_confirm";
     }
@@ -180,11 +188,16 @@ public class StudentTaskController {
     @PostMapping(path = "question_confirm", params="nextBtn")
     public String nextQuestionConfirm(TaskForm form, Model model) {
 
+    	// 確認画面から次の問題を描画する場合、タグの更新を行う
+    	taskService.saveQuestionTag(form);
+    	
     	// 前の問題をセットする
     	TaskForm taskForm = taskService.getTaskFormToSetQuestionForm(form.getId(), form.getQuestionForm().getId(),  1);
     	
     	model.addAttribute("taskForm", taskForm);
     	model.addAttribute("answerSelectedItems", taskService.getAnswerSelectedItems());
+    	// タグ情報をセット
+    	model.addAttribute("questionTagItems", taskService.getQuestionTagSelectedItems());
 
         return "student/task/question_confirm";
     }
@@ -196,6 +209,9 @@ public class StudentTaskController {
     @PostMapping(path = "question_confirm", params="backPageBtn")
     public String backBtnQuestionConfirm(TaskForm form, Model model) {
 
+    	// 確認画面から次の問題を描画する場合、タグの更新を行う
+    	taskService.saveQuestionTag(form);
+    	
     	// 課題-問題一覧画面に戻る
         return questionAnsweredList(form.getId(), model);
     }

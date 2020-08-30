@@ -59,11 +59,25 @@ public interface StudentSelfStudyService {
 	public SelfStudyQuestionForm getQuestionAndAnswer(SelfStudyQuestionForm form, int number);
 
     /**
-     * 回答アイテム取得
+     * 回答アイテム取得.
      * 
      * @return 回答アイテムマップ
      */
-    public Map<String,String> getAnswerSelectedItems();
+    public Map<String, String> getAnswerSelectedItems();
+    
+    /**
+     * 問題タグアイテム取得.
+     * 
+     * @return 問題タグアイテムマップ
+     */
+    public Map<String, String> getQuestionTagSelectedItems();
+
+    /**
+     * 問題タグ情報保存.
+     * 
+     * @param form 自習問題Form
+     */
+    public void saveQuestionTag(SelfStudyQuestionForm form);
     
     /**
      * 自習用課題作成.

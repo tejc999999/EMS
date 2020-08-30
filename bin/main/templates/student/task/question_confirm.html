@@ -22,6 +22,15 @@
       <h4 th:text="*{questionForm.questionFieldInfoStr}"></h4>
     </div>
   </div>
+  
+  <div class="row form-inline pb-3">
+    <div class="col-md-2" th:each="item : ${questionTagItems}">
+      <label class="checkbox-inline float-left" th:id="${'tag' + item.key}">
+        <input type="checkbox" name="questionForm.questionTag" th:value="${item.key}" th:text="${item.value}" th:field="*{questionForm.questionTag}"/>
+      </label>
+    </div>    
+  </div>
+  
   <div class="form-row">
     <div class="form-group col-md-12">
       <h4 th:text="${'課題 第' + taskForm.questionForm.taskNumber + ' / ' + taskForm.questionSize + '問'}"></h4>
@@ -81,6 +90,15 @@
   </div>
   </form>
 </div>
+
+<script th:inline="javascript">
+window.onload = function() {
+	document.getElementById("tag1").style.color = "red";
+	document.getElementById("tag2").style.color = "green";
+	document.getElementById("tag3").style.color = "blue";
+}
+</script>
+
 <div th:replace="layout :: footer"></div>
 </body>
 </html>

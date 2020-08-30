@@ -71,6 +71,7 @@ public interface UserRepository extends JpaRepository<UserBean, String> {
     		+ " LEFT JOIN FETCH u.studentCourseBeans"
     		+ " LEFT JOIN FETCH u.studentTaskBeans"
     		+ " LEFT JOIN FETCH u.studentTaskQuestionHistoryBeans"
+    		+ " LEFT JOIN FETCH u.studentQuestionTagBeans"
     		+ " WHERE u.id = :id")
     Optional<UserBean> findByIdFetchAll(@Param("id") String id);
 

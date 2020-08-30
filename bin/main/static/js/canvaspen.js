@@ -58,9 +58,6 @@ window.onload = function() {
 	
   canvas_init();
 }
-//PCとスマホで画像読込タイミングとwindow完了タイミングが異なるため、２か所で初期化を行う
-//document.getElementById('image').addEventListener("load", canvas_init, false);
-//window.setTimeout(canvas_init, 1000);
 
 function canvas_init() {
   let container = document.getElementById('canvas-container');

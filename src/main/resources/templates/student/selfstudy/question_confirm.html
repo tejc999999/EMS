@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head th:replace="layout :: common_layout(title = '自習回答確認画面', scripts = ~{::script}, links = ~{::link})">
- </head>
+</head>
 <body>
 
 <div th:replace="layout :: header"></div>
@@ -16,6 +16,13 @@
     <div class="form-group col-md-8">
       <h4 th:text="*{questionFieldInfoStr}"></h4>
     </div>
+  </div>
+  <div class="row form-inline pb-3">
+    <div class="col-md-2" th:each="item : ${questionTagItems}">
+      <label class="checkbox-inline float-left" th:id="${'tag' + item.key}">
+        <input type="checkbox" name="questionTag" th:value="${item.key}" th:text="${item.value}" th:field="*{questionTag}"/>
+      </label>
+    </div>    
   </div>
   <div class="form-row">
     <div class="form-group col-md-12">
@@ -59,6 +66,16 @@
   </div>
   </form>
 </div>
+
+<script th:inline="javascript">
+window.onload = function() {
+	document.getElementById("tag1").style.color = "red";
+	document.getElementById("tag2").style.color = "green";
+	document.getElementById("tag3").style.color = "blue";
+}
+</script>
+
+
 <div th:replace="layout :: footer"></div>
 </body>
 </html>

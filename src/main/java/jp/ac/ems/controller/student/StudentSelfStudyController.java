@@ -1,11 +1,14 @@
 package jp.ac.ems.controller.student;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -27,12 +30,13 @@ public class StudentSelfStudyController {
 	@Autowired
 	StudentSelfStudyService studentSelfStudyService;
 	
-//    /**
-//     * モデルにフォームをセットする(set form the model).
-//     * @return 自習Form(self study form)
-//     */
+    /**
+     * モデルにフォームをセットする(set form the model).
+     * @return 自習Form(self study form)
+     */
 //    @ModelAttribute
 //    SelfStudyForm setupForm() {
+//    	// 自習課題選択時初期設定（条件：全てのラジオボタンのデフォルトオン）
 //        return new SelfStudyForm();
 //    }
     
@@ -51,9 +55,10 @@ public class StudentSelfStudyController {
     	
     	// ドロップダウン項目設定
     	studentSelfStudyService.setSelectData(form, model);
-        
     	// チェックボックス項目設定
     	studentSelfStudyService.setCheckItems(form, model);
+    	// タグ情報をセット
+    	model.addAttribute("questionTagItems", studentSelfStudyService.getQuestionTagSelectedItems());
     	
         // 入力値保持
         model.addAttribute("selfStudyForm", form);
@@ -106,9 +111,10 @@ public class StudentSelfStudyController {
     	
     	// ドロップダウン項目設定
     	studentSelfStudyService.setSelectData(form, model);
-    	
     	// チェックボックス項目設定
     	studentSelfStudyService.setCheckItems(form, model);
+    	// タグ情報をセット
+    	model.addAttribute("questionTagItems", studentSelfStudyService.getQuestionTagSelectedItems());
 
         return "student/selfstudy/select";
     }
@@ -185,6 +191,9 @@ public class StudentSelfStudyController {
     String startSelfStudyQuestion(@Validated SelfStudyQuestionForm form, BindingResult result,
             Model model) {
     	
+    	// 確認画面から次の問題を描画する場合、タグの更新を行う
+    	studentSelfStudyService.saveQuestionTag(form);
+    	
     	// 次の問題情報を設定
     	model.addAttribute("selfStudyQuestionForm", studentSelfStudyService
     			.getQuestion(form, form.getSelectQuestionNumber() + 1));
@@ -208,6 +217,8 @@ public class StudentSelfStudyController {
     	
     	// 問題情報を設定
     	model.addAttribute("selfStudyQuestionForm", studentSelfStudyService.getQuestionAndAnswer(form, form.getSelectQuestionNumber()));
+    	// タグ情報をセット
+    	model.addAttribute("questionTagItems", studentSelfStudyService.getQuestionTagSelectedItems());
     	// 解答群を設定
     	model.addAttribute("answerSelectedItems", studentSelfStudyService.getAnswerSelectedItems());
 

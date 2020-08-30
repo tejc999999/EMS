@@ -28,16 +28,20 @@ import jp.ac.ems.bean.StudentQuestionHistoryBean;
 import jp.ac.ems.bean.StudentTaskBean;
 import jp.ac.ems.bean.TaskBean;
 import jp.ac.ems.bean.TaskQuestionBean;
+import jp.ac.ems.bean.UserBean;
 import jp.ac.ems.config.ExamDivisionCode;
 import jp.ac.ems.config.FieldLarge;
 import jp.ac.ems.config.FieldMiddle;
 import jp.ac.ems.config.FieldSmall;
+import jp.ac.ems.config.QuestionTag;
 import jp.ac.ems.form.student.SelfStudyForm;
 import jp.ac.ems.form.student.SelfStudyQuestionForm;
 import jp.ac.ems.form.teacher.TaskForm;
 import jp.ac.ems.repository.QuestionRepository;
+import jp.ac.ems.repository.QuestionTagRepository;
 import jp.ac.ems.repository.StudentQuestionHistoryRepository;
 import jp.ac.ems.repository.TaskRepository;
+import jp.ac.ems.repository.UserRepository;
 import jp.ac.ems.service.student.StudentSelfStudyService;
 import lombok.Data;
 
@@ -49,6 +53,12 @@ import lombok.Data;
 @Service
 public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 
+	/**
+	 * ユーザーリポジトリ(user repository)
+	 */
+	@Autowired
+	private UserRepository userRepository;
+	
 	/**
 	 * 問題リポジトリ(quesiton repository)
 	 */
@@ -66,7 +76,7 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 	 */
 	@Autowired
 	private TaskRepository taskRepository;
-
+	
     /**
      * ドロップダウン項目設定(Set dropdown param).
      * @param form 自習Form(self study form)
@@ -252,6 +262,39 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 	        }
 		}
 		
+		if(form.getQuestionTag() != null && form.getQuestionTag().size() > 0) {
+			// タグによる選択
+
+        	List<String> tagQuestionIdList = new ArrayList<>();
+	        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	        String userId = auth.getName();
+
+	        List<UserBean> userBeanList = new ArrayList<>();
+	        Optional<UserBean> optUser = userRepository.findById(userId);
+	        optUser.ifPresent(userBean -> {
+	        	userBeanList.add(userBean);
+	        });
+	        if(userBeanList.size() > 0) {
+	        	UserBean userBean = userBeanList.get(0);
+	        	List<String> tagIdList = form.getQuestionTag();
+	        	for(String tagId : tagIdList) {
+        			List<String> list = userBean.getQuestionIdListByTagId(Long.valueOf(tagId));
+        			if(list != null && list.size() > 0) {
+        				tagQuestionIdList.addAll(list);
+        			}
+	        	}
+	        }
+	        
+	        // タグによる選択と一致し、かつそれ以前の条件に合致する問題のみ残す
+	        List<String> tempQuestionIdList = new ArrayList<>();
+        	for(String questionId : tagQuestionIdList) {
+        		if(questionIdList.contains(questionId)) {
+        			tempQuestionIdList.add(questionId);
+        		}
+        	}
+			questionIdList = tempQuestionIdList;
+		}
+		
 		if(form.isLatestFlg()) {
 			// 直近6回分だけにする
 			
@@ -399,8 +442,12 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 	@Override
 	public SelfStudyQuestionForm getQuestionAndAnswer(SelfStudyQuestionForm form, int number) {
 		
+		// 問題情報をセットする
 		SelfStudyQuestionForm selfStudyQuestionForm = getSelfStudyQuestionForm(form, number);
+		// タグ情報をセットする
         String questionId = form.getQuestionList().get(number);
+        List<String> tagIdList = getQuestionTagList(questionId);
+		selfStudyQuestionForm.setQuestionTag(tagIdList);
 
 		// 回答履歴を保存する
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -424,6 +471,20 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 	}
 	
     /**
+     * 問題タグアイテム取得
+     * 
+     * @return 問題タグアイテムマップ
+     */
+	@Override
+    public Map<String, String> getQuestionTagSelectedItems() {
+        Map<String, String> selectMap = new LinkedHashMap<String, String>();
+        selectMap.put(String.valueOf(QuestionTag.QUESTION_TAG_1_TAG_RED.getId()), QuestionTag.QUESTION_TAG_1_TAG_RED.getName());
+        selectMap.put(String.valueOf(QuestionTag.QUESTION_TAG_2_TAG_GREEN.getId()), QuestionTag.QUESTION_TAG_2_TAG_GREEN.getName());
+        selectMap.put(String.valueOf(QuestionTag.QUESTION_TAG_3_TAG_BLUE.getId()), QuestionTag.QUESTION_TAG_3_TAG_BLUE.getName());
+        return selectMap;
+	}
+	
+    /**
      * 回答アイテム取得
      * 
      * @return 回答アイテムマップ
@@ -442,6 +503,7 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
      * 自習用課題作成.
      * @param form 自習Form
      */
+    @Override
     public void createSelfTask(SelfStudyForm form) {
     	
     	TaskBean taskBean = new TaskBean();
@@ -484,12 +546,84 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 	    taskBean.setDescription("【作成日】" + new SimpleDateFormat("yyyy年MM月dd日(E) H時mm分").format(new Date()));
 	    taskBean = taskRepository.save(taskBean);
     }
+
+    /**
+     * 問題タグ情報保存.
+     * 
+     * @param form 自習問題Form
+     */
+    @Override
+    public void saveQuestionTag(SelfStudyQuestionForm form) {
+
+		List<UserBean> userBeanList = new ArrayList<UserBean>();
+		// 一旦ユーザー情報を削除
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String userId = auth.getName();
+        String questionId = form.getQuestionList().get(form.getSelectQuestionNumber());
+        Optional<UserBean> optUser = userRepository.findById(userId);
+        optUser.ifPresent(userBean -> {
+        	userBeanList.add(userBean);
+        });
+    	
+    	List<String> tagIdList = form.getQuestionTag();
+    	if(tagIdList != null && tagIdList.size() > 0) {
+    		// 問題タグあり
+    		if(userBeanList.size() > 0) {
+	            UserBean userBean = userBeanList.get(0);
+	    		// 一旦ユーザー情報を削除
+	        	userRepository.delete(userBean);
+	            // タグ情報を更新したユーザー情報を登録
+	            userBean.updateQuestionTagId(questionId, tagIdList);
+	            userRepository.save(userBean);
+    		}
+    	} else {
+    		// 問題タグなし:タグ情報がある場合のみ更新（削除）
+
+    		List<String> tagList = userBeanList.get(0).getQuestionTagList(questionId);
+    		if(tagList != null && tagList.size() > 0) {
+
+    			if(userBeanList.size() > 0) {
+    	            UserBean userBean = userBeanList.get(0);
+		    		// 一旦ユーザー情報を削除
+		        	userRepository.delete(userBean);
+		            // タグ情報を更新したユーザー情報を登録
+		            userBean.updateQuestionTagId(questionId, tagIdList);
+		            userRepository.save(userBean);
+    			}
+    		}
+    	}
+    }
     
     /**
+     * 問題タグをFormにセットする.
      * 
-     * @param form
-     * @param number
-     * @return
+     * @param form 自習問題Form
+     * @return 自習問題Form
+     */
+    private List<String> getQuestionTagList(String questionId) {
+    	
+    	List<String> list = new ArrayList<String>();
+    	
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String userId = auth.getName();
+        
+        Optional<UserBean> optUser = userRepository.findById(userId);
+        optUser.ifPresent(userBean -> {
+			List<String> tagIdList = userBean.getQuestionTagList(questionId);
+			if(tagIdList != null && tagIdList.size() > 0) {
+				list.addAll(tagIdList);
+        	}
+        });
+        
+    	return list;
+    }
+    
+    /**
+     * 指定番号の問題情報を取得し、Formにセットする.
+     * 
+     * @param form 自習問題Form
+     * @param number 問題の指定番号
+     * @return 自習問題Form
      */
     private SelfStudyQuestionForm getSelfStudyQuestionForm(SelfStudyQuestionForm form, int number) {
     	

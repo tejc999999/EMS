@@ -1,5 +1,7 @@
 package jp.ac.ems.form.student;
 
+import java.util.List;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -83,4 +85,9 @@ public class QuestionForm {
      * 問題分野情報文字列
      */
     private String questionFieldInfoStr;
+    
+    /**
+     * 問題タグ
+     */
+    private List<String> questionTag;
 }

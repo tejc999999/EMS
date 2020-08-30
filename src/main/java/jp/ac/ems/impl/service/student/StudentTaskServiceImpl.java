@@ -25,8 +25,10 @@ import jp.ac.ems.config.ExamDivisionCode;
 import jp.ac.ems.config.FieldLarge;
 import jp.ac.ems.config.FieldMiddle;
 import jp.ac.ems.config.FieldSmall;
+import jp.ac.ems.config.QuestionTag;
 import jp.ac.ems.form.student.TaskQuestionForm;
 import jp.ac.ems.form.GradeForm;
+import jp.ac.ems.form.student.SelfStudyQuestionForm;
 import jp.ac.ems.form.student.TaskForm;
 import jp.ac.ems.repository.QuestionRepository;
 import jp.ac.ems.repository.StudentQuestionHistoryRepository;
@@ -196,11 +198,13 @@ public class StudentTaskServiceImpl implements StudentTaskService {
 	    	String positionStr = String.valueOf(Integer.valueOf(currentPosition) + position);
 	    	questionId = questionMap.get(positionStr);
     	}
- 		
  		TaskQuestionForm questionForm = getAnsweredQuestionForm(taskId, questionId);
-
  		questionForm.setCorrect(convertAnsweredIdToWord(questionForm.getCorrect()));
-		
+
+		// タグ情報をセットする
+        List<String> tagIdList = getQuestionTagList(questionId);
+        questionForm.setQuestionTag(tagIdList);
+
 		form.setQuestionForm(questionForm);
 
     	return form;
@@ -336,8 +340,23 @@ public class StudentTaskServiceImpl implements StudentTaskService {
 			
 			list.add(questionForm);
 		}
+		
+		// 課題番号順でソートする
+		List<TaskQuestionForm> sortList = new ArrayList<>();
+		if(list != null) {
+			Map<Integer, TaskQuestionForm> sortMap = new HashMap<>();
+			for(TaskQuestionForm form : list) {
+				sortMap.put(Integer.valueOf(form.getNumber()), form);
+			}
+	    	List<Integer> sortNumList = sortMap.keySet().stream().sorted().collect(Collectors.toList());
+	    	if(sortNumList != null) {
+	    		for(Integer num : sortNumList) {
+	    			sortList.add(sortMap.get(num));
+	    		}
+	    	}
+		}
 
-		return list;
+		return sortList;
 	}
 	
     /**
@@ -391,6 +410,91 @@ public class StudentTaskServiceImpl implements StudentTaskService {
 		}
 		model.addAttribute("xStepSize", String.valueOf(xStepSize));
 	}
+	
+    /**
+     * 問題タグアイテム取得.
+     * 
+     * @return 問題タグアイテムマップ
+     */
+	@Override
+    public Map<String, String> getQuestionTagSelectedItems() {
+        Map<String, String> selectMap = new LinkedHashMap<String, String>();
+        selectMap.put(String.valueOf(QuestionTag.QUESTION_TAG_1_TAG_RED.getId()), QuestionTag.QUESTION_TAG_1_TAG_RED.getName());
+        selectMap.put(String.valueOf(QuestionTag.QUESTION_TAG_2_TAG_GREEN.getId()), QuestionTag.QUESTION_TAG_2_TAG_GREEN.getName());
+        selectMap.put(String.valueOf(QuestionTag.QUESTION_TAG_3_TAG_BLUE.getId()), QuestionTag.QUESTION_TAG_3_TAG_BLUE.getName());
+        return selectMap;
+	}
+	
+    /**
+     * 問題タグ情報保存.
+     * 
+     * @param form 課題Form
+     */
+    @Override
+    public void saveQuestionTag(TaskForm form) {
+
+		List<UserBean> userBeanList = new ArrayList<UserBean>();
+		// 一旦ユーザー情報を削除
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String userId = auth.getName();
+        String questionId = form.getQuestionForm().getId();
+        Optional<UserBean> optUser = userRepository.findById(userId);
+        optUser.ifPresent(userBean -> {
+        	userBeanList.add(userBean);
+        });
+    	
+    	List<String> tagIdList = form.getQuestionForm().getQuestionTag();
+    	if(tagIdList != null && tagIdList.size() > 0) {
+    		// 問題タグあり
+    		if(userBeanList.size() > 0) {
+	            UserBean userBean = userBeanList.get(0);
+	    		// 一旦ユーザー情報を削除
+	        	userRepository.delete(userBean);
+	            // タグ情報を更新したユーザー情報を登録
+	            userBean.updateQuestionTagId(questionId, tagIdList);
+	            userRepository.save(userBean);
+    		}
+    	} else {
+    		// 問題タグなし:タグ情報がある場合のみ更新（削除）
+
+    		List<String> tagList = userBeanList.get(0).getQuestionTagList(questionId);
+    		if(tagList != null && tagList.size() > 0) {
+
+    			if(userBeanList.size() > 0) {
+    	            UserBean userBean = userBeanList.get(0);
+		    		// 一旦ユーザー情報を削除
+		        	userRepository.delete(userBean);
+		            // タグ情報を更新したユーザー情報を登録
+		            userBean.updateQuestionTagId(questionId, tagIdList);
+		            userRepository.save(userBean);
+    			}
+    		}
+    	}
+    }
+	
+    /**
+     * 問題タグをFormにセットする.
+     * 
+     * @param form 自習問題Form
+     * @return 自習問題Form
+     */
+    private List<String> getQuestionTagList(String questionId) {
+    	
+    	List<String> list = new ArrayList<String>();
+    	
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String userId = auth.getName();
+        
+        Optional<UserBean> optUser = userRepository.findById(userId);
+        optUser.ifPresent(userBean -> {
+			List<String> tagIdList = userBean.getQuestionTagList(questionId);
+			if(tagIdList != null && tagIdList.size() > 0) {
+				list.addAll(tagIdList);
+        	}
+        });
+        
+    	return list;
+    }
 	
 	/**
 	 * 回答IDを語句に置き換える(Convert answered id to word).
@@ -451,11 +555,11 @@ public class StudentTaskServiceImpl implements StudentTaskService {
     		questionMap.putAll(taskBean.getQuestionIdSeqMap());
     	});
     	String position = questionMap
-    									.entrySet()
-    									.stream()
-    									.filter(entry -> questionId.equals(entry.getValue()))
-    									.map(Map.Entry::getKey)
-    									.findFirst().get();
+    			.entrySet()
+    			.stream()
+    			.filter(entry -> questionId.equals(entry.getValue()))
+    			.map(Map.Entry::getKey)
+    			.findFirst().get();
 		questionForm.setTaskNumber(String.valueOf(Integer.parseInt(position) + 1));
 		
 		// 回答履歴がある場合、回答をコピーする
