@@ -1,9 +1,53 @@
 window.onload = function() {
   document.getElementById('image').style.display = "none";
   var isDrag = false;
+  var isActivePen = false;
   var x = 0, y = 0;
   var ctx = document.getElementById('canvas').getContext('2d');
 
+  function penactivetoggle() {
+	if(!isActivePen) {
+	  isActivePen = true;
+      let canvas = document.getElementById('canvas');
+      canvas.addEventListener("mousedown", mousedown, false);
+      canvas.addEventListener("mouseup", mouseup, false);
+      canvas.addEventListener("mousemove", mousemove, false);
+      canvas.addEventListener("touchstart", touchstart, false);
+      canvas.addEventListener("touchend", touchend, false);
+      canvas.addEventListener("touchmove", touchmove, false);
+      
+      let pentooldiv = document.getElementsByClassName('pen_tool_div');
+      for (let i = 0, len = pentooldiv.length; i < len; i++) {
+    	  pentooldiv[i].style.display = "block";
+      }
+      
+	} else {
+		isActivePen = false;
+	    let canvas = document.getElementById('canvas');
+	    canvas.removeEventListener("mousedown", mousedown, false);
+	    canvas.removeEventListener("mouseup", mouseup, false);
+	    canvas.removeEventListener("mousemove", mousemove, false);
+	    canvas.removeEventListener("touchstart", touchstart, false);
+	    canvas.removeEventListener("touchend", touchend, false);
+	    canvas.removeEventListener("touchmove", touchmove, false);
+
+        let pentooldiv = document.getElementsByClassName('pen_tool_div');
+        for (let i = 0, len = pentooldiv.length; i < len; i++) {
+      	  pentooldiv[i].style.display = "none";
+        }
+	}
+  }
+  
+  let penactivebtn = document.getElementById('pen_active_btn');
+  penactivebtn.addEventListener("mousedown", penactivetoggle, false);
+  let canvas = document.getElementById('canvas');
+  
+  canvas_init();
+  let pentooldiv = document.getElementsByClassName('pen_tool_div');
+  for (let i = 0, len = pentooldiv.length; i < len; i++) {
+	  pentooldiv[i].style.display = "none";
+  }
+  
   function mousedown(event) {
     ctx.beginPath();
     isDrag = true;
@@ -47,16 +91,6 @@ window.onload = function() {
     event.preventDefault();
     event.stopPropagation();
   }
-
-  let canvas = document.getElementById('canvas');
-  canvas.addEventListener("mousedown", mousedown, false);
-  canvas.addEventListener("mouseup", mouseup, false);
-  canvas.addEventListener("mousemove", mousemove, false);
-  canvas.addEventListener("touchstart", touchstart, false);
-  canvas.addEventListener("touchend", touchend, false);
-  canvas.addEventListener("touchmove", touchmove, false);
-	
-  canvas_init();
 }
 
 function canvas_init() {
