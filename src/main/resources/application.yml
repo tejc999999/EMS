@@ -6,6 +6,10 @@
 # JDBCデータソースurlの後方に?useUnicode=true&characterEncoding=utf8を付与することでUnicode(文字)を使ってUTF-8(符号化)を指定しないと文字化ける
 
 spring:
+  messages:
+    basename: messages, i18n/messages
+    cache-duration: -1
+    encoding: UTF-8
   batch:
     # db initialize enable(always/embedded/never)
     initialize-schema: always

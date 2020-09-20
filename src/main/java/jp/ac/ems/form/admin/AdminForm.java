@@ -1,6 +1,7 @@
 package jp.ac.ems.form.admin;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import jp.ac.ems.config.RoleCode;
@@ -24,6 +25,7 @@ public class AdminForm {
      */
 	@NotNull
 	@Size(min=6, max=20)
+	@Pattern(regexp = "^[a-zA-Z0-9]*$", message="{error.id.pattern.unmatch}")
     String id;
 
     /**

@@ -320,7 +320,7 @@ public class StudentTaskServiceImpl implements StudentTaskService {
     }
 
     /**
-     * 回答済み課題一覧を取得する(Get answered question list).
+     * 回答済み課題の問題一覧を取得する(Get answered question list).
      * @param taskId 課題ID(task id)
      */
 	@Override
@@ -341,19 +341,12 @@ public class StudentTaskServiceImpl implements StudentTaskService {
 			list.add(questionForm);
 		}
 		
-		// 課題番号順でソートする
+		// 問題番号順でソートする
 		List<TaskQuestionForm> sortList = new ArrayList<>();
 		if(list != null) {
-			Map<Integer, TaskQuestionForm> sortMap = new HashMap<>();
-			for(TaskQuestionForm form : list) {
-				sortMap.put(Integer.valueOf(form.getNumber()), form);
-			}
-	    	List<Integer> sortNumList = sortMap.keySet().stream().sorted().collect(Collectors.toList());
-	    	if(sortNumList != null) {
-	    		for(Integer num : sortNumList) {
-	    			sortList.add(sortMap.get(num));
-	    		}
-	    	}
+			sortList = list.stream()
+			        .sorted(Comparator.comparingInt(v -> Integer.valueOf(v.getTaskNumber())))
+			        .collect(Collectors.toList());
 		}
 
 		return sortList;
