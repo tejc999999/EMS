@@ -34,6 +34,7 @@ import jp.ac.ems.repository.StudentTaskQuestionHistoryRepository;
 import jp.ac.ems.repository.TaskRepository;
 import jp.ac.ems.repository.UserRepository;
 import jp.ac.ems.service.teacher.TeacherTaskService;
+import jp.ac.ems.service.util.JPCalenderEncoder;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -700,28 +701,29 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
 
     	// 問題情報文字列を作成し、Formにセットする    	
     	StringBuffer questionInfoStrBuff = new StringBuffer();
-    	int yearInt = Integer.valueOf(questionForm.getYear());
-    	String termStr = questionForm.getTerm();
-    	if(yearInt < 2019) {
-    		questionInfoStrBuff.append("平成");
-    		questionInfoStrBuff.append(yearInt - 1988 + "年");
-    	} else if(yearInt == 2019) {
-    		if("H".equals(termStr)) {
-        		questionInfoStrBuff.append("平成");
-        		questionInfoStrBuff.append(yearInt - 1988 + "年");
-    		} else if("A".equals(termStr)) {
-        		questionInfoStrBuff.append("令和元年");
-    		}
-    	} else if(yearInt > 2020) {
-    		questionInfoStrBuff.append("令和");
-    		questionInfoStrBuff.append(yearInt - 2019 + "年");
-    	}
-    	if("H".equals(termStr)) {
-    		questionInfoStrBuff.append("春");
-    	} else if("A".equals(termStr)) {
-    		questionInfoStrBuff.append("秋");
-    	}
-    	
+//    	int yearInt = Integer.valueOf(questionForm.getYear());
+//    	String termStr = questionForm.getTerm();
+//    	if(yearInt < 2019) {
+//    		questionInfoStrBuff.append("平成");
+//    		questionInfoStrBuff.append(yearInt - 1988 + "年");
+//    	} else if(yearInt == 2019) {
+//    		if("H".equals(termStr)) {
+//        		questionInfoStrBuff.append("平成");
+//        		questionInfoStrBuff.append(yearInt - 1988 + "年");
+//    		} else if("A".equals(termStr)) {
+//        		questionInfoStrBuff.append("令和元年");
+//    		}
+//    	} else if(yearInt > 2020) {
+//    		questionInfoStrBuff.append("令和");
+//    		questionInfoStrBuff.append(yearInt - 2019 + "年");
+//    	}
+//    	if("H".equals(termStr)) {
+//    		questionInfoStrBuff.append("春");
+//    	} else if("A".equals(termStr)) {
+//    		questionInfoStrBuff.append("秋");
+//    	}
+
+    	questionInfoStrBuff.append(JPCalenderEncoder.getInstance().convertJpCalender(questionForm.getYear(), questionForm.getTerm()));
 		questionInfoStrBuff.append("期 問" + questionForm.getNumber());
     	questionForm.setQuestionInfoStr(questionInfoStrBuff.toString());
     	
@@ -748,31 +750,32 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
     		// 年度
     		keyBuff.append(questionBean.getYear());
     		
-    		int yearInt = Integer.valueOf(questionBean.getYear());
+//    		int yearInt = Integer.valueOf(questionBean.getYear());
     		String termStr = questionBean.getTerm();
-        	if(yearInt < 2019) {
-        		valueBuff.append("平成");
-        		valueBuff.append(yearInt - 1988 + "年");
-        	} else if(yearInt == 2019) {
-        		if("H".equals(termStr)) {
-        			valueBuff.append("平成");
-        			valueBuff.append(yearInt - 1988 + "年");
-        		} else if("A".equals(termStr)) {
-        			valueBuff.append("令和元年");
-        		}
-        	} else if(yearInt > 2020) {
-        		valueBuff.append("令和");
-        		valueBuff.append(yearInt - 2019 + "年");
-        	}
+//        	if(yearInt < 2019) {
+//        		valueBuff.append("平成");
+//        		valueBuff.append(yearInt - 1988 + "年");
+//        	} else if(yearInt == 2019) {
+//        		if("H".equals(termStr)) {
+//        			valueBuff.append("平成");
+//        			valueBuff.append(yearInt - 1988 + "年");
+//        		} else if("A".equals(termStr)) {
+//        			valueBuff.append("令和元年");
+//        		}
+//        	} else if(yearInt > 2020) {
+//        		valueBuff.append("令和");
+//        		valueBuff.append(yearInt - 2019 + "年");
+//        	}
     		// 期
     		if("H".equals(termStr)) {
     			keyBuff.append("H");
-    			valueBuff.append("春");
+//    			valueBuff.append("春");
     		} else {
     			keyBuff.append("A");
-    			valueBuff.append("秋");
+//    			valueBuff.append("秋");
     		}
    			
+        	valueBuff.append(JPCalenderEncoder.getInstance().convertJpCalender(questionBean.getYear(), termStr));
    			map.put(keyBuff.toString(), valueBuff.toString());
     	}
     	return map;
@@ -833,28 +836,30 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
     	for(QuestionBean questionBean : questionBeanList) {
     		StringBuffer valueBuff = new StringBuffer();
     		// 年度
-    		int yearInt = Integer.valueOf(questionBean.getYear());
-    		String termStr = questionBean.getTerm();
-        	if(yearInt < 2019) {
-        		valueBuff.append("平成");
-        		valueBuff.append(yearInt - 1988 + "年");
-        	} else if(yearInt == 2019) {
-        		if("H".equals(termStr)) {
-        			valueBuff.append("平成");
-        			valueBuff.append(yearInt - 1988 + "年");
-        		} else if("A".equals(termStr)) {
-        			valueBuff.append("令和元年");
-        		}
-        	} else if(yearInt > 2020) {
-        		valueBuff.append("令和");
-        		valueBuff.append(yearInt - 2019 + "年");
-        	}
-    		// 期
-    		if("H".equals(questionBean.getTerm())) {
-    			valueBuff.append("春");
-    		} else {
-    			valueBuff.append("秋");
-    		}
+//    		int yearInt = Integer.valueOf(questionBean.getYear());
+//    		String termStr = questionBean.getTerm();
+//        	if(yearInt < 2019) {
+//        		valueBuff.append("平成");
+//        		valueBuff.append(yearInt - 1988 + "年");
+//        	} else if(yearInt == 2019) {
+//        		if("H".equals(termStr)) {
+//        			valueBuff.append("平成");
+//        			valueBuff.append(yearInt - 1988 + "年");
+//        		} else if("A".equals(termStr)) {
+//        			valueBuff.append("令和元年");
+//        		}
+//        	} else if(yearInt > 2020) {
+//        		valueBuff.append("令和");
+//        		valueBuff.append(yearInt - 2019 + "年");
+//        	}
+//    		// 期
+//    		if("H".equals(questionBean.getTerm())) {
+//    			valueBuff.append("春");
+//    		} else {
+//    			valueBuff.append("秋");
+//    		}
+        	valueBuff.append(JPCalenderEncoder.getInstance().convertJpCalender(questionBean.getYear(), questionBean.getTerm()));
+    		
     		// 問番
    			valueBuff.append("問" + questionBean.getNumber());
    			

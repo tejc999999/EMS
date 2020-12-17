@@ -43,6 +43,7 @@ import jp.ac.ems.repository.StudentQuestionHistoryRepository;
 import jp.ac.ems.repository.TaskRepository;
 import jp.ac.ems.repository.UserRepository;
 import jp.ac.ems.service.student.StudentSelfStudyService;
+import jp.ac.ems.service.util.JPCalenderEncoder;
 import lombok.Data;
 
 /**
@@ -656,27 +657,29 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 		
     	// 問題情報文字列を作成し、Formにセットする
     	StringBuffer questionInfoStrBuff = new StringBuffer();
-    	int yearInt = Integer.valueOf(selfStudyQuestionForm.getYear());
-    	String termStr = selfStudyQuestionForm.getTerm();
-    	if(yearInt < 2019) {
-    		questionInfoStrBuff.append("平成");
-    		questionInfoStrBuff.append(yearInt - 1988 + "年");
-    	} else if(yearInt == 2019) {
-    		if("H".equals(termStr)) {
-        		questionInfoStrBuff.append("平成");
-        		questionInfoStrBuff.append(yearInt - 1988 + "年");
-    		} else if("A".equals(termStr)) {
-        		questionInfoStrBuff.append("令和元年");
-    		}
-    	} else if(yearInt > 2020) {
-    		questionInfoStrBuff.append("令和");
-    		questionInfoStrBuff.append(yearInt - 2019 + "年");
-    	}
-    	if("H".equals(termStr)) {
-    		questionInfoStrBuff.append("春");
-    	} else if("A".equals(termStr)) {
-    		questionInfoStrBuff.append("秋");
-    	}
+//    	int yearInt = Integer.valueOf(selfStudyQuestionForm.getYear());
+//    	String termStr = selfStudyQuestionForm.getTerm();
+//    	if(yearInt < 2019) {
+//    		questionInfoStrBuff.append("平成");
+//    		questionInfoStrBuff.append(yearInt - 1988 + "年");
+//    	} else if(yearInt == 2019) {
+//    		if("H".equals(termStr)) {
+//        		questionInfoStrBuff.append("平成");
+//        		questionInfoStrBuff.append(yearInt - 1988 + "年");
+//    		} else if("A".equals(termStr)) {
+//        		questionInfoStrBuff.append("令和元年");
+//    		}
+//    	} else if(yearInt > 2020) {
+//    		questionInfoStrBuff.append("令和");
+//    		questionInfoStrBuff.append(yearInt - 2019 + "年");
+//    	}
+//    	if("H".equals(termStr)) {
+//    		questionInfoStrBuff.append("春");
+//    	} else if("A".equals(termStr)) {
+//    		questionInfoStrBuff.append("秋");
+//    	}
+    	questionInfoStrBuff.append(JPCalenderEncoder.getInstance().convertJpCalender(selfStudyQuestionForm.getYear(), selfStudyQuestionForm.getTerm()));
+    	
 		questionInfoStrBuff.append("期 問" + selfStudyQuestionForm.getNumber());
 		selfStudyQuestionForm.setQuestionInfoStr(questionInfoStrBuff.toString());
     	
@@ -703,32 +706,33 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
     		// 年度
     		keyBuff.append(questionBean.getYear());
     		
-    		int yearInt = Integer.valueOf(questionBean.getYear());
+//    		int yearInt = Integer.valueOf(questionBean.getYear());
     		String termStr = questionBean.getTerm();
-        	if(yearInt < 2019) {
-        		valueBuff.append("平成");
-        		valueBuff.append(yearInt - 1988 + "年");
-        	} else if(yearInt == 2019) {
-        		if("H".equals(termStr)) {
-        			valueBuff.append("平成");
-        			valueBuff.append(yearInt - 1988 + "年");
-        		} else if("A".equals(termStr)) {
-        			valueBuff.append("令和元年");
-        		}
-        	} else if(yearInt > 2020) {
-        		valueBuff.append("令和");
-        		valueBuff.append(yearInt - 2019 + "年");
-        	}
-    		// 期
+//        	if(yearInt < 2019) {
+//        		valueBuff.append("平成");
+//        		valueBuff.append(yearInt - 1988 + "年");
+//        	} else if(yearInt == 2019) {
+//        		if("H".equals(termStr)) {
+//        			valueBuff.append("平成");
+//        			valueBuff.append(yearInt - 1988 + "年");
+//        		} else if("A".equals(termStr)) {
+//        			valueBuff.append("令和元年");
+//        		}
+//        	} else if(yearInt > 2020) {
+//        		valueBuff.append("令和");
+//        		valueBuff.append(yearInt - 2019 + "年");
+//        	}
+//    		// 期
     		if("H".equals(termStr)) {
     			keyBuff.append("H");
-    			valueBuff.append("春");
+//    			valueBuff.append("春");
     		} else {
     			keyBuff.append("A");
-    			valueBuff.append("秋");
+//    			valueBuff.append("秋");
     		}
-   			
-   			map.put(keyBuff.toString(), valueBuff.toString());
+    		valueBuff.append(JPCalenderEncoder.getInstance().convertJpCalender(questionBean.getYear(), termStr));
+    		
+    		map.put(keyBuff.toString(), valueBuff.toString());
     	}
     	return map;
     }

@@ -28,6 +28,7 @@ import jp.ac.ems.repository.QuestionRepository;
 import jp.ac.ems.repository.StudentQuestionHistoryRepository;
 import jp.ac.ems.repository.UserRepository;
 import jp.ac.ems.service.PersonalGradeService;
+import jp.ac.ems.service.util.JPCalenderEncoder;
 import lombok.Data;
 
 /**
@@ -263,31 +264,33 @@ public class PersonalGradeServiceImpl  implements PersonalGradeService {
     		// 年度
     		keyBuff.append(questionBean.getYear());
     		
-    		int yearInt = Integer.valueOf(questionBean.getYear());
+//    		int yearInt = Integer.valueOf(questionBean.getYear());
     		String termStr = questionBean.getTerm();
-        	if(yearInt < 2019) {
-        		valueBuff.append("平成");
-        		valueBuff.append(yearInt - 1988 + "年");
-        	} else if(yearInt == 2019) {
-        		if("H".equals(termStr)) {
-        			valueBuff.append("平成");
-        			valueBuff.append(yearInt - 1988 + "年");
-        		} else if("A".equals(termStr)) {
-        			valueBuff.append("令和元年");
-        		}
-        	} else if(yearInt > 2020) {
-        		valueBuff.append("令和");
-        		valueBuff.append(yearInt - 2019 + "年");
-        	}
+//        	if(yearInt < 2019) {
+//        		valueBuff.append("平成");
+//        		valueBuff.append(yearInt - 1988 + "年");
+//        	} else if(yearInt == 2019) {
+//        		if("H".equals(termStr)) {
+//        			valueBuff.append("平成");
+//        			valueBuff.append(yearInt - 1988 + "年");
+//        		} else if("A".equals(termStr)) {
+//        			valueBuff.append("令和元年");
+//        		}
+//        	} else if(yearInt > 2020) {
+//        		valueBuff.append("令和");
+//        		valueBuff.append(yearInt - 2019 + "年");
+//        	}
     		// 期
     		if("H".equals(termStr)) {
     			keyBuff.append("H");
-    			valueBuff.append("春");
+//    			valueBuff.append("春");
     		} else {
     			keyBuff.append("A");
-    			valueBuff.append("秋");
+//    			valueBuff.append("秋");
     		}
     		
+        	valueBuff.append(JPCalenderEncoder.getInstance().convertJpCalender(questionBean.getYear(), termStr));
+
    			map.put(keyBuff.toString(), valueBuff.toString());
     	}
     	return map;
