@@ -44,6 +44,7 @@ import jp.ac.ems.repository.TaskRepository;
 import jp.ac.ems.repository.UserRepository;
 import jp.ac.ems.service.student.StudentSelfStudyService;
 import jp.ac.ems.service.util.JPCalenderEncoder;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
@@ -298,54 +299,87 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 		
 		if(form.isLatestFlg()) {
 			// 直近6回分だけにする
+			List<YearAndTermData> latestYearAndTermList = new ArrayList<>();
 			
+    		// 直近6回に該当する年度、期を取得する
+	    	for(QuestionBean questionBean : questionRepository.findDistinctYearAndTerm()) {
+	    		// 全年度、期を取得
+	    		latestYearAndTermList.add(new YearAndTermData(Integer.valueOf(questionBean.getYear()), questionBean.getTerm()));
+	    	}
+	    	// 年度の降順、期の昇順でソート
+	    	latestYearAndTermList = latestYearAndTermList.stream()
+	    			.sorted(Comparator.comparing(YearAndTermData::getYear, Comparator.reverseOrder())
+	    					.thenComparing(YearAndTermData::getTerm))
+	    			.collect(Collectors.toList());
+	    	// 先頭から6個だけ取得
+	    	if(latestYearAndTermList.size() > 6) {
+	    		latestYearAndTermList = latestYearAndTermList.subList(0, 6);
+	    	}
+	    	
 			List<String> removeQuestionIdList = new ArrayList<>();
 			for(String questionId : questionIdList) {
 				// 直近6回より前の問題を除外する
+				
 				// TODO:問い合わせ回数軽減策検討
+				int latestLastYear = latestYearAndTermList.get(latestYearAndTermList.size() - 1).getYear();
+				String latestLastTerm = latestYearAndTermList.get(latestYearAndTermList.size() - 1).getTerm();
 				Optional<QuestionBean> optQuestion = questionRepository.findById(Long.valueOf(questionId));
 				optQuestion.ifPresent(questionBean -> {
+
+					if((latestLastYear > Integer.valueOf(questionBean.getYear()))
+							|| (latestLastYear == Integer.valueOf(questionBean.getYear())
+									&&("A".equals(latestLastTerm) && "H".equals(questionBean.getTerm())))){
+						// 直近の年度、期の6回分に該当しない場合は削除する
+						// 【条件】(1)と(2)はOR
+						// (1)年度：直近6回分で最も古い年度より前の年度
+						// (2)年度：直近6回分で最も古い年度と同じ　AND
+						//      期：直近6回分で最も古いものの期が'A'で問題の方が'H'
+						removeQuestionIdList.add(String.valueOf(questionBean.getId()));
+					}
+					
 					// ※中止試験があった場合、コード修正が必要
-					int yearInt = Integer.valueOf(questionBean.getYear());
-					String termStr = questionBean.getTerm();
-					int nowYearInt = Calendar.getInstance().get(Calendar.YEAR);
-					int nowMonthInt = Calendar.getInstance().get(Calendar.MONTH);
-					if(nowYearInt >= 2013 && nowMonthInt > 10) {
-						// 2020春試験（中止）の影響なし
-						if(nowMonthInt < 5) {
-							// (1-4月)春試験：年度後
-							if((nowYearInt - yearInt) > 3) {
-								removeQuestionIdList.add(String.valueOf(questionBean.getId()));
-							}
-						} else if(nowMonthInt > 10) {
-							// (11-12月)春試験：年度前
-							if((nowYearInt - yearInt) > 2) {
-								removeQuestionIdList.add(String.valueOf(questionBean.getId()));
-							}
-						} else if(nowMonthInt < 11) {
-							// (5-10月)秋試験:
-							if(((nowYearInt - yearInt) > 3) || ((nowYearInt - yearInt) == 3) && "H".equals(termStr)) {
-								removeQuestionIdList.add(String.valueOf(questionBean.getId()));
-							}
-						}
-					} else {
-						// 2020春試験（中止）の影響あり
-						if(nowMonthInt < 5) {
-							// (1-4月)春試験：年度後
-							if(((nowYearInt - yearInt) > 4) || ((nowYearInt - yearInt) == 4) && "H".equals(termStr)) {
-								removeQuestionIdList.add(String.valueOf(questionBean.getId()));
-							}
-						} else if(nowMonthInt > 10) {
-							// (11-12月)春試験：年度前
-							if(((nowYearInt - yearInt) > 3) || ((nowYearInt - yearInt) == 3) && "H".equals(termStr)) {
-								removeQuestionIdList.add(String.valueOf(questionBean.getId()));
-							}
-						} else if(nowMonthInt < 11) {
-							// (5-10月)秋試験:
-							if((nowYearInt - yearInt) > 3) {
-								removeQuestionIdList.add(String.valueOf(questionBean.getId()));
-							}
-						}					}
+					// 現在年月から過去6回を抽出する処理（破棄）
+//					int yearInt = Integer.valueOf(questionBean.getYear());
+//					String termStr = questionBean.getTerm();
+//					int nowYearInt = Calendar.getInstance().get(Calendar.YEAR);
+//					int nowMonthInt = Calendar.getInstance().get(Calendar.MONTH);
+//					if(nowYearInt >= 2013 && nowMonthInt > 10) {
+//						// 2020春試験（中止）の影響なし
+//						if(nowMonthInt < 5) {
+//							// (1-4月)春試験：年度後
+//							if((nowYearInt - yearInt) > 3) {
+//								removeQuestionIdList.add(String.valueOf(questionBean.getId()));
+//							}
+//						} else if(nowMonthInt > 10) {
+//							// (11-12月)春試験：年度前
+//							if((nowYearInt - yearInt) > 2) {
+//								removeQuestionIdList.add(String.valueOf(questionBean.getId()));
+//							}
+//						} else if(nowMonthInt < 11) {
+//							// (5-10月)秋試験:
+//							if(((nowYearInt - yearInt) > 3) || ((nowYearInt - yearInt) == 3) && "H".equals(termStr)) {
+//								removeQuestionIdList.add(String.valueOf(questionBean.getId()));
+//							}
+//						}
+//					} else {
+//						// 2020春試験（中止）の影響あり
+//						if(nowMonthInt < 5) {
+//							// (1-4月)春試験：年度後
+//							if(((nowYearInt - yearInt) > 4) || ((nowYearInt - yearInt) == 4) && "H".equals(termStr)) {
+//								removeQuestionIdList.add(String.valueOf(questionBean.getId()));
+//							}
+//						} else if(nowMonthInt > 10) {
+//							// (11-12月)春試験：年度前
+//							if(((nowYearInt - yearInt) > 3) || ((nowYearInt - yearInt) == 3) && "H".equals(termStr)) {
+//								removeQuestionIdList.add(String.valueOf(questionBean.getId()));
+//							}
+//						} else if(nowMonthInt < 11) {
+//							// (5-10月)秋試験:
+//							if((nowYearInt - yearInt) > 3) {
+//								removeQuestionIdList.add(String.valueOf(questionBean.getId()));
+//							}
+//						}
+//					}
 				});
 			}
 			questionIdList.removeAll(removeQuestionIdList);
@@ -808,15 +842,53 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 	}
 	
 	/**
-	 * 内部処理用クラス
+	 * 
+	 * @param yearAndTermDataList
+	 * @param questionBean
+	 * @return
+	 */
+	private boolean containsYearAndTermData(List<YearAndTermData> yearAndTermDataList, QuestionBean questionBean) {
+		
+		return true;
+	}
+	
+	/**
+	 * 年度、期情報クラス
+	 * 
+	 * @author user-01
+	 *
+	 */
+	@Data
+	@AllArgsConstructor
+	private class YearAndTermData {
+		
+		/**
+		 * 年度
+		 */
+		private int year;
+		
+		/**
+		 * 期
+		 */
+		private String Term;
+	}
+	
+	/**
+	 * 正解、不正解情報クラス
 	 * @author user01
 	 *
 	 */
 	@Data
 	private class RateData {
 		
+		/**
+		 * 正解数
+		 */
 		private int correctCnt = 0;
 		
+		/**
+		 * 不正解数
+		 */
 		private int incorrectCnt = 0;
 	}
 }
