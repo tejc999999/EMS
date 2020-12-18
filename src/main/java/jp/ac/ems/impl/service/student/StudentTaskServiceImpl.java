@@ -569,28 +569,6 @@ public class StudentTaskServiceImpl implements StudentTaskService {
 
     	// 問題情報文字列を作成し、Formにセットする    	
     	StringBuffer questionInfoStrBuff = new StringBuffer();
-//    	int yearInt = Integer.valueOf(questionForm.getYear());
-//    	String termStr = questionForm.getTerm();
-//    	if(yearInt < 2019) {
-//    		questionInfoStrBuff.append("平成");
-//    		questionInfoStrBuff.append(yearInt - 1988 + "年");
-//    	} else if(yearInt == 2019) {
-//    		if("H".equals(termStr)) {
-//        		questionInfoStrBuff.append("平成");
-//        		questionInfoStrBuff.append(yearInt - 1988 + "年");
-//    		} else if("A".equals(termStr)) {
-//        		questionInfoStrBuff.append("令和元年");
-//    		}
-//    	} else if(yearInt > 2020) {
-//    		questionInfoStrBuff.append("令和");
-//    		questionInfoStrBuff.append(yearInt - 2019 + "年");
-//    	}
-//    	if("H".equals(termStr)) {
-//    		questionInfoStrBuff.append("春");
-//    	} else if("A".equals(termStr)) {
-//    		questionInfoStrBuff.append("秋");
-//    	}
-    	
     	questionInfoStrBuff.append(JPCalenderEncoder.getInstance().convertJpCalender(questionForm.getYear(), questionForm.getTerm()));
 		questionInfoStrBuff.append("期 問" + questionForm.getNumber());
     	questionForm.setQuestionInfoStr(questionInfoStrBuff.toString());

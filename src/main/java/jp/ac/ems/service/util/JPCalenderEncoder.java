@@ -3,6 +3,7 @@ package jp.ac.ems.service.util;
 import java.time.chrono.JapaneseDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoField;
+import java.util.Locale;
 
 /**
  * 西暦、和暦変換クラス
@@ -45,9 +46,9 @@ public class JPCalenderEncoder {
 			jpCalenderStrBuff.append("令和元年");
 		} else  {
 			JapaneseDate japaneseDate = JapaneseDate.of(yearInt, 1, 1);
-			DateTimeFormatter kanjiFormatter = DateTimeFormatter.ofPattern("G");
-			String jpCal = kanjiFormatter.format(japaneseDate);
-//			Era era = japaneseDate.getEra();
+			// 元号を日本語（漢字）出力
+			DateTimeFormatter jpFormatter = DateTimeFormatter.ofPattern("G", Locale.JAPAN);
+			String jpCal = jpFormatter.format(japaneseDate);
 			int yearOfJpCal = japaneseDate.get(ChronoField.YEAR_OF_ERA);
 			
 			jpCalenderStrBuff.append(jpCal);

@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head th:replace="layout :: common_layout(title = '自習回答画面', scripts = ~{::script}, links = ~{::link})">
   <script th:src="@{/js/canvaspen.js}"></script> 
+  <link href="../static/css/canvas.css" th:href="@{/css/canvas.css}" rel="stylesheet"></link>
 </head>
 <body>
 
