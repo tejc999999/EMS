@@ -21,7 +21,7 @@
     </div>
   </div>
 
-  <div class="form-row">
+  <div class="form-row" id="writeButton">
     <button type="button" id="pen_active_btn" class="btn btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">
       書き込み
     </button>
@@ -56,12 +56,10 @@
     </div>
   </div>
   
-  
-  <div class="form-row mt-5">
-    <div class="form-check form-check-inline col-md-3 m-0 p-0" th:each="answerItem : ${answerSelectedItems}">
-      <input class="form-check-input" type="radio" name="answer" th:id="${answerItem.key}" th:value="${answerItem.key}" th:checked="${answerItem.key.equals(selfStudyQuestionForm.answer)}" >
-      <label class="form-check-label" th:text="${answerItem.value}" th:for="${answerItem.key}"></label>
-    </div>
+  <div class="btn-group btn-group-toggle" data-toggle="buttons" style="width: 100%;">
+    <label class="btn mybtn-secondary" th:each="answerItem : ${answerSelectedItems}">
+      <input type="radio" name="answer" th:id="${answerItem.key}" th:value="${answerItem.key}" th:checked="${answerItem.key.equals(selfStudyQuestionForm.answer)}" th:text="${answerItem.value}" autocomplete="off"></label>
+    </label>
   </div>
   
   <div class="form-row  mt-5">
