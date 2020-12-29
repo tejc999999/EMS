@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head th:replace="layout :: common_layout(title = '課題回答確認画面', scripts = ~{::script}, links = ~{::link})">
+  <link href="../static/css/canvas.css" th:href="@{/css/canvas.css}" rel="stylesheet"></link>
  </head>
 <body>
 
@@ -59,16 +60,12 @@
     </div>
   </div>
   
-  <div class="form-row mt-5">
-    <div class="form-check form-check-inline col-md-3 m-0 p-0" th:each="answerItem : ${answerSelectedItems}">
-      <input class="form-check-input" type="radio" name="questionForm.answer" th:value="${answerItem.key}" th:checked="${answerItem.key.equals(taskForm.questionForm.answer)}" disabled />
-      <font th:if="${answerItem.key.equals(taskForm.questionForm.answer)}" style="border-bottom: solid 4px red;">
-        <label class="form-check-label" th:text="${answerItem.value}"></label>
-      </font>
-      <font th:if="${!answerItem.key.equals(taskForm.questionForm.answer)}">
-        <label class="form-check-label" th:text="${answerItem.value}"></label>
-      </font>
-    </div>
+  <div class="btn-group btn-group-toggle" data-toggle="buttons" style="width: 100%;">
+    <label class="btn mybtn-secondary" th:each="answerItem : ${answerSelectedItems}">
+      <input type="radio" name="questionForm.answer" th:value="${answerItem.key}" th:checked="${answerItem.key.equals(taskForm.questionForm.answer)}" autocomplete="off" disabled/>
+      <label th:if="${answerItem.key.equals(taskForm.questionForm.answer)}" th:text="${answerItem.value}" style="border-bottom: solid 3px #ff0000;"></label>
+      <label th:if="${!answerItem.key.equals(taskForm.questionForm.answer)}" th:text="${answerItem.value}" ></label>
+    </label>
   </div>
   
   <div class="form-row  mt-5">

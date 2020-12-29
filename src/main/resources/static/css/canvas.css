@@ -11,6 +11,16 @@ canvas{
     width: 100%;
     height: 100%;
 }
+.mybtn-secondary {
+    color: #fff;
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+.mybtn-secondary:not(:disabled):not(.disabled).active, .mybtn-secondary:not(:disabled):not(.disabled):active, .show>.mybtn-secondary.dropdown-toggle {
+    color: #fff;
+    background-color: #17a2b8;
+    border-color: #4e555b;
+}
 
 @media screen and ( max-width:500px) {
     /*　画面サイズが500pxまではここを読み込む　*/
