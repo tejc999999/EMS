@@ -57,7 +57,7 @@
   </div>
   
   <div class="btn-group btn-group-toggle" data-toggle="buttons" style="width: 100%;">
-    <label class="btn btn-secondary" th:each="answerItem : ${answerSelectedItems}">
+    <label class="btn mybtn-secondary" th:each="answerItem : ${answerSelectedItems}">
       <input type="radio" name="answer" th:id="${answerItem.key}" th:value="${answerItem.key}" th:checked="${answerItem.key.equals(selfStudyQuestionForm.answer)}" th:text="${answerItem.value}" autocomplete="off"></label>
     </label>
   </div>

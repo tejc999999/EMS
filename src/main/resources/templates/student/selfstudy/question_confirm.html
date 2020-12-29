@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head th:replace="layout :: common_layout(title = '自習回答確認画面', scripts = ~{::script}, links = ~{::link})">
+<link href="../static/css/canvas.css" th:href="@{/css/canvas.css}" rel="stylesheet"></link>
 </head>
 <body>
 
@@ -49,7 +50,7 @@
   
 
   <div class="btn-group btn-group-toggle" data-toggle="buttons" style="width: 100%;">
-    <label class="btn btn-secondary" th:each="answerItem : ${answerSelectedItems}">
+    <label class="btn mybtn-secondary" th:each="answerItem : ${answerSelectedItems}">
       <input type="radio" name="questionForm.answer" th:value="${answerItem.key}" th:checked="${answerItem.key.equals(selfStudyQuestionForm.answer)}" autocomplete="off" disabled/>
       <label th:if="${answerItem.key.equals(selfStudyQuestionForm.answer)}" th:text="${answerItem.value}" style="border-bottom: solid 3px #ff0000;"></label>
       <label th:if="${!answerItem.key.equals(selfStudyQuestionForm.answer)}" th:text="${answerItem.value}" ></label>
