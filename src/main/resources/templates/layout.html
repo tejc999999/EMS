@@ -7,9 +7,6 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width">
-  <!-- /* 各画面専用のCSSを定義 */ -->
-  <!-- /* ${変数}について?で存在条件分岐をかけて、:以降のelse部分に_(処理なしトークン)を記述 */ -->
-  <th:block th:replace="${links} ?: _"/>
   <!-- /* 各画面専用のjavascriptを定義 */ -->
   <th:block th:replace="${scripts} ?: _" />
 
@@ -22,6 +19,11 @@
     th:href="@{/webjars/bootstrap/4.5.0/css/bootstrap.min.css}" />
   <script th:src="@{/webjars/jquery/3.4.0/jquery.slim.min.js}" type="text/javascript" charset="utf-8"></script>
   <script th:src="@{/webjars/bootstrap/4.5.0/js/bootstrap.bundle.min.js}" type="text/javascript" charset="utf-8"></script>
+
+  <!-- /* 各画面専用のCSSを定義 */ -->
+  <!-- /* ${変数}について?で存在条件分岐をかけて、:以降のelse部分に_(処理なしトークン)を記述 */ -->
+  <th:block th:replace="${links} ?: _"/>
+  
   <style type="text/css">
 .dropdown:hover .dropdown-menu {
     display: block;
