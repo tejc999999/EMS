@@ -35,6 +35,7 @@ import jp.ac.ems.repository.TaskRepository;
 import jp.ac.ems.repository.UserRepository;
 import jp.ac.ems.service.teacher.TeacherTaskService;
 import jp.ac.ems.service.util.JPCalenderEncoder;
+import lombok.Data;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -515,27 +516,52 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
     		targetStudentAnsweredMap.putAll(taskBean.getStudentAnsweredMap());
     	});
     	
-    	// 学生ごとの回答数を取得する
-    	Map<String, Integer> stqhMap = new HashMap<>();
+    	// 学生ごとの回答数と正当数を取得する
+    	Map<String, StudentTaskQuestionHistoryData> stqhDataMap = new HashMap<>();
     	List<StudentTaskQuestionHistoryBean> stqhBeanList = studentTaskQuestionHistoryRepository.findAllByTaskId(Long.valueOf(taskId));
     	for(StudentTaskQuestionHistoryBean stqhBean : stqhBeanList) {
+    		
+			// 回答されている（無回答の履歴を除外）
+    		String userId = stqhBean.getUserId();
+    		StudentTaskQuestionHistoryData data = null;
+
+    		if(stqhDataMap.containsKey(userId)) {
+    			data = stqhDataMap.get(userId);
+    		} else {
+    			data = new StudentTaskQuestionHistoryData();
+    		}
+    		// 問題数+1
+    		data.setQuestionCnt(data.getQuestionCnt() + 1);
+
     		if(stqhBean.getAnswer() != null) {
-	    		String userId = stqhBean.getUserId();
-	    		if(stqhMap.containsKey(userId)) {
-	    			stqhMap.put(userId, stqhMap.get(userId) + 1);
+	    		// 回答数+1
+	    		if(stqhDataMap.containsKey(userId)) {
+	    			
+	    			data.setAnswerCnt(data.getAnswerCnt() + 1);
 	    		} else {
-	    			stqhMap.put(userId, 1);
+	    			
+	    			data.setAnswerCnt(1);
+	    		}
+	    		
+	    		// 正解数+1
+	    		if(stqhBean.getAnswer().equals(stqhBean.getCorrect())) {
+	    			data.setCorrectCnt(data.getCorrectCnt() + 1);
 	    		}
     		}
+    		
+			stqhDataMap.put(userId, data);
     	}
 
     	// 提出状況を作成し、リストに格納する
     	for(Map.Entry<String, Boolean> entry : targetStudentAnsweredMap.entrySet()) {
         	TaskSubmissionForm form = new TaskSubmissionForm();
-        	if(stqhMap.containsKey(entry.getKey())) {
-        		form.setAnsweredCnt(String.valueOf(stqhMap.get(entry.getKey())));
+        	if(stqhDataMap.containsKey(entry.getKey())) {
+        		form.setAnsweredCnt(String.valueOf(stqhDataMap.get(entry.getKey()).getAnswerCnt()));
+        		form.setCorrectRate(String.valueOf(
+        				(((float)stqhDataMap.get(entry.getKey()).getCorrectCnt() / stqhDataMap.get(entry.getKey()).getQuestionCnt()) * 100)));
         	} else {
         		form.setAnsweredCnt("0");
+        		form.setCorrectRate("0");
         	}
         	form.setAnsweredFlg(entry.getValue());
         	form.setQuestionCnt(String.valueOf(questionSizeList.get(0)));
@@ -876,5 +902,29 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
     	}
 
     	return map;
+    }
+    
+    /**
+     * 学生の課題回答状況情報
+     * @author t.kawana
+     *
+     */
+    @Data
+    private class StudentTaskQuestionHistoryData {
+
+    	/**
+    	 * 問題数
+    	 */
+    	int questionCnt = 0;
+
+    	/**
+    	 * 回答数
+    	 */
+    	int answerCnt = 0;
+    	
+    	/**
+    	 * 正当数
+    	 */
+    	int correctCnt = 0;
     }
 }

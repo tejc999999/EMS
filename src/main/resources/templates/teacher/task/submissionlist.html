@@ -25,16 +25,18 @@
 		<table class="table table-hover table-striped">
 			<thead class="thead-dark">
 				<tr class="row">
-					<th class="col-md-4 text-nowrap" scope="col" th:text="ユーザーID">ユーザーID</th>
-					<th class="col-md-4 text-nowrap" scope="col" th:text="回答数">回答数</th>
-					<th class="col-md-4 text-nowrap" scope="col" th:text="提出">提出</th>
+					<th class="col-md-3 text-nowrap" scope="col" th:text="ユーザーID">ユーザーID</th>
+					<th class="col-md-3 text-nowrap" scope="col" th:text="回答数">回答数</th>
+					<th class="col-md-3 text-nowrap" scope="col" th:text="正解率">正解率</th>
+					<th class="col-md-3 text-nowrap" scope="col" th:text="提出">提出</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr class="row" th:each="task : ${submissionTasks}">
-					<td class="col-md-4" th:text="${task.userId}">ユーザーID</td>
-					<td class="col-md-4" th:text="${task.answeredCnt + '/' + task.questionCnt}">回答数</td>
-					<td class="col-md-4" th:text="${task.answeredFlg} ? '済' : '未'"></td>
+					<td class="col-md-3" th:text="${task.userId}">ユーザーID</td>
+					<td class="col-md-3" th:text="${task.answeredCnt + '/' + task.questionCnt}">回答数</td>
+					<td class="col-md-3" th:text="${task.correctRate + '%'}">正解率</td>
+					<td class="col-md-3" th:text="${task.answeredFlg} ? '済' : '未'"></td>
 				</tr>
 			</tbody>
 		</table>

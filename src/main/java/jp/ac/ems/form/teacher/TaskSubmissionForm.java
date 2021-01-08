@@ -25,6 +25,11 @@ public class TaskSubmissionForm {
 	 * 課題の問題数
 	 */
 	private String questionCnt;
+	
+	/**
+	 * 課題の正当率
+	 */
+	private String correctRate;
 
 	/**
 	 * 提出済フラグ（false:未提出、true:提出済).
