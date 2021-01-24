@@ -2,10 +2,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity">
-<head>
+<head
+	th:replace="layout :: common_layout(title = '課題一覧画面', scripts = ~{::script}, links = ~{::link})">
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>課題一覧画面</title>
 <link rel="stylesheet"
 	href="http://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
 	th:href="@{/webjars/bootstrap/4.5.0/css/bootstrap.min.css}" />
@@ -13,7 +13,6 @@
 	type="text/javascript" charset="utf-8"></script>
 <script th:src="@{/webjars/bootstrap/4.5.0/js/bootstrap.bundle.min.js}"
 	type="text/javascript" charset="utf-8"></script>
-
 
 </head>
 <body>
