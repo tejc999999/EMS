@@ -35,7 +35,7 @@
 				<tr class="row" th:each="task : ${submissionTasks}">
 					<td class="col-md-3" th:text="${task.userId}">ユーザーID</td>
 					<td class="col-md-3" th:text="${task.answeredCnt + '/' + task.questionCnt}">回答数</td>
-					<td class="col-md-3" th:text="${task.correctRate + '%'}">正解率</td>
+					<td class="col-md-3" th:text="${#numbers.formatDecimal(task.correctRate, 1, 2) + '%'}">正解率</td>
 					<td class="col-md-3" th:text="${task.answeredFlg} ? '済' : '未'"></td>
 				</tr>
 			</tbody>
