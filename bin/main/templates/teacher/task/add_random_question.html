@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity">
+<head
+	th:replace="layout :: common_layout(title = '課題登録（ランダム）画面', scripts = ~{::script}, links = ~{::link})">
+<script th:src="@{/js/allcheck.js}"></script> 
+</head>
+<body>
+	<div th:replace="layout :: header"></div>
+
+	<h2>■課題登録（ランダム）</h2>
+	<div class="container-fluid no-gutters pb-5">
+		<form th:action="@{/teacher/task/add_submit}" th:object="${taskForm}"
+			method="post">
+          <div class="row form-inline pb-3">
+            <div class="col-md-3" th:each="item : ${fieldCheckItems}">
+              <label class="radio-inline float-left">
+                <input type="radio" name="fieldChecked" th:value="${item.key}" th:text="${item.value}" th:field="*{fieldChecked}" th:checked="${item.key.equals(taskForm.fieldChecked)}" />
+              </label>
+            </div>
+          </div>
+		  <div class="form-row">
+            <div class="form-group col-md-12">
+              <label for="totalNumber" class="col-form-label">問題数</label>
+              <input type="number" class="form-control" name="totalNumber"  aria-label="問題数" th:value="*{totalNumber}" th:errorclass="error-input" />
+            </div>
+            <span th:if="${#fields.hasErrors('totalNumber')}" th:errors="*{totalNumber}" class="error-messages">error!</span>
+
+		    <div class="form-group col-md-12">
+				<input type="submit" name="selectRandomBtn" class="btn btn-info btn-block" th:value="選択">
+		    </div>
+          </div>
+		  <div class="form-row">
+		    <div class="form-group col-md-12">
+		      <label class="col-form-label">問題</label>
+		      <p th:text="'該当:' + ${questionCheckItems.size()} + '問'">
+		    </div>
+         </div>
+			<div class="form-row">
+				<div class="col-md-6">
+					<input type="submit" name="backBtn" class="btn btn-info btn-block" th:value="前へ">
+				</div>
+				<div class="col-md-6">
+					<input type="submit" name="randomSubmit" class="btn btn-info btn-block" th:value="次へ">
+				</div>
+			</div>
+		　　<div th:each="item : *{questionCheckedList}">
+              <input type="hidden" name="questionCheckedList" th:value="${item}" >
+          </div>
+	      <input type="hidden" name="title" th:value="*{title}" >
+          <input type="hidden" name="description" th:value="*{description}" >
+		</form>
+	</div>
+	
+	<div th:replace="layout :: footer"></div>
+
+</body>
+</html>

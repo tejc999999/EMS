@@ -1,5 +1,6 @@
 package jp.ac.ems.controller.teacher;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -115,14 +116,39 @@ public class TeacherTaskController {
     }
     
     /**
-     * 課題登録 - 問題追加(task add/question add).
+     * 課題登録 - ランダム問題追加(task add/question add).
      * @param form 課題Form(task form)
      * @param result エラーチェック結果(error validate result)
      * @param model モデル(model to save xxx)
      * @return 課題問題登録用ページビュー(task question add page view)
      */
-    @PostMapping(path = "add_question")
-    public String addQuestion(@Validated TaskForm form, BindingResult result,
+    @PostMapping(path = "add_question", params = "randomBtn")
+    public String addRandomQuestion(@Validated TaskForm form, BindingResult result,
+            Model model) {
+    	
+    	if(result.hasErrors()) {
+    		
+    		model.addAttribute("taskForm", form);
+            return "teacher/task/add";
+    	}
+    	// 分野名項目設定
+    	taskService.setSelectDataForRandom(form, model);
+    	
+    	Map<String, String> questionMap = new HashMap<>();
+        model.addAttribute("questionCheckItems", questionMap);
+        
+        return "teacher/task/add_random_question";
+    }
+    
+    /**
+     * 課題登録 - 固定問題追加(task add/question add).
+     * @param form 課題Form(task form)
+     * @param result エラーチェック結果(error validate result)
+     * @param model モデル(model to save xxx)
+     * @return 課題問題登録用ページビュー(task question add page view)
+     */
+    @PostMapping(path = "add_question", params = "selectBtn")
+    public String addSelectQuestion(@Validated TaskForm form, BindingResult result,
             Model model) {
     	
     	if(result.hasErrors()) {
@@ -131,31 +157,45 @@ public class TeacherTaskController {
             return "teacher/task/add";
     	}
     	// ドロップダウン項目設定
-    	taskService.setSelectData(form, model);
+    	taskService.setSelectDataForSelect(form, model);
     	
         // 全問表示は通信負荷が高いため、初期状態は問題なしに変更
 //        Map<String, String> questionMap = taskService.findAllMap();
     	Map<String, String> questionMap = new HashMap<>();
         model.addAttribute("questionCheckItems", questionMap);
         
-        return "teacher/task/add_question";
+        return "teacher/task/add_select_question";
     }
 
     
     /**
-     * 課題送信先画面から課題問題登録画面に戻る(Return to the task add view from the task destination view).
+     * 課題送信先画面から課題問題登録(ランダム)画面に戻る(Return to the task add view from the task destination view).
      * @param form 課題Form(task form)
      * @param result エラーチェック結果(error validate result)
      * @param model モデル(model to save xxx)
      * @return 課題問題登録用ページビュー(task question add page view)
      */
-    @PostMapping(path = "add_process", params = "backBtn")
-    public String addProcessBack(@Validated TaskForm form, BindingResult result,
+    @PostMapping(path = "add_process", params = "backRandomBtn")
+    public String addProcessRandomBack(@Validated TaskForm form, BindingResult result,
             Model model) {
     	
-        return addQuestion(form, result, model);
+        return addRandomQuestion(form, result, model);
     }
-
+    
+    /**
+     * 課題送信先画面から課題問題登録（個別選択）画面に戻る(Return to the task add view from the task destination view).
+     * @param form 課題Form(task form)
+     * @param result エラーチェック結果(error validate result)
+     * @param model モデル(model to save xxx)
+     * @return 課題問題登録用ページビュー(task question add page view)
+     */
+    @PostMapping(path = "add_process", params = "backSelectBtn")
+    public String addProcessSelectBack(@Validated TaskForm form, BindingResult result,
+            Model model) {
+    	
+        return addSelectQuestion(form, result, model);
+    }
+    
     /**
      * 所属要素除外(exclution).
      * @param form 課題Form(task form)
@@ -201,18 +241,19 @@ public class TeacherTaskController {
 
 
     /**
-     * 課題登録 - 送信先追加(task add/send to add).
+     * 課題登録(個別選択) - 送信先追加(task add/send to add).
      * @param form 課題Form(task form)
      * @param result エラーチェック結果(error validate result)
      * @param model モデル(model to save xxx)
      * @return 課題送信先登録用ページビュー(task send to  add page view)
      */
-    @PostMapping(path = "add_submit")
-    public String addSubmit(@Validated TaskForm form, BindingResult result,
+    @PostMapping(path = "add_submit", params = "selectSubmit")
+    public String addSelectSubmit(@Validated TaskForm form, BindingResult result,
             Model model) {
 
     	if(form.getQuestionCheckedList() == null || form.getQuestionCheckedList().size() == 0) {
-            return addQuestion(form, result, model);
+    		// 個別選択問題登録画面に戻す
+            return addSelectQuestion(form, result, model);
     	}
     	// コース一覧
         Map<String, String> courseMap = taskService.findAllCourse();
@@ -229,6 +270,35 @@ public class TeacherTaskController {
         return "teacher/task/add_submit";
     }
     
+    /**
+     * 課題登録(ランダム) - 送信先追加(task add/send to add).
+     * @param form 課題Form(task form)
+     * @param result エラーチェック結果(error validate result)
+     * @param model モデル(model to save xxx)
+     * @return 課題送信先登録用ページビュー(task send to  add page view)
+     */
+    @PostMapping(path = "add_submit", params = "randomSubmit")
+    public String addRandomSubmit(@Validated TaskForm form, BindingResult result,
+            Model model) {
+
+    	if(form.getQuestionCheckedList() == null || form.getQuestionCheckedList().size() == 0) {
+    		// ランダム選択問題登録画面に戻す
+            return addRandomQuestion(form, result, model);
+    	}
+    	// コース一覧
+        Map<String, String> courseMap = taskService.findAllCourse();
+        model.addAttribute("courseCheckItems", courseMap);
+    	
+        // 全クラス取得
+        Map<String, String> classMap = taskService.findAllClass();
+        model.addAttribute("classCheckItems", classMap);
+
+        // 全学生取得
+        Map<String, String> userMap = taskService.findAllStudent();
+        model.addAttribute("userCheckItems", userMap);
+        
+        return "teacher/task/add_submit";
+    }
 
     /**
      * 課題問題登録画面から課題情報登録画面に戻る(Return to the task question add view from the task info add view)
@@ -260,12 +330,12 @@ public class TeacherTaskController {
     	model.addAttribute("questionCheckItems", questionMap);
     	
     	// ドロップダウン項目設定
-    	taskService.setSelectData(form, model);
+    	taskService.setSelectDataForSelect(form, model);
     	
         // 入力状態保持のため
         model.addAttribute("courseForm", form);
         
-        return "teacher/task/add_question";
+        return "teacher/task/add_select_question";
     }
     
     /**
@@ -284,12 +354,12 @@ public class TeacherTaskController {
     	model.addAttribute("questionCheckItems", questionMap);
     	
     	// ドロップダウン項目設定
-    	taskService.setSelectData(form, model);
+    	taskService.setSelectDataForSelect(form, model);
     	
         // 入力状態保持のため
         model.addAttribute("courseForm", form);
         
-        return "teacher/task/add_question";
+        return "teacher/task/add_select_question";
 //        return addQuestion(form, result, model);
     }
     
@@ -309,13 +379,38 @@ public class TeacherTaskController {
     	model.addAttribute("questionCheckItems", questionMap);
     	
     	// ドロップダウン項目設定
-    	taskService.setSelectData(form, model);
+    	taskService.setSelectDataForSelect(form, model);
     	
         // 入力状態保持のため
         model.addAttribute("courseForm", form);
         
-        return "teacher/task/add_question";
+        return "teacher/task/add_select_question";
 //        return addQuestion(form, result, model);
+    }
+    
+    /**
+     * ランダム問題取得(Obtaining questions by random).
+     * @param form 課題Form(task form)
+     * @param result エラーチェック結果(error validate result)
+     * @param model モデル(model)
+     * @return 課題問題登録用ページビュー(task question add page view)
+     */
+    @PostMapping(path = "add_submit", params = "selectRandomBtn")
+    public String addselectRandom(@Validated TaskForm form, BindingResult result,
+            Model model) {
+
+    	// 分野名項目設定
+    	taskService.setSelectDataForRandom(form, model);
+    	
+    	// 問題更新
+    	Map<String, String> questionMap = taskService.getRandomQuestionIdList(Integer.parseInt(form.getFieldChecked()), Integer.parseInt(form.getTotalNumber()));
+    	model.addAttribute("questionCheckItems", questionMap);
+    	form.setQuestionCheckedList(new ArrayList<String>(questionMap.keySet()));
+    	
+        // 入力状態保持のため
+        model.addAttribute("courseForm", form);
+        
+        return "teacher/task/add_random_question";
     }
     
     /**
@@ -334,14 +429,14 @@ public class TeacherTaskController {
     	model.addAttribute("questionCheckItems", questionMap);
     	
     	// ドロップダウン項目設定
-    	taskService.setSelectData(form, model);
+    	taskService.setSelectDataForSelect(form, model);
     	
         // 入力状態保持のため
         model.addAttribute("courseForm", form);
         
-        return "teacher/task/add_question";
+        return "teacher/task/add_select_question";
     }
-    
+        
     /**
      * 分野別問題取得(Obtaining questions by field).
      * @param form 課題Form(task form)

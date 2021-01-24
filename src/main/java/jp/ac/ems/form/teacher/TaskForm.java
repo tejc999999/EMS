@@ -2,6 +2,7 @@ package jp.ac.ems.form.teacher;
 
 import java.util.List;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import jp.ac.ems.form.teacher.ConfirmQuestionForm;
@@ -38,6 +39,7 @@ public class TaskForm {
      */
     private List<String> questionCheckedList;
 
+    // 固定問題選択用=============================================================
     /**
      * 選択年度(select year).
      */
@@ -57,6 +59,19 @@ public class TaskForm {
      * 選択小分類（select small field).
      */
     private String selectFieldS;
+    // 固定問題選択用=============================================================
+
+    // ランダム問題選択用===========================================================
+    /**
+     * 選択分類(select field).
+     */
+    private String fieldChecked = "0";
+    
+    /**
+     * 出題問題数
+     */
+    private String totalNumber;
+    // ランダム問題選択用===========================================================
     
     /**
      * 対象コースIDリスト(target course list).

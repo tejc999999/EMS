@@ -103,11 +103,27 @@ public interface TeacherTaskService {
     public List<TaskSubmissionForm> getAnswerdList(String taskId);
     
     /**
-     * ドロップダウン項目設定(Set dropdown param).
+     * 個別選択用ドロップダウン項目設定(Set dropdown param for select).
      * @param form 課題Form(task form)
      * @param model モデル(model)
      */
-    public void setSelectData(TaskForm form, Model model);
+    public void setSelectDataForSelect(TaskForm form, Model model);
+    
+    /**
+     * ランダム選択用分類名項目設定(Set field param name for random).
+     * @param form 課題Form(task form)
+     * @param model モデル(model)
+     */
+    public void setSelectDataForRandom(TaskForm form, Model model);
+    
+    /**
+     * 指定の出題数に基づき、分野ごとランダムに問題を取得する.
+     * 
+     * @param fieldLevel 分野レベル（0:大分類, 1：中分類, 2:小分類)
+     * @param totalNumber 出題数
+     * @return 問題IDマップ
+     */
+    public Map<String, String> getRandomQuestionIdList(int fieldLevel, int totalNumber);
     
     /**
      * 課題Formに問題Formをセットする

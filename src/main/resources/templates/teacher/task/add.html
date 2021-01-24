@@ -28,7 +28,10 @@
       </div>
       <div class="form-row">
         <div class="col-md-12">
-          <input type="submit" class="btn btn-info btn-block" th:value="次へ">
+          <input type="submit" name="randomBtn" class="btn btn-info btn-block" th:value="ランダム出題">
+        </div>
+        <div class="col-md-12" style="margin-top:10px;">
+          <input type="submit" name="selectBtn" class="btn btn-info btn-block" th:value="個別選択出題">
         </div>
       </div>
       <input type="hidden" name="questionCheckedList" th:value="*{questionCheckedList}" >

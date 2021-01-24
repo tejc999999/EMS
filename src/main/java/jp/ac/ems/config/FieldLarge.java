@@ -4,7 +4,7 @@ package jp.ac.ems.config;
  * 大分野コードEnum(large field code enum).
  * @author tejc999999
  */
-public enum FieldLarge {
+public enum FieldLarge implements FieldBaseEnum<FieldLarge>{
     AP_FL_1_TECHNOLOGY((byte)1, "AP", "テクノロジ"),
     AP_FL_2_MANAGEMENT((byte)2, "AP", "マネジメント"),
     AP_FL_3_STRATEGY((byte)3, "AP", "ストラテジ");
@@ -23,8 +23,7 @@ public enum FieldLarge {
      * 分野名(Field name).
      */
     private final String name;
-
-
+	
     /**
      * コンストラクタ(Constructor).
      * @param id 分野ID(field id)

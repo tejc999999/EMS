@@ -1,14 +1,19 @@
 package jp.ac.ems.impl.service.teacher;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import jp.ac.ems.bean.ClassBean;
 import jp.ac.ems.bean.CourseBean;
@@ -19,6 +24,7 @@ import jp.ac.ems.bean.UserBean;
 import jp.ac.ems.bean.StudentTaskBean;
 import jp.ac.ems.bean.StudentTaskQuestionHistoryBean;
 import jp.ac.ems.config.ExamDivisionCode;
+import jp.ac.ems.config.FieldBaseEnum;
 import jp.ac.ems.config.FieldLarge;
 import jp.ac.ems.config.FieldMiddle;
 import jp.ac.ems.config.FieldSmall;
@@ -95,7 +101,7 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
     ServerProperties serverProperties;
     
     /**
-     * 全ての問題を取得する.
+     * 全ての課題を取得する.
      * @return 全ての問題Formリスト
      */
     @Override
@@ -116,6 +122,7 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
 	            formList.add(taskForm);
 	        }
         }
+        
         return formList;
     }
     
@@ -572,12 +579,12 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
     }
     
     /**
-     * ドロップダウン項目設定(Set dropdown param).
+     * 個別選択用ドロップダウン項目設定(Set dropdown param for select).
      * @param form 課題Form(task form)
      * @param model モデル(model)
      */
     @Override
-    public void setSelectData(TaskForm form, Model model) {
+    public void setSelectDataForSelect(TaskForm form, Model model) {
     	
     	// 年度取得
         Map<String, String> yearMap = findAllYearMap();
@@ -594,7 +601,20 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
     	// 小分類取得
         Map<String, String> fieldSMap = findAllFieldSMap(form.getSelectFieldM());
         model.addAttribute("fieldSDropItems", fieldSMap);
-    	
+    }
+    
+    /**
+     * ランダム選択用分類名項目設定(Set field param name for random).
+     * @param form 課題Form(task form)
+     * @param model モデル(model)
+     */
+    public void setSelectDataForRandom(TaskForm form, Model model) {
+
+    	// 分類名
+        Map<String, String> fieldSMap = findAllFieldNameMap();
+        
+        model.addAttribute("fieldCheckItems", fieldSMap);
+
     }
     
     /**
@@ -727,27 +747,6 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
 
     	// 問題情報文字列を作成し、Formにセットする    	
     	StringBuffer questionInfoStrBuff = new StringBuffer();
-//    	int yearInt = Integer.valueOf(questionForm.getYear());
-//    	String termStr = questionForm.getTerm();
-//    	if(yearInt < 2019) {
-//    		questionInfoStrBuff.append("平成");
-//    		questionInfoStrBuff.append(yearInt - 1988 + "年");
-//    	} else if(yearInt == 2019) {
-//    		if("H".equals(termStr)) {
-//        		questionInfoStrBuff.append("平成");
-//        		questionInfoStrBuff.append(yearInt - 1988 + "年");
-//    		} else if("A".equals(termStr)) {
-//        		questionInfoStrBuff.append("令和元年");
-//    		}
-//    	} else if(yearInt > 2020) {
-//    		questionInfoStrBuff.append("令和");
-//    		questionInfoStrBuff.append(yearInt - 2019 + "年");
-//    	}
-//    	if("H".equals(termStr)) {
-//    		questionInfoStrBuff.append("春");
-//    	} else if("A".equals(termStr)) {
-//    		questionInfoStrBuff.append("秋");
-//    	}
 
     	questionInfoStrBuff.append(JPCalenderEncoder.getInstance().convertJpCalender(questionForm.getYear(), questionForm.getTerm()));
 		questionInfoStrBuff.append("期 問" + questionForm.getNumber());
@@ -775,30 +774,12 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
     		StringBuffer valueBuff = new StringBuffer();
     		// 年度
     		keyBuff.append(questionBean.getYear());
-    		
-//    		int yearInt = Integer.valueOf(questionBean.getYear());
-    		String termStr = questionBean.getTerm();
-//        	if(yearInt < 2019) {
-//        		valueBuff.append("平成");
-//        		valueBuff.append(yearInt - 1988 + "年");
-//        	} else if(yearInt == 2019) {
-//        		if("H".equals(termStr)) {
-//        			valueBuff.append("平成");
-//        			valueBuff.append(yearInt - 1988 + "年");
-//        		} else if("A".equals(termStr)) {
-//        			valueBuff.append("令和元年");
-//        		}
-//        	} else if(yearInt > 2020) {
-//        		valueBuff.append("令和");
-//        		valueBuff.append(yearInt - 2019 + "年");
-//        	}
     		// 期
+    		String termStr = questionBean.getTerm();
     		if("H".equals(termStr)) {
     			keyBuff.append("H");
-//    			valueBuff.append("春");
     		} else {
     			keyBuff.append("A");
-//    			valueBuff.append("秋");
     		}
    			
         	valueBuff.append(JPCalenderEncoder.getInstance().convertJpCalender(questionBean.getYear(), termStr));
@@ -862,28 +843,6 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
     	for(QuestionBean questionBean : questionBeanList) {
     		StringBuffer valueBuff = new StringBuffer();
     		// 年度
-//    		int yearInt = Integer.valueOf(questionBean.getYear());
-//    		String termStr = questionBean.getTerm();
-//        	if(yearInt < 2019) {
-//        		valueBuff.append("平成");
-//        		valueBuff.append(yearInt - 1988 + "年");
-//        	} else if(yearInt == 2019) {
-//        		if("H".equals(termStr)) {
-//        			valueBuff.append("平成");
-//        			valueBuff.append(yearInt - 1988 + "年");
-//        		} else if("A".equals(termStr)) {
-//        			valueBuff.append("令和元年");
-//        		}
-//        	} else if(yearInt > 2020) {
-//        		valueBuff.append("令和");
-//        		valueBuff.append(yearInt - 2019 + "年");
-//        	}
-//    		// 期
-//    		if("H".equals(questionBean.getTerm())) {
-//    			valueBuff.append("春");
-//    		} else {
-//    			valueBuff.append("秋");
-//    		}
         	valueBuff.append(JPCalenderEncoder.getInstance().convertJpCalender(questionBean.getYear(), questionBean.getTerm()));
     		
     		// 問番
@@ -902,6 +861,249 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
     	}
 
     	return map;
+    }
+    
+    /**
+     * 指定の出題数に基づき、分野ごとランダムに問題を取得する.
+     * 
+     * @param fieldLevel 分野レベル（0:大分類, 1：中分類, 2:小分類)
+     * @param totalNumber 出題数
+     * @return 問題マップ
+     */
+    @Override
+    public Map<String, String> getRandomQuestionIdList(int fieldLevel, int totalNumber) {
+    	
+        Map<String, String> result = null;
+        List<QuestionBean> questionBeanList = null;
+
+    	// 最新年度期を取得する
+    	String latestYear = null;
+    	String latestTerm = null;
+    	for(QuestionBean questionBean : questionRepository.findDistinctYearAndTerm()) {
+    		String year = questionBean.getYear();
+    		String term = questionBean.getTerm();
+    		
+    		if((latestYear == null || latestTerm == null)
+    				|| (Integer.parseInt(latestYear) < Integer.parseInt(year))
+    				|| (Integer.parseInt(latestYear) == Integer.parseInt(year) && "H".equals(latestTerm) && "A".equals(term))) {
+    			latestYear = year;
+    			latestTerm = term;
+    		}
+    	}
+    	// 分野別の問題Beanを取得
+    	Map<Byte, List<QuestionBean>> questionByFieldMap = numberOfQuestionPerField(latestYear, latestTerm, fieldLevel);
+    	// 指定された問題数ごとに分野別の抽出数を算出
+    	Map<Byte, Integer> numberByFieldMap = getNumberOfQuestionByField(questionByFieldMap, totalNumber);
+    	// 指定した分野から、抽出数ぶんの問題を取得
+    	questionBeanList = createRandomQuestionId(fieldLevel, numberByFieldMap);
+
+        result = convertQuestionMap(questionBeanList);
+    	
+    	return result;
+    }
+    
+    /**
+     * 分野別の問題IDを取得.
+     * 
+     * @param year 年度
+     * @param term 期
+     * @param fieldLevel 分野レベル(0:大分類, 1:中分類, 2:小分類)
+     * @return 分類IDをキーとして、分野別問題IDリストを持つマップ
+     */
+    private Map<Byte, List<QuestionBean>> numberOfQuestionPerField(String year, String term, int fieldLevel) {
+    	Map<Byte, List<QuestionBean>> result = new HashMap<Byte, List<QuestionBean>>();
+    	
+    	List<QuestionBean> questionBeanList = questionRepository.findByYearAndTerm(year, term);
+
+    	FieldBaseEnum<?>[] fieldValueArray = null;
+    	
+    	if(fieldLevel == 0) {
+    		// 大分類別問題数
+    		fieldValueArray = FieldLarge.values();
+    		Arrays.asList(fieldValueArray)
+    		.forEach(fieldId -> {
+  			  questionBeanList.stream().filter(q -> fieldId.getId() == q.getFieldLId())
+  			  .forEach(q-> {
+  				  if(!result.containsKey(fieldId.getId())) {
+  					  List<QuestionBean> list = new ArrayList<QuestionBean>();
+  					  list.add(q);
+  					  result.put(fieldId.getId(), list);
+  				  } else {
+  					  List<QuestionBean> list = result.get(fieldId.getId());
+  					  list.add(q);
+  					  result.put(fieldId.getId(), list);
+  				  }
+  			  });
+  		  });
+    	} else if(fieldLevel == 1) {
+    		// 中分類別問題数
+    		fieldValueArray = FieldMiddle.values();
+    		Arrays.asList(fieldValueArray)
+  		  	.forEach(fieldId -> {
+  			  questionBeanList.stream().filter(q -> fieldId.getId() == q.getFieldMId())
+  			  .forEach(q-> {
+  				  if(!result.containsKey(fieldId.getId())) {
+  					  List<QuestionBean> list = new ArrayList<QuestionBean>();
+  					  list.add(q);
+  					  result.put(fieldId.getId(), list);
+  				  } else {
+  					  List<QuestionBean> list = result.get(fieldId.getId());
+  					  list.add(q);
+  					  result.put(fieldId.getId(), list);
+  				  }
+  			  });
+  		  });
+    	} else if(fieldLevel == 2) {
+    		// 小分類別問題数
+    		fieldValueArray = FieldSmall.values();
+    		Arrays.asList(fieldValueArray)
+  		  	.forEach(fieldId -> {
+  			  questionBeanList.stream().filter(q -> fieldId.getId() == q.getFieldSId())
+  			  .forEach(q-> {
+  				  if(!result.containsKey(fieldId.getId())) {
+  					  List<QuestionBean> list = new ArrayList<QuestionBean>();
+  					  list.add(q);
+  					  result.put(fieldId.getId(), list);
+  				  } else {
+  					  List<QuestionBean> list = result.get(fieldId.getId());
+  					  list.add(q);
+  					  result.put(fieldId.getId(), list);
+  				  }
+  			  });
+  		  });
+    	}
+    	
+    	return result;
+    }
+    
+    /**
+     * 分野ごと均等に出題数を算出する.
+     * 
+     * @param questionIdListMap 分野IDをキーとする問題IDリスト
+     * @param targetNumber 抽出問題数
+     * @return 分野IDごとの出題数マップ
+     */
+    private Map<Byte, Integer> getNumberOfQuestionByField(Map<Byte, List<QuestionBean>> questionIdListMap, int targetNumber) {
+    	
+    	Map<Byte, Integer> result = new HashMap<Byte, Integer>();
+    	var totalNumber = new Object() { int count; };
+    	totalNumber.count = 0;
+    	Map<Byte, Double> tempResult = new HashMap<Byte, Double>();
+    	// 分野別に問題数をカウント
+    	questionIdListMap.entrySet().stream()
+    	.forEach(e-> {
+    		if(!tempResult.containsKey(e.getKey())) {
+    			tempResult.put(e.getKey(), Double.valueOf(0));
+    		}
+    		tempResult.put(e.getKey(), tempResult.get(e.getKey()) + e.getValue().size());
+    		totalNumber.count += e.getValue().size();
+    	});
+    	// 指定の問題数で分野ごとの問題の割り当てを算出
+    	tempResult.entrySet().stream()
+    	.forEach(e-> {
+    		tempResult.put(e.getKey(), (tempResult.get(e.getKey()) / totalNumber.count) * targetNumber);
+    	});
+    	
+    	// 整数部分を取り出し、割り当て数から減算
+    	var remainNumber = new Object() { int count; };
+    	remainNumber.count = targetNumber;
+    	tempResult.entrySet()
+    			.stream()
+    			.forEach(e-> {
+    				int floorValue = (int) Math.floor(e.getValue());
+    				tempResult.put(e.getKey(), e.getValue() - floorValue);
+    				result.put(e.getKey(), floorValue);
+    				remainNumber.count -= floorValue;
+    	});
+
+    	// 残りの問題数ぶん、小数値の多い順に割り当てる
+    	while(remainNumber.count > 0) {
+    		
+    		// 割り当て数（小数）が最も大きい分野IDを取得
+    		Optional<Entry<Byte, Double>> maxEntry = tempResult.entrySet()
+    				.stream()
+    		        .max((Entry<Byte, Double> e1, Entry<Byte, Double> e2) -> e1.getValue()
+    		            .compareTo(e2.getValue()));
+    		Byte maxKey = maxEntry.get().getKey();
+    		// 問題を割り当て、残りから削除する
+    		result.put(maxKey, result.get(maxKey) + 1);
+    		tempResult.remove(maxKey);
+    		
+    		remainNumber.count--;
+    	}
+    	
+    	return result;
+    }
+	
+    /**
+     * 指定の出題数に基づいた問題IDリストを生成.
+     * 
+     * @param fieldLevel 分野ごとの問題IDマップ
+     * @param numberByFieldMap 分野ごとの出題数マップ
+     * @return 問題リスト
+     */
+    private List<QuestionBean> createRandomQuestionId(int fieldLevel, Map<Byte, Integer> numberByFieldMap) {
+    	List<QuestionBean> result = new ArrayList<QuestionBean>();
+
+    	if(fieldLevel == 0) {
+    		// 大分類
+	    	numberByFieldMap.entrySet()
+	    		.stream()
+	    		.forEach(e -> {
+	        		List<QuestionBean> questionList = questionRepository.findByFieldLId(e.getKey());
+	    			result.addAll(getRandom(questionList, e.getValue()));
+	    		});
+    	} else if(fieldLevel == 1) {
+    		// 中分類
+	    	numberByFieldMap.entrySet()
+    		.stream()
+    		.forEach(e -> {
+        		List<QuestionBean> questionList = questionRepository.findByFieldMId(e.getKey());
+    			result.addAll(getRandom(questionList, e.getValue()));
+    		});
+    	} else if(fieldLevel == 2) {
+    		// 小分類
+	    	numberByFieldMap.entrySet()
+    		.stream()
+    		.forEach(e -> {
+        		List<QuestionBean> questionList = questionRepository.findByFieldSId(e.getKey());
+    			result.addAll(getRandom(questionList, e.getValue()));
+    		});
+    	}
+    	
+    	return result;
+    }
+    
+    /**
+     * 問題IDリストから指定の数だけランダムに抽出する
+     * 
+     * @param list　問題IDリスト
+     * @param number 抽出数
+     * @return 抽出後問題リスト
+     */
+    private List<QuestionBean> getRandom(List<QuestionBean> list, int number) {
+    	List<QuestionBean> result = new ArrayList<QuestionBean>();
+    	
+        Collections.shuffle(list);
+
+        result = list.subList(0, number);
+    	
+    	return result;
+    }
+    
+    /**
+     * 分野名を取得する
+     * 
+     * @return 分野名マップ
+     */
+    private Map<String, String> findAllFieldNameMap() {
+    	Map<String, String> result = new HashMap<String, String>();
+    	
+    	result.put("0", "大分類");
+    	result.put("1", "中分類");
+    	result.put("2", "小分類");
+    	
+    	return result;
     }
     
     /**

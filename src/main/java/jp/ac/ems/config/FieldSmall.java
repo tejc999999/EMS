@@ -7,7 +7,7 @@ import java.util.Map;
  * 小分野コードEnum(small field code enum).
  * @author tejc999999
  */
-public enum FieldSmall {
+public enum FieldSmall implements FieldBaseEnum<FieldSmall>{
     AP_FS_1_BASIC_THEORY((byte)1, "AP", "基礎理論"),
     AP_FS_2_ALGORITHM_AND_PROGRAMING((byte)2, "AP", "アルゴリズムとプログラミング"),
     
