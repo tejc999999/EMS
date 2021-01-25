@@ -16,7 +16,7 @@ version = '1.1.2-SNAPSHOT'
 // プロジェクトの説明
 description = 'EMS'
 // JDKバージョン（変数を上書きする事で実行時にバージョンを変えることが可能）
-sourceCompatibility = '11'
+sourceCompatibility = '13'
 
 // ライブラリ探索場所
 repositories {

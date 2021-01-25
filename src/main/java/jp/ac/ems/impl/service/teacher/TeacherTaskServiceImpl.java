@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import jp.ac.ems.bean.ClassBean;
@@ -986,8 +987,8 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
     private Map<Byte, Integer> getNumberOfQuestionByField(Map<Byte, List<QuestionBean>> questionIdListMap, int targetNumber) {
     	
     	Map<Byte, Integer> result = new HashMap<Byte, Integer>();
-    	var totalNumber = new Object() { int count; };
-    	totalNumber.count = 0;
+//    	var totalNumber = new Object() { int count = 0; };
+    	AtomicInteger totalNumber = new AtomicInteger(0);
     	Map<Byte, Double> tempResult = new HashMap<Byte, Double>();
     	// 分野別に問題数をカウント
     	questionIdListMap.entrySet().stream()
@@ -996,28 +997,33 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
     			tempResult.put(e.getKey(), Double.valueOf(0));
     		}
     		tempResult.put(e.getKey(), tempResult.get(e.getKey()) + e.getValue().size());
-    		totalNumber.count += e.getValue().size();
+    		totalNumber.set(totalNumber.get() + e.getValue().size());
+//    		totalNumber.count += e.getValue().size();
     	});
     	// 指定の問題数で分野ごとの問題の割り当てを算出
     	tempResult.entrySet().stream()
     	.forEach(e-> {
-    		tempResult.put(e.getKey(), (tempResult.get(e.getKey()) / totalNumber.count) * targetNumber);
+//    		tempResult.put(e.getKey(), (tempResult.get(e.getKey()) / totalNumber.count) * targetNumber);
+    		tempResult.put(e.getKey(), (tempResult.get(e.getKey()) / totalNumber.get()) * targetNumber);
     	});
     	
     	// 整数部分を取り出し、割り当て数から減算
-    	var remainNumber = new Object() { int count; };
-    	remainNumber.count = targetNumber;
+//    	var remainNumber = new Object() { int count = targetNumber; };
+    	AtomicInteger remainNumber = new AtomicInteger(targetNumber);
     	tempResult.entrySet()
     			.stream()
     			.forEach(e-> {
     				int floorValue = (int) Math.floor(e.getValue());
     				tempResult.put(e.getKey(), e.getValue() - floorValue);
     				result.put(e.getKey(), floorValue);
-    				remainNumber.count -= floorValue;
+    				remainNumber.set(remainNumber.get() - floorValue);
+//    				remainNumber.count -= floorValue;
     	});
 
     	// 残りの問題数ぶん、小数値の多い順に割り当てる
-    	while(remainNumber.count > 0) {
+    	int remainNumberInt = remainNumber.get();
+//    	while(remainNumber.count > 0) {
+       	while(remainNumberInt > 0) {
     		
     		// 割り当て数（小数）が最も大きい分野IDを取得
     		Optional<Entry<Byte, Double>> maxEntry = tempResult.entrySet()
@@ -1028,8 +1034,8 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
     		// 問題を割り当て、残りから削除する
     		result.put(maxKey, result.get(maxKey) + 1);
     		tempResult.remove(maxKey);
-    		
-    		remainNumber.count--;
+    		remainNumberInt--;
+//    		remainNumber.count--;
     	}
     	
     	return result;
