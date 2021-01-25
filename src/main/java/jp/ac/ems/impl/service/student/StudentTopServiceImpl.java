@@ -3,37 +3,21 @@ package jp.ac.ems.impl.service.student;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 
 import jp.ac.ems.bean.QuestionBean;
 import jp.ac.ems.bean.StudentQuestionHistoryBean;
-import jp.ac.ems.config.ExamDivisionCode;
 import jp.ac.ems.config.FieldLarge;
-import jp.ac.ems.config.FieldMiddle;
-import jp.ac.ems.config.FieldSmall;
-import jp.ac.ems.form.student.SelfStudyForm;
-import jp.ac.ems.form.student.SelfStudyQuestionForm;
 import jp.ac.ems.form.student.TopForm;
 import jp.ac.ems.repository.QuestionRepository;
 import jp.ac.ems.repository.StudentQuestionHistoryRepository;
-import jp.ac.ems.service.student.StudentSelfStudyService;
 import jp.ac.ems.service.student.StudentTopService;
 import lombok.Data;
 

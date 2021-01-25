@@ -1,7 +1,6 @@
 package jp.ac.ems.form;
 
 import java.util.List;
-import java.util.Map;
 
 import lombok.AccessLevel;
 import lombok.Data;

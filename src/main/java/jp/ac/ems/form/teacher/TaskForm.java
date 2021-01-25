@@ -2,10 +2,8 @@ package jp.ac.ems.form.teacher;
 
 import java.util.List;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-import jp.ac.ems.form.teacher.ConfirmQuestionForm;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

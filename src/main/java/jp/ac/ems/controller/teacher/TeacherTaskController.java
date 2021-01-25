@@ -137,7 +137,7 @@ public class TeacherTaskController {
     	Map<String, String> questionMap = new HashMap<>();
         model.addAttribute("questionCheckItems", questionMap);
         
-        return "teacher/task/add_random_question";
+        return "teacher/task/add_question_random";
     }
     
     /**
@@ -164,7 +164,7 @@ public class TeacherTaskController {
     	Map<String, String> questionMap = new HashMap<>();
         model.addAttribute("questionCheckItems", questionMap);
         
-        return "teacher/task/add_select_question";
+        return "teacher/task/add_question_select";
     }
 
     
@@ -247,7 +247,7 @@ public class TeacherTaskController {
      * @param model モデル(model to save xxx)
      * @return 課題送信先登録用ページビュー(task send to  add page view)
      */
-    @PostMapping(path = "add_submit", params = "selectSubmit")
+    @PostMapping(path = "add_target", params = "selectSubmit")
     public String addSelectSubmit(@Validated TaskForm form, BindingResult result,
             Model model) {
 
@@ -277,7 +277,7 @@ public class TeacherTaskController {
      * @param model モデル(model to save xxx)
      * @return 課題送信先登録用ページビュー(task send to  add page view)
      */
-    @PostMapping(path = "add_submit", params = "randomSubmit")
+    @PostMapping(path = "add_target", params = "randomSubmit")
     public String addRandomSubmit(@Validated TaskForm form, BindingResult result,
             Model model) {
 
@@ -307,7 +307,7 @@ public class TeacherTaskController {
      * @param model モデル(model to save xxx)
      * @return 課題問題登録用ページビュー(task question add page view)
      */
-    @PostMapping(path = "add_submit", params = "backBtn")
+    @PostMapping(path = "add_target", params = "backBtn")
     public String addSubmitBack(@Validated TaskForm form, BindingResult result,
             Model model) {
     	
@@ -321,7 +321,7 @@ public class TeacherTaskController {
      * @param model モデル(model)
      * @return 課題問題登録用ページビュー(task question add page view)
      */
-    @PostMapping(path = "add_submit", params = "selectYearBtn")
+    @PostMapping(path = "add_target", params = "selectYearBtn")
     public String addSelectYear(@Validated TaskForm form, BindingResult result,
             Model model) {
 
@@ -335,7 +335,7 @@ public class TeacherTaskController {
         // 入力状態保持のため
         model.addAttribute("courseForm", form);
         
-        return "teacher/task/add_select_question";
+        return "teacher/task/add_question_select";
     }
     
     /**
@@ -345,7 +345,7 @@ public class TeacherTaskController {
      * @param model モデル(model)
      * @return 課題問題登録用ページビュー(task question add page view)
      */
-    @PostMapping(path = "add_submit", params = "selectFieldLargeBtn")
+    @PostMapping(path = "add_target", params = "selectFieldLargeBtn")
     public String addSelectFieldMiddle(@Validated TaskForm form, BindingResult result,
             Model model) {
         
@@ -359,7 +359,7 @@ public class TeacherTaskController {
         // 入力状態保持のため
         model.addAttribute("courseForm", form);
         
-        return "teacher/task/add_select_question";
+        return "teacher/task/add_question_select";
 //        return addQuestion(form, result, model);
     }
     
@@ -370,7 +370,7 @@ public class TeacherTaskController {
      * @param model モデル(model)
      * @return 課題問題登録用ページビュー(task question add page view)
      */
-    @PostMapping(path = "add_submit", params = "selectFieldMiddleBtn")
+    @PostMapping(path = "add_target", params = "selectFieldMiddleBtn")
     public String addSelectFieldSmall(@Validated TaskForm form, BindingResult result,
             Model model) {
         
@@ -384,7 +384,7 @@ public class TeacherTaskController {
         // 入力状態保持のため
         model.addAttribute("courseForm", form);
         
-        return "teacher/task/add_select_question";
+        return "teacher/task/add_question_select";
 //        return addQuestion(form, result, model);
     }
     
@@ -395,7 +395,7 @@ public class TeacherTaskController {
      * @param model モデル(model)
      * @return 課題問題登録用ページビュー(task question add page view)
      */
-    @PostMapping(path = "add_submit", params = "selectRandomBtn")
+    @PostMapping(path = "add_target", params = "selectRandomBtn")
     public String addselectRandom(@Validated TaskForm form, BindingResult result,
             Model model) {
 
@@ -410,7 +410,7 @@ public class TeacherTaskController {
         // 入力状態保持のため
         model.addAttribute("courseForm", form);
         
-        return "teacher/task/add_random_question";
+        return "teacher/task/add_question_random";
     }
     
     /**
@@ -420,7 +420,7 @@ public class TeacherTaskController {
      * @param model モデル(model)
      * @return 課題問題登録用ページビュー(task question add page view)
      */
-    @PostMapping(path = "add_submit", params = "selectFieldBtn")
+    @PostMapping(path = "add_target", params = "selectFieldBtn")
     public String addSelectField(@Validated TaskForm form, BindingResult result,
             Model model) {
 
@@ -434,7 +434,7 @@ public class TeacherTaskController {
         // 入力状態保持のため
         model.addAttribute("courseForm", form);
         
-        return "teacher/task/add_select_question";
+        return "teacher/task/add_question_select";
     }
         
     /**

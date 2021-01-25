@@ -27,8 +27,6 @@ import jp.ac.ems.config.FieldMiddle;
 import jp.ac.ems.config.FieldSmall;
 import jp.ac.ems.config.QuestionTag;
 import jp.ac.ems.form.student.TaskQuestionForm;
-import jp.ac.ems.form.GradeForm;
-import jp.ac.ems.form.student.SelfStudyQuestionForm;
 import jp.ac.ems.form.student.TaskForm;
 import jp.ac.ems.repository.QuestionRepository;
 import jp.ac.ems.repository.StudentQuestionHistoryRepository;

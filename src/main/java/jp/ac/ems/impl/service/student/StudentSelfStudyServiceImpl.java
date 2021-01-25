@@ -2,17 +2,14 @@ package jp.ac.ems.impl.service.student;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.EnumSet;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +18,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-import jp.ac.ems.bean.ClassBean;
-import jp.ac.ems.bean.CourseBean;
 import jp.ac.ems.bean.QuestionBean;
 import jp.ac.ems.bean.StudentQuestionHistoryBean;
 import jp.ac.ems.bean.StudentTaskBean;
@@ -36,9 +31,7 @@ import jp.ac.ems.config.FieldSmall;
 import jp.ac.ems.config.QuestionTag;
 import jp.ac.ems.form.student.SelfStudyForm;
 import jp.ac.ems.form.student.SelfStudyQuestionForm;
-import jp.ac.ems.form.teacher.TaskForm;
 import jp.ac.ems.repository.QuestionRepository;
-import jp.ac.ems.repository.QuestionTagRepository;
 import jp.ac.ems.repository.StudentQuestionHistoryRepository;
 import jp.ac.ems.repository.TaskRepository;
 import jp.ac.ems.repository.UserRepository;
@@ -803,16 +796,16 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 		return answeredWord;
 	}
 	
-	/**
-	 * 
-	 * @param yearAndTermDataList
-	 * @param questionBean
-	 * @return
-	 */
-	private boolean containsYearAndTermData(List<YearAndTermData> yearAndTermDataList, QuestionBean questionBean) {
-		
-		return true;
-	}
+//	/**
+//	 * 
+//	 * @param yearAndTermDataList
+//	 * @param questionBean
+//	 * @return
+//	 */
+//	private boolean containsYearAndTermData(List<YearAndTermData> yearAndTermDataList, QuestionBean questionBean) {
+//		
+//		return true;
+//	}
 	
 	/**
 	 * 年度、期情報クラス

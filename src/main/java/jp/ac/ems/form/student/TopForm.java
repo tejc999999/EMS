@@ -1,7 +1,6 @@
 package jp.ac.ems.form.student;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**

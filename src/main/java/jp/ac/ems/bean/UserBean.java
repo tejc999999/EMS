@@ -20,7 +20,6 @@ import javax.persistence.Table;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import jp.ac.ems.config.QuestionTag;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;

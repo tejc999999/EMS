@@ -6,8 +6,6 @@ import java.util.Map;
 import org.springframework.ui.Model;
 
 import jp.ac.ems.form.student.TaskQuestionForm;
-import jp.ac.ems.form.student.SelfStudyForm;
-import jp.ac.ems.form.student.SelfStudyQuestionForm;
 import jp.ac.ems.form.student.TaskForm;
 
 /**

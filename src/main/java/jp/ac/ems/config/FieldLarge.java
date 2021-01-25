@@ -23,6 +23,11 @@ public enum FieldLarge implements FieldBaseEnum<FieldLarge>{
      * 分野名(Field name).
      */
     private final String name;
+    
+    /**
+     * 分野レベル
+     */
+    public static final Byte LEVEL = 0;
 	
     /**
      * コンストラクタ(Constructor).
@@ -79,7 +84,7 @@ public enum FieldLarge implements FieldBaseEnum<FieldLarge>{
     	}
         return name;
     }
-    
+
     /**
      * 分野ID取得(Get field id).
      * @param division 区分コード(division code)
@@ -98,5 +103,13 @@ public enum FieldLarge implements FieldBaseEnum<FieldLarge>{
     		}
     	}
         return id;
+    }
+
+    /**
+     * 分野レベルを取得する
+     * @return 分野レベル
+     */
+    public Byte getLevel() {
+    	return FieldLarge.LEVEL;
     }
 }

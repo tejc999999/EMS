@@ -8,6 +8,7 @@ import java.util.Map;
  * @author tejc999999
  */
 public enum FieldMiddle implements FieldBaseEnum<FieldMiddle>{
+	
     AP_FM_1_BASIC_THEORY((byte)1, "AP", "基礎理論"),
     AP_FM_2_COMPUTER_SYSTEM((byte)2, "AP", "コンピュータシステム"),
     AP_FM_3_TECHNOLOGY_ELEMENT((byte)3, "AP", "技術要素"),
@@ -36,6 +37,10 @@ public enum FieldMiddle implements FieldBaseEnum<FieldMiddle>{
      */
     private final String name;
 
+    /**
+     * 分野レベル
+     */
+    public static final Byte LEVEL = 1;
 
     /**
      * コンストラクタ(Constructor).
@@ -169,5 +174,13 @@ public enum FieldMiddle implements FieldBaseEnum<FieldMiddle>{
     	}
     	
     	return map;
+    }
+    
+    /**
+     * 分野レベルを取得する
+     * @return 分野レベル
+     */
+    public Byte getLevel() {
+    	return FieldMiddle.LEVEL;
     }
 }

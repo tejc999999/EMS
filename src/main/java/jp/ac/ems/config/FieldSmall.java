@@ -8,6 +8,7 @@ import java.util.Map;
  * @author tejc999999
  */
 public enum FieldSmall implements FieldBaseEnum<FieldSmall>{
+	
     AP_FS_1_BASIC_THEORY((byte)1, "AP", "基礎理論"),
     AP_FS_2_ALGORITHM_AND_PROGRAMING((byte)2, "AP", "アルゴリズムとプログラミング"),
     
@@ -56,7 +57,11 @@ public enum FieldSmall implements FieldBaseEnum<FieldSmall>{
      */
     private final String name;
 
-
+    /**
+     * 分野レベル
+     */
+    public static final Byte LEVEL = 2;
+    
     /**
      * コンストラクタ(Constructor).
      * @param id 分野ID(field id)
@@ -268,5 +273,13 @@ public enum FieldSmall implements FieldBaseEnum<FieldSmall>{
     	}
     	
     	return map;
+    }
+    
+    /**
+     * 分野レベルを取得する
+     * @return 分野レベル
+     */
+    public Byte getLevel() {
+    	return FieldSmall.LEVEL;
     }
 }

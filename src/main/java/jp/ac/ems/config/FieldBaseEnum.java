@@ -3,6 +3,12 @@ package jp.ac.ems.config;
 // TODO: 将来拡張用
 public interface FieldBaseEnum<E extends Enum<E>> {
 
+	/**
+	 * 分野レベル取得
+	 * @return 分野レベル
+	 */
+	public Byte getLevel();
+	
     /**
      * 権限ID取得(Get role id).
      * @return 権限ID(Role id)

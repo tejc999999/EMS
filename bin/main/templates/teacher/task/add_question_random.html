@@ -10,7 +10,7 @@
 
 	<h2>■課題登録（ランダム）</h2>
 	<div class="container-fluid no-gutters pb-5">
-		<form th:action="@{/teacher/task/add_submit}" th:object="${taskForm}"
+		<form th:action="@{/teacher/task/add_target}" th:object="${taskForm}"
 			method="post">
           <div class="row form-inline pb-3">
             <div class="col-md-3" th:each="item : ${fieldCheckItems}">

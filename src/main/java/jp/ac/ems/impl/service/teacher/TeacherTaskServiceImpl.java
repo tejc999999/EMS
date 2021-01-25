@@ -7,14 +7,12 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 import jp.ac.ems.bean.ClassBean;
 import jp.ac.ems.bean.CourseBean;
@@ -171,7 +169,6 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
         if (taskId != null && !taskId.equals("")) {
         	// 更新時
         	// TODO：関連テーブル（課題-ユーザー）等の変更を伴う場合は、一旦taskBeanを消して再登録する方が関連テーブル不整合の問題がなくてよい
-        	
             List<TaskBean> taskBeanList = new ArrayList<>();
         	
         	Optional<TaskBean> optTask = taskRepository.findById(Long.valueOf(taskId));
@@ -281,18 +278,6 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
 
         return resultForm;
     }
-    
-//    /**
-//     * 年度ごとの問題を取得する(Get yearly question).
-//     * @param yearId 年度Id(year id)
-//     * @return 画面用問題マップ（key:チェックボックスID、value：問題ラベル）
-//     */
-//    @Override
-//    public Map<String, String> findAllQuestionByYearAndTerm(String yearId) {
-//        
-//        
-//        return map;
-//    }
 
     /**
      * 分野ごとの問題を取得する(Get fiealdly question).
@@ -918,7 +903,7 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
 
     	FieldBaseEnum<?>[] fieldValueArray = null;
     	
-    	if(fieldLevel == 0) {
+    	if(fieldLevel == FieldLarge.LEVEL) {
     		// 大分類別問題数
     		fieldValueArray = FieldLarge.values();
     		Arrays.asList(fieldValueArray)
@@ -936,7 +921,7 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
   				  }
   			  });
   		  });
-    	} else if(fieldLevel == 1) {
+    	} else if(fieldLevel == FieldMiddle.LEVEL) {
     		// 中分類別問題数
     		fieldValueArray = FieldMiddle.values();
     		Arrays.asList(fieldValueArray)
@@ -954,7 +939,7 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
   				  }
   			  });
   		  });
-    	} else if(fieldLevel == 2) {
+    	} else if(fieldLevel == FieldSmall.LEVEL) {
     		// 小分類別問題数
     		fieldValueArray = FieldSmall.values();
     		Arrays.asList(fieldValueArray)
@@ -987,7 +972,6 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
     private Map<Byte, Integer> getNumberOfQuestionByField(Map<Byte, List<QuestionBean>> questionIdListMap, int targetNumber) {
     	
     	Map<Byte, Integer> result = new HashMap<Byte, Integer>();
-//    	var totalNumber = new Object() { int count = 0; };
     	AtomicInteger totalNumber = new AtomicInteger(0);
     	Map<Byte, Double> tempResult = new HashMap<Byte, Double>();
     	// 分野別に問題数をカウント
@@ -998,17 +982,14 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
     		}
     		tempResult.put(e.getKey(), tempResult.get(e.getKey()) + e.getValue().size());
     		totalNumber.set(totalNumber.get() + e.getValue().size());
-//    		totalNumber.count += e.getValue().size();
     	});
     	// 指定の問題数で分野ごとの問題の割り当てを算出
     	tempResult.entrySet().stream()
     	.forEach(e-> {
-//    		tempResult.put(e.getKey(), (tempResult.get(e.getKey()) / totalNumber.count) * targetNumber);
     		tempResult.put(e.getKey(), (tempResult.get(e.getKey()) / totalNumber.get()) * targetNumber);
     	});
     	
     	// 整数部分を取り出し、割り当て数から減算
-//    	var remainNumber = new Object() { int count = targetNumber; };
     	AtomicInteger remainNumber = new AtomicInteger(targetNumber);
     	tempResult.entrySet()
     			.stream()
@@ -1017,12 +998,10 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
     				tempResult.put(e.getKey(), e.getValue() - floorValue);
     				result.put(e.getKey(), floorValue);
     				remainNumber.set(remainNumber.get() - floorValue);
-//    				remainNumber.count -= floorValue;
     	});
 
     	// 残りの問題数ぶん、小数値の多い順に割り当てる
     	int remainNumberInt = remainNumber.get();
-//    	while(remainNumber.count > 0) {
        	while(remainNumberInt > 0) {
     		
     		// 割り当て数（小数）が最も大きい分野IDを取得
@@ -1035,7 +1014,6 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
     		result.put(maxKey, result.get(maxKey) + 1);
     		tempResult.remove(maxKey);
     		remainNumberInt--;
-//    		remainNumber.count--;
     	}
     	
     	return result;
@@ -1051,7 +1029,7 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
     private List<QuestionBean> createRandomQuestionId(int fieldLevel, Map<Byte, Integer> numberByFieldMap) {
     	List<QuestionBean> result = new ArrayList<QuestionBean>();
 
-    	if(fieldLevel == 0) {
+    	if(fieldLevel == FieldLarge.LEVEL) {
     		// 大分類
 	    	numberByFieldMap.entrySet()
 	    		.stream()
@@ -1059,7 +1037,7 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
 	        		List<QuestionBean> questionList = questionRepository.findByFieldLId(e.getKey());
 	    			result.addAll(getRandom(questionList, e.getValue()));
 	    		});
-    	} else if(fieldLevel == 1) {
+    	} else if(fieldLevel == FieldMiddle.LEVEL) {
     		// 中分類
 	    	numberByFieldMap.entrySet()
     		.stream()
@@ -1067,7 +1045,7 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
         		List<QuestionBean> questionList = questionRepository.findByFieldMId(e.getKey());
     			result.addAll(getRandom(questionList, e.getValue()));
     		});
-    	} else if(fieldLevel == 2) {
+    	} else if(fieldLevel == FieldSmall.LEVEL) {
     		// 小分類
 	    	numberByFieldMap.entrySet()
     		.stream()
@@ -1092,6 +1070,11 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
     	
         Collections.shuffle(list);
 
+        if(list.size() < number) {
+        	// 実際に存在する問題数よりも、抽出する問題数が多い場合
+        	number = list.size();
+        }
+        
         result = list.subList(0, number);
     	
     	return result;
@@ -1105,9 +1088,9 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
     private Map<String, String> findAllFieldNameMap() {
     	Map<String, String> result = new HashMap<String, String>();
     	
-    	result.put("0", "大分類");
-    	result.put("1", "中分類");
-    	result.put("2", "小分類");
+    	result.put(String.valueOf(FieldLarge.LEVEL), "大分類");
+    	result.put(String.valueOf(FieldMiddle.LEVEL), "中分類");
+    	result.put(String.valueOf(FieldSmall.LEVEL), "小分類");
     	
     	return result;
     }
