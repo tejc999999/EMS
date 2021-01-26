@@ -13,7 +13,7 @@
   <div th:if="${errorMsg}" class="alert alert-danger">
     <p th:text="${errorMsg}">error message.</p>
   </div>
-  <form th:action="@{/admin/teacher/editprocess}" th:object="${teacherForm}" method="post">
+  <form th:action="@{/admin/teacher/edit-process}" th:object="${teacherForm}" method="post">
     <div class="form-row">
         <div class="form-group col-md-12">
           <label for="id" class="col-form-label">ユーザーID</label>

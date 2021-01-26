@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="layout :: common_layout(title = '自習課題個別選択', scripts = ~{::script}, links = ~{::link})">
+
+</head>
+
+<body>
+
+<div th:replace="layout :: header"></div>
+
+<h2>■自習課題個別選択</h2>
+<div class="container-fluid no-gutters pb-5">
+<form id="form" th:action="@{/student/selfstudy/select-question-individual-process}" th:object="${selfStudyForm}" method="post">
+  <div class="form-row">
+    <div class="form-group col-md-2">
+      <div class="form-group">
+		<select class="form-control" id="selectYear" name="selectYear">
+		     <option value="">---</option>
+		     <option th:each="item : ${yearDropItems}" th:value="${item.key}" th:text="${item.value}" th:selected="${item.key} == *{selectYear}">pulldown</option>
+		</select>
+      </div>
+    </div>
+   	<div class="form-group col-md-2">
+    </div>
+    <div class="form-group col-md-2">
+    </div>
+    <div class="form-group col-md-6">
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group col-md-2">
+      <div class="form-group">
+	    <select class="form-control" id="selectFieldL" name="selectFieldL">
+	      <option value="">---</option>
+	      <option th:each="item : ${fieldLDropItemsItems}" th:value="${item.key}" th:text="${item.value}" th:selected="${item.key} == *{selectFieldL}">pulldown</option>
+	    </select>
+      </div>
+    </div>
+    <div class="form-group col-md-1">
+      <input type="submit" name="selectFieldLargeBtn" class="btn btn-info btn-block" th:value="'>'">
+    </div>
+    <div class="form-group col-md-2">
+      <div class="form-group">
+	    <select class="form-control" id="selectFieldM" name="selectFieldM">
+	      <option value="">---</option>
+	      <option th:each="item : ${fieldMDropItems}" th:value="${item.key}" th:text="${item.value}" th:selected="${item.key} == *{selectFieldM}">pulldown</option>
+	    </select>
+      </div>
+    </div>
+    <div class="form-group col-md-1">
+      <input type="submit" name="selectFieldMiddleBtn" class="btn btn-info btn-block" th:value="'>'">
+    </div>
+    <div class="form-group col-md-2">
+      <div class="form-group">
+	    <select class="form-control" id="selectFieldS" name="selectFieldS">
+	      <option value="">---</option>
+	      <option th:each="item : ${fieldSDropItems}" th:value="${item.key}" th:text="${item.value}" th:selected="${item.key} == *{selectFieldS}">pulldown</option>
+	    </select>
+      </div>
+    </div>
+    <div class="form-group col-md-2">
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <label class="col-form-label col-md-12">【条件】</label>
+  </div>
+  <div class="row form-inline pb-3">
+    <div class="col-md-3" th:each="item : ${conditionCheckItems}">
+      <label class="radio-inline float-left">
+        <input type="radio" name="conditionChecked" th:value="${item.key}" th:text="${item.value}" th:field="*{conditionChecked}" th:checked="${item.key.equals(selfStudyForm.conditionChecked)}" />
+      </label>
+    </div>
+  </div>
+
+  <div class="row form-inline pb-3">
+    <div class="col-md-2" th:each="item : ${questionTagItems}">
+      <label class="checkbox-inline float-left" th:id="${'tag' + item.key}">
+        <input type="checkbox" name="questionTag" th:value="${item.key}" th:text="${item.value}" th:field="*{questionTag}"/>
+      </label>
+    </div>    
+    <div class="col-md-2">
+      <label class="float-left">
+        <input type="checkbox" name="latestFlg" th:value="${true}" th:text="'直近6回'" th:field="*{latestFlg}" />
+      </label>
+    </div>
+    
+  </div>
+
+  <div class="form-row">
+   	<div class="form-group col-md-12">
+		<input type="submit" name="selectBtn" class="btn btn-info btn-block" th:value="条件設定">
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group col-md-12">
+    <label class="col-form-label">【選択結果】</label>
+      <p th:if="${selfStudyForm.questionList != null}" th:text="${'該当数：' + selfStudyForm.questionList.size() + '問'}"></p>
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <label class="col-form-label col-md-12">【出題順】</label>
+  </div>
+  <div class="row form-inline pb-3">
+    <div class="col-md-4" th:each="item : ${sortCheckItems}">
+      <label class="radio-inline float-left">
+        <input type="radio" name="sortChecked" th:value="${item.key}" th:text="${item.value}" th:field="*{sortChecked}" />
+      </label>
+    </div>
+  </div>
+
+  <div class="form-row">
+   	<div class="form-group col-md-12">
+		<input type="button" id="dummyStartBtn" name="startBtn" class="btn btn-info btn-block" th:value="開始">
+    </div>
+  </div>
+
+  <div class="form-row">
+   	<div class="form-group col-md-12">
+		<input type="button" id="dummyCreateTaskBtn" name="createTaskBtn" class="btn btn-info btn-block" th:value="課題作成">
+    </div>
+  </div>
+
+  <div th:each="questionId : *{questionList}">
+    <input type="hidden" name="questionList" th:value="${questionId}" />
+  </div>
+</form>
+</div>
+
+<script th:inline="javascript">
+window.onload = function() {
+    var startbtnobj = document.getElementById("dummyStartBtn");
+	startbtnobj.addEventListener('click', function () {
+		var questionList = /*[[${selfStudyForm.questionList}]]*/ null;
+		if(questionList != null && questionList.length != 0) {
+			var form = document.getElementById("form");
+			
+			var input = document.createElement('input');
+			input.setAttribute('type', 'hidden');
+			input.setAttribute('name', 'startBtn');
+			form.appendChild(input);
+			
+			form.submit();
+		} else {
+			alert("問題が選択されていません。");
+		}
+  	});
+    var createtaskobj = document.getElementById("dummyCreateTaskBtn");
+    createtaskobj.addEventListener('click', function () {
+		var questionList = /*[[${selfStudyForm.questionList}]]*/ null;
+		if(questionList != null && questionList.length != 0) {
+			var form = document.getElementById("form");
+			
+			var input = document.createElement('input');
+			input.setAttribute('type', 'hidden');
+			input.setAttribute('name', 'createTaskBtn');
+			form.appendChild(input);
+			
+			form.submit();
+		} else {
+			alert("問題が選択されていません。");
+		}
+  	});
+
+	document.getElementById("tag1").style.color = "red";
+	document.getElementById("tag2").style.color = "green";
+	document.getElementById("tag3").style.color = "blue";
+}
+</script>
+<div th:replace="layout :: footer"></div>
+  
+</body>
+</html>

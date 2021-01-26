@@ -57,8 +57,8 @@
         		<li class="nav-item dropdown" sec:authorize="hasRole('STUDENT')">
           			<a class="nav-link dropdown-toggle" href="#" id="selfStudyDropDown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">自習</a>
           			<div class="dropdown-menu" aria-labelledby="selfStudyDropDown">
-              			<a class="dropdown-item" th:href="@{'/student/selfstudy/selfselect'}">個別選択</a>
-              			<a class="dropdown-item" th:href="@{'/student/selfstudy/selfrandom'}">ランダム選択</a>
+              			<a class="dropdown-item" th:href="@{'/student/selfstudy/select-question-individual'}">個別選択</a>
+              			<a class="dropdown-item" th:href="@{'/student/selfstudy/select-question-random'}">ランダム選択</a>
               		</div>
         		</li>
         		<li class="nav-item dropdown" sec:authorize="hasRole('STUDENT')">
@@ -67,9 +67,9 @@
         		<li class="nav-item dropdown" sec:authorize="hasRole('STUDENT') or hasRole('TEACHER')">
           			<a class="nav-link dropdown-toggle" href="#" id="personalGradeDropDown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">進捗</a>
           			<div class="dropdown-menu" aria-labelledby="personalGradeDropDown">
-              			<a sec:authorize="hasRole('TEACHER')" class="dropdown-item" th:href="@{'/share/personalgrade/list'}">個人進捗</a>
-              			<a sec:authorize="hasRole('STUDENT')" class="dropdown-item" th:href="@{'/share/personalgrade/list'}">個人進捗</a>
-              			<a class="dropdown-item" th:href="@{'/share/grade/list'}">全体進捗一覧</a>
+              			<a sec:authorize="hasRole('TEACHER')" class="dropdown-item" th:href="@{'/common/progress/personal'}">個人進捗</a>
+              			<a sec:authorize="hasRole('STUDENT')" class="dropdown-item" th:href="@{'/common/progress/personal'}">個人進捗</a>
+              			<a class="dropdown-item" th:href="@{'/common/progress'}">全体進捗一覧</a>
           			</div>
         		</li>
         		<li class="nav-item dropdown" sec:authorize="hasRole('TEACHER')">
@@ -117,7 +117,7 @@
 	        	<li class="nav-item dropdown" sec:authorize="hasRole('STUDENT') or hasRole('TEACHER') or hasRole('ADMIN')">
 	          		<a class="nav-link dropdown-toggle" href="#" id="settingDropDown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">設定</a>
 	          		<div class="dropdown-menu" aria-labelledby="settingDropDown">
-	              		<a class="dropdown-item" th:href="@{'/share/selfsetting/passwordchange'}">パスワード変更</a>
+	              		<a class="dropdown-item" th:href="@{'/common/setting/password'}">パスワード変更</a>
 	          		</div>
 	        	</li>
 	      	</ul>  

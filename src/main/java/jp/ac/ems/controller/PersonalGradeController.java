@@ -18,7 +18,7 @@ import jp.ac.ems.service.PersonalGradeService;
  * @author tejc999999
  */
 @Controller
-@RequestMapping("/share/personalgrade")
+@RequestMapping("/common/progress/personal")
 public class PersonalGradeController {
 
 	/**
@@ -43,7 +43,7 @@ public class PersonalGradeController {
      * @param model 成績一覧保存用モデル(model to save grade list)
      * @return 課題問題登録用ページビュー(task question add page view)
      */
-    @GetMapping(path = "list")
+    @GetMapping
     String getList(@Validated PersonalGradeForm form, BindingResult result,
             Model model) {
     	
@@ -53,7 +53,7 @@ public class PersonalGradeController {
     	// ドロップダウン項目設定
     	personalGradeService.setSelectData(form, model);
 
-        return "share/grade/personallist";
+        return "common/progress/personal";
     }
     
     /**
@@ -63,7 +63,7 @@ public class PersonalGradeController {
      * @param model 成績一覧保存用モデル(model to save grade list)
      * @return 課題問題登録用ページビュー(task question add page view)
      */
-    @PostMapping(path = "list", params = "targetIdSelectBtn")
+    @PostMapping(params = "targetIdSelectBtn")
     public String targetselectList(@Validated PersonalGradeForm form, BindingResult result,
             Model model) {
         
@@ -86,7 +86,7 @@ public class PersonalGradeController {
     	// ドロップダウン項目設定
     	personalGradeService.setSelectData(form, model);
 
-        return "share/grade/personallist";
+        return "common/progress/personal";
     }
 
     /**
@@ -96,7 +96,7 @@ public class PersonalGradeController {
      * @param model モデル(model)
      * @return 課題問題登録用ページビュー(task question add page view)
      */
-    @PostMapping(path = "list", params = "selectFieldLargeBtn")
+    @PostMapping(params = "selectFieldLargeBtn")
     public String addSelectFieldMiddle(@Validated PersonalGradeForm form, BindingResult result,
             Model model) {
         
@@ -124,7 +124,7 @@ public class PersonalGradeController {
      * @param model モデル(model)
      * @return 課題問題登録用ページビュー(task question add page view)
      */
-    @PostMapping(path = "list", params = "selectYearBtn")
+    @PostMapping(params = "selectYearBtn")
     public String addSelectYear(@Validated PersonalGradeForm form, BindingResult result,
             Model model) {
     	
@@ -134,7 +134,7 @@ public class PersonalGradeController {
     	// ドロップダウン項目設定
     	personalGradeService.setSelectData(form, model);
         
-        return "share/grade/personallist";
+        return "common/progress/personal";
     }
     
     /**
@@ -144,7 +144,7 @@ public class PersonalGradeController {
      * @param model モデル(model)
      * @return 課題問題登録用ページビュー(task question add page view)
      */
-    @PostMapping(path = "list", params = "selectFieldBtn")
+    @PostMapping(params = "selectFieldBtn")
     public String addSelectField(@Validated PersonalGradeForm form, BindingResult result,
             Model model) {
     	
@@ -154,6 +154,6 @@ public class PersonalGradeController {
     	// ドロップダウン項目設定
     	personalGradeService.setSelectData(form, model);
         
-        return "share/grade/personallist";
+        return "common/progress/personal";
     }
 }

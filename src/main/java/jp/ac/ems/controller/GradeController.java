@@ -18,7 +18,7 @@ import jp.ac.ems.service.GradeService;
  * @author tejc999999
  */
 @Controller
-@RequestMapping("/share/grade")
+@RequestMapping("/common/progress")
 public class GradeController {
 
 	/**
@@ -43,7 +43,7 @@ public class GradeController {
      * @param model 成績一覧保存用モデル(model to save grade list)
      * @return 課題問題登録用ページビュー(task question add page view)
      */
-    @GetMapping(path = "list")
+    @GetMapping
     String list(@Validated GradeForm form, BindingResult result,
             Model model) {
 
@@ -53,7 +53,7 @@ public class GradeController {
     	// ドロップダウン項目設定
     	gradeService.setSelectData(form, model);
 
-        return "share/grade/list";
+        return "common/progress/list";
     }
 
     /**
@@ -63,7 +63,7 @@ public class GradeController {
      * @param model モデル(model)
      * @return 課題問題登録用ページビュー(task question add page view)
      */
-    @PostMapping(path = "list", params = "selectFieldLargeBtn")
+    @PostMapping(params = "selectFieldLargeBtn")
     public String addSelectFieldMiddle(@Validated GradeForm form, BindingResult result,
             Model model) {
         
@@ -91,7 +91,7 @@ public class GradeController {
      * @param model モデル(model)
      * @return 課題問題登録用ページビュー(task question add page view)
      */
-    @PostMapping(path = "list", params = "selectYearBtn")
+    @PostMapping(params = "selectYearBtn")
     public String addSelectYear(@Validated GradeForm form, BindingResult result,
             Model model) {
     	
@@ -101,7 +101,7 @@ public class GradeController {
     	// ドロップダウン項目設定
     	gradeService.setSelectData(form, model);
         
-        return "share/grade/list";
+        return "common/progress/list";
     }
     
     /**
@@ -111,7 +111,7 @@ public class GradeController {
      * @param model モデル(model)
      * @return 課題問題登録用ページビュー(task question add page view)
      */
-    @PostMapping(path = "list", params = "selectFieldBtn")
+    @PostMapping(params = "selectFieldBtn")
     public String addSelectField(@Validated GradeForm form, BindingResult result,
             Model model) {
     	
@@ -121,6 +121,6 @@ public class GradeController {
     	// ドロップダウン項目設定
     	gradeService.setSelectData(form, model);
         
-        return "share/grade/list";
+        return "common/progress/list";
     }
 }

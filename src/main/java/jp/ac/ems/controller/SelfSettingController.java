@@ -18,7 +18,7 @@ import jp.ac.ems.service.SelfSettingService;
  * @author tejc999999
  */
 @Controller
-@RequestMapping("/share/selfsetting")
+@RequestMapping("/common/setting/password")
 public class SelfSettingController {
 
 	/**
@@ -40,34 +40,34 @@ public class SelfSettingController {
      * 個人パスワード変更ページ表示(show change self password page).
      * @return 個人パスワード変更ページビュー(change self password page view)
      */
-    @GetMapping(path = "passwordchange")
+    @GetMapping
     public String add(Model model) {
 
-        return "share/selfsetting/password";
+        return "common/setting/password";
     }
     
     /**
      * 個人パスワード変更処理(edit self password).
      * @return トップページリダイレクト(top page redirect)
      */
-    @PostMapping(path = "passwordchange")
+    @PostMapping
     public String editProcess(@Validated SelfSettingForm form, BindingResult result, Model model) {
 
     	if(result.hasErrors()) {
     		
-            return "share/selfsetting/password";
+            return "common/setting/password";
     	} else {
 
         	if(!selfSettingService.nowPasswordCheck(form)) {
         		// 現在のパスワードを検証
         		
         		model.addAttribute("errorMsg", "現在のパスワードが違います");
-                return "share/selfsetting/password";
+                return "common/setting/password";
         	} else if(!selfSettingService.newPasswordCheck(form)) {
         		// 新しいパスワードの入力一致検証
         		
         		model.addAttribute("errorMsg", "新しいパスワードが一致していません");
-                return "share/selfsetting/password";
+                return "common/setting/password";
         	}
     	}
     	
