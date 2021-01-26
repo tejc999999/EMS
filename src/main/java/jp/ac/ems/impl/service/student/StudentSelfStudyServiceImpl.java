@@ -2,14 +2,18 @@ package jp.ac.ems.impl.service.student;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +29,14 @@ import jp.ac.ems.bean.TaskBean;
 import jp.ac.ems.bean.TaskQuestionBean;
 import jp.ac.ems.bean.UserBean;
 import jp.ac.ems.config.ExamDivisionCode;
+import jp.ac.ems.config.FieldBaseEnum;
 import jp.ac.ems.config.FieldLarge;
 import jp.ac.ems.config.FieldMiddle;
 import jp.ac.ems.config.FieldSmall;
 import jp.ac.ems.config.QuestionTag;
 import jp.ac.ems.form.student.SelfStudyForm;
 import jp.ac.ems.form.student.SelfStudyQuestionForm;
+import jp.ac.ems.form.teacher.TaskForm;
 import jp.ac.ems.repository.QuestionRepository;
 import jp.ac.ems.repository.StudentQuestionHistoryRepository;
 import jp.ac.ems.repository.TaskRepository;
@@ -73,16 +79,24 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 	private TaskRepository taskRepository;
 	
     /**
-     * ドロップダウン項目設定(Set dropdown param).
+     * 年度ドロップダウン項目設定(Set dropdown param).
      * @param form 自習Form(self study form)
      * @param model モデル(model)
      */
 	@Override
-    public void setSelectData(SelfStudyForm form, Model model) {
+    public void setSelectYearData(SelfStudyForm form, Model model) {
     	// 年度取得
         Map<String, String> yearMap = findAllYearMap();
         model.addAttribute("yearDropItems", yearMap);
-    	
+    }
+	
+    /**
+     * 分野ドロップダウン項目設定(Set dropdown param).
+     * @param form 自習Form(self study form)
+     * @param model モデル(model)
+     */
+	@Override
+    public void setSelectFieldData(SelfStudyForm form, Model model) {
     	// 大分類取得
         Map<String, String> fieldLMap = findAllFieldLMap();
         model.addAttribute("fieldLDropItemsItems", fieldLMap);
@@ -94,8 +108,8 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
     	// 小分類取得
         Map<String, String> fieldSMap = findAllFieldSMap(form.getSelectFieldM());
         model.addAttribute("fieldSDropItems", fieldSMap);
-    	
     }
+
 
 	/**
      * セレクトボックス項目設定(Set select box param).
@@ -291,91 +305,8 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 		}
 		
 		if(form.isLatestFlg()) {
-			// 直近6回分だけにする
-			List<YearAndTermData> latestYearAndTermList = new ArrayList<>();
-			
-    		// 直近6回に該当する年度、期を取得する
-	    	for(QuestionBean questionBean : questionRepository.findDistinctYearAndTerm()) {
-	    		// 全年度、期を取得
-	    		latestYearAndTermList.add(new YearAndTermData(Integer.valueOf(questionBean.getYear()), questionBean.getTerm()));
-	    	}
-	    	// 年度の降順、期の昇順でソート
-	    	latestYearAndTermList = latestYearAndTermList.stream()
-	    			.sorted(Comparator.comparing(YearAndTermData::getYear, Comparator.reverseOrder())
-	    					.thenComparing(YearAndTermData::getTerm))
-	    			.collect(Collectors.toList());
-	    	// 先頭から6個だけ取得
-	    	if(latestYearAndTermList.size() > 6) {
-	    		latestYearAndTermList = latestYearAndTermList.subList(0, 6);
-	    	}
-	    	
-			List<String> removeQuestionIdList = new ArrayList<>();
-			for(String questionId : questionIdList) {
-				// 直近6回より前の問題を除外する
-				
-				// TODO:問い合わせ回数軽減策検討
-				int latestLastYear = latestYearAndTermList.get(latestYearAndTermList.size() - 1).getYear();
-				String latestLastTerm = latestYearAndTermList.get(latestYearAndTermList.size() - 1).getTerm();
-				Optional<QuestionBean> optQuestion = questionRepository.findById(Long.valueOf(questionId));
-				optQuestion.ifPresent(questionBean -> {
-
-					if((latestLastYear > Integer.valueOf(questionBean.getYear()))
-							|| (latestLastYear == Integer.valueOf(questionBean.getYear())
-									&&("A".equals(latestLastTerm) && "H".equals(questionBean.getTerm())))){
-						// 直近の年度、期の6回分に該当しない場合は削除する
-						// 【条件】(1)と(2)はOR
-						// (1)年度：直近6回分で最も古い年度より前の年度
-						// (2)年度：直近6回分で最も古い年度と同じ　AND
-						//      期：直近6回分で最も古いものの期が'A'で問題の方が'H'
-						removeQuestionIdList.add(String.valueOf(questionBean.getId()));
-					}
-					
-					// ※中止試験があった場合、コード修正が必要
-					// 現在年月から過去6回を抽出する処理（破棄）
-//					int yearInt = Integer.valueOf(questionBean.getYear());
-//					String termStr = questionBean.getTerm();
-//					int nowYearInt = Calendar.getInstance().get(Calendar.YEAR);
-//					int nowMonthInt = Calendar.getInstance().get(Calendar.MONTH);
-//					if(nowYearInt >= 2013 && nowMonthInt > 10) {
-//						// 2020春試験（中止）の影響なし
-//						if(nowMonthInt < 5) {
-//							// (1-4月)春試験：年度後
-//							if((nowYearInt - yearInt) > 3) {
-//								removeQuestionIdList.add(String.valueOf(questionBean.getId()));
-//							}
-//						} else if(nowMonthInt > 10) {
-//							// (11-12月)春試験：年度前
-//							if((nowYearInt - yearInt) > 2) {
-//								removeQuestionIdList.add(String.valueOf(questionBean.getId()));
-//							}
-//						} else if(nowMonthInt < 11) {
-//							// (5-10月)秋試験:
-//							if(((nowYearInt - yearInt) > 3) || ((nowYearInt - yearInt) == 3) && "H".equals(termStr)) {
-//								removeQuestionIdList.add(String.valueOf(questionBean.getId()));
-//							}
-//						}
-//					} else {
-//						// 2020春試験（中止）の影響あり
-//						if(nowMonthInt < 5) {
-//							// (1-4月)春試験：年度後
-//							if(((nowYearInt - yearInt) > 4) || ((nowYearInt - yearInt) == 4) && "H".equals(termStr)) {
-//								removeQuestionIdList.add(String.valueOf(questionBean.getId()));
-//							}
-//						} else if(nowMonthInt > 10) {
-//							// (11-12月)春試験：年度前
-//							if(((nowYearInt - yearInt) > 3) || ((nowYearInt - yearInt) == 3) && "H".equals(termStr)) {
-//								removeQuestionIdList.add(String.valueOf(questionBean.getId()));
-//							}
-//						} else if(nowMonthInt < 11) {
-//							// (5-10月)秋試験:
-//							if((nowYearInt - yearInt) > 3) {
-//								removeQuestionIdList.add(String.valueOf(questionBean.getId()));
-//							}
-//						}
-//					}
-				});
-			}
-			questionIdList.removeAll(removeQuestionIdList);
+			// 直近6回以外の問題IDを取り除く
+			questionIdList = getLatestQuestionIdList(questionIdList);
 		}
 		
 		form.setQuestionList(questionIdList);
@@ -511,7 +442,7 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
         selectMap.put(String.valueOf(QuestionTag.QUESTION_TAG_3_TAG_BLUE.getId()), QuestionTag.QUESTION_TAG_3_TAG_BLUE.getName());
         return selectMap;
 	}
-	
+
     /**
      * 回答アイテム取得
      * 
@@ -620,6 +551,33 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
     			}
     		}
     	}
+    }
+    
+    /**
+     * ランダム選択用分類名項目設定(Set field param name for random).
+     * @param model モデル(model)
+     */
+    @Override
+    public void setSelectDataForRandom(Model model) {
+
+    	// 分類名
+        Map<String, String> fieldSMap = findAllFieldNameMap();
+        model.addAttribute("fieldCheckItems", fieldSMap);
+    }
+    
+    /**
+     * 分野名を取得する
+     * 
+     * @return 分野名マップ
+     */
+    private Map<String, String> findAllFieldNameMap() {
+    	Map<String, String> result = new HashMap<String, String>();
+    	
+    	result.put(String.valueOf(FieldLarge.LEVEL), "大分類");
+    	result.put(String.valueOf(FieldMiddle.LEVEL), "中分類");
+    	result.put(String.valueOf(FieldSmall.LEVEL), "小分類");
+    	
+    	return result;
     }
     
     /**
@@ -796,17 +754,6 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 		return answeredWord;
 	}
 	
-//	/**
-//	 * 
-//	 * @param yearAndTermDataList
-//	 * @param questionBean
-//	 * @return
-//	 */
-//	private boolean containsYearAndTermData(List<YearAndTermData> yearAndTermDataList, QuestionBean questionBean) {
-//		
-//		return true;
-//	}
-	
 	/**
 	 * 年度、期情報クラス
 	 * 
@@ -845,5 +792,300 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 		 * 不正解数
 		 */
 		private int incorrectCnt = 0;
+	}
+	
+    /**
+     * ランダム問題セット
+     * @param form 自習Form
+     */
+    public void setRandomQuestionList(SelfStudyForm form) {
+    	
+    	int totalNumber = Integer.parseInt(form.getTotalNumber());
+    	int fieldLevel = Integer.parseInt(form.getFieldChecked());
+    	boolean latestFlg = form.isLatestFlg();
+    	
+        Map<String, String> result = null;
+        List<String> questionIdList = null;
+
+    	// 最新年度期を取得する
+    	String latestYear = null;
+    	String latestTerm = null;
+    	for(QuestionBean questionBean : questionRepository.findDistinctYearAndTerm()) {
+    		String year = questionBean.getYear();
+    		String term = questionBean.getTerm();
+    		
+    		if((latestYear == null || latestTerm == null)
+    				|| (Integer.parseInt(latestYear) < Integer.parseInt(year))
+    				|| (Integer.parseInt(latestYear) == Integer.parseInt(year) && "H".equals(latestTerm) && "A".equals(term))) {
+    			latestYear = year;
+    			latestTerm = term;
+    		}
+    	}
+    	// 分野別の問題Beanを取得
+    	Map<Byte, List<QuestionBean>> questionByFieldMap = numberOfQuestionPerField(latestYear, latestTerm, fieldLevel);
+    	// 指定された問題数ごとに分野別の抽出数を算出
+    	Map<Byte, Integer> numberByFieldMap = getNumberOfQuestionByField(questionByFieldMap, totalNumber);
+    	// 指定した分野から、抽出数ぶんの問題を取得
+    	questionIdList = createRandomQuestionId(fieldLevel, numberByFieldMap, latestFlg);
+
+    	form.setQuestionList(questionIdList);
+    }
+    
+    /**
+     * 分野別の問題IDを取得.
+     * 
+     * @param year 年度
+     * @param term 期
+     * @param fieldLevel 分野レベル(0:大分類, 1:中分類, 2:小分類)
+     * @return 分類IDをキーとして、分野別問題IDリストを持つマップ
+     */
+    private Map<Byte, List<QuestionBean>> numberOfQuestionPerField(String year, String term, int fieldLevel) {
+    	Map<Byte, List<QuestionBean>> result = new HashMap<Byte, List<QuestionBean>>();
+    	
+    	List<QuestionBean> questionBeanList = questionRepository.findByYearAndTerm(year, term);
+
+    	FieldBaseEnum<?>[] fieldValueArray = null;
+    	
+    	if(fieldLevel == FieldLarge.LEVEL) {
+    		// 大分類別問題数
+    		fieldValueArray = FieldLarge.values();
+    		Arrays.asList(fieldValueArray)
+    		.forEach(fieldId -> {
+  			  questionBeanList.stream().filter(q -> fieldId.getId() == q.getFieldLId())
+  			  .forEach(q-> {
+  				  if(!result.containsKey(fieldId.getId())) {
+  					  List<QuestionBean> list = new ArrayList<QuestionBean>();
+  					  list.add(q);
+  					  result.put(fieldId.getId(), list);
+  				  } else {
+  					  List<QuestionBean> list = result.get(fieldId.getId());
+  					  list.add(q);
+  					  result.put(fieldId.getId(), list);
+  				  }
+  			  });
+  		  });
+    	} else if(fieldLevel == FieldMiddle.LEVEL) {
+    		// 中分類別問題数
+    		fieldValueArray = FieldMiddle.values();
+    		Arrays.asList(fieldValueArray)
+  		  	.forEach(fieldId -> {
+  			  questionBeanList.stream().filter(q -> fieldId.getId() == q.getFieldMId())
+  			  .forEach(q-> {
+  				  if(!result.containsKey(fieldId.getId())) {
+  					  List<QuestionBean> list = new ArrayList<QuestionBean>();
+  					  list.add(q);
+  					  result.put(fieldId.getId(), list);
+  				  } else {
+  					  List<QuestionBean> list = result.get(fieldId.getId());
+  					  list.add(q);
+  					  result.put(fieldId.getId(), list);
+  				  }
+  			  });
+  		  });
+    	} else if(fieldLevel == FieldSmall.LEVEL) {
+    		// 小分類別問題数
+    		fieldValueArray = FieldSmall.values();
+    		Arrays.asList(fieldValueArray)
+  		  	.forEach(fieldId -> {
+  			  questionBeanList.stream().filter(q -> fieldId.getId() == q.getFieldSId())
+  			  .forEach(q-> {
+  				  if(!result.containsKey(fieldId.getId())) {
+  					  List<QuestionBean> list = new ArrayList<QuestionBean>();
+  					  list.add(q);
+  					  result.put(fieldId.getId(), list);
+  				  } else {
+  					  List<QuestionBean> list = result.get(fieldId.getId());
+  					  list.add(q);
+  					  result.put(fieldId.getId(), list);
+  				  }
+  			  });
+  		  });
+    	}
+    	
+    	return result;
+    }
+    
+    /**
+     * 分野ごと均等に出題数を算出する.
+     * 
+     * @param questionIdListMap 分野IDをキーとする問題IDリスト
+     * @param targetNumber 抽出問題数
+     * @return 分野IDごとの出題数マップ
+     */
+    private Map<Byte, Integer> getNumberOfQuestionByField(Map<Byte, List<QuestionBean>> questionIdListMap, int targetNumber) {
+    	
+    	Map<Byte, Integer> result = new HashMap<Byte, Integer>();
+    	AtomicInteger totalNumber = new AtomicInteger(0);
+    	Map<Byte, Double> tempResult = new HashMap<Byte, Double>();
+    	// 分野別に問題数をカウント
+    	questionIdListMap.entrySet().stream()
+    	.forEach(e-> {
+    		if(!tempResult.containsKey(e.getKey())) {
+    			tempResult.put(e.getKey(), Double.valueOf(0));
+    		}
+    		tempResult.put(e.getKey(), tempResult.get(e.getKey()) + e.getValue().size());
+    		totalNumber.set(totalNumber.get() + e.getValue().size());
+    	});
+    	// 指定の問題数で分野ごとの問題の割り当てを算出
+    	tempResult.entrySet().stream()
+    	.forEach(e-> {
+    		tempResult.put(e.getKey(), (tempResult.get(e.getKey()) / totalNumber.get()) * targetNumber);
+    	});
+    	
+    	// 整数部分を取り出し、割り当て数から減算
+    	AtomicInteger remainNumber = new AtomicInteger(targetNumber);
+    	tempResult.entrySet()
+    			.stream()
+    			.forEach(e-> {
+    				int floorValue = (int) Math.floor(e.getValue());
+    				tempResult.put(e.getKey(), e.getValue() - floorValue);
+    				result.put(e.getKey(), floorValue);
+    				remainNumber.set(remainNumber.get() - floorValue);
+    	});
+
+    	// 残りの問題数ぶん、小数値の多い順に割り当てる
+    	int remainNumberInt = remainNumber.get();
+       	while(remainNumberInt > 0) {
+    		
+    		// 割り当て数（小数）が最も大きい分野IDを取得
+    		Optional<Entry<Byte, Double>> maxEntry = tempResult.entrySet()
+    				.stream()
+    		        .max((Entry<Byte, Double> e1, Entry<Byte, Double> e2) -> e1.getValue()
+    		            .compareTo(e2.getValue()));
+    		Byte maxKey = maxEntry.get().getKey();
+    		// 問題を割り当て、残りから削除する
+    		result.put(maxKey, result.get(maxKey) + 1);
+    		tempResult.remove(maxKey);
+    		remainNumberInt--;
+    	}
+    	
+    	return result;
+    }
+	
+    /**
+     * 指定の出題数に基づいた問題IDリストを生成.
+     * 
+     * @param fieldLevel 分野ごとの問題IDマップ
+     * @param numberByFieldMap 分野ごとの出題数マップ
+     * @param latestFlg 直近6回フラグ
+     * @return 問題IDリスト
+     */
+    private List<String> createRandomQuestionId(int fieldLevel, Map<Byte, Integer> numberByFieldMap, boolean latestFlg) {
+    	List<String> result = new ArrayList<String>();
+
+    	if(fieldLevel == FieldLarge.LEVEL) {
+    		// 大分類
+	    	numberByFieldMap.entrySet()
+	    		.stream()
+	    		.forEach(e -> {
+	        		List<QuestionBean> questionList = questionRepository.findByFieldLId(e.getKey());
+	        		List<String> fieldLQuestionIdList = questionList.stream().map(s -> String.valueOf(s.getId())).collect(Collectors.toList());
+	    			if(latestFlg) {
+	    				fieldLQuestionIdList = getLatestQuestionIdList(fieldLQuestionIdList);
+	    			}
+	    			result.addAll(getRandom(fieldLQuestionIdList, e.getValue()));
+	    		});
+    	} else if(fieldLevel == FieldMiddle.LEVEL) {
+    		// 中分類
+	    	numberByFieldMap.entrySet()
+    		.stream()
+    		.forEach(e -> {
+        		List<QuestionBean> questionList = questionRepository.findByFieldMId(e.getKey());
+        		List<String> fieldMQuestionIdList = questionList.stream().map(s -> String.valueOf(s.getId())).collect(Collectors.toList());
+    			if(latestFlg) {
+    				fieldMQuestionIdList = getLatestQuestionIdList(fieldMQuestionIdList);
+    			}
+    			result.addAll(getRandom(fieldMQuestionIdList, e.getValue()));
+    		});
+    	} else if(fieldLevel == FieldSmall.LEVEL) {
+    		// 小分類
+	    	numberByFieldMap.entrySet()
+    		.stream()
+    		.forEach(e -> {
+        		List<QuestionBean> questionList = questionRepository.findByFieldSId(e.getKey());
+        		List<String> fieldSQuestionIdList = questionList.stream().map(s -> String.valueOf(s.getId())).collect(Collectors.toList());
+    			if(latestFlg) {
+    				fieldSQuestionIdList = getLatestQuestionIdList(fieldSQuestionIdList);
+    			}
+    			result.addAll(getRandom(fieldSQuestionIdList, e.getValue()));
+    		});
+    	}
+    	
+    	return result;
+    }
+    
+    /**
+     * 問題IDリストから指定の数だけランダムに抽出する
+     * 
+     * @param list　問題IDリスト
+     * @param number 抽出数
+     * @return 抽出後問題リスト
+     */
+    private List<String> getRandom(List<String> list, int number) {
+    	List<String> result = new ArrayList<String>();
+    	
+        Collections.shuffle(list);
+
+        if(list.size() < number) {
+        	// 実際に存在する問題数よりも、抽出する問題数が多い場合
+        	number = list.size();
+        }
+        
+        result = list.subList(0, number);
+    	
+    	return result;
+    }
+    
+    /**
+     * 直近6回の問題のみ取得する
+     * 
+     * @param list 問題IDリスト
+     * @return 直近6回の問題IDリスト
+     */
+    private List<String> getLatestQuestionIdList(List<String> questionIdList) {
+    	
+		// 直近6回分だけにする
+		List<YearAndTermData> latestYearAndTermList = new ArrayList<>();
+		
+		// 直近6回に該当する年度、期を取得する
+    	for(QuestionBean questionBean : questionRepository.findDistinctYearAndTerm()) {
+    		// 全年度、期を取得
+    		latestYearAndTermList.add(new YearAndTermData(Integer.valueOf(questionBean.getYear()), questionBean.getTerm()));
+    	}
+    	// 年度の降順、期の昇順でソート
+    	latestYearAndTermList = latestYearAndTermList.stream()
+    			.sorted(Comparator.comparing(YearAndTermData::getYear, Comparator.reverseOrder())
+    					.thenComparing(YearAndTermData::getTerm))
+    			.collect(Collectors.toList());
+    	// 先頭から6個だけ取得
+    	if(latestYearAndTermList.size() > 6) {
+    		latestYearAndTermList = latestYearAndTermList.subList(0, 6);
+    	}
+    	
+    	List<String> removeQuestionIdList = new ArrayList<>();
+		for(String questionId : questionIdList) {
+			// 直近6回より前の問題を除外する
+			
+			// TODO:問い合わせ回数軽減策検討
+			int latestLastYear = latestYearAndTermList.get(latestYearAndTermList.size() - 1).getYear();
+			String latestLastTerm = latestYearAndTermList.get(latestYearAndTermList.size() - 1).getTerm();
+			Optional<QuestionBean> optQuestion = questionRepository.findById(Long.valueOf(questionId));
+			optQuestion.ifPresent(questionBean -> {
+
+				if((latestLastYear > Integer.valueOf(questionBean.getYear()))
+						|| (latestLastYear == Integer.valueOf(questionBean.getYear())
+								&&("A".equals(latestLastTerm) && "H".equals(questionBean.getTerm())))){
+					// 直近の年度、期の6回分に該当しない場合は削除する
+					// 【条件】(1)と(2)はOR
+					// (1)年度：直近6回分で最も古い年度より前の年度
+					// (2)年度：直近6回分で最も古い年度と同じ　AND
+					//      期：直近6回分で最も古いものの期が'A'で問題の方が'H'
+					removeQuestionIdList.add(String.valueOf(questionBean.getId()));
+				}
+			});
+		}
+		questionIdList.removeAll(removeQuestionIdList);
+		
+		return questionIdList;
 	}
 }

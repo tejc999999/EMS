@@ -132,7 +132,7 @@ public class TeacherTaskController {
             return "teacher/task/add";
     	}
     	// 分野名項目設定
-    	taskService.setSelectDataForRandom(form, model);
+    	taskService.setSelectDataForRandom(model);
     	
     	Map<String, String> questionMap = new HashMap<>();
         model.addAttribute("questionCheckItems", questionMap);
@@ -400,7 +400,7 @@ public class TeacherTaskController {
             Model model) {
 
     	// 分野名項目設定
-    	taskService.setSelectDataForRandom(form, model);
+    	taskService.setSelectDataForRandom(model);
     	
     	// 問題更新
     	Map<String, String> questionMap = taskService.getRandomQuestionIdList(Integer.parseInt(form.getFieldChecked()), Integer.parseInt(form.getTotalNumber()));

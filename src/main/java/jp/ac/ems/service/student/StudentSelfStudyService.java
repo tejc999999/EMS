@@ -10,11 +10,18 @@ import jp.ac.ems.form.student.SelfStudyQuestionForm;
 public interface StudentSelfStudyService {
 
     /**
-     * ドロップダウン項目設定(Set dropdown param).
+     * 分野ドロップダウン項目設定(Set field dropdown param).
      * @param form 自習Form(self study form)
      * @param model モデル(model)
      */
-    public void setSelectData(SelfStudyForm form, Model model);
+    public void setSelectFieldData(SelfStudyForm form, Model model);
+
+    /**
+     * 年度ドロップダウン項目設定(Set year dropdown param).
+     * @param form 自習Form(self study form)
+     * @param model モデル(model)
+     */
+    public void setSelectYearData(SelfStudyForm form, Model model);
 
 	/**
      * セレクトボックス項目設定(Set select box param).
@@ -83,4 +90,16 @@ public interface StudentSelfStudyService {
      * @param form 自習Form
      */
     public void createSelfTask(SelfStudyForm form);
+    
+    /**
+     * ランダム選択用分類名項目設定(Set field param name for random).
+     * @param model モデル(model)
+     */
+    public void setSelectDataForRandom(Model model);
+    
+    /**
+     * ランダム問題セット
+     * @param form 自習Form
+     */
+    public void setRandomQuestionList(SelfStudyForm form);
 }

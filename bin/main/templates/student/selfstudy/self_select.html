@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
-<head th:replace="layout :: common_layout(title = '自習課題選択', scripts = ~{::script}, links = ~{::link})">
+<head th:replace="layout :: common_layout(title = '自習課題個別選択', scripts = ~{::script}, links = ~{::link})">
 
 </head>
 
@@ -8,9 +8,9 @@
 
 <div th:replace="layout :: header"></div>
 
-<h2>■自習課題選択</h2>
+<h2>■自習課題個別選択</h2>
 <div class="container-fluid no-gutters pb-5">
-<form id="form" th:action="@{/student/selfstudy/select}" th:object="${selfStudyForm}" method="post">
+<form id="form" th:action="@{/student/selfstudy/self_select_submit}" th:object="${selfStudyForm}" method="post">
   <div class="form-row">
     <div class="form-group col-md-2">
       <div class="form-group">

@@ -128,4 +128,14 @@ public class SelfStudyForm {
      * 問題タグ
      */
     private List<String> questionTag;
+    
+    /**
+     * ランダム選択分類(random select field).
+     */
+    private String fieldChecked = "0";
+
+    /**
+     * ランダム出題数
+     */
+    private String totalNumber;
 }

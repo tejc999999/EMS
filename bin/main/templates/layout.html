@@ -54,15 +54,19 @@
     	<!-- /* ナビゲーション */ -->
     	<div class="collapse navbar-collapse justify-content-around" id="navbar-content" ontouchstart="">
       		<ul class="navbar-nav mr-auto ">
-        		<li class="nav-item" sec:authorize="hasRole('STUDENT')">
-          			<a class="nav-link" th:href="@{'/student/selfstudy/select'}" >自習</a>
+        		<li class="nav-item dropdown" sec:authorize="hasRole('STUDENT')">
+          			<a class="nav-link dropdown-toggle" href="#" id="selfStudyDropDown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">自習</a>
+          			<div class="dropdown-menu" aria-labelledby="selfStudyDropDown">
+              			<a class="dropdown-item" th:href="@{'/student/selfstudy/selfselect'}">個別選択</a>
+              			<a class="dropdown-item" th:href="@{'/student/selfstudy/selfrandom'}">ランダム選択</a>
+              		</div>
         		</li>
         		<li class="nav-item dropdown" sec:authorize="hasRole('STUDENT')">
 	          		<a class="nav-link" th:href="@{'/student/task'}"> 課題</a>
         		</li>
         		<li class="nav-item dropdown" sec:authorize="hasRole('STUDENT') or hasRole('TEACHER')">
-          			<a class="nav-link dropdown-toggle" href="#" id="studentTaskDropDown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">進捗</a>
-          			<div class="dropdown-menu" aria-labelledby="taskDropDown">
+          			<a class="nav-link dropdown-toggle" href="#" id="personalGradeDropDown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">進捗</a>
+          			<div class="dropdown-menu" aria-labelledby="personalGradeDropDown">
               			<a sec:authorize="hasRole('TEACHER')" class="dropdown-item" th:href="@{'/share/personalgrade/list'}">個人進捗</a>
               			<a sec:authorize="hasRole('STUDENT')" class="dropdown-item" th:href="@{'/share/personalgrade/list'}">個人進捗</a>
               			<a class="dropdown-item" th:href="@{'/share/grade/list'}">全体進捗一覧</a>
@@ -97,7 +101,7 @@
 	          		</div>
 	        	</li>
 		        <li class="nav-item dropdown dmenu" sec:authorize="hasRole('ADMIN')">
-	          		<a class="nav-link dropdown-toggle" href="#" id="studentDropDown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">管理者</a>
+	          		<a class="nav-link dropdown-toggle" href="#" id="adminDropDown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">管理者</a>
 	          		<div class="dropdown-menu sm-menu" aria-labelledby="adminDropDown">
 	              		<a class="dropdown-item" th:href="@{'/admin/admin/add'}">管理者登録</a>
 	              		<a class="dropdown-item" th:href="@{'/admin/admin'}">管理者一覧</a>
@@ -111,7 +115,7 @@
 	          		</div>
 	        	</li>
 	        	<li class="nav-item dropdown" sec:authorize="hasRole('STUDENT') or hasRole('TEACHER') or hasRole('ADMIN')">
-	          		<a class="nav-link dropdown-toggle" href="#" id="studentTaskDropDown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">設定</a>
+	          		<a class="nav-link dropdown-toggle" href="#" id="settingDropDown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">設定</a>
 	          		<div class="dropdown-menu" aria-labelledby="settingDropDown">
 	              		<a class="dropdown-item" th:href="@{'/share/selfsetting/passwordchange'}">パスワード変更</a>
 	          		</div>
@@ -130,7 +134,7 @@
 <footer th:fragment="footer">
  		<div class="pusth" style="height:10px"></div>
  		<div class="fixed-bottom bg-dark">
-   		<span class="text-light text-right" style="height:10px; margin-bottom:-10px">ver.1.1.2</span>
+   		<span class="text-light text-right" style="height:10px; margin-bottom:-10px">ver.1.1.3</span>
  		</div>
 </footer>
 </html>
