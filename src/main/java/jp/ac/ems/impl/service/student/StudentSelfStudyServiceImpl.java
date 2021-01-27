@@ -36,7 +36,6 @@ import jp.ac.ems.config.FieldSmall;
 import jp.ac.ems.config.QuestionTag;
 import jp.ac.ems.form.student.SelfStudyForm;
 import jp.ac.ems.form.student.SelfStudyQuestionForm;
-import jp.ac.ems.form.teacher.TaskForm;
 import jp.ac.ems.repository.QuestionRepository;
 import jp.ac.ems.repository.StudentQuestionHistoryRepository;
 import jp.ac.ems.repository.TaskRepository;
@@ -804,7 +803,6 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
     	int fieldLevel = Integer.parseInt(form.getFieldChecked());
     	boolean latestFlg = form.isLatestFlg();
     	
-        Map<String, String> result = null;
         List<String> questionIdList = null;
 
     	// 最新年度期を取得する

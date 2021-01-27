@@ -1,6 +1,7 @@
 package jp.ac.ems.controller.teacher.task;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import jp.ac.ems.form.teacher.TaskForm;
@@ -64,11 +65,12 @@ public class TeacherTaskAddTargetController extends BaseTeacherTaskController{
     @PostMapping(params = "randomSubmit")
     public String addRandomSubmit(@Validated TaskForm form, BindingResult result,
             Model model) {
-
+    	
     	if(form.getQuestionCheckedList() == null || form.getQuestionCheckedList().size() == 0) {
     		// ランダム選択問題登録画面に戻す
             return teacherTaskAddQuestionController.addRandomQuestion(form, result, model);
     	}
+
     	// コース一覧
         Map<String, String> courseMap = taskService.findAllCourse();
         model.addAttribute("courseCheckItems", courseMap);
@@ -187,10 +189,14 @@ public class TeacherTaskAddTargetController extends BaseTeacherTaskController{
     	taskService.setSelectDataForRandom(model);
     	
     	// 問題更新
-    	Map<String, String> questionMap = taskService.getRandomQuestionIdList(Integer.parseInt(form.getFieldChecked()), Integer.parseInt(form.getTotalNumber()));
-    	model.addAttribute("questionCheckItems", questionMap);
-    	form.setQuestionCheckedList(new ArrayList<String>(questionMap.keySet()));
-    	
+    	if(form.getTotalNumber() != null &&  !"".equals(form.getTotalNumber())) {
+	    	Map<String, String> questionMap = taskService.getRandomQuestionIdList(Integer.parseInt(form.getFieldChecked()), Integer.parseInt(form.getTotalNumber()));
+	    	model.addAttribute("questionCheckItems", questionMap);
+	    	form.setQuestionCheckedList(new ArrayList<String>(questionMap.keySet()));
+    	} else {
+	    	model.addAttribute("questionCheckItems", new HashMap<String, String>());
+    	}
+
         // 入力状態保持のため
         model.addAttribute("courseForm", form);
         

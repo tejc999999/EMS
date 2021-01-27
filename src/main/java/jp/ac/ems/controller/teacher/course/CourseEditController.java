@@ -1,18 +1,11 @@
 package jp.ac.ems.controller.teacher.course;
 
-import java.util.List;
 import java.util.Map;
 
 import jp.ac.ems.form.teacher.CourseForm;
-import jp.ac.ems.service.teacher.TeacherCourseService;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;

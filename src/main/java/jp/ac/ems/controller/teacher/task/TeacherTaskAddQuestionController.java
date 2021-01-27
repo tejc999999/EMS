@@ -1,5 +1,6 @@
 package jp.ac.ems.controller.teacher.task;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,6 +42,9 @@ public class TeacherTaskAddQuestionController extends BaseTeacherTaskController{
     	
     	Map<String, String> questionMap = new HashMap<>();
         model.addAttribute("questionCheckItems", questionMap);
+        
+        // ランダム問題追加は問題の選択をプログラム側で行うため、画面で選択情報がクリアされない。あらかじめ選択を消しておく
+        form.setQuestionCheckedList(new ArrayList<String>());
         
         return "teacher/task/add_question_random";
     }

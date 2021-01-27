@@ -1,6 +1,5 @@
 package jp.ac.ems.controller.teacher.class_;
 
-import java.util.List;
 import java.util.Map;
 
 import jp.ac.ems.form.teacher.ClassForm;
