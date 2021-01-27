@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author tejc999999
  */
 @Controller
-@RequestMapping("/teacher/class_/editprocess")
+@RequestMapping("/teacher/class_/edit-process")
 public class ClassEditProcessController extends BaseClassController {
 
     /**

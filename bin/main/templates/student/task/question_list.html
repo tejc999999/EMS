@@ -135,7 +135,7 @@ window.onload = function() {
 			<td class="col-md-1" th:text="${question.correct}">正解</td>
 			<td class="col-md-1" th:text="${question.correct.equals(question.answer)} ? '正解' : '不正解'">結果</td>
 			<td class="col-md-1">
-				<form th:action="@{/student/task/question_confirm}" method="post">
+				<form th:action="@{/student/task/question-confirm}" method="post">
 					<input type="submit" name="form" th:value="確認" />
 					<input type="hidden" name="taskId" th:value="${taskForm.id}" />
 					<input type="hidden" name="questionId" th:value="${question.id}" />

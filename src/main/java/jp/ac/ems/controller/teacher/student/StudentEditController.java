@@ -21,7 +21,7 @@ public class StudentEditController extends BaseStudentController {
      * 学生編集ページ表示(show edit student page).
      * @return 学生編集ページビュー(edit student page view)
      */
-    @PostMapping(path = "edit")
+    @PostMapping
     public String edit(@RequestParam String id, Model model) {
 
         StudentForm studentForm = studentService.findById(id);

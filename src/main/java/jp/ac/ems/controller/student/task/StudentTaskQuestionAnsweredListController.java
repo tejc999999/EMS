@@ -16,7 +16,7 @@ import jp.ac.ems.form.student.TaskForm;
  * @author tejc999999
  */
 @Controller
-@RequestMapping("/student/task/question_answered_list")
+@RequestMapping("/student/task/question-answered-list")
 public class StudentTaskQuestionAnsweredListController extends BaseStudentTaskController {
 	        
     /**

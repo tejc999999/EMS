@@ -11,7 +11,7 @@
     <div th:if="${errorMsg}" class="alert alert-danger">
       <p th:text="${errorMsg}">error message.</p>
     </div>
-    <form th:action="@{/teacher/task/add_question}" th:object="${taskForm}" method="post">
+    <form th:action="@{/teacher/task/add-question}" th:object="${taskForm}" method="post">
       <div class="form-row">
         <div class="form-group col-md-12">
           <label for="title" class="col-form-label">課題名</label>

@@ -14,7 +14,7 @@ import jp.ac.ems.form.student.TaskForm;
  * @author tejc999999
  */
 @Controller
-@RequestMapping("/student/task/question_confirm")
+@RequestMapping("/student/task/question-confirm")
 public class StudentTaskQuestionConfirmController extends BaseStudentTaskController {
 
 	@Autowired

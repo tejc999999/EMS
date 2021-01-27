@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author tejc999999
  */
 @Controller
-@RequestMapping("/teacher/task/add_process")
+@RequestMapping("/teacher/task/add-process")
 public class TeacherTaskAddProcessController extends BaseTeacherTaskController{
     
 	@Autowired

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @author tejc999999
  */
 @Controller
-@RequestMapping("/teacher/task/question_confirm")
+@RequestMapping("/teacher/task/question-confirm")
 public class TeacherTaskQuestionConfirmController extends BaseTeacherTaskController{
     
 	@Autowired

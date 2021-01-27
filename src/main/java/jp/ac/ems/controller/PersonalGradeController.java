@@ -110,7 +110,7 @@ public class PersonalGradeController {
      * @param model モデル(model)
      * @return 課題問題登録用ページビュー(task question add page view)
      */
-    @PostMapping(path = "list", params = "selectFieldMiddleBtn")
+    @PostMapping(params = "selectFieldMiddleBtn")
     public String addSelectFieldSmall(@Validated PersonalGradeForm form, BindingResult result,
             Model model) {
         

@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @author tejc999999
  */
 @Controller
-@RequestMapping("/teacher/task/submissionlist")
+@RequestMapping("/teacher/task/submission-list")
 public class TeacherTaskSubmissionListController extends BaseTeacherTaskController{
     
     /**
@@ -39,6 +39,6 @@ public class TeacherTaskSubmissionListController extends BaseTeacherTaskControll
 
     	model.addAttribute("submissionTasks", taskService.getAnswerdList(id));
     	
-        return "teacher/task/submissionlist";
+        return "teacher/task/submission_list";
     }
 }

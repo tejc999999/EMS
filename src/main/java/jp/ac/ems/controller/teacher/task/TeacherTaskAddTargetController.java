@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author tejc999999
  */
 @Controller
-@RequestMapping("/teacher/task/addtarget")
+@RequestMapping("/teacher/task/add-target")
 public class TeacherTaskAddTargetController extends BaseTeacherTaskController{
 	
 	@Autowired

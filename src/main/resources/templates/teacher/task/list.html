@@ -54,13 +54,13 @@
 					<td class="col-md-3" th:text="${task.title}">タイトル</td>
 					<td class="col-md-5" th:text="${task.description}">説明文</td>
 					<td class="col-md-1">
-						<form th:action="@{/teacher/task/submissionlist}" method="post">
+						<form th:action="@{/teacher/task/submission-list}" method="post">
 							<input type="submit" name="form" th:value="進捗" /> <input
 								type="hidden" name="id" th:value="${task.id}" />
 						</form>
 					</td>
 					<td class="col-md-1">
-						<form th:action="@{/teacher/task/question_confirm}" method="post">
+						<form th:action="@{/teacher/task/question-confirm}" method="post">
 							<input type="submit" name="form" th:value="回答" /> <input
 								type="hidden" name="id" th:value="${task.id}" />
 						</form>
