@@ -616,7 +616,7 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
     	ConfirmTaskForm form = new ConfirmTaskForm();
     	form.setId(taskId);
 
-    	Map<String, String> questionMap = new HashMap<>();
+    	Map<Integer, String> questionMap = new HashMap<>();
     	Optional<TaskBean> optTask = taskRepository.findByIdFetchTaskQuestion(Long.valueOf(taskId));
     	optTask.ifPresent(taskBean -> {
     		form.setTitle(taskBean.getTitle());
@@ -627,18 +627,17 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
     	// 指定位置情報の問題を取得する
  		if(questionId == null) {
  			
- 			questionId = questionMap.get("0");
+ 			questionId = questionMap.get(0);
  		} else if(position != 0) {
  			
  			String currenctQuestionId = questionId;
-	    	String currentPosition = questionMap
+	    	Integer currentPosition = questionMap
 	    									.entrySet()
 	    									.stream()
 	    									.filter(entry -> currenctQuestionId.equals(entry.getValue()))
 	    									.map(Map.Entry::getKey)
 	    									.findFirst().get();
-	    	String positionStr = String.valueOf(Integer.valueOf(currentPosition) + position);
-	    	questionId = questionMap.get(positionStr);
+	    	questionId = questionMap.get(currentPosition + position);
     	}
  		
  		ConfirmQuestionForm questionForm = getAnsweredQuestionForm(taskId, questionId);
@@ -718,18 +717,18 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
 		questionForm.setImagePath(imagePath);
 
 		// 課題上の問題番号をセットする
-    	Map<String, String> questionMap = new HashMap<>();
+    	Map<Integer, String> questionMap = new HashMap<>();
     	Optional<TaskBean> optTask = taskRepository.findByIdFetchTaskQuestion(Long.valueOf(taskId));
     	optTask.ifPresent(taskBean -> {
     		questionMap.putAll(taskBean.getQuestionIdSeqMap());
     	});
-    	String position = questionMap
+    	Integer position = questionMap
     									.entrySet()
     									.stream()
     									.filter(entry -> questionId.equals(entry.getValue()))
     									.map(Map.Entry::getKey)
     									.findFirst().get();
-		questionForm.setTaskNumber(String.valueOf(Integer.parseInt(position) + 1));
+		questionForm.setTaskNumber(String.valueOf(position + 1));
 
     	// 問題情報文字列を作成し、Formにセットする    	
     	StringBuffer questionInfoStrBuff = new StringBuffer();

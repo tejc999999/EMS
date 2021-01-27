@@ -84,6 +84,18 @@
       <input type="submit" class="btn btn-info btn-block" name="finishBtn" value="終了">
     </div>
   </div>
+  
+    <div class="form-row  mt-1">
+  	<div th:if="${!taskForm.questionForm.taskNumber.equals('1')}" class="form-group col-md-6">
+      <input type="submit" class="btn btn-info btn-block" name="prevUnselectedBtn" value="前の未選択へ">
+    </div>
+  	<div th:if="${taskForm.questionForm.taskNumber.equals('1')}" class="form-group col-md-6">
+    </div>
+  	<div th:if="${!taskForm.questionSize.equals(taskForm.questionForm.taskNumber)}" class="form-group col-md-6">
+      <input type="submit" class="btn btn-info btn-block" name="nextUnselectedBtn" value="次の未選択へ">
+    </div>
+  </div>
+  
   </form>
 </div>
 

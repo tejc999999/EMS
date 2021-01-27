@@ -62,7 +62,7 @@ public class StudentTaskQuestionController extends BaseStudentTaskController {
     @PostMapping(params="nextBtn")
     public String nextQuestion(TaskForm form, Model model) {
 
-    	// 前の問題の回答を回答履歴に保存する
+    	// 今の問題の回答を回答履歴に保存する
     	taskService.answerSave(form.getId(), form.getQuestionForm().getId(), form.getQuestionForm().getAnswer());
 
     	// 前の問題をセットする
@@ -81,7 +81,7 @@ public class StudentTaskQuestionController extends BaseStudentTaskController {
     @PostMapping(params="finishBtn")
     public String finishQuestion(TaskForm form, Model model) {
 
-    	// 前の問題の回答を回答履歴に保存する
+    	// 今の問題の回答を回答履歴に保存する
     	taskService.answerSave(form.getId(), form.getQuestionForm().getId(), form.getQuestionForm().getAnswer());
 
     	// 提出処理
@@ -90,4 +90,44 @@ public class StudentTaskQuestionController extends BaseStudentTaskController {
     	// 課題-問題一覧画面に遷移する
         return taskController.list(model);
     }
+    
+
+    /**
+     * 前の課題-未回答問題回答(prev task-unselected question answer).
+     * @return 課題-問題ページビュー(task-question page view)
+     */
+    @PostMapping(params="prevUnselectedBtn")
+    public String prevUnselectedQuestion(TaskForm form, Model model) {
+
+    	// 今の問題の回答を回答履歴に保存する
+    	taskService.answerSave(form.getId(), form.getQuestionForm().getId(), form.getQuestionForm().getAnswer());
+
+    	// 次の未回答問題をセットする
+    	TaskForm taskForm = taskService.getTaskFormToSetUnselectedQuestionForm(form.getId(), form.getQuestionForm().getId(), -1);
+    	
+    	model.addAttribute("taskForm", taskForm);
+    	model.addAttribute("answerSelectedItems", taskService.getAnswerSelectedItems());
+
+        return "student/task/question";
+    }
+    
+    /**
+     * 次の課題-未回答問題回答(next task-unselected question answer).
+     * @return 課題-問題ページビュー(task-question page view)
+     */
+    @PostMapping(params="nextUnselectedBtn")
+    public String nextUnselectedQuestion(TaskForm form, Model model) {
+
+    	// 今の問題の回答を回答履歴に保存する
+    	taskService.answerSave(form.getId(), form.getQuestionForm().getId(), form.getQuestionForm().getAnswer());
+
+    	// 前の未回答問題をセットする
+    	TaskForm taskForm = taskService.getTaskFormToSetUnselectedQuestionForm(form.getId(), form.getQuestionForm().getId(),  1);
+    	
+    	model.addAttribute("taskForm", taskForm);
+    	model.addAttribute("answerSelectedItems", taskService.getAnswerSelectedItems());
+
+        return "student/task/question";
+    }
+    
 }

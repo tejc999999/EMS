@@ -21,14 +21,25 @@ public interface StudentTaskService {
     public List<TaskForm> getTaskList();
     
     /**
-     * 課題Formに問題Formをセットする
+     * 課題Formに指定位置の問題Formをセットする
      * 
      * @param taskId 課題ID(task id)
+     * @param questionId 問題ID(question id)
      * @param position 位置情報(position info)
      * @return 課題Form(task form)
      */
     public TaskForm getTaskFormToSetQuestionForm(String taskId, String questionId,  int position);
 
+    /**
+     * 課題Formに未回答の問題Formをセットする
+     * 
+     * @param taskId 課題ID(task id)
+     * @param questionId 問題ID(question id)
+     * @param position 位置情報(position info)
+     * @return 課題Form(task form)
+     */
+    public TaskForm getTaskFormToSetUnselectedQuestionForm(String taskId, String questionId, int position);
+    
     /**
      * 問題への回答を保存する(save answer for question).
      * @param taskId 課題ID(task id)

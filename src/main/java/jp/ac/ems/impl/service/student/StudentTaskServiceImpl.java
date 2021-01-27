@@ -162,9 +162,10 @@ public class StudentTaskServiceImpl implements StudentTaskService {
     }
     
     /**
-     * 課題Formに問題Formをセットする
+     * 課題Formに指定位置の問題Formをセットする
      * 
      * @param taskId 課題ID(task id)
+     * @param questionId 問題ID(question id)
      * @param position 位置情報(position info)
      * @return 課題Form(task form)
      */
@@ -173,7 +174,7 @@ public class StudentTaskServiceImpl implements StudentTaskService {
     	TaskForm form = new TaskForm();
     	form.setId(taskId);
 
-    	Map<String, String> questionMap = new HashMap<>();
+    	Map<Integer, String> questionMap = new HashMap<>();
     	Optional<TaskBean> optTask = taskRepository.findByIdFetchTaskQuestion(Long.valueOf(taskId));
     	optTask.ifPresent(taskBean -> {
     		form.setTitle(taskBean.getTitle());
@@ -184,19 +185,123 @@ public class StudentTaskServiceImpl implements StudentTaskService {
     	// 指定位置情報の問題を取得する
  		if(questionId == null) {
  			
- 			questionId = questionMap.get("0");
+ 			questionId = questionMap.get(0);
  		} else if(position != 0) {
  			
  			String currenctQuestionId = questionId;
-	    	String currentPosition = questionMap
+	    	Integer currentPosition = questionMap
 	    									.entrySet()
 	    									.stream()
 	    									.filter(entry -> currenctQuestionId.equals(entry.getValue()))
 	    									.map(Map.Entry::getKey)
 	    									.findFirst().get();
-	    	String positionStr = String.valueOf(Integer.valueOf(currentPosition) + position);
-	    	questionId = questionMap.get(positionStr);
+	    	questionId = questionMap.get(currentPosition + position);
     	}
+ 		TaskQuestionForm questionForm = getAnsweredQuestionForm(taskId, questionId);
+ 		questionForm.setCorrect(convertAnsweredIdToWord(questionForm.getCorrect()));
+
+		// タグ情報をセットする
+        List<String> tagIdList = getQuestionTagList(questionId);
+        questionForm.setQuestionTag(tagIdList);
+
+		form.setQuestionForm(questionForm);
+
+    	return form;
+    }
+    
+    /**
+     * 課題Formに未選択の問題Formをセットする
+     * 
+     * @param taskId 課題ID(task id)
+     * @param questionId 問題ID(question id)
+     * @param position 位置情報(position info)
+     * @return 課題Form(task form)
+     */
+    public TaskForm getTaskFormToSetUnselectedQuestionForm(String taskId, String questionId,  int position) {
+    	
+    	TaskForm form = new TaskForm();
+    	form.setId(taskId);
+
+    	Map<Integer, String> questionMap = new HashMap<>();
+    	Optional<TaskBean> optTask = taskRepository.findByIdFetchTaskQuestion(Long.valueOf(taskId));
+    	optTask.ifPresent(taskBean -> {
+    		form.setTitle(taskBean.getTitle());
+    		form.setQuestionSize(String.valueOf(taskBean.getQuestionSize()));
+    		questionMap.putAll(taskBean.getQuestionIdSeqMap());
+    	});
+
+    	// 指定位置情報の問題を取得する
+ 		if(questionId == null) {
+ 			
+ 			questionId = questionMap.get(0);
+ 		} else {
+ 	        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+ 	        String userId = auth.getName();
+
+ 			String currenctQuestionId = questionId;
+	    	Integer currentPosition = questionMap
+	    									.entrySet().stream()
+	    									.filter(entry -> currenctQuestionId.equals(entry.getValue()))
+	    									.map(Map.Entry::getKey)
+	    									.findFirst().get();
+	    	List<String> sortQuestionIdList = questionMap
+	    									.entrySet().stream()
+	    									.sorted(Map.Entry.comparingByKey())
+	    									.map(e -> e.getValue())
+	    					                .collect(Collectors.toList());
+	 		if(position == -1) {
+	 			// 前方で未回答を検索
+		 		List<Long> unselectedQuestionIdList = new ArrayList<Long>();
+		    	for(int i = currentPosition - 1; i > -1; i--) {
+		    		String tmpQuestionId = sortQuestionIdList.get(i);
+
+		    		Optional<StudentTaskQuestionHistoryBean> optStudentTaskQuestionHistoryBean = studentTaskQuestionHistoryRepository.findByUserIdAndTaskIdAndQuestionId(userId, Long.valueOf(taskId), Long.valueOf(tmpQuestionId));
+		    		optStudentTaskQuestionHistoryBean.ifPresent(studentTaskQuestionHistoryBean -> {
+		    			if(studentTaskQuestionHistoryBean.getAnswer() == null) {
+		    				unselectedQuestionIdList.add(studentTaskQuestionHistoryBean.getQuestionId());
+		    			}
+		    		});
+		    		// 問題すら開いていない場合は履歴にデータが残らないため、存在しない場合を未回答とする
+		    		if(optStudentTaskQuestionHistoryBean.isEmpty()) {
+		    			unselectedQuestionIdList.add(Long.valueOf(tmpQuestionId));
+		    		}
+
+		    		if(unselectedQuestionIdList.size() > 0) break;
+		    	}
+		    	if(unselectedQuestionIdList.size() > 0) {
+		    		questionId = String.valueOf(unselectedQuestionIdList.get(0));
+		    	} else {
+		    		// 最初の問題をセットする
+		    		questionId = sortQuestionIdList.get(0);
+		    	}
+		 	} else {
+	 			//　後方で未回答を検索
+		 		List<Long> unselectedQuestionIdList = new ArrayList<Long>();
+		    	for(int i = currentPosition + 1; i < sortQuestionIdList.size(); i++) {
+		    		String tmpQuestionId = sortQuestionIdList.get(i);
+
+		    		Optional<StudentTaskQuestionHistoryBean> optStudentTaskQuestionHistoryBean = studentTaskQuestionHistoryRepository.findByUserIdAndTaskIdAndQuestionId(userId, Long.valueOf(taskId), Long.valueOf(tmpQuestionId));
+		    		optStudentTaskQuestionHistoryBean.ifPresent(studentTaskQuestionHistoryBean -> {
+		    			if(studentTaskQuestionHistoryBean.getAnswer() == null) {
+		    				unselectedQuestionIdList.add(studentTaskQuestionHistoryBean.getQuestionId());
+		    			}
+		    		});
+		    		// 問題すら開いていない場合は履歴にデータが残らないため、存在しない場合を未回答とする
+		    		if(optStudentTaskQuestionHistoryBean.isEmpty()) {
+		    			unselectedQuestionIdList.add(Long.valueOf(tmpQuestionId));
+		    		}
+		    		
+		    		if(unselectedQuestionIdList.size() > 0) break;
+		    	}
+		    	if(unselectedQuestionIdList.size() > 0) {
+		    		questionId = String.valueOf(unselectedQuestionIdList.get(0));
+		    	} else {
+		    		// 最後の問題をセットする
+		    		questionId = sortQuestionIdList.get(sortQuestionIdList.size() - 1);
+		    	}
+		 	}
+    	}
+ 		
  		TaskQuestionForm questionForm = getAnsweredQuestionForm(taskId, questionId);
  		questionForm.setCorrect(convertAnsweredIdToWord(questionForm.getCorrect()));
 
@@ -541,18 +646,18 @@ public class StudentTaskServiceImpl implements StudentTaskService {
 		questionForm.setImagePath(imagePath);
 
 		// 課題上の問題番号をセットする
-    	Map<String, String> questionMap = new HashMap<>();
+    	Map<Integer, String> questionMap = new HashMap<>();
     	Optional<TaskBean> optTask = taskRepository.findByIdFetchTaskQuestion(Long.valueOf(taskId));
     	optTask.ifPresent(taskBean -> {
     		questionMap.putAll(taskBean.getQuestionIdSeqMap());
     	});
-    	String position = questionMap
+    	Integer position = questionMap
     			.entrySet()
     			.stream()
     			.filter(entry -> questionId.equals(entry.getValue()))
     			.map(Map.Entry::getKey)
     			.findFirst().get();
-		questionForm.setTaskNumber(String.valueOf(Integer.parseInt(position) + 1));
+		questionForm.setTaskNumber(String.valueOf(position + 1));
 		
 		// 回答履歴がある場合、回答をコピーする
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

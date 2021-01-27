@@ -134,10 +134,10 @@ public class TaskBean {
      * 問題IDマップ（キーが順番）を取得する(get question id map(key:seq number)).
      * @return 問題IDマップ(question id map)
      */
-    public Map<String, String> getQuestionIdSeqMap() {
-        Map<String, String> map = new HashMap<>();
+    public Map<Integer, String> getQuestionIdSeqMap() {
+        Map<Integer, String> map = new HashMap<>();
         taskQuestionBeans.forEach(taskQuestionBean -> {
-            map.put(String.valueOf(taskQuestionBean.getSeqNumber()), String.valueOf(taskQuestionBean.getQuestionId()));
+            map.put(taskQuestionBean.getSeqNumber().intValue(), String.valueOf(taskQuestionBean.getQuestionId()));
         });
         return map;
     }
