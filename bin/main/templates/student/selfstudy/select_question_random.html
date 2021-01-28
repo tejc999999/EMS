@@ -13,11 +13,11 @@
 <form id="form" th:action="@{/student/selfstudy/select-question-random-process}" th:object="${selfStudyForm}" method="post">
 
   <div class="row form-group">
-    <label class="col-form-label col-md-12">【条件】</label>
+    <label class="col-form-label col-12 col-md-12">【条件】</label>
   </div>
 
   <div class="row form-inline pb-3">
-    <div class="col-md-2">
+    <div class="col-12 col-md-2">
       <label class="float-left">
         <input type="checkbox" name="latestFlg" th:value="${true}" th:text="'直近6回'" th:field="*{latestFlg}" />
       </label>
@@ -25,7 +25,7 @@
   </div>
 
   <div class="row form-inline pb-3">
-    <div class="col-md-3" th:each="item : ${fieldCheckItems}">
+    <div class="col-4 col-md-3" th:each="item : ${fieldCheckItems}">
       <label class="radio-inline float-left">
         <input type="radio" name="fieldChecked" th:value="${item.key}" th:text="${item.value}" th:field="*{fieldChecked}" th:checked="${item.key.equals(selfStudyForm.fieldChecked)}" />
       </label>
@@ -33,7 +33,7 @@
   </div>
 
   <div class="form-row">
-    <div class="form-group col-md-12">
+    <div class="form-group col-12 col-md-12">
       <label for="totalNumber" class="col-form-label">問題数</label>
       <input type="number" class="form-control" name="totalNumber"  aria-label="問題数" th:value="*{totalNumber}" th:errorclass="error-input" />
     </div>
@@ -41,13 +41,13 @@
   </div>
 
   <div class="form-row">
-   	<div class="form-group col-md-12">
+   	<div class="form-group col-12 col-md-12">
 		<input type="submit" id="dummyStartBtn" name="startBtn" class="btn btn-info btn-block" th:value="開始">
     </div>
   </div>
 
   <div class="form-row">
-   	<div class="form-group col-md-12">
+   	<div class="form-group col-12 col-md-12">
 		<input type="submit" id="dummyCreateTaskBtn" name="createTaskBtn" class="btn btn-info btn-block" th:value="課題作成">
     </div>
   </div>

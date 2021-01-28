@@ -14,7 +14,7 @@
     </div>
     <form th:action="@{/admin/teacher/add}" th:object="${teacherForm}" method="post">
     <div class="form-row">
-        <div class="form-group col-md-12">
+        <div class="form-group col-12 col-md-12">
           <label for="id" class="col-form-label">ユーザーID</label>
           <input type="text" class="form-control" name="id"  aria-label="ユーザーID" th:value=*{id} th:errorclass="error-input" />
         </div>
@@ -22,7 +22,7 @@
     </div>
 
     <div class="form-row">
-        <div class="form-group col-md-12">
+        <div class="form-group col-12 col-md-12">
             <label for="password" class="col-form-label">パスワード</label>
                 <input type="password" class="form-control" name="password" aria-label="パスワード" th:value="*{password}" th:errorclass="error-input" />
         </div>
@@ -30,14 +30,14 @@
     </div>
 
     <div class="form-row">
-        <div class="form-group col-md-12">
+        <div class="form-group col-12 col-md-12">
             <label for="name" class="col-form-label">名前</label>
             <input type="text" class="form-control" name="name"  aria-label="名前" th:value="*{name}" th:errorclass="error-input" />
         </div>
         <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="error-messages">error!</span>
     </div>
     <div class="form-row">
-        <div class="col-md-12">
+        <div class="col-12 col-md-12">
             <input type="submit" class="btn btn-info btn-block" th:value="作成">
         </div>
     </div>

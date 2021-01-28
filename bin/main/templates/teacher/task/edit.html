@@ -14,21 +14,21 @@
     </div>
     <form th:action="@{/teacher/task/edit-process}" th:object="${taskForm}" method="post">
       <div class="form-row">
-        <div class="form-group col-md-12">
+        <div class="form-group col-12 col-md-12">
           <label for="title" class="col-form-label">課題名</label>
           <input type="text" class="form-control" name="title" th:value="*{title}" placeholder="課題の名前" aria-label="課題の名前" th:errorclass="error-input" />
         </div>
         <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="error-messages">error!</span>
       </div>
       <div class="form-row">
-        <div class="form-group col-md-12">
+        <div class="form-group col-12 col-md-12">
           <label for="description" class="col-form-label">説明文</label>
             <textarea class="form-control" name="description" th:field="*{description}" placeholder="課題の説明文" aria-label="課題の説明文" th:errorclass="error-input" /></textarea>
         </div>
         <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="error-messages">error!</span>
       </div>
       <div class="form-row">
-        <div class="col-md-12">
+        <div class="col-12 col-md-12">
           <input type="submit" class="btn btn-info btn-block" th:value="更新">
         </div>
       </div>

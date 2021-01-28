@@ -19,22 +19,20 @@
 <form th:action="@{/common/progress/personal}" th:object="${personalGradeForm}" method="post">
 
   <div class="form-row" sec:authorize="hasRole('TEACHER')">
-    <div class="form-group col-md-2">
+    <div class="form-group col-12 col-md-2">
       <input type="text" class="form-control" name="userId" id="userId" aria-label="ユーザーID" th:value=*{userId} th:errorclass="error-input" placeholder="ユーザーID"/>
     </div>
-    <div class="form-group col-md-2">
+    <div class="form-group col-12 col-md-2">
       <input type="submit" class="btn btn-info btn-block" name="targetIdSelectBtn" value="選択">
     </div>
     <span th:if="${#fields.hasErrors('userId')}" th:errors="*{userId}" class="error-messages">error!</span>
-    <div class="form-group col-md-8">
-    </div>
   </div>
   <div sec:authorize="hasRole('STUDENT')">
     <input type="hidden" name="userId" th:value="${#authentication.principal.username}" >
   </div>
 
   <div class="form-row">
-    <div class="form-group col-md-2">
+    <div class="form-group col-6 col-md-2">
       <div class="form-group">
 		<select class="form-control" id="selectYear" name="selectYear">
 		     <option value="">---</option>
@@ -42,17 +40,13 @@
 		</select>
       </div>
     </div>
-   	<div class="form-group col-md-2">
+   	<div class="form-group col-6 col-md-2">
 		<input type="submit" name="selectYearBtn" class="btn btn-info btn-block" th:value="選択">
-    </div>
-    <div class="form-group col-md-2">
-    </div>
-    <div class="form-group col-md-6">
     </div>
   </div>
 
   <div class="form-row">
-    <div class="form-group col-md-2">
+    <div class="form-group col-5 col-md-2">
       <div class="form-group">
 	    <select class="form-control" id="selectFieldL" name="selectFieldL">
 	      <option value="">---</option>
@@ -60,10 +54,10 @@
 	    </select>
       </div>
     </div>
-    <div class="form-group col-md-1">
+    <div class="form-group col-2 col-md-1">
       <input type="submit" name="selectFieldLargeBtn" class="btn btn-info btn-block" th:value="'>'">
     </div>
-    <div class="form-group col-md-2">
+    <div class="form-group col-5 col-md-2">
       <div class="form-group">
 	    <select class="form-control" id="selectFieldM" name="selectFieldM">
 	      <option value="">---</option>
@@ -71,10 +65,10 @@
 	    </select>
       </div>
     </div>
-    <div class="form-group col-md-1">
+    <div class="form-group col-2 col-md-1">
       <input type="submit" name="selectFieldMiddleBtn" class="btn btn-info btn-block" th:value="'>'">
     </div>
-    <div class="form-group col-md-2">
+    <div class="form-group col-5 col-md-2">
       <div class="form-group">
 	    <select class="form-control" id="selectFieldS" name="selectFieldS">
 	      <option value="">---</option>
@@ -82,7 +76,7 @@
 	    </select>
       </div>
     </div>
-    <div class="form-group col-md-2">
+    <div class="form-group col-5 col-md-2">
       <input type="submit" name="selectFieldBtn" class="btn btn-info btn-block" th:value="選択">
     </div>
   </div>

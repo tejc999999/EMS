@@ -13,10 +13,10 @@
 
 <form th:action="@{/student/selfstudy/question-confirm}" th:object="${selfStudyQuestionForm}"  method="post">
   <div class="form-row">
-    <div class="form-group col-md-4">
+    <div class="form-group col-4 col-md-4">
       <h4 th:text="*{questionInfoStr}"></h4>
     </div>
-    <div class="form-group col-md-8">
+    <div class="form-group col-8 col-md-8">
       <h4 th:text="*{questionFieldInfoStr}"></h4>
     </div>
   </div>
@@ -28,17 +28,17 @@
   </div>
 
   <div class="form-row">
-    <div class="form-group col-md-2 pen_tool_div">
+    <div class="form-group col-2 col-md-2 pen_tool_div">
       <input type="button" id="btn_pen_thin" class="btn-outline-info rounded-circle p-0" onclick="canvas_pen_thin()" value=" 細 ">
       <input type="button" id="btn_pen_bold" class="btn-outline-info rounded-circle p-0" onclick="canvas_pen_bold()" value=" 太 ">
       <font id="font_bold_pt"></font>
     </div>
-    <div class="form-group col-md-2 pen_tool_div">
+    <div class="form-group col-2 col-md-2 pen_tool_div">
       <input type="button" id="btn_pen_black" class="btn-outline-info rounded-circle p-0" onclick="change_pen_color('black')" value=" 黒 ">
       <input type="button" id="btn_pen_blue" class="btn-outline-info rounded-circle p-0" onclick="change_pen_color('blue')" value=" 青 ">
       <input type="button" id="btn_pen_red" class="btn-outline-info rounded-circle p-0" onclick="change_pen_color('red')" value=" 赤 ">
     </div>
-    <div class="form-group col-md-1 pen_tool_div">
+    <div class="form-group col-1 col-md-1 pen_tool_div">
       <input type="button" id="btn_canvas_clear" class="btn-outline-info rounded-circle p-0" onclick="canvas_init()" value=" 消 ">
     </div>
   </div>
@@ -63,7 +63,7 @@
   </div>
   
   <div class="form-row  mt-5">
-  	<div class="form-group col-md-12">
+  	<div class="form-group col-12 col-md-12">
       <input type="submit" class="btn btn-info btn-block" value="回答">
     </div>
   </div>

@@ -25,12 +25,12 @@
 		<form th:action="@{/teacher/task/addsearch}"
 			th:object="${taskForm}" method="post">
 			<div class="form-row">
-				<div class="form-group col-md-9">
+				<div class="form-group col-9 col-md-9">
 					<label for="searchWord" class="col-form-label">検索ワード</label> <input
 						type="text" class="form-control" name="searchWord"
 						placeholder="検索ワード" aria-label="検索ワード" />
 				</div>
-				<div class="form-group col-md-offset-1 col-md-2">
+				<div class="form-group col-md-offset-1 col-2 col-md-2">
 					<label for="searchbtn" class="col-form-label"> </label> <input
 						type="submit" name="searchbtn" class="btn btn-info btn-block"
 						th:value="検索">
@@ -41,37 +41,37 @@
 		<table class="table table-hover table-striped">
 			<thead class="thead-dark">
 				<tr class="row">
-					<th class="col-md-3 text-nowrap" scope="col" th:text="タイトル">タイトル</th>
-					<th class="col-md-5 text-nowrap" scope="col" th:text="説明文">説明文</th>
-					<th class="col-md-1" scope="col" th:text="進捗"></th>
-					<th class="col-md-1" scope="col" th:text="回答"></th>
-					<th class="col-md-1" scope="col" th:text="編集"></th>
-					<th class="col-md-1" scope="col" th:text="削除"></th>
+					<th class="col-5 col-md-3 text-nowrap" scope="col" th:text="タイトル">タイトル</th>
+					<th class="col-7 col-md-5 text-nowrap" scope="col" th:text="説明文">説明文</th>
+					<th class="col-3 col-md-1" scope="col" th:text="進捗"></th>
+					<th class="col-3 col-md-1" scope="col" th:text="回答"></th>
+					<th class="col-3 col-md-1" scope="col" th:text="編集"></th>
+					<th class="col-3 col-md-1" scope="col" th:text="削除"></th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr class="row" th:each="task : ${tasks}">
-					<td class="col-md-3" th:text="${task.title}">タイトル</td>
-					<td class="col-md-5" th:text="${task.description}">説明文</td>
-					<td class="col-md-1">
+					<td class="col-5 col-md-3" th:text="${task.title}">タイトル</td>
+					<td class="col-7 col-md-5" th:text="${task.description}">説明文</td>
+					<td class="col-3 col-md-1">
 						<form th:action="@{/teacher/task/submission-list}" method="post">
 							<input type="submit" name="form" th:value="進捗" /> <input
 								type="hidden" name="id" th:value="${task.id}" />
 						</form>
 					</td>
-					<td class="col-md-1">
+					<td class="col-3 col-md-1">
 						<form th:action="@{/teacher/task/question-confirm}" method="post">
 							<input type="submit" name="form" th:value="回答" /> <input
 								type="hidden" name="id" th:value="${task.id}" />
 						</form>
 					</td>
-					<td class="col-md-1">
+					<td class="col-3 col-md-1">
 						<form th:action="@{/teacher/task/edit}" method="post">
 							<input type="submit" name="form" th:value="編集" /> <input
 								type="hidden" name="id" th:value="${task.id}" />
 						</form>
 					</td>
-					<td class="col-md-1">
+					<td class="col-3 col-md-1">
 						<form th:action="@{/teacher/task/delete}" method="post">
 							<input type="submit" name="form" th:value="削除" /> <input
 								type="hidden" name="id" th:value="${task.id}" />

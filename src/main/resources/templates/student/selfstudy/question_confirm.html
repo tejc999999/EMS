@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head th:replace="layout :: common_layout(title = '自習回答確認画面', scripts = ~{::script}, links = ~{::link})">
-<link href="../static/css/canvas.css" th:href="@{/css/canvas.css}" rel="stylesheet"></link>
+  <link href="../static/css/canvas.css" th:href="@{/css/canvas.css}" rel="stylesheet"></link>
+  <script th:src="@{/js/tagchecksubmit.js}"></script> 
 </head>
 <body>
 
@@ -9,24 +10,24 @@
 
 <h2>■自習</h2>
 <div class="able-responsive-md container">
-<form th:action="@{/student/selfstudy/question}" th:object="${selfStudyQuestionForm}"  method="post">
+<form name="form" th:action="@{/student/selfstudy/question}" th:object="${selfStudyQuestionForm}"  method="post">
   <div class="form-row">
-    <div class="form-group col-md-4">
+    <div class="form-group col-12 col-md-4">
       <h4 th:text="*{questionInfoStr}"></h4>
     </div>
-    <div class="form-group col-md-8">
+    <div class="form-group col-12 col-md-8">
       <h4 th:text="*{questionFieldInfoStr}"></h4>
     </div>
   </div>
   <div class="row form-inline pb-3">
-    <div class="col-md-2" th:each="item : ${questionTagItems}">
+    <div class="col-4 col-md-2" th:each="item : ${questionTagItems}">
       <label class="checkbox-inline float-left" th:id="${'tag' + item.key}">
-        <input type="checkbox" name="questionTag" th:value="${item.key}" th:text="${item.value}" th:field="*{questionTag}"/>
+        <input type="checkbox" name="questionTag" th:value="${item.key}" th:text="${item.value}" th:field="*{questionTag}" onchange="submitTagData(this)"/>
       </label>
     </div>    
   </div>
   <div class="form-row">
-    <div class="form-group col-md-12">
+    <div class="form-group col-12 col-md-12">
 	  <img th:src="@{'/images/question/' + *{imagePath}}" alt="問題画像" class="border border-info" width=100% border=10>
 	  <input type="hidden" name="id" th:value="*{id}">
 	  <input type="hidden" name="selectQuestionNumber" th:value="*{selectQuestionNumber}">
@@ -37,13 +38,13 @@
   </div>
 
   <div class="form-row">
-    <div class="col-md-12">
+    <div class="col-12 col-md-12">
        <p th:inline="text" style="font-weight:bold; color: #ff0000;">正解： [[*{correct}]]</p>
     </div>
   </div>
   
   <div class="form-row">
-    <div class="col-md-12">
+    <div class="col-12 col-md-12">
        <a th:href="*{'https://www.google.com/search?safe=off&hl=ja&q=応用情報技術者 解説 午前' + questionInfoStr}" target="_blank">解説を検索</a>
     </div>
   </div>
@@ -58,7 +59,7 @@
   </div>
 
   <div class="form-row  mt-5">
-  	<div th:if="${selfStudyQuestionForm.questionList.size() - 1 > selfStudyQuestionForm.selectQuestionNumber}" class="form-group col-md-12">
+  	<div th:if="${selfStudyQuestionForm.questionList.size() - 1 > selfStudyQuestionForm.selectQuestionNumber}" class="form-group col-12 col-md-12">
       <input type="submit" class="btn btn-info btn-block" name="nextBtn" value="次へ">
     </div>
   </div>

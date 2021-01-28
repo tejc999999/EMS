@@ -13,34 +13,34 @@
 		<form th:action="@{/teacher/task/add-target}" th:object="${taskForm}"
 			method="post">
           <div class="row form-inline pb-3">
-            <div class="col-md-3" th:each="item : ${fieldCheckItems}">
+            <div class="col-4 col-md-3" th:each="item : ${fieldCheckItems}">
               <label class="radio-inline float-left">
                 <input type="radio" name="fieldChecked" th:value="${item.key}" th:text="${item.value}" th:field="*{fieldChecked}" th:checked="${item.key.equals(taskForm.fieldChecked)}" />
               </label>
             </div>
           </div>
 		  <div class="form-row">
-            <div class="form-group col-md-12">
+            <div class="form-group col-12 col-md-12">
               <label for="totalNumber" class="col-form-label">問題数</label>
               <input type="number" class="form-control" name="totalNumber"  aria-label="問題数" th:value="*{totalNumber}" th:errorclass="error-input" />
             </div>
             <span th:if="${#fields.hasErrors('totalNumber')}" th:errors="*{totalNumber}" class="error-messages">error!</span>
 
-		    <div class="form-group col-md-12">
+		    <div class="form-group col-12 col-md-12">
 				<input type="submit" name="selectRandomBtn" class="btn btn-info btn-block" th:value="選択">
 		    </div>
           </div>
 		  <div class="form-row">
-		    <div class="form-group col-md-12">
+		    <div class="form-group col-12 col-md-12">
 		      <label class="col-form-label">問題</label>
 		      <p th:text="'該当:' + ${questionCheckItems.size()} + '問'">
 		    </div>
          </div>
 			<div class="form-row">
-				<div class="col-md-6">
+				<div class="col-6 col-md-6">
 					<input type="submit" name="backBtn" class="btn btn-info btn-block" th:value="前へ">
 				</div>
-				<div class="col-md-6">
+				<div class="col-6 col-md-6">
 					<input type="submit" name="randomSubmit" class="btn btn-info btn-block" th:value="次へ">
 				</div>
 			</div>

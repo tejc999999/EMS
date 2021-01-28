@@ -19,7 +19,7 @@
 <form th:action="@{/common/progress}" th:object="${gradeForm}" method="post">
 
   <div class="form-row">
-    <div class="form-group col-md-2">
+    <div class="form-group col-6 col-md-2">
       <div class="form-group">
 		<select class="form-control" id="selectYear" name="selectYear">
 		     <option value="">---</option>
@@ -27,17 +27,13 @@
 		</select>
       </div>
     </div>
-   	<div class="form-group col-md-2">
+   	<div class="form-group col-6 col-md-2">
 		<input type="submit" name="selectYearBtn" class="btn btn-info btn-block" th:value="選択">
-    </div>
-    <div class="form-group col-md-2">
-    </div>
-    <div class="form-group col-md-6">
     </div>
   </div>
 
   <div class="form-row">
-    <div class="form-group col-md-2">
+    <div class="form-group col-5 col-md-2">
       <div class="form-group">
 	    <select class="form-control" id="selectFieldL" name="selectFieldL">
 	      <option value="">---</option>
@@ -45,10 +41,10 @@
 	    </select>
       </div>
     </div>
-    <div class="form-group col-md-1">
+    <div class="form-group col-2 col-md-1">
       <input type="submit" name="selectFieldLargeBtn" class="btn btn-info btn-block" th:value="'>'">
     </div>
-    <div class="form-group col-md-2">
+    <div class="form-group col-5 col-md-2">
       <div class="form-group">
 	    <select class="form-control" id="selectFieldM" name="selectFieldM">
 	      <option value="">---</option>
@@ -56,10 +52,10 @@
 	    </select>
       </div>
     </div>
-    <div class="form-group col-md-1">
+    <div class="form-group col-2 col-md-1">
       <input type="submit" name="selectFieldMiddleBtn" class="btn btn-info btn-block" th:value="'>'">
     </div>
-    <div class="form-group col-md-2">
+    <div class="form-group col-5 col-md-2">
       <div class="form-group">
 	    <select class="form-control" id="selectFieldS" name="selectFieldS">
 	      <option value="">---</option>
@@ -67,23 +63,21 @@
 	    </select>
       </div>
     </div>
-    <div class="form-group col-md-2">
+    <div class="form-group col-5 col-md-2">
       <input type="submit" name="selectFieldBtn" class="btn btn-info btn-block" th:value="選択">
     </div>
   </div>
 
   <div class="row form-inline pb-3">
-    <div class="col-md-4" th:each="item : ${sortKeyItems}">
+    <div class="col-12 col-md-4" th:each="item : ${sortKeyItems}">
       <label class="radio-inline float-left">
         <input type="radio" name="selectSortKey" th:value="${item.key}" th:text="${item.value}" th:field="*{selectSortKey}" />
       </label>
     </div>
-    <div class="col-md-4">
-    </div>
   </div>
   
   <div class="form-row">
-    <div id="chart" class="chart-container form-group col-md-12">
+    <div id="chart" class="chart-container form-group col-12 col-md-12">
       <canvas id="ex_chart"></canvas>
     </div>
   </div>

@@ -11,32 +11,32 @@
 	<table class="table table-hover table-striped">
 		<thead class="thead-dark">
           	<tr class="row">
-				<th class="col-md-2 text-nowrap" scope="col" th:text="タイトル"></th>
-				<th class="col-md-4 text-nowrap" scope="col" th:text="説明"></th>
-                <th class="col-md-2 text-nowrap" scope="col">回答数</th>
-                <th class="col-md-2 text-nowrap" scope="col"></th>
-				<th class="col-md-2 text-nowrap" scope="col" th:text="ステータス"></th>
+				<th class="col-5 col-md-2 text-nowrap" scope="col" th:text="タイトル"></th>
+				<th class="col-7 col-md-4 text-nowrap" scope="col" th:text="説明"></th>
+                <th class="col-6 col-md-2 text-nowrap" scope="col">回答数</th>
+                <th class="col-2 col-md-2 text-nowrap" scope="col"></th>
+				<th class="col-4 col-md-2 text-nowrap" scope="col" th:text="ステータス"></th>
 			</tr>
 		</thead>
 		<tbody>
 		<tr class="row" th:each="task : ${tasks}">
-			<td class="col-md-2" th:text="${task.title}">タイトル</td>
-			<td class="col-md-4" th:text="${task.description}">説明</td>
-			<td class="col-md-2" th:text="${task.answeredQuestionCnt + '/' + task.questionSize + '問'}">
+			<td class="col-5 col-md-2" th:text="${task.title}">タイトル</td>
+			<td class="col-7 col-md-4" th:text="${task.description}">説明</td>
+			<td class="col-6 col-md-2" th:text="${task.answeredQuestionCnt + '/' + task.questionSize + '問'}">
 			</td>
-			<td th:if="${!task.answeredFlg}" class="col-md-2" >
+			<td th:if="${!task.answeredFlg}" class="col-2 col-md-2" >
 				<form th:action="@{/student/task/question}" method="post">
 					<input type="submit" name="form" th:value="開始" />
 					<input type="hidden" name="id" th:value="${task.id}" />
 				</form>
 			</td>
-			<td th:if="${task.answeredFlg}" class="col-md-2" >
+			<td th:if="${task.answeredFlg}" class="col-2 col-md-2" >
 				<form th:action="@{/student/task/question-answered-list}" method="post">
 					<input type="submit" name="form" th:value="確認" />
 					<input type="hidden" name="id" th:value="${task.id}" />
 				</form>
 			</td>
-			<td class="col-md-2" th:text="${task.answeredFlg}? '完了' : '未完了'">
+			<td class="col-4 col-md-2" th:text="${task.answeredFlg}? '完了' : '未完了'">
 			</td>
 		</tr>
 		</tbody>

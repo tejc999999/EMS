@@ -1,0 +1,6 @@
+/* スマホの場合はボタンが詰まれるため、上部の余白が必要 */
+@media screen and (max-width:767px) {
+  .btn-padding {
+    padding-top:3px;
+  }
+}

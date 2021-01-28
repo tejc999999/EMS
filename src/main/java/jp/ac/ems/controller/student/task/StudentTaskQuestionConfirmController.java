@@ -44,8 +44,8 @@ public class StudentTaskQuestionConfirmController extends BaseStudentTaskControl
     @PostMapping(params="prevBtn")
     public String prevQuestionConfirm(TaskForm form, Model model) {
 
-    	// 確認画面から次の問題を描画する場合、タグの更新を行う
-    	taskService.saveQuestionTag(form);
+//    	// 確認画面から次の問題を描画する場合、タグの更新を行う
+//    	taskService.saveQuestionTag(form);
     	
     	// 次の問題をセットする
     	TaskForm taskForm = taskService.getTaskFormToSetQuestionForm(form.getId(), form.getQuestionForm().getId(), -1);
@@ -65,8 +65,8 @@ public class StudentTaskQuestionConfirmController extends BaseStudentTaskControl
     @PostMapping(params="nextBtn")
     public String nextQuestionConfirm(TaskForm form, Model model) {
 
-    	// 確認画面から次の問題を描画する場合、タグの更新を行う
-    	taskService.saveQuestionTag(form);
+//    	// 確認画面から次の問題を描画する場合、タグの更新を行う
+//    	taskService.saveQuestionTag(form);
     	
     	// 前の問題をセットする
     	TaskForm taskForm = taskService.getTaskFormToSetQuestionForm(form.getId(), form.getQuestionForm().getId(),  1);
@@ -74,7 +74,9 @@ public class StudentTaskQuestionConfirmController extends BaseStudentTaskControl
     	model.addAttribute("taskForm", taskForm);
     	model.addAttribute("answerSelectedItems", taskService.getAnswerSelectedItems());
     	// タグ情報をセット
+    	// TODO:Form側で対応する
     	model.addAttribute("questionTagItems", taskService.getQuestionTagSelectedItems());
+    	
 
         return "student/task/question_confirm";
     }
@@ -86,11 +88,31 @@ public class StudentTaskQuestionConfirmController extends BaseStudentTaskControl
     @PostMapping(params="backPageBtn")
     public String backBtnQuestionConfirm(TaskForm form, Model model) {
 
-    	// TODO: あとで画面側のJavaScriptに実装する
-    	// 確認画面から次の問題を描画する場合、タグの更新を行う
-    	taskService.saveQuestionTag(form);
+//    	// TODO: あとで画面側のJavaScriptに実装する
+//    	// 確認画面から次の問題を描画する場合、タグの更新を行う
+//    	taskService.saveQuestionTag(form);
     	
     	// 課題-問題一覧画面に戻る
         return taskQuestionAnsweredListController.questionAnsweredList(form.getId(), model);
+    }
+    
+    /**
+     * 課題-問題回答:タグ更新(first task-question answer:tag update).
+     * @return 課題-問題ページビュー(task-question page view)
+     */
+    @PostMapping(params="tagChange")
+    public String tagChangeQuestionConfirm(TaskForm form, Model model) {
+
+    	// タグを更新する
+    	taskService.saveQuestionTag(form);
+    	
+    	TaskForm taskForm = taskService.getTaskFormToSetQuestionForm(form.getId(), form.getQuestionForm().getId(), 0);
+    	model.addAttribute("taskForm", taskForm);
+    	model.addAttribute("answerSelectedItems", taskService.getAnswerSelectedItems());
+
+    	// タグ情報をセット
+    	model.addAttribute("questionTagItems", taskService.getQuestionTagSelectedItems());
+
+        return "student/task/question_confirm";
     }
 }

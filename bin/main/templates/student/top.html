@@ -11,7 +11,7 @@
 <div class="able-responsive-md container">
   <div th:object="${topForm}">
     <div class="form-row">
-      <div class="form-group col-md-4">
+      <div class="form-group col-12 col-md-4">
         <p>■累計</p>
         <p>全期間</p>
         <p th:text="${'回答数：' + topForm.totalAnswerCnt + '問(' + topForm.totalCorrectRate + '%正解)'}">
@@ -21,7 +21,7 @@
         <p th:text="${'　・マネジメント系/回答数：' + topForm.totalManagementAnswerCnt + '問(' + topForm.totalManagementCorrectRate + '%正解)'}">
         <p th:text="*{'　・ストラテジ系/回答数：' + totalStrategyAnswerCnt + '問(' + totalStrategyCorrectRate + '%正解)'}">
       </div>
-      <div class="form-group col-md-4">
+      <div class="form-group col-12 col-md-4">
         <p>■今週</p>
         <p th:if="*{weekPeriod}" th:text="*{'期間:' + weekPeriod}">
         <p th:text="${'回答数：' + topForm.weekAnswerCnt + '問(' + topForm.weekCorrectRate + '%正解)'}">
@@ -31,7 +31,7 @@
         <p th:text="${'　・マネジメント系/回答数：' + topForm.weekManagementAnswerCnt + '問(' + topForm.weekManagementCorrectRate + '%正解)'}">
         <p th:text="*{'　・ストラテジ系/回答数：' + weekStrategyAnswerCnt + '問(' + weekStrategyCorrectRate + '%正解)'}">
       </div>
-      <div class="form-group col-md-4">
+      <div class="form-group col-12 col-md-4">
         <p>■前週</p>
         <p th:if="*{prevWeekPeriod}" th:text="*{'期間:' + prevWeekPeriod}">
         <p th:text="${'回答数：' + topForm.prevWeekAnswerCnt + '問(' + topForm.prevWeekCorrectRate + '%正解)'}">
