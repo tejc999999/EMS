@@ -515,6 +515,7 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 
 		List<UserBean> userBeanList = new ArrayList<UserBean>();
 		// 一旦ユーザー情報を削除
+		// TODO:中間テーブルをクリアすることで対応してみる
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userId = auth.getName();
         String questionId = form.getQuestionList().get(form.getSelectQuestionNumber());
@@ -528,25 +529,29 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
     		// 問題タグあり
     		if(userBeanList.size() > 0) {
 	            UserBean userBean = userBeanList.get(0);
-	    		// 一旦ユーザー情報を削除
-	        	userRepository.delete(userBean);
-	            // タグ情報を更新したユーザー情報を登録
 	            userBean.updateQuestionTagId(questionId, tagIdList);
 	            userRepository.save(userBean);
+//	    		// 一旦ユーザー情報を削除
+//	        	userRepository.delete(userBean);
+//	            // タグ情報を更新したユーザー情報を登録
+//	            userBean.updateQuestionTagId(questionId, tagIdList);
+//	            userRepository.save(userBean);
     		}
     	} else {
     		// 問題タグなし:タグ情報がある場合のみ更新（削除）
-
     		List<String> tagList = userBeanList.get(0).getQuestionTagList(questionId);
     		if(tagList != null && tagList.size() > 0) {
 
     			if(userBeanList.size() > 0) {
     	            UserBean userBean = userBeanList.get(0);
-		    		// 一旦ユーザー情報を削除
-		        	userRepository.delete(userBean);
-		            // タグ情報を更新したユーザー情報を登録
+//		            // タグ情報を更新したユーザー情報を登録
 		            userBean.updateQuestionTagId(questionId, tagIdList);
-		            userRepository.save(userBean);
+		            userRepository.save(userBean);          
+//		    		// 一旦ユーザー情報を削除
+//		        	userRepository.delete(userBean);
+//		            // タグ情報を更新したユーザー情報を登録
+//		            userBean.updateQuestionTagId(questionId, tagIdList);
+//		            userRepository.save(userBean);
     			}
     		}
     	}

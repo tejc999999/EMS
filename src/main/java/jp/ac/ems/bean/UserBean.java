@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -101,7 +102,7 @@ public class UserBean {
      */
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval=true)
     @JoinColumn(name = "user_id")
     private Set<StudentQuestionTagBean> studentQuestionTagBeans;
 
@@ -161,7 +162,7 @@ public class UserBean {
         List<String> list = new ArrayList<>();
         if(questionId != null) {
 	        studentQuestionTagBeans.forEach(studentQuestionTagBean -> {
-	        	if(studentQuestionTagBean.getQuestionId() != null && Long.valueOf(questionId) == studentQuestionTagBean.getQuestionId()) {
+	        	if(studentQuestionTagBean.getQuestionId() != null && Long.valueOf(questionId).longValue() == studentQuestionTagBean.getQuestionId().longValue()) {
 	                list.add(String.valueOf(studentQuestionTagBean.getTagId()));
 	        	}
 	        });
@@ -234,7 +235,7 @@ public class UserBean {
             // 既存の該当問題タグ情報を削除する
 	    	List<StudentQuestionTagBean> removeQuestionTagBeanList = studentQuestionTagBeans
 	    		.stream()
-	    		.filter(entry -> Long.valueOf(questionId) == entry.getQuestionId())
+	    		.filter(entry -> Long.valueOf(questionId).longValue() == entry.getQuestionId().longValue())
 	    		.collect(Collectors.toList()); 
 	    	for(StudentQuestionTagBean bean : removeQuestionTagBeanList) {
 	    		studentQuestionTagBeans.remove(bean);

@@ -546,7 +546,7 @@ public class StudentTaskServiceImpl implements StudentTaskService {
     		if(userBeanList.size() > 0) {
 	            UserBean userBean = userBeanList.get(0);
 	    		// 一旦ユーザー情報を削除
-	        	userRepository.delete(userBean);
+//	        	userRepository.delete(userBean);
 	            // タグ情報を更新したユーザー情報を登録
 	            userBean.updateQuestionTagId(questionId, tagIdList);
 	            userRepository.save(userBean);
@@ -560,7 +560,7 @@ public class StudentTaskServiceImpl implements StudentTaskService {
     			if(userBeanList.size() > 0) {
     	            UserBean userBean = userBeanList.get(0);
 		    		// 一旦ユーザー情報を削除
-		        	userRepository.delete(userBean);
+//		        	userRepository.delete(userBean);
 		            // タグ情報を更新したユーザー情報を登録
 		            userBean.updateQuestionTagId(questionId, tagIdList);
 		            userRepository.save(userBean);
