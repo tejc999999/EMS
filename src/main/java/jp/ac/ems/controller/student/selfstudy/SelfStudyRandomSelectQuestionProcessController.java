@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import jp.ac.ems.form.student.SelfStudyForm;
 import jp.ac.ems.form.student.SelfStudyQuestionForm;
+import jp.ac.ems.service.student.StudentSelfStudyService;
 
 /**
  * 学生用自習ランダム選択開始Contollerクラス（student start random select self study Controller Class）.
@@ -17,8 +18,17 @@ import jp.ac.ems.form.student.SelfStudyQuestionForm;
  */
 @Controller
 @RequestMapping("/student/selfstudy/select-question-random-process")
-public class SelfStudyRandomSelectQuestionProcessController extends BaseSelfStudyController {
+public class SelfStudyRandomSelectQuestionProcessController {
     
+	/**
+	 * 自習サービス
+	 */
+	@Autowired
+	StudentSelfStudyService studentSelfStudyService;
+	
+	/**
+	 * 学生用自習ランダム選択Contoller
+	 */
 	@Autowired
 	SelfStudyRandomSelectQuestionController selfStudySelfRandomController;
 	

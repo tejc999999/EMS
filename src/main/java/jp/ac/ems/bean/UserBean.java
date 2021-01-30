@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -225,33 +224,61 @@ public class UserBean {
      * 問題タグを更新する
      * 
      * @param questionId 問題ID(question id)
-     * @param tagIdList タグIDリスト(tag id list)
+     * @param tagId タグID(tag id)
+     * @param tagIdList タグ状態(true:有効化、false:無効化)
      */
-    public void updateQuestionTagId(String questionId, List<String> tagIdList) {
+    public void updateQuestionTagId(String questionId, String tagId, boolean checkFlg) {
     	if(questionId != null) {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             String userId = auth.getName();
 
             // 既存の該当問題タグ情報を削除する
-	    	List<StudentQuestionTagBean> removeQuestionTagBeanList = studentQuestionTagBeans
+	    	List<StudentQuestionTagBean> questionTagBeanList = studentQuestionTagBeans
 	    		.stream()
 	    		.filter(entry -> Long.valueOf(questionId).longValue() == entry.getQuestionId().longValue())
 	    		.collect(Collectors.toList()); 
-	    	for(StudentQuestionTagBean bean : removeQuestionTagBeanList) {
-	    		studentQuestionTagBeans.remove(bean);
-    		}
-	    	// 新しく問題タグ情報を追加する
-	    	if(tagIdList != null && tagIdList.size() > 0) {
-	    		for(String tagId : tagIdList) {
-	    			StudentQuestionTagBean bean = new StudentQuestionTagBean();
-	    			bean.setUserId(userId);
-	    			bean.setQuestionId(Long.valueOf(questionId));
-	    			bean.setTagId(Long.valueOf(tagId));
-	    			studentQuestionTagBeans.add(bean);
+	    	
+	    	if(checkFlg) {
+	    		// タグ有効化
+    			StudentQuestionTagBean bean = new StudentQuestionTagBean();
+    			bean.setUserId(userId);
+    			bean.setQuestionId(Long.valueOf(questionId));
+    			bean.setTagId(Long.valueOf(tagId));
+    			studentQuestionTagBeans.add(bean);
+	    	} else {
+	    		// タグ無効化
+		    	for(StudentQuestionTagBean bean : questionTagBeanList) {
+		    		if(bean.getTagId().longValue() == Long.valueOf(tagId).longValue()) {
+		    			studentQuestionTagBeans.remove(bean);
+		    			break;
+		    		}
 	    		}
 	    	}
     	}
     }
+//        public void updateQuestionTagId(String questionId, List<String> tagIdList) {
+//    	if(questionId != null) {
+//            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//            String userId = auth.getName();
+//
+//            // 既存の該当問題タグ情報を削除する
+//	    	List<StudentQuestionTagBean> removeQuestionTagBeanList = studentQuestionTagBeans
+//	    		.stream()
+//	    		.filter(entry -> Long.valueOf(questionId).longValue() == entry.getQuestionId().longValue())
+//	    		.collect(Collectors.toList()); 
+//	    	for(StudentQuestionTagBean bean : removeQuestionTagBeanList) {
+//	    		studentQuestionTagBeans.remove(bean);
+//    		}
+//	    	// 新しく問題タグ情報を追加する
+//	    	if(tagIdList != null && tagIdList.size() > 0) {
+//	    		for(String tagId : tagIdList) {
+//	    			StudentQuestionTagBean bean = new StudentQuestionTagBean();
+//	    			bean.setUserId(userId);
+//	    			bean.setQuestionId(Long.valueOf(questionId));
+//	    			bean.setTagId(Long.valueOf(tagId));
+//	    			studentQuestionTagBeans.add(bean);
+//	    		}
+//	    	}
     
     
     /**

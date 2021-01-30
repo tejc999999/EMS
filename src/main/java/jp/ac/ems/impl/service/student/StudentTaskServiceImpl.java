@@ -34,6 +34,7 @@ import jp.ac.ems.repository.StudentTaskQuestionHistoryRepository;
 //import jp.ac.ems.repository.StudentTaskQuestionHistoryRepository;
 import jp.ac.ems.repository.TaskRepository;
 import jp.ac.ems.repository.UserRepository;
+import jp.ac.ems.service.shared.SharedStudentQuestionHistoryService;
 import jp.ac.ems.service.student.StudentTaskService;
 import jp.ac.ems.service.util.JPCalenderEncoder;
 
@@ -44,6 +45,12 @@ import jp.ac.ems.service.util.JPCalenderEncoder;
 @Service
 public class StudentTaskServiceImpl implements StudentTaskService {
 	
+	/**
+	 * 学生用課題回答履歴共通処理サービス
+	 */
+	@Autowired
+	SharedStudentQuestionHistoryService sharedStudentQuestionHistoryService;
+
     /**
      * 課題リポジトリ(task repository).
      */
@@ -523,53 +530,6 @@ public class StudentTaskServiceImpl implements StudentTaskService {
 	}
 	
     /**
-     * 問題タグ情報保存.
-     * 
-     * @param form 課題Form
-     */
-    @Override
-    public void saveQuestionTag(TaskForm form) {
-
-		List<UserBean> userBeanList = new ArrayList<UserBean>();
-		// 一旦ユーザー情報を削除
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String userId = auth.getName();
-        String questionId = form.getQuestionForm().getId();
-        Optional<UserBean> optUser = userRepository.findById(userId);
-        optUser.ifPresent(userBean -> {
-        	userBeanList.add(userBean);
-        });
-    	
-    	List<String> tagIdList = form.getQuestionForm().getQuestionTag();
-    	if(tagIdList != null && tagIdList.size() > 0) {
-    		// 問題タグあり
-    		if(userBeanList.size() > 0) {
-	            UserBean userBean = userBeanList.get(0);
-	    		// 一旦ユーザー情報を削除
-//	        	userRepository.delete(userBean);
-	            // タグ情報を更新したユーザー情報を登録
-	            userBean.updateQuestionTagId(questionId, tagIdList);
-	            userRepository.save(userBean);
-    		}
-    	} else {
-    		// 問題タグなし:タグ情報がある場合のみ更新（削除）
-
-    		List<String> tagList = userBeanList.get(0).getQuestionTagList(questionId);
-    		if(tagList != null && tagList.size() > 0) {
-
-    			if(userBeanList.size() > 0) {
-    	            UserBean userBean = userBeanList.get(0);
-		    		// 一旦ユーザー情報を削除
-//		        	userRepository.delete(userBean);
-		            // タグ情報を更新したユーザー情報を登録
-		            userBean.updateQuestionTagId(questionId, tagIdList);
-		            userRepository.save(userBean);
-    			}
-    		}
-    	}
-    }
-	
-    /**
      * 問題タグをFormにセットする.
      * 
      * @param form 自習問題Form
@@ -684,4 +644,17 @@ public class StudentTaskServiceImpl implements StudentTaskService {
     	
     	return questionForm;
 	}
+	
+    /**
+     * 問題タグ情報保存.
+     * 
+     * @param form 課題Form
+     * @param tagId タグID
+     * @param tagChangeFlg タグ変更状態（true:有効化、false:無効化)
+     */
+    @Override
+    public void saveQuestionTag(TaskForm form, String tagId, String tagCheckFlg) {
+    	
+    	sharedStudentQuestionHistoryService.saveQuestionTag(form.getQuestionForm().getId(), tagId, tagCheckFlg);
+    }
 }

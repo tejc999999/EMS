@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import jp.ac.ems.form.student.SelfStudyForm;
 import jp.ac.ems.form.student.SelfStudyQuestionForm;
+import jp.ac.ems.service.student.StudentSelfStudyService;
 
 /**
  * 学生用自習個別問題取得Contollerクラス（student self select submit self study Controller Class）.
@@ -17,10 +18,19 @@ import jp.ac.ems.form.student.SelfStudyQuestionForm;
  */
 @Controller
 @RequestMapping("/student/selfstudy/select-question-individual-process")
-public class SelfStudyIndividualSelectQuestionProcessController extends BaseSelfStudyController {
+public class SelfStudyIndividualSelectQuestionProcessController {
 	
+	/**
+	 * 学生用自習個別問題選択Contoller
+	 */
 	@Autowired
 	SelfStudyIndividualSelectQuestionController selfStudySelfSelectController;
+	
+	/**
+	 * 自習サービス
+	 */
+	@Autowired
+	StudentSelfStudyService studentSelfStudyService;
 	
     /**
      * 自習問題条件による問題取得.

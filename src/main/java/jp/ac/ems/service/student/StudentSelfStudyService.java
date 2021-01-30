@@ -77,13 +77,6 @@ public interface StudentSelfStudyService {
      * @return 問題タグアイテムマップ
      */
     public Map<String, String> getQuestionTagSelectedItems();
-
-    /**
-     * 問題タグ情報保存.
-     * 
-     * @param form 自習問題Form
-     */
-    public void saveQuestionTag(SelfStudyQuestionForm form);
     
     /**
      * 自習用課題作成.
@@ -102,4 +95,13 @@ public interface StudentSelfStudyService {
      * @param form 自習Form
      */
     public void setRandomQuestionList(SelfStudyForm form);
+    
+    /**
+     * 問題タグ情報保存.
+     * 
+     * @param form 自習問題Form
+     * @param tagId タグID
+     * @param tagChangeFlg タグ変更状態（true:有効化、false:無効化)
+     */
+    public void saveQuestionTag(SelfStudyQuestionForm form, String tagId, String tagCheckFlg);
 }

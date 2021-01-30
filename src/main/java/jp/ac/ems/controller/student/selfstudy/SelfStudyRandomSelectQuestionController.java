@@ -1,5 +1,6 @@
 package jp.ac.ems.controller.student.selfstudy;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import jp.ac.ems.form.student.SelfStudyForm;
+import jp.ac.ems.service.student.StudentSelfStudyService;
 
 /**
  * 学生用自習ランダム選択Contollerクラス（student random select self study Controller Class）.
@@ -15,7 +17,13 @@ import jp.ac.ems.form.student.SelfStudyForm;
  */
 @Controller
 @RequestMapping("/student/selfstudy/select-question-random")
-public class SelfStudyRandomSelectQuestionController extends BaseSelfStudyController {
+public class SelfStudyRandomSelectQuestionController {
+	
+	/**
+	 * 自習サービス
+	 */
+	@Autowired
+	StudentSelfStudyService studentSelfStudyService;
 	
     /**
      * ランダム自習問題選択(select self study random question).

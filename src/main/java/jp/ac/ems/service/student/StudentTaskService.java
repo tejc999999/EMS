@@ -91,11 +91,13 @@ public interface StudentTaskService {
      * @return 問題タグアイテムマップ
      */
     public Map<String, String> getQuestionTagSelectedItems();
-
+    
     /**
      * 問題タグ情報保存.
      * 
      * @param form 課題Form
+     * @param tagId タグID
+     * @param tagChangeFlg タグ変更状態（true:有効化、false:無効化)
      */
-    public void saveQuestionTag(TaskForm form);
+    public void saveQuestionTag(TaskForm form, String tagId, String tagCheckFlg);
 }

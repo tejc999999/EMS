@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 @RequestMapping("/student/selfstudy")
-public class SelfStudyController extends BaseSelfStudyController {
-        
+public class SelfStudyController {
 
 }

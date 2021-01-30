@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import jp.ac.ems.form.student.TaskForm;
+import jp.ac.ems.service.student.StudentTaskService;
 
 /**
  * 学生用課題問題Contollerクラス（student question task Controller Class）.
@@ -15,8 +16,17 @@ import jp.ac.ems.form.student.TaskForm;
  */
 @Controller
 @RequestMapping("/student/task/question")
-public class StudentTaskQuestionController extends BaseStudentTaskController {
+public class StudentTaskQuestionController {
 	
+	/**
+	 * 課題サービス
+	 */
+    @Autowired
+    StudentTaskService taskService;
+	
+    /**
+     * 学生用課題Contoller
+     */
 	@Autowired
 	StudentTaskController taskController;
 	

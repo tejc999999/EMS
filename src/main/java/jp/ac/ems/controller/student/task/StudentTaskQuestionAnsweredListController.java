@@ -2,6 +2,7 @@ package jp.ac.ems.controller.student.task;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import jp.ac.ems.form.student.TaskQuestionForm;
+import jp.ac.ems.service.student.StudentTaskService;
 import jp.ac.ems.form.student.TaskForm;
 
 /**
@@ -17,8 +19,14 @@ import jp.ac.ems.form.student.TaskForm;
  */
 @Controller
 @RequestMapping("/student/task/question-answered-list")
-public class StudentTaskQuestionAnsweredListController extends BaseStudentTaskController {
-	        
+public class StudentTaskQuestionAnsweredListController {
+
+	/**
+	 * 課題サービス
+	 */
+    @Autowired
+    StudentTaskService taskService;
+	
     /**
      * 課題-問題回答履歴一覧表示(show task-answered question list).
      * @pram id 課題ID(task id)
