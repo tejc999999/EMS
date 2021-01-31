@@ -13,7 +13,6 @@ function submitTagData(selectObj) {
     tagValueElm.setAttribute('name', 'tagValue');
     tagValueElm.setAttribute('value', selectObj.value);
     document.form.appendChild(tagValueElm);
-    alert("submit!!");
     // タグ変更要求を送信
     document.form.submit();
 }

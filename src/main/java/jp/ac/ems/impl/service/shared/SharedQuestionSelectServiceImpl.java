@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import jp.ac.ems.bean.QuestionBean;
 import jp.ac.ems.config.FieldLarge;
@@ -25,6 +26,7 @@ import lombok.Data;
  * @author user01-m
  *
  */
+@Service
 public class SharedQuestionSelectServiceImpl implements SharedQuestionSelectService {
 	
 	/**
@@ -92,7 +94,8 @@ public class SharedQuestionSelectServiceImpl implements SharedQuestionSelectServ
      * @param list 問題IDリスト
      * @return 直近6回の問題IDリスト
      */
-    private List<String> getLatestQuestionIdList(List<String> questionIdList) {
+	@Override
+    public List<String> getLatestQuestionIdList(List<String> questionIdList) {
     	
 		// 直近6回分だけにする
 		List<YearAndTermData> latestYearAndTermList = new ArrayList<>();

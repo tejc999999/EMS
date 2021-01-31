@@ -19,4 +19,12 @@ public interface SharedQuestionSelectService {
      * @return 問題IDリスト
      */
     public List<String> createRandomQuestionId(int fieldLevel, Map<Byte, Integer> numberByFieldMap, boolean latestFlg);
+
+    /**
+     * 直近6回の問題のみ取得する
+     * 
+     * @param list 問題IDリスト
+     * @return 直近6回の問題IDリスト
+     */
+    public List<String> getLatestQuestionIdList(List<String> questionIdList);
 }

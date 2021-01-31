@@ -319,7 +319,7 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 		
 		if(form.isLatestFlg()) {
 			// 直近6回以外の問題IDを取り除く
-			questionIdList = getLatestQuestionIdList(questionIdList);
+			questionIdList = sharedQuestionSelectService.getLatestQuestionIdList(questionIdList);
 		}
 		
 		form.setQuestionList(questionIdList);

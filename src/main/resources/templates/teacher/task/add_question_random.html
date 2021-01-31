@@ -13,6 +13,14 @@
 		<form th:action="@{/teacher/task/add-target}" th:object="${taskForm}"
 			method="post">
           <div class="row form-inline pb-3">
+            <div class="col-12 col-md-2">
+              <label class="float-left">
+                <input type="checkbox" name="latestFlg" th:value="${true}" th:text="'直近6回'" th:field="*{latestFlg}" />
+              </label>
+            </div>
+          </div>
+
+          <div class="row form-inline pb-3">
             <div class="col-4 col-md-3" th:each="item : ${fieldCheckItems}">
               <label class="radio-inline float-left">
                 <input type="radio" name="fieldChecked" th:value="${item.key}" th:text="${item.value}" th:field="*{fieldChecked}" th:checked="${item.key.equals(taskForm.fieldChecked)}" />

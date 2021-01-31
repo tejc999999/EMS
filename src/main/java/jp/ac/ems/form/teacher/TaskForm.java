@@ -69,6 +69,11 @@ public class TaskForm {
      * 出題問題数
      */
     private String totalNumber;
+    
+    /**
+     * 最新フラグ
+     */
+    private boolean latestFlg;
     // ランダム問題選択用===========================================================
     
     /**

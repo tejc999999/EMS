@@ -120,9 +120,10 @@ public interface TeacherTaskService {
      * 
      * @param fieldLevel 分野レベル（0:大分類, 1：中分類, 2:小分類)
      * @param totalNumber 出題数
+     * @param latestFlg 直近6回(true:有効、false:無効)
      * @return 問題IDマップ
      */
-    public Map<String, String> getRandomQuestionIdList(int fieldLevel, int totalNumber);
+    public Map<String, String> getRandomQuestionIdList(int fieldLevel, int totalNumber, boolean latestFlg);
     
     /**
      * 課題Formに問題Formをセットする

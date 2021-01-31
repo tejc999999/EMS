@@ -860,10 +860,11 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
      * 
      * @param fieldLevel 分野レベル（0:大分類, 1：中分類, 2:小分類)
      * @param totalNumber 出題数
+     * @param latestFlg 直近6回フラグ(true:有効、false:無効)
      * @return 問題マップ
      */
     @Override
-    public Map<String, String> getRandomQuestionIdList(int fieldLevel, int totalNumber) {
+    public Map<String, String> getRandomQuestionIdList(int fieldLevel, int totalNumber, boolean latestFlg) {
     	
         Map<String, String> result = null;
         List<QuestionBean> questionBeanList = null;
@@ -887,8 +888,10 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
     	// 指定された問題数ごとに分野別の抽出数を算出
     	Map<Byte, Integer> numberByFieldMap = getNumberOfQuestionByField(questionByFieldMap, totalNumber);
     	// 指定した分野から、抽出数ぶんの問題を取得
-    	questionBeanList = createRandomQuestionId(fieldLevel, numberByFieldMap);
+    	List<String> questionIdList = createRandomQuestionId(fieldLevel, numberByFieldMap, latestFlg);
 
+    	questionBeanList = convertQuestionBeanFromQuestionIdList(questionIdList);
+    	
         result = convertQuestionMap(questionBeanList);
     	
     	return result;
@@ -1024,45 +1027,24 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
     	
     	return result;
     }
-	
-    /**
-     * 指定の出題数に基づいた問題IDリストを生成.
-     * 
-     * @param fieldLevel 分野ごとの問題IDマップ
-     * @param numberByFieldMap 分野ごとの出題数マップ
-     * @return 問題リスト
-     */
-    private List<QuestionBean> createRandomQuestionId(int fieldLevel, Map<Byte, Integer> numberByFieldMap) {
-    	List<QuestionBean> result = new ArrayList<QuestionBean>();
 
-    	if(fieldLevel == FieldLarge.LEVEL) {
-    		// 大分類
-	    	numberByFieldMap.entrySet()
-	    		.stream()
-	    		.forEach(e -> {
-	        		List<QuestionBean> questionList = questionRepository.findByFieldLId(e.getKey());
-	    			result.addAll(getRandom(questionList, e.getValue()));
-	    		});
-    	} else if(fieldLevel == FieldMiddle.LEVEL) {
-    		// 中分類
-	    	numberByFieldMap.entrySet()
-    		.stream()
-    		.forEach(e -> {
-        		List<QuestionBean> questionList = questionRepository.findByFieldMId(e.getKey());
-    			result.addAll(getRandom(questionList, e.getValue()));
-    		});
-    	} else if(fieldLevel == FieldSmall.LEVEL) {
-    		// 小分類
-	    	numberByFieldMap.entrySet()
-    		.stream()
-    		.forEach(e -> {
-        		List<QuestionBean> questionList = questionRepository.findByFieldSId(e.getKey());
-    			result.addAll(getRandom(questionList, e.getValue()));
+    /**
+     * 問題IDリストを問題Beanリストに変換する
+     * 
+     * @param questionIdList 問題IDリスト
+     * @return 問題Beanリスト
+     */
+    private List<QuestionBean> convertQuestionBeanFromQuestionIdList(List<String> questionIdList) {
+    	List<QuestionBean> result = new ArrayList<QuestionBean>();
+    	for(String questionId: questionIdList) {
+    		Optional<QuestionBean> optQuestionBean = questionRepository.findById(Long.valueOf(questionId).longValue());
+    		optQuestionBean.ifPresent(questionBean -> {
+    			result.add(questionBean);
     		});
     	}
-    	
     	return result;
     }
+    
     /**
      * 指定の出題数に基づいた問題IDリストを生成.
      * 

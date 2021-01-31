@@ -204,7 +204,7 @@ public class TeacherTaskAddTargetController{
     	
     	// 問題更新
     	if(form.getTotalNumber() != null &&  !"".equals(form.getTotalNumber())) {
-	    	Map<String, String> questionMap = taskService.getRandomQuestionIdList(Integer.parseInt(form.getFieldChecked()), Integer.parseInt(form.getTotalNumber()));
+	    	Map<String, String> questionMap = taskService.getRandomQuestionIdList(Integer.parseInt(form.getFieldChecked()), Integer.parseInt(form.getTotalNumber()), form.isLatestFlg());
 	    	model.addAttribute("questionCheckItems", questionMap);
 	    	form.setQuestionCheckedList(new ArrayList<String>(questionMap.keySet()));
     	} else {

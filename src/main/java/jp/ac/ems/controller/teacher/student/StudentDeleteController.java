@@ -18,7 +18,7 @@ import jp.ac.ems.service.teacher.TeacherStudentService;
  */
 @Controller
 @RequestMapping("/teacher/student/delete")
-public class StudentDeleteController extends BaseStudentController {
+public class StudentDeleteController {
     
     /**
      * 学生サービス(student service).
