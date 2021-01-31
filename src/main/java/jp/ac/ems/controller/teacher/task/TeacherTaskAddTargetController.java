@@ -5,12 +5,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import jp.ac.ems.form.teacher.TaskForm;
+import jp.ac.ems.service.teacher.TeacherTaskService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -20,8 +22,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 @RequestMapping("/teacher/task/add-target")
-public class TeacherTaskAddTargetController extends BaseTeacherTaskController{
+public class TeacherTaskAddTargetController{
 	
+    @Autowired
+    TeacherTaskService taskService;
+
+    /**
+     * モデルにフォームをセットする(set form the model).
+     * @return 課題Form(task form)
+     */
+    @ModelAttribute
+    TaskForm setupForm() {
+        return new TaskForm();
+    }
+    
 	@Autowired
 	TeacherTaskAddQuestionController teacherTaskAddQuestionController;
 

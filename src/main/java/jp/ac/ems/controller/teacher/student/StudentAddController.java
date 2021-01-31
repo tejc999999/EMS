@@ -1,12 +1,15 @@
 package jp.ac.ems.controller.teacher.student;
 
 import jp.ac.ems.form.teacher.StudentForm;
+import jp.ac.ems.service.teacher.TeacherStudentService;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -17,7 +20,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 @RequestMapping("/teacher/student/add")
-public class StudentAddController extends BaseStudentController {
+public class StudentAddController {
+    
+    /**
+     * 学生サービス(student service).
+     */
+    @Autowired
+    TeacherStudentService studentService;
+
+    /**
+     * モデルにフォームをセットする(set form the model).
+     * @return 学生Form(student form)
+     */
+    @ModelAttribute
+    StudentForm setupForm() {
+        return new StudentForm();
+    }
     
     /**
      * 学生登録ページ表示(show add student page).

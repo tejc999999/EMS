@@ -3,11 +3,14 @@ package jp.ac.ems.controller.teacher.task;
 import java.util.List;
 
 import jp.ac.ems.form.teacher.TaskForm;
+import jp.ac.ems.service.teacher.TeacherTaskService;
 import jp.ac.ems.form.teacher.ConfirmTaskForm;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -16,8 +19,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 @RequestMapping("/teacher/task")
-public class TeacherTaskController extends BaseTeacherTaskController{
+public class TeacherTaskController {
 
+    @Autowired
+    TeacherTaskService taskService;
+
+    /**
+     * モデルにフォームをセットする(set form the model).
+     * @return 課題Form(task form)
+     */
+    @ModelAttribute
+    TaskForm setupForm() {
+        return new TaskForm();
+    }
+    
     /**
      * 課題一覧(question list).
      * @param model 問題一覧保存用モデル(model to save question list)

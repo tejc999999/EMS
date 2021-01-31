@@ -1,10 +1,13 @@
 package jp.ac.ems.controller.teacher.task;
 
 import jp.ac.ems.form.teacher.ConfirmTaskForm;
+import jp.ac.ems.form.teacher.TaskForm;
+import jp.ac.ems.service.teacher.TeacherTaskService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,7 +18,19 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 @Controller
 @RequestMapping("/teacher/task/question-confirm")
-public class TeacherTaskQuestionConfirmController extends BaseTeacherTaskController{
+public class TeacherTaskQuestionConfirmController {
+    
+    @Autowired
+    TeacherTaskService taskService;
+
+    /**
+     * モデルにフォームをセットする(set form the model).
+     * @return 課題Form(task form)
+     */
+    @ModelAttribute
+    TaskForm setupForm() {
+        return new TaskForm();
+    }
     
 	@Autowired
 	TeacherTaskController teacherTaskController;

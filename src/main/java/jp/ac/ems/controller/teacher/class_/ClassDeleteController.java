@@ -1,11 +1,15 @@
 package jp.ac.ems.controller.teacher.class_;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import jp.ac.ems.form.teacher.ClassForm;
+import jp.ac.ems.service.teacher.TeacherClassService;
 
 
 /**
@@ -14,8 +18,23 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 @Controller
 @RequestMapping("/teacher/class_/delete")
-public class ClassDeleteController extends BaseClassController {
+public class ClassDeleteController {
 
+    /**
+     * クラス用サービス(class service).
+     */
+    @Autowired
+    TeacherClassService classService;
+    
+    /**
+     * モデルにフォームをセット(set form the model).
+     * @return クラスForm(class form)
+     */
+    @ModelAttribute
+    ClassForm setupForm() {
+        return new ClassForm();
+    }
+    
     /**
      * クラス削除処理(delete process for class).
      * @return クラス一覧ページリダイレクト(redirect class list page)

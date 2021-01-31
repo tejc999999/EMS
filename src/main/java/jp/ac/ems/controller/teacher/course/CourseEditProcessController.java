@@ -3,11 +3,14 @@ package jp.ac.ems.controller.teacher.course;
 import java.util.Map;
 
 import jp.ac.ems.form.teacher.CourseForm;
+import jp.ac.ems.service.teacher.TeacherCourseService;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -17,8 +20,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 @RequestMapping("/teacher/course/edit-process")
-public class CourseEditProcessController extends BaseCourseController {
+public class CourseEditProcessController {
 
+    /**
+     * コースサービス.
+     */
+    @Autowired
+    TeacherCourseService courseService;
+    
+    /**
+     * モデルにフォームをセットする(set form the model).
+     * @return コースForm(course form)
+     */
+    @ModelAttribute
+    CourseForm setupForm() {
+        return new CourseForm();
+    }
+    
     /**
      * コース編集処理(edit process for course).
      * @return コース一覧ページリダイレクト(course list page redirect)

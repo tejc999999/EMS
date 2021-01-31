@@ -3,10 +3,12 @@ package jp.ac.ems.controller.teacher.class_;
 import java.util.Map;
 
 import jp.ac.ems.form.teacher.ClassForm;
+import jp.ac.ems.service.teacher.TeacherClassService;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,8 +20,23 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 @Controller
 @RequestMapping("/teacher/class_/edit")
-public class ClassEditController extends BaseClassController {
+public class ClassEditController {
 
+    /**
+     * クラス用サービス(class service).
+     */
+    @Autowired
+    TeacherClassService classService;
+    
+    /**
+     * モデルにフォームをセット(set form the model).
+     * @return クラスForm(class form)
+     */
+    @ModelAttribute
+    ClassForm setupForm() {
+        return new ClassForm();
+    }
+    
     /**
      * クラス編集ページ表示(show edit class page).
      * @return クラス編集ページビュー(edit class page view)

@@ -2,13 +2,16 @@ package jp.ac.ems.controller.admin.admin;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import jp.ac.ems.form.admin.AdminForm;
+import jp.ac.ems.service.admin.AdminAdminService;
 
 /**
  * 管理者用管理者削除Controllerクラス（delete admin Controller class for administrator）.
@@ -16,8 +19,23 @@ import jp.ac.ems.form.admin.AdminForm;
  */
 @Controller
 @RequestMapping("/admin/admin/delete")
-public class AdminDeleteController extends BaseAdminAdminController {
+public class AdminDeleteController {
 
+    /**
+     * 管理者サービス(admin service).
+     */
+    @Autowired
+    AdminAdminService adminService;
+
+    /**
+     * モデルにフォームをセットする(set form the model).
+     * @return 管理者Form(teacher form)
+     */
+    @ModelAttribute
+    AdminForm setupForm() {
+        return new AdminForm();
+    }
+    
     /**
      * 管理者削除処理(delete admin for question).
      * @return 管理者一覧ページリダイレクト(redirect admin list page)

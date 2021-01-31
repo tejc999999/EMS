@@ -1,14 +1,17 @@
 package jp.ac.ems.controller.admin.teacher;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import jp.ac.ems.form.admin.TeacherForm;
+import jp.ac.ems.service.admin.AdminTeacherService;
 
 /**
  * 管理者用先生追加Controllerクラス（add teacher Controller class for administrator）.
@@ -16,8 +19,23 @@ import jp.ac.ems.form.admin.TeacherForm;
  */
 @Controller
 @RequestMapping("/admin/teacher/add")
-public class TeacherAddController extends BaseTeacherController {
+public class TeacherAddController {
 
+    /**
+     * 先生サービス(teacher service).
+     */
+    @Autowired
+    AdminTeacherService teacherService;
+    
+    /**
+     * モデルにフォームをセットする(set form the model).
+     * @return 先生Form(teacher form)
+     */
+    @ModelAttribute
+    TeacherForm setupForm() {
+        return new TeacherForm();
+    }
+    
     /**
      * 先生登録ページ表示(show add teacher page).
      * @return 先生登録ページビュー(add teacher page view)

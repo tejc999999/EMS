@@ -1,10 +1,15 @@
 package jp.ac.ems.controller.teacher.task;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import jp.ac.ems.form.teacher.TaskForm;
+import jp.ac.ems.service.teacher.TeacherTaskService;
 
 /**
  * 先生用課題Contollerクラス（teacher task Controller Class）.
@@ -12,7 +17,19 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 @Controller
 @RequestMapping("/teacher/task/submission-list")
-public class TeacherTaskSubmissionListController extends BaseTeacherTaskController{
+public class TeacherTaskSubmissionListController {
+    
+    @Autowired
+    TeacherTaskService taskService;
+
+    /**
+     * モデルにフォームをセットする(set form the model).
+     * @return 課題Form(task form)
+     */
+    @ModelAttribute
+    TaskForm setupForm() {
+        return new TaskForm();
+    }
     
     /**
      * 提出課題一覧取得(Get a list of submitted task).
