@@ -38,6 +38,7 @@ import jp.ac.ems.repository.QuestionRepository;
 import jp.ac.ems.repository.StudentTaskQuestionHistoryRepository;
 import jp.ac.ems.repository.TaskRepository;
 import jp.ac.ems.repository.UserRepository;
+import jp.ac.ems.service.shared.SharedQuestionSelectService;
 import jp.ac.ems.service.teacher.TeacherTaskService;
 import jp.ac.ems.service.util.JPCalenderEncoder;
 import lombok.Data;
@@ -56,6 +57,12 @@ import org.springframework.ui.Model;
  */
 @Service
 public class TeacherTaskServiceImpl implements TeacherTaskService {
+
+	/**
+	 * 問題選択共通サービス
+	 */
+	@Autowired
+	SharedQuestionSelectService sharedQuestionSelectService;
 
     /**
      * 課題リポジトリ(task repository).
@@ -1056,7 +1063,20 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
     	
     	return result;
     }
+    /**
+     * 指定の出題数に基づいた問題IDリストを生成.
+     * 
+     * @param fieldLevel 分野ごとの問題IDマップ
+     * @param numberByFieldMap 分野ごとの出題数マップ
+     * @param latestFlg 直近6回フラグ
+     * @return 問題IDリスト
+     */
+    private List<String> createRandomQuestionId(int fieldLevel, Map<Byte, Integer> numberByFieldMap, boolean latestFlg) {
+    	
+    	return sharedQuestionSelectService.createRandomQuestionId(fieldLevel, numberByFieldMap, latestFlg);
+    }
     
+    // TODO: あとで共通サービス化
     /**
      * 問題IDリストから指定の数だけランダムに抽出する
      * 
@@ -1065,8 +1085,8 @@ public class TeacherTaskServiceImpl implements TeacherTaskService {
      * @return 抽出後問題リスト
      */
     private List<QuestionBean> getRandom(List<QuestionBean> list, int number) {
-    	List<QuestionBean> result = new ArrayList<QuestionBean>();
     	
+    	List<QuestionBean> result = new ArrayList<QuestionBean>();
         Collections.shuffle(list);
 
         if(list.size() < number) {

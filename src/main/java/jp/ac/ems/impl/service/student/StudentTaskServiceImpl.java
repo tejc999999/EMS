@@ -34,7 +34,7 @@ import jp.ac.ems.repository.StudentTaskQuestionHistoryRepository;
 //import jp.ac.ems.repository.StudentTaskQuestionHistoryRepository;
 import jp.ac.ems.repository.TaskRepository;
 import jp.ac.ems.repository.UserRepository;
-import jp.ac.ems.service.shared.SharedStudentQuestionHistoryService;
+import jp.ac.ems.service.shared.SharedTagService;
 import jp.ac.ems.service.student.StudentTaskService;
 import jp.ac.ems.service.util.JPCalenderEncoder;
 
@@ -49,7 +49,7 @@ public class StudentTaskServiceImpl implements StudentTaskService {
 	 * 学生用課題回答履歴共通処理サービス
 	 */
 	@Autowired
-	SharedStudentQuestionHistoryService sharedStudentQuestionHistoryService;
+	SharedTagService sharedTagService;
 
     /**
      * 課題リポジトリ(task repository).
@@ -208,7 +208,7 @@ public class StudentTaskServiceImpl implements StudentTaskService {
  		questionForm.setCorrect(convertAnsweredIdToWord(questionForm.getCorrect()));
 
 		// タグ情報をセットする
-        List<String> tagIdList = getQuestionTagList(questionId);
+        List<String> tagIdList = sharedTagService.getQuestionTagList(questionId);
         questionForm.setQuestionTag(tagIdList);
 
 		form.setQuestionForm(questionForm);
@@ -313,7 +313,7 @@ public class StudentTaskServiceImpl implements StudentTaskService {
  		questionForm.setCorrect(convertAnsweredIdToWord(questionForm.getCorrect()));
 
 		// タグ情報をセットする
-        List<String> tagIdList = getQuestionTagList(questionId);
+        List<String> tagIdList = sharedTagService.getQuestionTagList(questionId);
         questionForm.setQuestionTag(tagIdList);
 
 		form.setQuestionForm(questionForm);
@@ -484,23 +484,17 @@ public class StudentTaskServiceImpl implements StudentTaskService {
 				}
 			}
 		}
-		List<String> userNameList = new ArrayList<>();
-//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        String userId = auth.getName();
-//		Optional<UserBean> optUser = userRepository.findById(userId);
-//		optUser.ifPresent(userBean -> {
-//			userNameList.add(userBean.getName());
-//		});
-		
+
 		List<String> correctList = new ArrayList<>();
 		correctList.add(String.valueOf(correctCnt));
+		model.addAttribute("correctGradeList", correctList);
+		
 		List<String> incorrectList = new ArrayList<>();
 		incorrectList.add(String.valueOf(incorrectCnt));
-//		model.addAttribute("userNameList", userNameList);
-		model.addAttribute("correctGradeList", correctList);
 		model.addAttribute("incorrectGradeList", incorrectList);
 		
 		// グラフ描画領域縦幅設定
+		List<String> userNameList = new ArrayList<>();
 		model.addAttribute("canvasHeight", String.valueOf(userNameList.size() * 50));
 
 		// グラフ横目盛り幅設定
@@ -522,37 +516,10 @@ public class StudentTaskServiceImpl implements StudentTaskService {
      */
 	@Override
     public Map<String, String> getQuestionTagSelectedItems() {
-        Map<String, String> selectMap = new LinkedHashMap<String, String>();
-        selectMap.put(String.valueOf(QuestionTag.QUESTION_TAG_1_TAG_RED.getId()), QuestionTag.QUESTION_TAG_1_TAG_RED.getName());
-        selectMap.put(String.valueOf(QuestionTag.QUESTION_TAG_2_TAG_GREEN.getId()), QuestionTag.QUESTION_TAG_2_TAG_GREEN.getName());
-        selectMap.put(String.valueOf(QuestionTag.QUESTION_TAG_3_TAG_BLUE.getId()), QuestionTag.QUESTION_TAG_3_TAG_BLUE.getName());
-        return selectMap;
+
+        return sharedTagService.getQuestionTagSelectedItems();
 	}
-	
-    /**
-     * 問題タグをFormにセットする.
-     * 
-     * @param form 自習問題Form
-     * @return 自習問題Form
-     */
-    private List<String> getQuestionTagList(String questionId) {
-    	
-    	List<String> list = new ArrayList<String>();
-    	
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String userId = auth.getName();
-        
-        Optional<UserBean> optUser = userRepository.findById(userId);
-        optUser.ifPresent(userBean -> {
-			List<String> tagIdList = userBean.getQuestionTagList(questionId);
-			if(tagIdList != null && tagIdList.size() > 0) {
-				list.addAll(tagIdList);
-        	}
-        });
-        
-    	return list;
-    }
-	
+
 	/**
 	 * 回答IDを語句に置き換える(Convert answered id to word).
 	 * @param answeredId 回答ID(answered id)
@@ -655,6 +622,6 @@ public class StudentTaskServiceImpl implements StudentTaskService {
     @Override
     public void saveQuestionTag(TaskForm form, String tagId, String tagCheckFlg) {
     	
-    	sharedStudentQuestionHistoryService.saveQuestionTag(form.getQuestionForm().getId(), tagId, tagCheckFlg);
+    	sharedTagService.saveQuestionTag(form.getQuestionForm().getId(), tagId, tagCheckFlg);
     }
 }

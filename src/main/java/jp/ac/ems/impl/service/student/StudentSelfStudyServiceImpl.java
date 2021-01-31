@@ -40,7 +40,8 @@ import jp.ac.ems.repository.QuestionRepository;
 import jp.ac.ems.repository.StudentQuestionHistoryRepository;
 import jp.ac.ems.repository.TaskRepository;
 import jp.ac.ems.repository.UserRepository;
-import jp.ac.ems.service.shared.SharedStudentQuestionHistoryService;
+import jp.ac.ems.service.shared.SharedQuestionSelectService;
+import jp.ac.ems.service.shared.SharedTagService;
 import jp.ac.ems.service.student.StudentSelfStudyService;
 import jp.ac.ems.service.util.JPCalenderEncoder;
 import lombok.AllArgsConstructor;
@@ -55,10 +56,16 @@ import lombok.Data;
 public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 
 	/**
-	 * 学生用課題回答履歴共通処理サービス
+	 * タグ共通処理サービス
 	 */
 	@Autowired
-	SharedStudentQuestionHistoryService sharedStudentQuestionHistoryService;
+	SharedTagService sharedTagService;
+
+	/**
+	 * 問題選択共通サービス
+	 */
+	@Autowired
+	SharedQuestionSelectService sharedQuestionSelectService;
 	
 	/**
 	 * ユーザーリポジトリ(user repository)
@@ -411,7 +418,7 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 		SelfStudyQuestionForm selfStudyQuestionForm = getSelfStudyQuestionForm(form, number);
 		// タグ情報をセットする
         String questionId = form.getQuestionList().get(number);
-        List<String> tagIdList = getQuestionTagList(questionId);
+        List<String> tagIdList = sharedTagService.getQuestionTagList(questionId);
 		selfStudyQuestionForm.setQuestionTag(tagIdList);
 
 		// 回答履歴を保存する
@@ -442,11 +449,8 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
      */
 	@Override
     public Map<String, String> getQuestionTagSelectedItems() {
-        Map<String, String> selectMap = new LinkedHashMap<String, String>();
-        selectMap.put(String.valueOf(QuestionTag.QUESTION_TAG_1_TAG_RED.getId()), QuestionTag.QUESTION_TAG_1_TAG_RED.getName());
-        selectMap.put(String.valueOf(QuestionTag.QUESTION_TAG_2_TAG_GREEN.getId()), QuestionTag.QUESTION_TAG_2_TAG_GREEN.getName());
-        selectMap.put(String.valueOf(QuestionTag.QUESTION_TAG_3_TAG_BLUE.getId()), QuestionTag.QUESTION_TAG_3_TAG_BLUE.getName());
-        return selectMap;
+		
+        return sharedTagService.getQuestionTagSelectedItems();
 	}
 
     /**
@@ -537,30 +541,6 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
     	result.put(String.valueOf(FieldSmall.LEVEL), "小分類");
     	
     	return result;
-    }
-    
-    /**
-     * 問題タグをFormにセットする.
-     * 
-     * @param form 自習問題Form
-     * @return 自習問題Form
-     */
-    private List<String> getQuestionTagList(String questionId) {
-    	
-    	List<String> list = new ArrayList<String>();
-    	
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String userId = auth.getName();
-        
-        Optional<UserBean> optUser = userRepository.findById(userId);
-        optUser.ifPresent(userBean -> {
-			List<String> tagIdList = userBean.getQuestionTagList(questionId);
-			if(tagIdList != null && tagIdList.size() > 0) {
-				list.addAll(tagIdList);
-        	}
-        });
-        
-    	return list;
     }
     
     /**
@@ -711,27 +691,6 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 				break;
 		}
 		return answeredWord;
-	}
-	
-	/**
-	 * 年度、期情報クラス
-	 * 
-	 * @author user-01
-	 *
-	 */
-	@Data
-	@AllArgsConstructor
-	private class YearAndTermData {
-		
-		/**
-		 * 年度
-		 */
-		private int year;
-		
-		/**
-		 * 期
-		 */
-		private String Term;
 	}
 	
 	/**
@@ -929,123 +888,9 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
      * @return 問題IDリスト
      */
     private List<String> createRandomQuestionId(int fieldLevel, Map<Byte, Integer> numberByFieldMap, boolean latestFlg) {
-    	List<String> result = new ArrayList<String>();
-
-    	if(fieldLevel == FieldLarge.LEVEL) {
-    		// 大分類
-	    	numberByFieldMap.entrySet()
-	    		.stream()
-	    		.forEach(e -> {
-	        		List<QuestionBean> questionList = questionRepository.findByFieldLId(e.getKey());
-	        		List<String> fieldLQuestionIdList = questionList.stream().map(s -> String.valueOf(s.getId())).collect(Collectors.toList());
-	    			if(latestFlg) {
-	    				fieldLQuestionIdList = getLatestQuestionIdList(fieldLQuestionIdList);
-	    			}
-	    			result.addAll(getRandom(fieldLQuestionIdList, e.getValue()));
-	    		});
-    	} else if(fieldLevel == FieldMiddle.LEVEL) {
-    		// 中分類
-	    	numberByFieldMap.entrySet()
-    		.stream()
-    		.forEach(e -> {
-        		List<QuestionBean> questionList = questionRepository.findByFieldMId(e.getKey());
-        		List<String> fieldMQuestionIdList = questionList.stream().map(s -> String.valueOf(s.getId())).collect(Collectors.toList());
-    			if(latestFlg) {
-    				fieldMQuestionIdList = getLatestQuestionIdList(fieldMQuestionIdList);
-    			}
-    			result.addAll(getRandom(fieldMQuestionIdList, e.getValue()));
-    		});
-    	} else if(fieldLevel == FieldSmall.LEVEL) {
-    		// 小分類
-	    	numberByFieldMap.entrySet()
-    		.stream()
-    		.forEach(e -> {
-        		List<QuestionBean> questionList = questionRepository.findByFieldSId(e.getKey());
-        		List<String> fieldSQuestionIdList = questionList.stream().map(s -> String.valueOf(s.getId())).collect(Collectors.toList());
-    			if(latestFlg) {
-    				fieldSQuestionIdList = getLatestQuestionIdList(fieldSQuestionIdList);
-    			}
-    			result.addAll(getRandom(fieldSQuestionIdList, e.getValue()));
-    		});
-    	}
     	
-    	return result;
+    	return sharedQuestionSelectService.createRandomQuestionId(fieldLevel, numberByFieldMap, latestFlg);
     }
-    
-    /**
-     * 問題IDリストから指定の数だけランダムに抽出する
-     * 
-     * @param list　問題IDリスト
-     * @param number 抽出数
-     * @return 抽出後問題リスト
-     */
-    private List<String> getRandom(List<String> list, int number) {
-    	List<String> result = new ArrayList<String>();
-    	
-        Collections.shuffle(list);
-
-        if(list.size() < number) {
-        	// 実際に存在する問題数よりも、抽出する問題数が多い場合
-        	number = list.size();
-        }
-        
-        result = list.subList(0, number);
-    	
-    	return result;
-    }
-    
-    /**
-     * 直近6回の問題のみ取得する
-     * 
-     * @param list 問題IDリスト
-     * @return 直近6回の問題IDリスト
-     */
-    private List<String> getLatestQuestionIdList(List<String> questionIdList) {
-    	
-		// 直近6回分だけにする
-		List<YearAndTermData> latestYearAndTermList = new ArrayList<>();
-		
-		// 直近6回に該当する年度、期を取得する
-    	for(QuestionBean questionBean : questionRepository.findDistinctYearAndTerm()) {
-    		// 全年度、期を取得
-    		latestYearAndTermList.add(new YearAndTermData(Integer.valueOf(questionBean.getYear()), questionBean.getTerm()));
-    	}
-    	// 年度の降順、期の昇順でソート
-    	latestYearAndTermList = latestYearAndTermList.stream()
-    			.sorted(Comparator.comparing(YearAndTermData::getYear, Comparator.reverseOrder())
-    					.thenComparing(YearAndTermData::getTerm))
-    			.collect(Collectors.toList());
-    	// 先頭から6個だけ取得
-    	if(latestYearAndTermList.size() > 6) {
-    		latestYearAndTermList = latestYearAndTermList.subList(0, 6);
-    	}
-    	
-    	List<String> removeQuestionIdList = new ArrayList<>();
-		for(String questionId : questionIdList) {
-			// 直近6回より前の問題を除外する
-			
-			// TODO:問い合わせ回数軽減策検討
-			int latestLastYear = latestYearAndTermList.get(latestYearAndTermList.size() - 1).getYear();
-			String latestLastTerm = latestYearAndTermList.get(latestYearAndTermList.size() - 1).getTerm();
-			Optional<QuestionBean> optQuestion = questionRepository.findById(Long.valueOf(questionId));
-			optQuestion.ifPresent(questionBean -> {
-
-				if((latestLastYear > Integer.valueOf(questionBean.getYear()))
-						|| (latestLastYear == Integer.valueOf(questionBean.getYear())
-								&&("A".equals(latestLastTerm) && "H".equals(questionBean.getTerm())))){
-					// 直近の年度、期の6回分に該当しない場合は削除する
-					// 【条件】(1)と(2)はOR
-					// (1)年度：直近6回分で最も古い年度より前の年度
-					// (2)年度：直近6回分で最も古い年度と同じ　AND
-					//      期：直近6回分で最も古いものの期が'A'で問題の方が'H'
-					removeQuestionIdList.add(String.valueOf(questionBean.getId()));
-				}
-			});
-		}
-		questionIdList.removeAll(removeQuestionIdList);
-		
-		return questionIdList;
-	}
     
     /**
      * 問題タグ情報保存.
@@ -1057,6 +902,6 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
     @Override
     public void saveQuestionTag(SelfStudyQuestionForm form, String tagId, String tagCheckFlg) {
     	
-    	sharedStudentQuestionHistoryService.saveQuestionTag(form.getQuestionList().get(form.getSelectQuestionNumber()), tagId, tagCheckFlg);
+    	sharedTagService.saveQuestionTag(form.getQuestionList().get(form.getSelectQuestionNumber()), tagId, tagCheckFlg);
     }
 }
