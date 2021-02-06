@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity">
+<head
+	th:replace="layout :: common_layout(title = '課題登録（個別選択）画面', scripts = ~{::script}, links = ~{::link})">
+<script th:src="@{/js/allcheck.js}"></script> 
+</head>
+<body>
+	<div th:replace="layout :: header"></div>
+	
+	<h2>■課題登録（個別選択）</h2>
+	<div class="container-fluid no-gutters pb-5">
+		<form th:action="@{/teacher/task/add-target-individual}" th:object="${taskIndividualForm}"
+			method="post">
+		  <div class="form-row">
+		    <div class="form-group col-6 col-md-2">
+		      <div class="form-group">
+				<select class="form-control" id="selectYear" name="selectYear">
+				     <option value="">---</option>
+				     <option th:each="item : ${yearDropItems}" th:value="${item.key}" th:text="${item.value}" th:selected="${item.key} == *{selectYear}">pulldown</option>
+				</select>
+		      </div>
+		    </div>
+		   	<div class="form-group col-6 col-md-2">
+				<input type="submit" name="selectYearBtn" class="btn btn-info btn-block" th:value="選択">
+		    </div>
+		  </div>
+		  
+		  <div class="form-row">
+		    <div class="form-group col-5 col-md-2">
+		      <div class="form-group">
+				<select class="form-control" id="selectFieldL" name="selectFieldL">
+				     <option value="">---</option>
+				     <option th:each="item : ${fieldLDropItemsItems}" th:value="${item.key}" th:text="${item.value}" th:selected="${item.key} == *{selectFieldL}">pulldown</option>
+				</select>
+		      </div>
+		    </div>
+		    <div class="form-group col-2 col-md-1">
+				<input type="submit" name="selectFieldLargeBtn" class="btn btn-info btn-block" th:value="'>'">
+		    </div>
+		    <div class="form-group col-5 col-md-2">
+		      <div class="form-group">
+				<select class="form-control" id="selectFieldM" name="selectFieldM">
+				     <option value="">---</option>
+				     <option th:each="item : ${fieldMDropItems}" th:value="${item.key}" th:text="${item.value}" th:selected="${item.key} == *{selectFieldM}">pulldown</option>
+				</select>
+		      </div>
+		    </div>
+		    <div class="form-group col-2 col-md-1">
+				<input type="submit" name="selectFieldMiddleBtn" class="btn btn-info btn-block" th:value="'>'">
+		    </div>
+		    <div class="form-group col-5 col-md-2">
+		      <div class="form-group">
+				<select class="form-control" id="selectFieldS" name="selectFieldS">
+				     <option value="">---</option>
+				     <option th:each="item : ${fieldSDropItems}" th:value="${item.key}" th:text="${item.value}" th:selected="${item.key} == *{selectFieldS}">pulldown</option>
+				</select>
+		      </div>
+		    </div>
+		    <div class="form-group col-5 col-md-2">
+				<input type="submit" name="selectFieldBtn" class="btn btn-info btn-block" th:value="選択">
+		    </div>
+		  </div>
+		  <div class="form-row">
+		    <div class="form-group col-12 col-md-12">
+		    <label class="col-form-label">問題</label>
+		    <p th:text="'該当:' + ${questionCheckItems.size()} + '問'">
+		    <div class="form-group">
+		        <div class="checkbox">
+		          <label>
+		            <input type="checkbox" id="allCheck" th:text="全チェック" />
+		          </label>
+		        </div>
+		        <div class="checkbox" th:each="item : ${questionCheckItems}">
+		          <label>
+		            <input type="checkbox" class="targetquestion" name="questionCheckedList" th:value="${item.key}" th:text="${item.value}" th:field="*{questionCheckedList}" />
+		          </label>
+		        </div>
+		      </div>
+		    </div>
+		    </div>
+
+			<div class="form-row">
+				<div class="col-6 col-md-6">
+					<input type="submit" name="backBtn" class="btn btn-info btn-block" th:value="前へ">
+				</div>
+				<div class="col-6 col-md-6">
+					<input type="submit" name="selectSubmit" class="btn btn-info btn-block" th:value="次へ">
+				</div>
+			</div>
+	      <input type="hidden" name="title" th:value="*{title}" >
+          <input type="hidden" name="description" th:value="*{description}" >
+		</form>
+	</div>
+	
+	<div th:replace="layout :: footer"></div>
+
+</body>
+</html>

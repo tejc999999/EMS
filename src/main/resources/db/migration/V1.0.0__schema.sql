@@ -7,40 +7,40 @@ CREATE TABLE t_user(
     name VARCHAR(100),
     role_id TINYINT,
     PRIMARY KEY(id)
-) CHARACTER SET 'utf8';
+) /*! CHARACTER SET 'utf8' */;
 
 CREATE TABLE t_class(
     id BIGINT AUTO_INCREMENT,
     name VARCHAR(200),
     PRIMARY KEY(id)
-) CHARACTER SET 'utf8';
+) /*! CHARACTER SET 'utf8' */;
 
 CREATE TABLE t_student_class(
     id BIGINT AUTO_INCREMENT,
     user_id VARCHAR(20),
     class_id BIGINT,
     PRIMARY KEY(id)
-) CHARACTER SET 'utf8';
+) /*! CHARACTER SET 'utf8' */;
 
 CREATE TABLE t_student_course(
     id BIGINT AUTO_INCREMENT,
     user_id VARCHAR(20),
     course_id BIGINT,
     PRIMARY KEY(id)
-) CHARACTER SET 'utf8';
+) /*! CHARACTER SET 'utf8' */;
 
 CREATE TABLE t_course(
     id BIGINT AUTO_INCREMENT,
     name VARCHAR(200),
     PRIMARY KEY(id)
-) CHARACTER SET 'utf8';
+) /*! CHARACTER SET 'utf8' */;
 
 CREATE TABLE t_class_course(
     id BIGINT AUTO_INCREMENT,
     class_id BIGINT,
     course_id BIGINT,
     PRIMARY KEY(id)
-) CHARACTER SET 'utf8';
+) /*! CHARACTER SET 'utf8' */;
 
 CREATE TABLE t_message(
     id BIGINT AUTO_INCREMENT,
@@ -50,7 +50,7 @@ CREATE TABLE t_message(
     present_task_id BIGINT,
     read_flg TINYINT(1),
     PRIMARY KEY(id)
-) CHARACTER SET 'utf8';
+) /*! CHARACTER SET 'utf8' */;
 
 CREATE TABLE t_task(
     id BIGINT AUTO_INCREMENT,
@@ -59,7 +59,7 @@ CREATE TABLE t_task(
     question_size BIGINT,
     teacher_id VARCHAR(20),
     PRIMARY KEY(id)
-) CHARACTER SET 'utf8';
+) /*! CHARACTER SET 'utf8' */;
 
 CREATE TABLE t_student_task(
     id BIGINT AUTO_INCREMENT,
@@ -68,7 +68,7 @@ CREATE TABLE t_student_task(
     answer_flg TINYINT(1),
     update_date TIMESTAMP,
     PRIMARY KEY(id)
-) CHARACTER SET 'utf8';
+) /*! CHARACTER SET 'utf8' */;
 
 CREATE TABLE t_question(
     id BIGINT AUTO_INCREMENT,
@@ -81,7 +81,7 @@ CREATE TABLE t_question(
     field_s_id TINYINT,
     correct TINYINT,
     PRIMARY KEY(id)
-) CHARACTER SET 'utf8';
+) /*! CHARACTER SET 'utf8' */;
 
 CREATE TABLE t_task_question(
     id BIGINT AUTO_INCREMENT,
@@ -89,7 +89,7 @@ CREATE TABLE t_task_question(
     question_id BIGINT,
     seq_number BIGINT,
     PRIMARY KEY(id)
-) CHARACTER SET 'utf8';
+) /*! CHARACTER SET 'utf8' */;
 
 CREATE TABLE t_student_question_history(
     id BIGINT AUTO_INCREMENT,
@@ -99,7 +99,7 @@ CREATE TABLE t_student_question_history(
     incorrect_cnt TINYINT default 0,
     update_date TIMESTAMP,
     PRIMARY KEY(id)
-) CHARACTER SET 'utf8';
+) /*! CHARACTER SET 'utf8' */;
 
 CREATE TABLE t_student_task_question_history(
     id BIGINT AUTO_INCREMENT,
@@ -109,4 +109,4 @@ CREATE TABLE t_student_task_question_history(
     answer TINYINT,
     correct TINYINT,
     PRIMARY KEY(id)
-) CHARACTER SET 'utf8';
+) /*! CHARACTER SET 'utf8' */;

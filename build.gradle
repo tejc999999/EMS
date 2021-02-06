@@ -65,7 +65,8 @@ dependencies {
     runtimeOnly 'com.h2database:h2:1.4.200'
     runtimeOnly 'mysql:mysql-connector-java:8.0.20'
 //    testImplementation 'org.springframework.boot:spring-boot-starter-test:2.3.1.RELEASE'
-    testImplementation('org.springframework.boot:spring-boot-starter-test'/*:2.3.1.RELEASE'*/) {
+    /*:2.3.1.RELEASE'*/
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'junit', module:'junit'
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
@@ -78,6 +79,7 @@ dependencies {
     testImplementation 'org.flywaydb.flyway-test-extensions:flyway-spring-test:6.4.0'
     testImplementation 'org.mockito:mockito-core:3.3.3'
 //    testImplementation 'org.hamcrest:hamcrest-all:1.3'
+
 }
 /*
 publishing {

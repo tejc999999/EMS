@@ -6,7 +6,7 @@ CREATE TABLE t_student_question_history_temp (
     incorrect_cnt TINYINT default 0,
     update_date TIMESTAMP,
     PRIMARY KEY(id)
-) CHARACTER SET 'utf8';
+) /*! CHARACTER SET 'utf8' */;
 
 INSERT INTO t_student_question_history_temp SELECT * FROM t_student_question_history;
 
@@ -15,7 +15,7 @@ ALTER TABLE t_student_question_history DROP COLUMN correct_cnt;
 ALTER TABLE t_student_question_history DROP COLUMN incorrect_cnt;
 
 DELETE FROM t_student_question_history;
-
+/*!
 delimiter //
 CREATE PROCEDURE insertcorrect(IN p1 INT, IN p2 INT, IN p3 INT, IN p4 INT)
 BEGIN
@@ -40,5 +40,5 @@ delimiter ;
 
 SELECT @maxid:=MAX(id) FROM t_student_question_history_temp;
 CALL insertloop(0, @maxid);
-
+*/
 DROP TABLE t_student_question_history;

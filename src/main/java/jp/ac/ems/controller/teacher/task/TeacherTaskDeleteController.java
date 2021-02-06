@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import jp.ac.ems.form.teacher.TaskForm;
-import jp.ac.ems.service.teacher.TeacherTaskService;
+import jp.ac.ems.service.teacher.TeacherTaskIndividualService;
 
 /**
  * 先生用課題削除Contollerクラス（teacher delete task Controller Class）.
@@ -20,7 +20,7 @@ import jp.ac.ems.service.teacher.TeacherTaskService;
 public class TeacherTaskDeleteController {
 
     @Autowired
-    TeacherTaskService taskService;
+    TeacherTaskIndividualService taskService;
 
     /**
      * モデルにフォームをセットする(set form the model).

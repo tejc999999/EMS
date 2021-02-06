@@ -43,8 +43,13 @@ public class AdminEditController {
 
         AdminForm adminForm = adminService.findById(id);
         
-        model.addAttribute("adminForm", adminForm);
+        if(adminForm == null || adminForm.getId() == null) {
+        	
+        	return "redirect:/admin/admin";
+        } else {
+        	model.addAttribute("adminForm", adminForm);
 
-        return "admin/admin/edit";
+        	return "admin/admin/edit";
+        }
     }
 }

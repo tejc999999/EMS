@@ -43,8 +43,10 @@ public class AdminEditProcessController {
     public String editProcess(@Validated AdminForm form, BindingResult result, Model model) {
 
     	if(result.hasErrors()) {
-    		// パスワードを変更しない場合、パスワードのエラーを無視する
-        	if(!form.getPasswordNoChangeFlg() ||  !result.hasFieldErrors("password")) {
+    		if(result.hasFieldErrors("name")
+    				|| (!form.getPasswordNoChangeFlg() && result.hasFieldErrors("password"))) {
+    			
+    			model.addAttribute("id", form.getId());
     			return "admin/admin/edit";
         	}
     	}

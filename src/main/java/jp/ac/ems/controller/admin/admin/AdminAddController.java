@@ -55,16 +55,20 @@ public class AdminAddController {
             Model model) {
     	
     	if(result.hasErrors()) {
-
+    		// 入力したFormにエラーがある場合、登録画面に戻す
+    		
     		model.addAttribute("adminForm", form);
             return "admin/admin/add";
     	} else if(adminService.checkDupulicate(form)) {
+    		// ユーザーIDが重複する場合、エラーメッセージを付与して、登録画面に戻す
     		
     		model.addAttribute("adminForm", form);
     		model.addAttribute("errorMsg", "ユーザーIDが重複しています");
             return "admin/admin/add";
     	} else {
+    		// エラーがない場合、登録を行ったのちに、登録画面にリダイレクトする
     		
+    		// 登録時はパスワード変更を有効にする
     		adminService.save(form);
             return "redirect:/admin/admin";
     	}

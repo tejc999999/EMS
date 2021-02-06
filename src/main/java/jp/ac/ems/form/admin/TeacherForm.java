@@ -38,7 +38,7 @@ public class TeacherForm {
 	/**
 	 * パスワード変更なしフラグ（true:変更なし, false:変更あり）
 	 */
-	Boolean passwordNoChangeFlg;
+	Boolean passwordNoChangeFlg = true;
 	
     /**
      * 名前(name).

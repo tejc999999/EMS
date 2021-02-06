@@ -33,18 +33,16 @@ import jp.ac.ems.config.FieldBaseEnum;
 import jp.ac.ems.config.FieldLarge;
 import jp.ac.ems.config.FieldMiddle;
 import jp.ac.ems.config.FieldSmall;
-import jp.ac.ems.config.QuestionTag;
 import jp.ac.ems.form.student.SelfStudyForm;
 import jp.ac.ems.form.student.SelfStudyQuestionForm;
 import jp.ac.ems.repository.QuestionRepository;
 import jp.ac.ems.repository.StudentQuestionHistoryRepository;
 import jp.ac.ems.repository.TaskRepository;
 import jp.ac.ems.repository.UserRepository;
-import jp.ac.ems.service.shared.SharedQuestionSelectService;
 import jp.ac.ems.service.shared.SharedTagService;
+import jp.ac.ems.service.shared.SharedTaskService;
 import jp.ac.ems.service.student.StudentSelfStudyService;
 import jp.ac.ems.service.util.JPCalenderEncoder;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
@@ -62,10 +60,10 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 	SharedTagService sharedTagService;
 
 	/**
-	 * 問題選択共通サービス
+	 * 課題共通サービス
 	 */
 	@Autowired
-	SharedQuestionSelectService sharedQuestionSelectService;
+	SharedTaskService sharedTaskService;
 	
 	/**
 	 * ユーザーリポジトリ(user repository)
@@ -319,7 +317,7 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 		
 		if(form.isLatestFlg()) {
 			// 直近6回以外の問題IDを取り除く
-			questionIdList = sharedQuestionSelectService.getLatestQuestionIdList(questionIdList);
+			questionIdList = sharedTaskService.getLatestQuestionIdList(questionIdList);
 		}
 		
 		form.setQuestionList(questionIdList);
@@ -889,7 +887,7 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
      */
     private List<String> createRandomQuestionId(int fieldLevel, Map<Byte, Integer> numberByFieldMap, boolean latestFlg) {
     	
-    	return sharedQuestionSelectService.createRandomQuestionId(fieldLevel, numberByFieldMap, latestFlg);
+    	return sharedTaskService.createRandomQuestionId(fieldLevel, numberByFieldMap, latestFlg);
     }
     
     /**

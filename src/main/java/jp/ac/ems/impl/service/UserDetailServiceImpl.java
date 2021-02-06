@@ -14,7 +14,8 @@ import jp.ac.ems.config.RoleCode;
 import jp.ac.ems.repository.UserRepository;
 import jp.ac.ems.security.LoginUserDetails;
 
-@Service
+// 命名しないとテスト時にサービスを呼び出して特定ユーザでの認証ができないため
+@Service("UserDetailService")
 public class UserDetailServiceImpl implements UserDetailsService {
 
 	@Autowired

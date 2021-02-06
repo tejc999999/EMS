@@ -44,8 +44,13 @@ public class StudentEditController {
 
         StudentForm studentForm = studentService.findById(id);
         
-        model.addAttribute("studentForm", studentForm);
+        if(studentForm == null || studentForm.getId() == null) {
+        	
+        	return "redirect:/teacher/student";
+        } else {
+            model.addAttribute("studentForm", studentForm);
 
-        return "teacher/student/edit";
+            return "teacher/student/edit";
+        }
     }
 }

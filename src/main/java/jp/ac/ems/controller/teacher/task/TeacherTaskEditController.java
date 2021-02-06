@@ -1,7 +1,7 @@
 package jp.ac.ems.controller.teacher.task;
 
 import jp.ac.ems.form.teacher.TaskForm;
-import jp.ac.ems.service.teacher.TeacherTaskService;
+import jp.ac.ems.service.teacher.TeacherTaskIndividualService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class TeacherTaskEditController {
 
     @Autowired
-    TeacherTaskService taskService;
+    TeacherTaskIndividualService taskService;
 
     /**
      * モデルにフォームをセットする(set form the model).

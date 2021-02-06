@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity">
+<head
+	th:replace="layout :: common_layout(title = '課題登録(ランダム)画面', scripts = ~{::script}, links = ~{::link})">
+<link href="../static/css/btnpadding.css" th:href="@{/css/btnpadding.css}" rel="stylesheet"></link>
+</head>
+<body>
+
+	<div th:replace="layout :: header"></div>
+
+	<h2>■課題登録(ランダム)</h2>
+	<div class="container-fluid no-gutters pb-5">
+		<form th:action="@{/teacher/task/add-process-random}" th:object="${taskRandomForm}"
+			method="post">
+		  <div class="form-row">
+		    <div class="form-group col-12 col-md-12">
+					      <div>
+		        <input type="submit" name="exclusionBtn" class="btn btn-info btn-block" th:value="所属要素除外">
+		      </div>
+		    </div>
+		  </div>
+		  <div class="form-row">
+		    <div class="form-group col-6 col-md-4">
+		      <div class="form-group">
+		        <label class="col-form-label">対象コース</label>
+		        <div class="checkbox" th:each="item : ${courseCheckItems}">
+		          <label>
+		            <input type="checkbox" name="courseCheckedList" th:value="${item.key}" th:text="${item.value}" th:field="*{courseCheckedList}" />
+		          </label>
+		        </div>
+		      </div>
+		    </div>
+		    <div class="form-group col-6 col-md-4">
+		      <div class="form-group">
+		      <label class="col-form-label">対象クラス</label>
+		        <div class="checkbox" th:each="item : ${classCheckItems}">
+		          <label>
+		            <input type="checkbox" name="classCheckedList" th:value="${item.key}" th:text="${item.value}" th:field="*{classCheckedList}" />
+		          </label>
+		        </div>
+		      </div>
+		    </div>
+		    <div class="form-group col-12 col-md-4">
+		      <div class="form-group">
+		      <label class="col-form-label">対象ユーザー</label>
+		        <div class="checkbox" th:each="item : ${userCheckItems}">
+		          <label>
+		            <input type="checkbox" name="userCheckedList" th:value="${item.key}" th:text="${item.value}" th:field="*{userCheckedList}" />
+		          </label>
+		        </div>
+		      </div>
+		    </div>
+		  </div>
+          <div class="form-row">
+            <div class="col-6 col-md-6 btn-padding">
+               <input type="submit" name="backBtn" class="btn btn-info btn-block" th:value="前へ">
+			</div>
+			<div class="col-6 col-md-6 btn-padding">
+			  <input type="submit" class="btn btn-info btn-block" th:value="送信">
+			</div>
+	      </div>
+	      
+	      <input type="hidden" name="title" th:value="*{title}" >
+          <input type="hidden" name="description" th:value="*{description}" >
+          <div th:each="item : *{questionCheckedList}">
+              <input type="hidden" name="questionCheckedList" th:value="${item}" >
+          </div>
+          <input type="hidden" name="fieldChecked" th:value="*{fieldChecked}" >
+          <input type="hidden" name="totalNumber" th:value="*{totalNumber}" >
+          <input type="hidden" name="latestFlg" th:value="*{latestFlg}" >
+		</form>
+	</div>
+	
+	<div th:replace="layout :: footer"></div>
+
+</body>
+</html>

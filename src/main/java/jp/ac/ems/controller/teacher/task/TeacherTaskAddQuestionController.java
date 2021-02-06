@@ -1,12 +1,12 @@
 package jp.ac.ems.controller.teacher.task;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
+import jp.ac.ems.controller.teacher.task.individual.TeacherTaskAddQuestionIndividualController;
+import jp.ac.ems.controller.teacher.task.random.TeacherTaskAddQuestionRandomController;
 import jp.ac.ems.form.teacher.TaskForm;
-import jp.ac.ems.service.teacher.TeacherTaskService;
+import jp.ac.ems.form.teacher.TaskIndividualForm;
+import jp.ac.ems.form.teacher.TaskRandomForm;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,8 +24,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/teacher/task/add-question")
 public class TeacherTaskAddQuestionController {
     
+	/**
+	 * 課題ランダム選択用コントローラ
+	 */
     @Autowired
-    TeacherTaskService taskService;
+    TeacherTaskAddQuestionRandomController teacherTaskAddQuestionRandomController;
+
+    /**
+     * 課題個別選択用コントローラ
+     */
+    @Autowired
+    TeacherTaskAddQuestionIndividualController teacherTaskAddQuestionIndividualController;
 
     /**
      * モデルにフォームをセットする(set form the model).
@@ -46,22 +55,14 @@ public class TeacherTaskAddQuestionController {
     @PostMapping(params = "randomBtn")
     public String addRandomQuestion(@Validated TaskForm form, BindingResult result,
             Model model) {
+
+    	TaskRandomForm taskRandomForm = new TaskRandomForm();
+    	BeanUtils.copyProperties(form, taskRandomForm);
+
+    	// @ModelAttributeによるForm登録はメソッド呼び出し時に動作しない（リクエスト時に設定される）ため、あらかじめmodelへの登録を行う
+    	model.addAttribute("taskRandomForm", taskRandomForm);
     	
-    	if(result.hasErrors()) {
-    		
-    		model.addAttribute("taskForm", form);
-            return "teacher/task/add";
-    	}
-    	// 分野名項目設定
-    	taskService.setSelectDataForRandom(model);
-    	
-    	Map<String, String> questionMap = new HashMap<>();
-        model.addAttribute("questionCheckItems", questionMap);
-        
-        // ランダム問題追加は問題の選択をプログラム側で行うため、画面で選択情報がクリアされない。あらかじめ選択を消しておく
-        form.setQuestionCheckedList(new ArrayList<String>());
-        
-        return "teacher/task/add_question_random";
+    	return teacherTaskAddQuestionRandomController.addRandomQuestion(taskRandomForm, result, model);
     }
     
     /**
@@ -72,22 +73,15 @@ public class TeacherTaskAddQuestionController {
      * @return 課題問題登録用ページビュー(task question add page view)
      */
     @PostMapping(params = "selectBtn")
-    public String addSelectQuestion(@Validated TaskForm form, BindingResult result,
+    public String addIndividualQuestion(@Validated TaskForm form, BindingResult result,
             Model model) {
     	
-    	if(result.hasErrors()) {
-    		
-    		model.addAttribute("taskForm", form);
-            return "teacher/task/add";
-    	}
-    	// ドロップダウン項目設定
-    	taskService.setSelectDataForSelect(form, model);
+    	TaskIndividualForm taskIndividualForm = new TaskIndividualForm();
+    	BeanUtils.copyProperties(form, taskIndividualForm);
     	
-        // 全問表示は通信負荷が高いため、初期状態は問題なしに変更
-//        Map<String, String> questionMap = taskService.findAllMap();
-    	Map<String, String> questionMap = new HashMap<>();
-        model.addAttribute("questionCheckItems", questionMap);
-        
-        return "teacher/task/add_question_select";
+    	// @ModelAttributeによるForm登録はメソッド呼び出し時に動作しない（リクエスト時に設定される）ため、あらかじめmodelへの登録を行う
+    	model.addAttribute("taskIndividualForm", taskIndividualForm);
+
+        return teacherTaskAddQuestionIndividualController.addIndividualQuestion(taskIndividualForm, result, model);
     }
 }

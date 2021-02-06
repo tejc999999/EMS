@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import jp.ac.ems.form.teacher.TaskForm;
-import jp.ac.ems.service.teacher.TeacherTaskService;
+import jp.ac.ems.service.teacher.TeacherTaskIndividualService;
 
 /**
  * 先生用課題追加Contollerクラス（teacher add task Controller Class）.
@@ -17,8 +17,11 @@ import jp.ac.ems.service.teacher.TeacherTaskService;
 @RequestMapping("/teacher/task/add")
 public class TeacherTaskAddController {
     
+	/**
+	 * 先生用個別課題サービス
+	 */
     @Autowired
-    TeacherTaskService taskService;
+    TeacherTaskIndividualService taskService;
 
     /**
      * モデルにフォームをセットする(set form the model).

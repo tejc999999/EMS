@@ -3,6 +3,10 @@ package jp.ac.ems.form.student;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
@@ -137,5 +141,7 @@ public class SelfStudyForm {
     /**
      * ランダム出題数
      */
+	@NotNull
+	@Min(0)
     private String totalNumber;
 }

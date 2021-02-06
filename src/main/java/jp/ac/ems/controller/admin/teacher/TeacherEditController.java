@@ -43,9 +43,13 @@ public class TeacherEditController {
 
         TeacherForm teacherForm = teacherService.findById(id);
         
-        model.addAttribute("teacherForm", teacherForm);
+        if(teacherForm == null || teacherForm.getId() == null) {
+        	
+        	return "redirect:/admin/teacher";
+        } else {
+            model.addAttribute("teacherForm", teacherForm);
 
-        return "admin/teacher/edit";
+            return "admin/teacher/edit";
+        }
     }
-
 }
