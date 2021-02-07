@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 @RequestMapping("/top")
-public class CommonTopController {
+public class TopController {
 
     /**
      * トップ画面情報表示(top page info view).

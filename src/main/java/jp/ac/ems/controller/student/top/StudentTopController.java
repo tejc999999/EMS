@@ -15,7 +15,7 @@ import jp.ac.ems.service.student.StudentTopService;
  */
 @Controller
 @RequestMapping("/student/top")
-public class TopController {
+public class StudentTopController {
 
 	/**
 	 * top画面サービス
