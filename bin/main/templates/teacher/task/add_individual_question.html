@@ -31,7 +31,7 @@
 		      <div class="form-group">
 				<select class="form-control" id="selectFieldL" name="selectFieldL">
 				     <option value="">---</option>
-				     <option th:each="item : ${fieldLDropItemsItems}" th:value="${item.key}" th:text="${item.value}" th:selected="${item.key} == *{selectFieldL}">pulldown</option>
+				     <option th:each="item : ${fieldLDropItems}" th:value="${item.key}" th:text="${item.value}" th:selected="${item.key} == *{selectFieldL}">pulldown</option>
 				</select>
 		      </div>
 		    </div>

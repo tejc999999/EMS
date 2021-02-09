@@ -108,7 +108,7 @@ public class GradeServiceImpl  implements GradeService {
         
     	// 大分類取得
         Map<String, String> fieldLMap = findAllFieldLMap();
-        model.addAttribute("fieldLDropItemsItems", fieldLMap);
+        model.addAttribute("fieldLDropItems", fieldLMap);
     	
     	// 中分類取得
         Map<String, String> fieldMMap = findAllFieldMMap(form.getSelectFieldL());

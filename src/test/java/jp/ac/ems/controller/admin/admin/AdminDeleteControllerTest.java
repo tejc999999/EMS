@@ -38,7 +38,6 @@ import com.ninja_squad.dbsetup.operation.Operation;
 import jp.ac.ems.bean.UserBean;
 import jp.ac.ems.config.RoleCode;
 import jp.ac.ems.repository.UserRepository;
-import jp.ac.ems.impl.service.UserDetailServiceImpl;
 
 /**
  * 管理者用管理者削除Controllerテスト（test delete admin Controller class for administrator）.

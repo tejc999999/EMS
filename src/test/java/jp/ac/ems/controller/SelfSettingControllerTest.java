@@ -1,7 +1,6 @@
 package jp.ac.ems.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
@@ -41,7 +40,6 @@ import com.ninja_squad.dbsetup.operation.Operation;
 import jp.ac.ems.bean.UserBean;
 import jp.ac.ems.config.RoleCode;
 import jp.ac.ems.form.SelfSettingForm;
-import jp.ac.ems.form.admin.AdminForm;
 import jp.ac.ems.repository.UserRepository;
 
 /**

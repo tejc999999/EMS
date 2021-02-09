@@ -138,7 +138,7 @@ public class PersonalGradeServiceImpl  implements PersonalGradeService {
     	
     	// 大分類取得
         Map<String, String> fieldLMap = findAllFieldLMap();
-        model.addAttribute("fieldLDropItemsItems", fieldLMap);
+        model.addAttribute("fieldLDropItems", fieldLMap);
     	
     	// 中分類取得
         Map<String, String> fieldMMap = findAllFieldMMap(form.getSelectFieldL());
