@@ -7,7 +7,7 @@ import jp.ac.ems.bean.QuestionBean;
 import jp.ac.ems.form.teacher.TaskForm;
 
 /**
- * 課題共通処理サービス
+ * 共通課題処理サービスインターフェース(common task service interface).
  * @author user01-m
  *
  */

@@ -17,7 +17,7 @@ import jp.ac.ems.repository.UserRepository;
 import jp.ac.ems.service.shared.SharedTagService;
 
 /**
- * タグ共通サービス
+ * 共通タグサービスクラス（common tag service class）.
  * @author user01-m
  *
  */

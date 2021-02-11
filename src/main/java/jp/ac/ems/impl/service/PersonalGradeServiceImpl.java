@@ -20,14 +20,17 @@ import org.springframework.ui.Model;
 import jp.ac.ems.bean.QuestionBean;
 import jp.ac.ems.bean.StudentQuestionHistoryBean;
 import jp.ac.ems.bean.UserBean;
+import jp.ac.ems.common.data.GradeData;
 import jp.ac.ems.config.FieldLarge;
 import jp.ac.ems.config.FieldMiddle;
 import jp.ac.ems.config.FieldSmall;
+import jp.ac.ems.form.BaseGradeForm;
 import jp.ac.ems.form.PersonalGradeForm;
 import jp.ac.ems.repository.QuestionRepository;
 import jp.ac.ems.repository.StudentQuestionHistoryRepository;
 import jp.ac.ems.repository.UserRepository;
 import jp.ac.ems.service.PersonalGradeService;
+import jp.ac.ems.service.shared.SharedGradeService;
 import jp.ac.ems.service.util.JPCalenderEncoder;
 import lombok.Data;
 
@@ -39,22 +42,16 @@ import lombok.Data;
 public class PersonalGradeServiceImpl  implements PersonalGradeService {
 	
 	/**
-	 * ユーザーリポジトリ（user repository)
+	 * 共通成績サービス(common grade service)
 	 */
 	@Autowired
-	private UserRepository userRepository;
+	private SharedGradeService sharedGradeService;
 	
 	/**
 	 * 問題回答履歴リポジトリ(question answer history repository)
 	 */
 	@Autowired
 	private StudentQuestionHistoryRepository studentQuestionHistoryRepository;
-	
-	/**
-	 * 問題リポジトリ(quesiton repository)
-	 */
-	@Autowired
-	private QuestionRepository questionRepository;
 
 	/**
 	 * ログインユーザの全問題の成績を取得する.
@@ -104,7 +101,7 @@ public class PersonalGradeServiceImpl  implements PersonalGradeService {
     @Override
 	public PersonalGradeForm getGradeFormByField(PersonalGradeForm form) {
 		
-		form.setSelectYear(null);;
+		form.setSelectYear(null);
 		
 		return getGradeForm(form);
 	}
@@ -132,21 +129,10 @@ public class PersonalGradeServiceImpl  implements PersonalGradeService {
      */
 	@Override
     public void setSelectData(PersonalGradeForm form, Model model) {
-    	// 年度取得
-        Map<String, String> yearMap = findAllYearMap();
-        model.addAttribute("yearDropItems", yearMap);
-    	
-    	// 大分類取得
-        Map<String, String> fieldLMap = findAllFieldLMap();
-        model.addAttribute("fieldLDropItems", fieldLMap);
-    	
-    	// 中分類取得
-        Map<String, String> fieldMMap = findAllFieldMMap(form.getSelectFieldL());
-        model.addAttribute("fieldMDropItems", fieldMMap);
-    	
-    	// 小分類取得
-        Map<String, String> fieldSMap = findAllFieldSMap(form.getSelectFieldM());
-        model.addAttribute("fieldSDropItems", fieldSMap);
+		
+		String fieldL = form.getSelectFieldL();
+		String fieldM = form.getSelectFieldM();
+		sharedGradeService.setSelectData(fieldL, fieldM, model);
     }
 
 	/**
@@ -156,190 +142,21 @@ public class PersonalGradeServiceImpl  implements PersonalGradeService {
 	 * @return 成績Form(grade form)
 	 */
 	private PersonalGradeForm getGradeForm(PersonalGradeForm form) {
-		
-		Grade grade = new Grade();
-		grade.setUserId(form.getUserId());
-		
-		// 始めに全手の問題情報を取得する（履歴ごとに問題情報を取得するとクエリ回数が増大し、クラウド料金が増えるため）
-		List<QuestionBean> questionBeanList =  questionRepository.findAll();
-	    Map<Long, QuestionBean> questionBeanMap = questionBeanList.stream().collect(HashMap::new, (m, d) -> m.put(d.getId(), d), Map::putAll);
-		
+
+		// 成績作成
 		List<StudentQuestionHistoryBean> studentQuestHistoryBeanList = studentQuestionHistoryRepository.findAllByUserId(form.getUserId());
-		for(StudentQuestionHistoryBean sqhBean : studentQuestHistoryBeanList) {
-			Long questionId = sqhBean.getQuestionId();
-			
-			QuestionBean questionBean = questionBeanMap.get(questionId);
-			if((form.getSelectYear() == null || form.getSelectYear().equals("")) && (form.getSelectFieldL() == null || form.getSelectFieldL().equals(""))
-					&& (form.getSelectFieldM() == null || form.getSelectFieldM().equals("")) && (form.getSelectFieldS() == null || form.getSelectFieldS().equals(""))) {
-			// 標準抽出（全問：全年度：全分野）
-				if(sqhBean.getCorrectFlg()) {
-					grade.setCorrectCnt(grade.getCorrectCnt() + 1);
-				} else {
-					grade.setIncorrectCnt(grade.getIncorrectCnt() + 1);
-				}
-			} else {
-				String year = questionBean.getYear() + questionBean.getTerm();
-				if(form.getSelectYear() != null && !form.getSelectYear().equals("") && form.getSelectYear().equals(year)) {
-					// (1)年度による抽出
-				
-					if(sqhBean.getCorrectFlg()) {
-						grade.setCorrectCnt(grade.getCorrectCnt() + 1);
-					} else {
-						grade.setIncorrectCnt(grade.getIncorrectCnt() + 1);
-					}
-				} else {
+		Map<String, GradeData> gradeMap = sharedGradeService.createGrade(form, studentQuestHistoryBeanList);
+		GradeData grade = gradeMap.get(form.getUserId());
 
-					// 分類による抽出
-					if(form.getSelectFieldS() != null && !form.getSelectFieldS().equals("")) {
-						// 小分類による抽出
-						if(form.getSelectFieldS().equals(String.valueOf(questionBean.getFieldSId()))) {
-							if(sqhBean.getCorrectFlg()) {
-								grade.setCorrectCnt(grade.getCorrectCnt() + 1);
-							} else {
-								grade.setIncorrectCnt(grade.getIncorrectCnt() + 1);
-							}
-						}
-					} else if(form.getSelectFieldM() != null && !form.getSelectFieldM().equals("")) {
-						// 中分類による抽出
-						if(form.getSelectFieldM().equals(String.valueOf(questionBean.getFieldMId()))) {
-							if(sqhBean.getCorrectFlg()) {
-								grade.setCorrectCnt(grade.getCorrectCnt() + 1);
-							} else {
-								grade.setIncorrectCnt(grade.getIncorrectCnt() + 1);
-							}
-						}
-					} else if(form.getSelectFieldL() != null && !form.getSelectFieldL().equals("")) {
-						// 大分類による抽出
-						if(form.getSelectFieldL().equals(String.valueOf(questionBean.getFieldLId()))) {
-							if(sqhBean.getCorrectFlg()) {
-								grade.setCorrectCnt(grade.getCorrectCnt() + 1);
-							} else {
-								grade.setIncorrectCnt(grade.getIncorrectCnt() + 1);
-							}
-						}
-					}
-				}
-			}
-		}
-
-    	// ユーザ名を設定する
-		Optional<UserBean> optUser = userRepository.findById(form.getUserId());
-		optUser.ifPresent(userBean -> grade.setUserName(userBean.getName()));
-
-		List<String> userNameList = new ArrayList<>();
-		userNameList.add(grade.getUserName());
-		form.setUserNameList(userNameList);
-		List<String> correctGradeList = new ArrayList<>();
-		correctGradeList.add(String.valueOf(grade.getCorrectCnt()));
-		form.setCorrectGradeList(correctGradeList);
-		List<String> incorrectGradeList = new ArrayList<>();
-		incorrectGradeList.add(String.valueOf(grade.getIncorrectCnt()));
-		form.setIncorrectGradeList(incorrectGradeList);
+    	// ユーザ情報設定
+		List<GradeData> gradeList = new ArrayList<GradeData>();
+		gradeList.add(grade);
+		sharedGradeService.viewSettingUser(form, gradeList);
 		
 		// グラフ描画領域縦幅設定
-		form.setCanvasHeight(String.valueOf(1 * 50));
-
-		// グラフ横目盛り幅設定
-		int length = String.valueOf(grade.getTotalCnt()).length();
-		int xStepSize = 1;
-		if(length > 2) {
-			xStepSize = (int) Math.pow(Double.valueOf(10), Double.valueOf(length - 2));
-		}
-		form.setXStepSize(String.valueOf(xStepSize));
+		int width = String.valueOf(grade.getTotalCnt()).length();
+		sharedGradeService.viewSettingGraph(form, 1, width);
 		
 		return form;
-	}
-	
-    /**
-     * 画面用年度マップ取得
-     * @return 画面用年度マップ（key:ドロップダウンリストID、value：年度ラベル）
-     */
-    private Map<String, String> findAllYearMap() {
-    	
-    	Map<String, String> map = new LinkedHashMap<String, String>();
-    	
-    	for(QuestionBean questionBean : questionRepository.findDistinctYearAndTerm()) {
-    		StringBuffer keyBuff = new StringBuffer();
-    		StringBuffer valueBuff = new StringBuffer();
-    		// 年度
-    		keyBuff.append(questionBean.getYear());
-    		
-    		String termStr = questionBean.getTerm();
-    		// 期
-    		if("H".equals(termStr)) {
-    			keyBuff.append("H");
-    		} else {
-    			keyBuff.append("A");
-    		}
-    		
-        	valueBuff.append(JPCalenderEncoder.getInstance().convertJpCalender(questionBean.getYear(), termStr));
-
-   			map.put(keyBuff.toString(), valueBuff.toString());
-    	}
-    	return map;
-    }
-    
-    /**
-     * 画面用大分類マップ取得(Get large  map for screen).
-     * @return 画面用大分類マップ（key:ドロップダウンリストID、value：大分類ラベル）
-     */
-    private Map<String, String> findAllFieldLMap() {
-    	
-    	Map<String, String> map = new LinkedHashMap<String, String>();
-
-    	EnumSet.allOf(FieldLarge.class)
-    	  .forEach(fieldL -> map.put(String.valueOf(fieldL.getId()), fieldL.getName()));
-    	
-    	return map;
-    }
-    
-    /**
-     * 画面用中分類マップ取得(Get middle filed map for screen).
-     * @param parentId 大分類ID(large field id)
-     * @return 画面用中分類マップ（key:ドロップダウンリストID、value：中分類ラベル）
-     */
-    private Map<String, String> findAllFieldMMap(String parentId) {
-
-    	Map<String, String> map = new LinkedHashMap<String, String>();
-    	if(parentId != null && !parentId.equals("")) {
-    		map.putAll(FieldMiddle.getMap(Byte.valueOf(parentId)));
-    	}
-    	return map;
-    }
-    
-    /**
-     * 画面用小分類マップ取得(Get small filed map for screen).
-     * @param parentId 中分類ID(middle field id)
-     * @return 画面用小分類マップ（key:ドロップダウンリストID、value：小分類ラベル）
-     */
-    private Map<String, String> findAllFieldSMap(String parentId) {
-    	
-    	
-    	Map<String, String> map = new LinkedHashMap<String, String>();
-    	if(parentId != null && !parentId.equals("")) {
-    		map.putAll(FieldSmall.getMap(Byte.valueOf(parentId)));
-    	}
-    	return map;
-    }
-
-	/**
-	 * 内部処理用成績クラス
-	 * 
-	 * @author user01-m
-	 */
-	@Data
-	class Grade {
-		
-		private String userId;
-		
-		private String userName;
-		
-		private int correctCnt = 0;
-
-		private int incorrectCnt = 0;
-		
-		private int getTotalCnt() {
-			return correctCnt + incorrectCnt;
-		}
 	}
 }

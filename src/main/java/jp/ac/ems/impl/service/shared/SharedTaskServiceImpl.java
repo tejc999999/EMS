@@ -42,7 +42,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
- * 課題共通サービス
+ * 共通課題サービスクラス(common task service class).
  * 
  * @author user01-m
  *

@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * タグ共通処理サービス
+ * 共通タグ処理サービスインターフェース（common tag service interface）.
  * @author user01-m
  *
  */
