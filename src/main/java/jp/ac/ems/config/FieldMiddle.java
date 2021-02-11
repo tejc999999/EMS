@@ -14,7 +14,7 @@ public enum FieldMiddle implements FieldBaseEnum<FieldMiddle>{
     AP_FM_3_TECHNOLOGY_ELEMENT((byte)3, "AP", "技術要素"),
     AP_FM_4_DEVELOPMENT_TECHNOLOGY((byte)4, "AP", "開発技術"),
     
-    AP_FM_5_PROJECT_MANAGEMNET((byte)5, "AP", "プロジェクトマネジメント"),
+    AP_FM_5_PROJECT_MANAGEMENT((byte)5, "AP", "プロジェクトマネジメント"),
     AP_FM_6_SERVICE_MANAGEMENT((byte)6, "AP", "サービスマネジメント"),
     
     AP_FM_7_SYSTEM_PLANNING((byte)7, "AP", "システム企画"),
@@ -95,8 +95,8 @@ public enum FieldMiddle implements FieldBaseEnum<FieldMiddle>{
     			name = AP_FM_3_TECHNOLOGY_ELEMENT.getName();
     		} else if(id == AP_FM_4_DEVELOPMENT_TECHNOLOGY.getId()) {
     			name = AP_FM_4_DEVELOPMENT_TECHNOLOGY.getName();
-    		} else if(id == AP_FM_5_PROJECT_MANAGEMNET.getId()) {
-    			name = AP_FM_5_PROJECT_MANAGEMNET.getName();
+    		} else if(id == AP_FM_5_PROJECT_MANAGEMENT.getId()) {
+    			name = AP_FM_5_PROJECT_MANAGEMENT.getName();
     		} else if(id == AP_FM_6_SERVICE_MANAGEMENT.getId()) {
     			name = AP_FM_6_SERVICE_MANAGEMENT.getName();
     		} else if(id == AP_FM_7_SYSTEM_PLANNING.getId()) {
@@ -129,8 +129,8 @@ public enum FieldMiddle implements FieldBaseEnum<FieldMiddle>{
     			id = AP_FM_3_TECHNOLOGY_ELEMENT.getId();
     		} else if(AP_FM_4_DEVELOPMENT_TECHNOLOGY.getName().equals(name)) {
     			id = AP_FM_4_DEVELOPMENT_TECHNOLOGY.getId();
-    		} else if(AP_FM_5_PROJECT_MANAGEMNET.getName().equals(name)) {
-    			id = AP_FM_5_PROJECT_MANAGEMNET.getId();
+    		} else if(AP_FM_5_PROJECT_MANAGEMENT.getName().equals(name)) {
+    			id = AP_FM_5_PROJECT_MANAGEMENT.getId();
     		} else if(AP_FM_6_SERVICE_MANAGEMENT.getName().equals(name)) {
     			id = AP_FM_6_SERVICE_MANAGEMENT.getId();
     		} else if(AP_FM_7_SYSTEM_PLANNING.getName().equals(name)) {
@@ -163,7 +163,7 @@ public enum FieldMiddle implements FieldBaseEnum<FieldMiddle>{
     		map.put(String.valueOf(AP_FM_4_DEVELOPMENT_TECHNOLOGY.getId()), AP_FM_4_DEVELOPMENT_TECHNOLOGY.getName());
     	} else if(parentId == FieldLarge.AP_FL_2_MANAGEMENT.getId()) {
     		
-    		map.put(String.valueOf(AP_FM_5_PROJECT_MANAGEMNET.getId()), AP_FM_5_PROJECT_MANAGEMNET.getName());
+    		map.put(String.valueOf(AP_FM_5_PROJECT_MANAGEMENT.getId()), AP_FM_5_PROJECT_MANAGEMENT.getName());
     		map.put(String.valueOf(AP_FM_6_SERVICE_MANAGEMENT.getId()), AP_FM_6_SERVICE_MANAGEMENT.getName());
     	} else if(parentId == FieldLarge.AP_FL_3_STRATEGY.getId()) {
     		
@@ -175,6 +175,39 @@ public enum FieldMiddle implements FieldBaseEnum<FieldMiddle>{
     	
     	return map;
     }
+    
+    /**
+     * 親となる大分類IDを取得する
+     * 
+     * @param fieldMId 中分類ID(field middle id).
+     * @return 大分類ID(field large id).
+     */
+    public static Byte getParentId(Byte fieldMId) {
+
+    	if(fieldMId != null) {
+    		if(fieldMId.equals(AP_FM_1_BASIC_THEORY.getId())
+    				|| fieldMId.equals(AP_FM_2_COMPUTER_SYSTEM.getId())
+    				|| fieldMId.equals(AP_FM_3_TECHNOLOGY_ELEMENT.getId())
+    				|| fieldMId.equals(AP_FM_4_DEVELOPMENT_TECHNOLOGY.getId())) {
+    			
+    			return FieldLarge.AP_FL_1_TECHNOLOGY.getId();
+    			
+    		} else if(fieldMId.equals(AP_FM_5_PROJECT_MANAGEMENT.getId())
+    				|| fieldMId.equals(AP_FM_6_SERVICE_MANAGEMENT.getId())) {
+    			
+    			return FieldLarge.AP_FL_2_MANAGEMENT.getId();
+    			
+    		} else if(fieldMId.equals(AP_FM_7_SYSTEM_PLANNING.getId())
+ 					|| fieldMId.equals(AP_FM_8_SYSTEM_STRATEGY.getId())
+ 					|| fieldMId.equals(AP_FM_9_MANAGEMENT_STRATEGY.getId())
+ 					|| fieldMId.equals(AP_FM_10_CORPORATE_AND_LEGAL.getId())) {
+ 				
+ 				return FieldLarge.AP_FL_3_STRATEGY.getId();
+    		}
+    	}
+		return null;
+    }
+    
     
     /**
      * 分野レベルを取得する

@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
+import com.mysql.cj.result.Field;
+
 import jp.ac.ems.bean.QuestionBean;
 import jp.ac.ems.bean.StudentQuestionHistoryBean;
 import jp.ac.ems.bean.UserBean;
@@ -111,7 +113,7 @@ public class GradeServiceImpl  implements GradeService {
         model.addAttribute("fieldLDropItems", fieldLMap);
     	
     	// 中分類取得
-        Map<String, String> fieldMMap = findAllFieldMMap(form.getSelectFieldL());
+        Map<String, String> fieldMMap = findAllFieldMMap(form.getSelectFieldL(), form.getSelectFieldM());
         model.addAttribute("fieldMDropItems", fieldMMap);
     	
     	// 小分類取得
@@ -319,16 +321,34 @@ public class GradeServiceImpl  implements GradeService {
     /**
      * 画面用中分類マップ取得(Get middle filed map for screen).
      * @param parentId 大分類ID(large field id)
+     * @param fieldMId 中分類ID(Middle Field id)
      * @return 画面用中分類マップ（key:ドロップダウンリストID、value：中分類ラベル）
      */
-    private Map<String, String> findAllFieldMMap(String parentId) {
+    private Map<String, String> findAllFieldMMap(String parentId, String fieldMId) {
 
     	Map<String, String> map = new LinkedHashMap<String, String>();
     	if(parentId != null && !parentId.equals("")) {
     		map.putAll(FieldMiddle.getMap(Byte.valueOf(parentId)));
+    	} else if(fieldMId != null && !fieldMId.equals("")) {
+    		map.putAll(findRestoreAllFieldMMap(parentId, fieldMId));
     	}
     	return map;
     }
+    
+    /**
+     * 画面用中分類マップ復元取得(Get middle filed map for screen).
+     * @param parentId 大分類ID(large field id)
+     * @param fieldMId 中分類ID(Middle Field id)
+     * @return 画面用中分類マップ（key:ドロップダウンリストID、value：中分類ラベル）
+     */
+    private Map<String, String> findRestoreAllFieldMMap(String parentId, String fieldMId) {
+
+    	Map<String, String> map = new LinkedHashMap<String, String>();
+    	map.putAll(findAllFieldMMap(FieldMiddle.getParentId(Byte.valueOf(fieldMId)).toString(), fieldMId));
+
+    	return map;
+    }
+
     
     /**
      * 画面用小分類マップ取得(Get small filed map for screen).

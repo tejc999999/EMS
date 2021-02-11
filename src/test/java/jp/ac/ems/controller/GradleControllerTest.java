@@ -7,7 +7,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import java.util.Date;
-import java.util.EnumSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,8 +30,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
@@ -1420,15 +1417,204 @@ public class GradleControllerTest {
 
     	// 中分類(マネジメントに属するもの）
 		Map<String, String> expFieldMMap =  new LinkedHashMap<String, String>();
-		expFieldMMap.put(String.valueOf(FieldMiddle.AP_FM_5_PROJECT_MANAGEMNET.getId()), FieldMiddle.AP_FM_5_PROJECT_MANAGEMNET.getName());
+		expFieldMMap.put(String.valueOf(FieldMiddle.AP_FM_5_PROJECT_MANAGEMENT.getId()), FieldMiddle.AP_FM_5_PROJECT_MANAGEMENT.getName());
 		expFieldMMap.put(String.valueOf(FieldMiddle.AP_FM_6_SERVICE_MANAGEMENT.getId()), FieldMiddle.AP_FM_6_SERVICE_MANAGEMENT.getName());
 		Map<String, String> actFieldMMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldMDropItems");
 
     	assertThat(actFieldMMap).hasSize(2);
     	assertThat(actFieldMMap).containsExactlyEntriesOf(expFieldMMap);
     }
-	// 大分類を指定せずに中分類を取得
-	// 中分類を指定して小分類を取得
-	// 中分類を指定せず小分類を取得
-	// 大分類を指定し、中分類を指定せず、小分類を取得
+
+    /**
+   	 * 大分類を指定せず中分類取得.
+     * @throws Exception MockMVC失敗時例外
+     */
+	@SuppressWarnings("unchecked")
+	@Test
+    public void 大分類を指定せず中分類を取得する_正常() throws Exception {
+		
+		GradeForm requestForm = new GradeForm();
+
+		MvcResult result = mockMvc.perform(post("/common/progress").param("selectFieldMiddleBtn", "").flashAttr("gradeForm", requestForm))
+    		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
+                "common/progress/list")).andReturn();
+
+    	// 大分類
+		Map<String, String> expFieldLMap =  new LinkedHashMap<String, String>();
+		expFieldLMap.put(String.valueOf(FieldLarge.AP_FL_1_TECHNOLOGY.getId()), FieldLarge.AP_FL_1_TECHNOLOGY.getName());
+		expFieldLMap.put(String.valueOf(FieldLarge.AP_FL_2_MANAGEMENT.getId()), FieldLarge.AP_FL_2_MANAGEMENT.getName());
+		expFieldLMap.put(String.valueOf(FieldLarge.AP_FL_3_STRATEGY.getId()), FieldLarge.AP_FL_3_STRATEGY.getName());
+		Map<String, String> actFieldLMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldLDropItems");
+		
+    	assertThat(actFieldLMap).hasSize(3);
+    	assertThat(actFieldLMap).containsExactlyEntriesOf(expFieldLMap);
+
+    	// 中分類(マネジメントに属するもの）
+		Map<String, String> actFieldMMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldMDropItems");
+
+    	assertThat(actFieldMMap).hasSize(0);
+    }
+	
+
+    /**
+   	 * 大分類と中分類を指定して小分類取得.
+     * @throws Exception MockMVC失敗時例外
+     */
+	@SuppressWarnings("unchecked")
+	@Test
+    public void 大分類と中分類を指定して小分類を取得する_正常() throws Exception {
+		
+		GradeForm requestForm = new GradeForm();
+		requestForm.setSelectFieldL(FieldLarge.AP_FL_2_MANAGEMENT.getId().toString());
+		requestForm.setSelectFieldM(FieldMiddle.AP_FM_5_PROJECT_MANAGEMENT.getId().toString());
+
+		MvcResult result = mockMvc.perform(post("/common/progress").param("selectFieldMiddleBtn", "").flashAttr("gradeForm", requestForm))
+    		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
+                "common/progress/list")).andReturn();
+
+    	// 大分類
+		Map<String, String> expFieldLMap =  new LinkedHashMap<String, String>();
+		expFieldLMap.put(String.valueOf(FieldLarge.AP_FL_1_TECHNOLOGY.getId()), FieldLarge.AP_FL_1_TECHNOLOGY.getName());
+		expFieldLMap.put(String.valueOf(FieldLarge.AP_FL_2_MANAGEMENT.getId()), FieldLarge.AP_FL_2_MANAGEMENT.getName());
+		expFieldLMap.put(String.valueOf(FieldLarge.AP_FL_3_STRATEGY.getId()), FieldLarge.AP_FL_3_STRATEGY.getName());
+		Map<String, String> actFieldLMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldLDropItems");
+		
+    	assertThat(actFieldLMap).hasSize(3);
+    	assertThat(actFieldLMap).containsExactlyEntriesOf(expFieldLMap);
+
+    	// 中分類(マネジメントに属するもの）
+		Map<String, String> expFieldMMap =  new LinkedHashMap<String, String>();
+		expFieldMMap.put(String.valueOf(FieldMiddle.AP_FM_5_PROJECT_MANAGEMENT.getId()), FieldMiddle.AP_FM_5_PROJECT_MANAGEMENT.getName());
+		expFieldMMap.put(String.valueOf(FieldMiddle.AP_FM_6_SERVICE_MANAGEMENT.getId()), FieldMiddle.AP_FM_6_SERVICE_MANAGEMENT.getName());
+		Map<String, String> actFieldMMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldMDropItems");
+
+    	assertThat(actFieldMMap).hasSize(2);
+    	assertThat(actFieldMMap).containsExactlyEntriesOf(expFieldMMap);
+
+		// 小分類（プロジェクトマネジメントに属するもの）
+		Map<String, String> expFieldSMap =  new LinkedHashMap<String, String>();
+		expFieldSMap.put(String.valueOf(FieldSmall.AP_FS_14_PROJECT_MANAGEMENT.getId()), FieldSmall.AP_FS_14_PROJECT_MANAGEMENT.getName());
+		Map<String, String> actFieldSMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldSDropItems");
+
+    	assertThat(actFieldSMap).hasSize(1);
+    	assertThat(actFieldSMap).containsExactlyEntriesOf(expFieldSMap);
+    }
+
+    /**
+   	 * 大分類を指定せず中分類を指定して小分類取得.
+     * @throws Exception MockMVC失敗時例外
+     */
+	@SuppressWarnings("unchecked")
+	@Test
+    public void 大分類を指定せず中分類を指定して小分類を取得する_正常() throws Exception {
+		
+		GradeForm requestForm = new GradeForm();
+		requestForm.setSelectFieldM(FieldMiddle.AP_FM_5_PROJECT_MANAGEMENT.getId().toString());
+
+		MvcResult result = mockMvc.perform(post("/common/progress").param("selectFieldMiddleBtn", "").flashAttr("gradeForm", requestForm))
+    		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
+                "common/progress/list")).andReturn();
+
+    	// 大分類
+		Map<String, String> expFieldLMap =  new LinkedHashMap<String, String>();
+		expFieldLMap.put(String.valueOf(FieldLarge.AP_FL_1_TECHNOLOGY.getId()), FieldLarge.AP_FL_1_TECHNOLOGY.getName());
+		expFieldLMap.put(String.valueOf(FieldLarge.AP_FL_2_MANAGEMENT.getId()), FieldLarge.AP_FL_2_MANAGEMENT.getName());
+		expFieldLMap.put(String.valueOf(FieldLarge.AP_FL_3_STRATEGY.getId()), FieldLarge.AP_FL_3_STRATEGY.getName());
+		Map<String, String> actFieldLMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldLDropItems");
+		
+    	assertThat(actFieldLMap).hasSize(3);
+    	assertThat(actFieldLMap).containsExactlyEntriesOf(expFieldLMap);
+
+    	// 中分類(マネジメントに属するもの）
+		Map<String, String> expFieldMMap =  new LinkedHashMap<String, String>();
+		expFieldMMap.put(String.valueOf(FieldMiddle.AP_FM_5_PROJECT_MANAGEMENT.getId()), FieldMiddle.AP_FM_5_PROJECT_MANAGEMENT.getName());
+		expFieldMMap.put(String.valueOf(FieldMiddle.AP_FM_6_SERVICE_MANAGEMENT.getId()), FieldMiddle.AP_FM_6_SERVICE_MANAGEMENT.getName());
+		Map<String, String> actFieldMMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldMDropItems");
+
+    	assertThat(actFieldMMap).hasSize(2);
+    	assertThat(actFieldMMap).containsExactlyEntriesOf(expFieldMMap);
+
+		// 小分類（プロジェクトマネジメントに属するもの）
+		Map<String, String> expFieldSMap =  new LinkedHashMap<String, String>();
+		expFieldSMap.put(String.valueOf(FieldSmall.AP_FS_14_PROJECT_MANAGEMENT.getId()), FieldSmall.AP_FS_14_PROJECT_MANAGEMENT.getName());
+		Map<String, String> actFieldSMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldSDropItems");
+
+    	assertThat(actFieldSMap).hasSize(1);
+    	assertThat(actFieldSMap).containsExactlyEntriesOf(expFieldSMap);
+    }
+
+    /**
+   	 * 大分類と中分類を指定せず小分類取得.
+     * @throws Exception MockMVC失敗時例外
+     */
+	@SuppressWarnings("unchecked")
+	@Test
+    public void 大分類と中分類を指定せず小分類を取得する_正常() throws Exception {
+		
+		GradeForm requestForm = new GradeForm();
+
+		MvcResult result = mockMvc.perform(post("/common/progress").param("selectFieldMiddleBtn", "").flashAttr("gradeForm", requestForm))
+    		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
+                "common/progress/list")).andReturn();
+
+    	// 大分類
+		Map<String, String> expFieldLMap =  new LinkedHashMap<String, String>();
+		expFieldLMap.put(String.valueOf(FieldLarge.AP_FL_1_TECHNOLOGY.getId()), FieldLarge.AP_FL_1_TECHNOLOGY.getName());
+		expFieldLMap.put(String.valueOf(FieldLarge.AP_FL_2_MANAGEMENT.getId()), FieldLarge.AP_FL_2_MANAGEMENT.getName());
+		expFieldLMap.put(String.valueOf(FieldLarge.AP_FL_3_STRATEGY.getId()), FieldLarge.AP_FL_3_STRATEGY.getName());
+		Map<String, String> actFieldLMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldLDropItems");
+		
+    	assertThat(actFieldLMap).hasSize(3);
+    	assertThat(actFieldLMap).containsExactlyEntriesOf(expFieldLMap);
+
+    	// 中分類
+		Map<String, String> actFieldMMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldMDropItems");
+
+		assertThat(actFieldMMap).hasSize(0);
+
+		// 小分類
+		Map<String, String> actFieldSMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldSDropItems");
+
+		assertThat(actFieldSMap).hasSize(0);
+    }
+
+    /**
+   	 * 大分類を指定して中分類を指定せず小分類取得.
+     * @throws Exception MockMVC失敗時例外
+     */
+	@SuppressWarnings("unchecked")
+	@Test
+    public void 大分類を指定して中分類を指定せず小分類を取得する_正常() throws Exception {
+		
+		GradeForm requestForm = new GradeForm();
+		requestForm.setSelectFieldL(FieldLarge.AP_FL_2_MANAGEMENT.getId().toString());
+
+		MvcResult result = mockMvc.perform(post("/common/progress").param("selectFieldMiddleBtn", "").flashAttr("gradeForm", requestForm))
+    		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
+                "common/progress/list")).andReturn();
+
+    	// 大分類
+		Map<String, String> expFieldLMap =  new LinkedHashMap<String, String>();
+		expFieldLMap.put(String.valueOf(FieldLarge.AP_FL_1_TECHNOLOGY.getId()), FieldLarge.AP_FL_1_TECHNOLOGY.getName());
+		expFieldLMap.put(String.valueOf(FieldLarge.AP_FL_2_MANAGEMENT.getId()), FieldLarge.AP_FL_2_MANAGEMENT.getName());
+		expFieldLMap.put(String.valueOf(FieldLarge.AP_FL_3_STRATEGY.getId()), FieldLarge.AP_FL_3_STRATEGY.getName());
+		Map<String, String> actFieldLMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldLDropItems");
+		
+    	assertThat(actFieldLMap).hasSize(3);
+    	assertThat(actFieldLMap).containsExactlyEntriesOf(expFieldLMap);
+
+    	// 中分類(マネジメントに属するもの）
+		Map<String, String> expFieldMMap =  new LinkedHashMap<String, String>();
+		expFieldMMap.put(String.valueOf(FieldMiddle.AP_FM_5_PROJECT_MANAGEMENT.getId()), FieldMiddle.AP_FM_5_PROJECT_MANAGEMENT.getName());
+		expFieldMMap.put(String.valueOf(FieldMiddle.AP_FM_6_SERVICE_MANAGEMENT.getId()), FieldMiddle.AP_FM_6_SERVICE_MANAGEMENT.getName());
+		Map<String, String> actFieldMMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldMDropItems");
+
+    	assertThat(actFieldMMap).hasSize(2);
+    	assertThat(actFieldMMap).containsExactlyEntriesOf(expFieldMMap);
+
+		// 小分類
+		Map<String, String> actFieldSMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldSDropItems");
+
+		assertThat(actFieldSMap).hasSize(0);
+    }
 }

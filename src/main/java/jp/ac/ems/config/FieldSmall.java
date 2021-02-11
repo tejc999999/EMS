@@ -248,7 +248,7 @@ public enum FieldSmall implements FieldBaseEnum<FieldSmall>{
     		map.put(String.valueOf(AP_FS_12_SYSTEM_DEVELOPMENT_TECHNOLOGY.getId()), AP_FS_12_SYSTEM_DEVELOPMENT_TECHNOLOGY.getName());
     		map.put(String.valueOf(AP_FS_13_SOFTWARE_DEVELOPMENT_MANAGEMENT_TECHNOLOGY.getId()), AP_FS_13_SOFTWARE_DEVELOPMENT_MANAGEMENT_TECHNOLOGY.getName());
 
-    	} else if(parentId == FieldMiddle.AP_FM_5_PROJECT_MANAGEMNET.getId()) {
+    	} else if(parentId == FieldMiddle.AP_FM_5_PROJECT_MANAGEMENT.getId()) {
     		map.put(String.valueOf(AP_FS_14_PROJECT_MANAGEMENT.getId()), AP_FS_14_PROJECT_MANAGEMENT.getName());
 
     	} else if(parentId == FieldMiddle.AP_FM_6_SERVICE_MANAGEMENT.getId()) {
