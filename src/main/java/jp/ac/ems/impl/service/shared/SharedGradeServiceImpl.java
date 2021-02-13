@@ -113,103 +113,73 @@ public class SharedGradeServiceImpl implements SharedGradeService {
 			// 成績作成
 			boolean correctFlg = sqhBean.getCorrectFlg().booleanValue();
 
-			if(!createGradeByAll(grade, form, correctFlg)) {
-				// 全年度・全分野作成ではない場合
+			if((form.getSelectYear() == null || form.getSelectYear().equals("")) && (form.getSelectFieldL() == null || form.getSelectFieldL().equals(""))
+					&& (form.getSelectFieldM() == null || form.getSelectFieldM().equals("")) && (form.getSelectFieldS() == null || form.getSelectFieldS().equals(""))) {
+				// 全年度・全分野の成績
+				createGradeByAll(grade, correctFlg);
+				
+			} else if(form.getSelectYear() != null && !form.getSelectYear().equals("")) {
+				// 年度別の成績
+				
 				String year = questionBean.getYear() + questionBean.getTerm();
-				if(!createGradeByYear(grade, form, correctFlg, year)) {
-					// 年度による抽出ではない場合
-					
-					// 分野による抽出
-					createGradeByField(grade, form, correctFlg, questionBean);
+				if(form.getSelectYear().equals(year)) {
+					createGradeByYear(grade, correctFlg, year);
+				}
+			} else {
+				// 分野別の成績
+				Byte fieldId = null;
+				if(form.getSelectFieldS() != null && !form.getSelectFieldS().equals("")) {
+					// 小分類別
+					fieldId = questionBean.getFieldSId();
+					createGradeByField(form, fieldId, correctFlg, grade, FieldSmall.class);
+				} else if(form.getSelectFieldM() != null && !form.getSelectFieldM().equals("")) {
+					// 中分類別
+					fieldId = questionBean.getFieldMId();
+					createGradeByField(form, fieldId, correctFlg, grade, FieldMiddle.class);
+				} else if(form.getSelectFieldL() != null && !form.getSelectFieldL().equals("")) {
+					// 大分類別
+					fieldId = questionBean.getFieldLId();
+					createGradeByField(form, fieldId, correctFlg, grade, FieldLarge.class);
 				}
 			}
-		
 		}
 		
 		return gradeMap;
 	}
 	
 	/**
+	 * 全問題の成績を作成
 	 * 
-	 * @param grade
-	 * @param form
-	 * @param correctFlg
-	 * @return
+	 * @param grade 成績データ
+	 * @param correctFlg　正解フラグ
 	 */
-	private boolean createGradeByAll(GradeData grade, BaseGradeForm form, boolean correctFlg) {
-		boolean result = false;
-		
-		if((form.getSelectYear() == null || form.getSelectYear().equals("")) && (form.getSelectFieldL() == null || form.getSelectFieldL().equals(""))
-				&& (form.getSelectFieldM() == null || form.getSelectFieldM().equals("")) && (form.getSelectFieldS() == null || form.getSelectFieldS().equals(""))) {
-			// 標準抽出（全問：全年度：全分野）
+	private void createGradeByAll(GradeData grade, boolean correctFlg) {
 			
-			if(correctFlg) {
-				grade.setCorrectCnt(grade.getCorrectCnt() + 1);
-			} else {
-				grade.setIncorrectCnt(grade.getIncorrectCnt() + 1);
-			}
-			
-			result = true;
+		if(correctFlg) {
+			grade.setCorrectCnt(grade.getCorrectCnt() + 1);
+		} else {
+			grade.setIncorrectCnt(grade.getIncorrectCnt() + 1);
 		}
-		
-		return result;
 	}
 	
 	/**
+	 * 年度指定で成績を作成
 	 * 
-	 * @param grade
-	 * @param form
-	 * @param correctFlg
-	 * @param year
-	 * @return
+	 * @param grade 成績データ
+	 * @param correctFlg 正解フラグ
+	 * @param year 年度情報
 	 */
-	private boolean createGradeByYear(GradeData grade, BaseGradeForm form, boolean correctFlg, String year) {
-		boolean result = false;
-		if(form.getSelectYear() != null && !form.getSelectYear().equals("") && form.getSelectYear().equals(year)) {
-			// (1)年度による抽出
-		
-			if(correctFlg) {
-				grade.setCorrectCnt(grade.getCorrectCnt() + 1);
-			} else {
-				grade.setIncorrectCnt(grade.getIncorrectCnt() + 1);
-			}
-			result = true;
-		}
-		
-		return result;
-	}
+	private void createGradeByYear(GradeData grade, boolean correctFlg, String year) {
 
-	/**
-	 * 
-	 * @param grade
-	 * @param form
-	 * @param correctFlg
-	 * @param questionBean
-	 * @return
-	 */
-	private boolean createGradeByField(GradeData grade, BaseGradeForm form, boolean correctFlg, QuestionBean questionBean) {
-		
-		// 分類による抽出
-		Byte fieldId = null;
-		if(form.getSelectFieldS() != null && !form.getSelectFieldS().equals("")) {
-			// 小分類による抽出
-			fieldId = questionBean.getFieldSId();
-			getGrade(form, fieldId, correctFlg, grade, FieldSmall.class);
-		} else if(form.getSelectFieldM() != null && !form.getSelectFieldM().equals("")) {
-			// 中分類による抽出
-			fieldId = questionBean.getFieldMId();
-			getGrade(form, fieldId, correctFlg, grade, FieldMiddle.class);
-		} else if(form.getSelectFieldL() != null && !form.getSelectFieldL().equals("")) {
-			// 大分類による抽出
-			fieldId = questionBean.getFieldLId();
-			getGrade(form, fieldId, correctFlg, grade, FieldLarge.class);
+		if(correctFlg) {
+			grade.setCorrectCnt(grade.getCorrectCnt() + 1);
+		} else {
+			grade.setIncorrectCnt(grade.getIncorrectCnt() + 1);
 		}
-		
-		return true;
 	}
 	
 	/**
-	 * 分類における成績付け
+	 * 分野別で成績を作成
 	 * 
 	 * @param form 成績Form
 	 * @param fieldId 分野ID
@@ -217,7 +187,7 @@ public class SharedGradeServiceImpl implements SharedGradeService {
 	 * @param grade 成績データ
 	 * @param fieldClass 分類(Enum)
 	 */
-	private void getGrade(BaseGradeForm form, Byte fieldId, boolean correctFlg, GradeData grade, Class<?> fieldClass) {
+	private void createGradeByField(BaseGradeForm form, Byte fieldId, boolean correctFlg, GradeData grade, Class<?> fieldClass) {
 		
 		String gradeField = null;
 		String questionField = null;
@@ -257,43 +227,25 @@ public class SharedGradeServiceImpl implements SharedGradeService {
 		List<String> correctList = new ArrayList<>();
 		List<String> incorrectList = new ArrayList<>();
 		if(gradeList != null) {
-			if(gradeList.size() == 1) {
-				// 個人進捗の場合
-				
-				GradeData grade = gradeList.get(0);
-				Optional<UserBean> optUser = userRepository.findById(grade.getUserId());
-				
-				optUser.ifPresent(userBean -> grade.setUserName(userBean.getName()));
-				userNameList.add(grade.getUserName());
-				
-				correctList.add(String.valueOf(grade.getCorrectCnt()));
-				incorrectList.add(String.valueOf(grade.getIncorrectCnt()));
-				
-			} else {
-				// 全体進捗の場合
-				
-				for(GradeData grade : gradeList) {
-		
-			    	// ユーザ名を設定する
-					// 削除済みユーザーは全ユーザーリストに存在しないため、成績から除外する）
-					List<UserBean> allUser = userRepository.findAllStudent();
-					Optional<UserBean> optUser = allUser.stream()
-			        	.filter(i -> i.getId().equals(grade.getUserId()))
-			        	.findFirst();
-					optUser.ifPresent(userBean -> {
-						
-						grade.setUserName(userBean.getName());
-						userNameList.add(grade.getUserName());
-						correctList.add(String.valueOf(grade.getCorrectCnt()));
-						incorrectList.add(String.valueOf(grade.getIncorrectCnt()));
-					});
-				}
+			List<UserBean> allUser = userRepository.findAllStudent();
+			for(GradeData grade : gradeList) {
+	
+		    	// ユーザ名を設定する
+				Optional<UserBean> optUser = allUser.stream()
+		        	.filter(i -> i.getId().equals(grade.getUserId()))
+		        	.findFirst();
+				optUser.ifPresent(userBean -> {
+					
+					grade.setUserName(userBean.getName());
+					userNameList.add(grade.getUserName());
+					correctList.add(String.valueOf(grade.getCorrectCnt()));
+					incorrectList.add(String.valueOf(grade.getIncorrectCnt()));
+				});
 			}
 		}
 		form.setUserNameList(userNameList);
 		form.setCorrectGradeList(correctList);
 		form.setIncorrectGradeList(incorrectList);
-		
 	}
 	
 	/**

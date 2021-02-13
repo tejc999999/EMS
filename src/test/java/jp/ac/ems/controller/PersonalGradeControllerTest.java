@@ -1,21 +1,31 @@
 package jp.ac.ems.controller;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
 import java.util.Date;
+import java.util.List;
 
 import javax.sql.DataSource;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.transaction.AfterTransaction;
 import org.springframework.test.context.transaction.BeforeTransaction;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
@@ -28,6 +38,8 @@ import com.ninja_squad.dbsetup.destination.Destination;
 import com.ninja_squad.dbsetup.operation.Operation;
 
 import jp.ac.ems.config.RoleCode;
+import jp.ac.ems.form.GradeForm;
+import jp.ac.ems.form.PersonalGradeForm;
 
 /**
  * 学生用個人成績Contollerテスト（test student personal grade Controller Class）.
@@ -551,29 +563,106 @@ public class PersonalGradeControllerTest {
         // セキュリティ機能を動作させるため、springSecurity()を適用させる
         mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
     }
+    
+    /**
+   	 * 存在しない学生を指定して成績一覧ページ表示.
+     * @throws Exception MockMVC失敗時例外
+     */
+	@Test
+    public void 学生なしで成績一覧ページ表示_正常() throws Exception {
+		
+		PersonalGradeForm requestForm = new PersonalGradeForm();
+		requestForm.setUserId(INSERT_STUDENT1_ID + "xyz");
+		
+    	MvcResult result = mockMvc.perform(post("/common/progress/personal").param("targetIdSelectBtn", "").flashAttr("personalGradeForm", requestForm))
+    		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
+                "common/progress/personal")).andReturn();
+    	
+    	PersonalGradeForm responseForm = (PersonalGradeForm) result.getModelAndView().getModel().get("personalGradeForm");
+    	// 学生名が存在しない
+    	List<String> actStudentIdList = responseForm.getUserNameList();
+    	assertThat(actStudentIdList.size()).isEqualTo(0);
+    	// 正解数が存在しない
+    	List<String> actCorrectCntList = responseForm.getCorrectGradeList();
+    	assertThat(actCorrectCntList.size()).isEqualTo(0);
+    	// 不正解数が存在しない
+    	List<String> actIncorrectCntList = responseForm.getIncorrectGradeList();
+    	assertThat(actIncorrectCntList.size()).isEqualTo(0);
+    }
+		
+    /**
+   	 * 成績なしで学生を指定して成績一覧ページ表示.
+     * @throws Exception MockMVC失敗時例外
+     */
+	@Test
+    public void 学生なしで学生を指定して成績一覧ページ表示_正常() throws Exception {
+		
+		PersonalGradeForm requestForm = new PersonalGradeForm();
+		requestForm.setUserId(INSERT_STUDENT1_ID);
+		
+    	MvcResult result = mockMvc.perform(post("/common/progress/personal").param("targetIdSelectBtn", "").flashAttr("personalGradeForm", requestForm))
+    		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
+                "common/progress/personal")).andReturn();
+    	
+    	PersonalGradeForm responseForm = (PersonalGradeForm) result.getModelAndView().getModel().get("personalGradeForm");
+    	// 学生名が1人ぶん
+    	List<String> actStudentNameList = responseForm.getUserNameList();
+    	assertThat(actStudentNameList.size()).isEqualTo(1);
+    	assertThat(actStudentNameList).contains(INSERT_STUDENT1_NAME);
+    	// 正解数が存在しない
+    	List<String> actCorrectCntList = responseForm.getCorrectGradeList();
+    	assertThat(actCorrectCntList.size()).isEqualTo(0);
+    	// 不正解数が存在しない
+    	List<String> actIncorrectCntList = responseForm.getIncorrectGradeList();
+    	assertThat(actIncorrectCntList.size()).isEqualTo(0);
+    }
 
     /**
-     * 以下、成績一覧画面のテスト
-     * ここにユーザー指定有無を加えたテストを作成する
-     * 
-   	 * 学生なしで成績一覧ページ表示.
-   	 * 学生１名で成績一覧ページ表示.
-   	 * 学生２名でソート指定なし、成績一覧ページ表示.
-   	 * 年度別抽出で学生２名該当、正解率でソートして表示.
-   	 * 年度別抽出で学生1名該当、正解率でソートして表示.
-   	 * 大分類別抽出で学生2名該当、回答数でソートして表示.
-   	 * 大分類別抽出で学生1名該当.
-   	 * 中分類別抽出で学生2名該当し、正答率でソートして表示.
-   	 * 中分類別抽出で学生1名該当し、正答率でソートして表示.
-   	 * 小分類別抽出で学生2名該当し、回答率でソートして表示.
-   	 * 小分類別抽出で学生2名該当し、回答率でソートして表示.
-   	 * 同じ問題を複数回カウントして、成績一覧ページを表示.
-   	 * 大分類を指定して中分類取得.
-   	 * 大分類を指定せず中分類取得.
-   	 * 大分類と中分類を指定して小分類取得.
-   	 * 大分類を指定せず中分類を指定して小分類取得.
-   	 * 大分類と中分類を指定せず小分類取得.
-   	 * 大分類を指定して中分類を指定せず小分類取得.
+   	 * 成績なしで学生自身が成績一覧ページ表示.
+     * @throws Exception MockMVC失敗時例外
+     */
+	@Test
+    @WithUserDetails(value=INSERT_STUDENT1_ID, userDetailsServiceBeanName="UserDetailService")
+    public void 学生なしで学生自身が成績一覧ページ表示_正常() throws Exception {
+		
+		PersonalGradeForm requestForm = new PersonalGradeForm();
+		
+    	MvcResult result = mockMvc.perform(get("/common/progress/personal").flashAttr("personalGradeForm", requestForm))
+    		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
+                "common/progress/personal")).andReturn();
+    	
+    	PersonalGradeForm responseForm = (PersonalGradeForm) result.getModelAndView().getModel().get("personalGradeForm");
+    	// 学生名が1人ぶん
+    	List<String> actStudentNameList = responseForm.getUserNameList();
+    	assertThat(actStudentNameList.size()).isEqualTo(1);
+    	assertThat(actStudentNameList).contains(INSERT_STUDENT1_NAME);
+    	// 正解数が存在しない
+    	List<String> actCorrectCntList = responseForm.getCorrectGradeList();
+    	assertThat(actCorrectCntList.size()).isEqualTo(0);
+    	// 不正解数が存在しない
+    	List<String> actIncorrectCntList = responseForm.getIncorrectGradeList();
+    	assertThat(actIncorrectCntList.size()).isEqualTo(0);
+    }
+
+
+    /**
+   	 * 複数名の学生の成績ありで学生を指定して成績一覧ページ表示.
+   	 * 複数名の学生の成績ありで学生自身が成績一覧ページ表示.
+   	 * 年度別抽出で学生を指定して成績一覧ページ表示.
+   	 * 年度別抽出で学生自身が成績一覧ページ表示.
+   	 * 大分類別抽出で学生を指定して成績一覧ページ表示.
+   	 * 大分類別抽出で学生自身が成績一覧ページ表示.
+   	 * 中分類別抽出で学生を指定して成績一覧ページ表示.
+   	 * 中分類別抽出で学生自身が成績一覧ページ表示.
+   	 * 小分類別抽出で学生を指定して成績一覧ページ表示.
+   	 * 小分類別抽出で学生自身が成績一覧ページ表示.
+   	 * 学生を指定して同じ問題を複数回カウントして、成績一覧ページを表示.
+   	 * 学生自身が大分類を指定して中分類取得.
+   	 * 学生を指定して大分類を指定せず中分類取得.
+   	 * 学生自身が大分類と中分類を指定して小分類取得.
+   	 * 学生を指定して大分類を指定せず中分類を指定して小分類取得.
+   	 * 学生自身が大分類と中分類を指定せず小分類取得.
+   	 * 学生を指定して大分類を指定して中分類を指定せず小分類取得.
      */
 
 }

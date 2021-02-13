@@ -52,6 +52,12 @@ public class PersonalGradeServiceImpl  implements PersonalGradeService {
 	 */
 	@Autowired
 	private StudentQuestionHistoryRepository studentQuestionHistoryRepository;
+	
+	/**
+	 * ユーザーリポジトリ(user repository).
+	 */
+	@Autowired
+	private UserRepository userRepository;
 
 	/**
 	 * ログインユーザの全問題の成績を取得する.
@@ -89,6 +95,8 @@ public class PersonalGradeServiceImpl  implements PersonalGradeService {
 	 */
     @Override
     public PersonalGradeForm getGradeFormDefault(PersonalGradeForm form) {
+    	
+    	// TODO:
 
     	return getGradeForm(form);
 	}
@@ -146,15 +154,27 @@ public class PersonalGradeServiceImpl  implements PersonalGradeService {
 		// 成績作成
 		List<StudentQuestionHistoryBean> studentQuestHistoryBeanList = studentQuestionHistoryRepository.findAllByUserId(form.getUserId());
 		Map<String, GradeData> gradeMap = sharedGradeService.createGrade(form, studentQuestHistoryBeanList);
-		GradeData grade = gradeMap.get(form.getUserId());
-
-    	// ユーザ情報設定
+		
+		int width = 0;
 		List<GradeData> gradeList = new ArrayList<GradeData>();
-		gradeList.add(grade);
-		sharedGradeService.viewSettingUser(form, gradeList);
+		if(gradeMap != null && gradeMap.size() > 0) {
+			GradeData grade = gradeMap.get(form.getUserId());
+			gradeList.add(grade);
+			width = String.valueOf(grade.getTotalCnt()).length();
+
+	    	// ユーザ情報設定
+			sharedGradeService.viewSettingUser(form, gradeList);
+		} else {
+			// 回答履歴がない場合、ユーザー名のみ設定する
+			List<String> userNameList = new ArrayList<>();
+			Optional<UserBean> optUser = userRepository.findById(form.getUserId());
+			optUser.ifPresent(user -> userNameList.add(user.getName()));
+			form.setUserNameList(userNameList);
+			form.setCorrectGradeList(new ArrayList<>());
+			form.setIncorrectGradeList(new ArrayList<>());
+		}
 		
 		// グラフ描画領域縦幅設定
-		int width = String.valueOf(grade.getTotalCnt()).length();
 		sharedGradeService.viewSettingGraph(form, 1, width);
 		
 		return form;
