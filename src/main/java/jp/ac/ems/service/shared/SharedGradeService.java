@@ -8,7 +8,6 @@ import org.springframework.ui.Model;
 import jp.ac.ems.bean.StudentQuestionHistoryBean;
 import jp.ac.ems.common.data.GradeData;
 import jp.ac.ems.form.BaseGradeForm;
-import jp.ac.ems.form.GradeForm;
 
 /**
  * 共通成績サービスインターフェース(common grade service interface).

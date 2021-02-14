@@ -18,7 +18,7 @@ import jp.ac.ems.service.GradeService;
  * @author tejc999999
  */
 @Controller
-@RequestMapping("/common/progress")
+@RequestMapping("/common/grade")
 public class GradeController {
 
 	/**
@@ -53,7 +53,7 @@ public class GradeController {
     	// ドロップダウン項目設定
     	gradeService.setSelectData(form, model);
 
-        return "common/progress/list";
+        return "common/grade/list";
     }
 
     /**
@@ -101,7 +101,7 @@ public class GradeController {
     	// ドロップダウン項目設定
     	gradeService.setSelectData(form, model);
         
-        return "common/progress/list";
+        return "common/grade/list";
     }
     
     /**
@@ -121,6 +121,6 @@ public class GradeController {
     	// ドロップダウン項目設定
     	gradeService.setSelectData(form, model);
         
-        return "common/progress/list";
+        return "common/grade/list";
     }
 }

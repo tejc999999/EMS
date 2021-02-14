@@ -1,14 +1,12 @@
 package jp.ac.ems.impl.service.shared;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +22,6 @@ import jp.ac.ems.config.FieldSmall;
 import jp.ac.ems.form.BaseGradeForm;
 import jp.ac.ems.form.GradeForm;
 import jp.ac.ems.repository.QuestionRepository;
-import jp.ac.ems.repository.StudentQuestionHistoryRepository;
 import jp.ac.ems.repository.UserRepository;
 import jp.ac.ems.service.shared.SharedGradeService;
 import jp.ac.ems.service.util.JPCalenderEncoder;

@@ -16,7 +16,7 @@
 
 <h2>■個人進捗</h2>
 <div class="container-fluid no-gutters pb-5">
-<form th:action="@{/common/progress/personal}" th:object="${personalGradeForm}" method="post">
+<form th:action="@{/common/grade/personal}" th:object="${personalGradeForm}" method="post">
 
   <div class="form-row" sec:authorize="hasRole('TEACHER')">
     <div class="form-group col-12 col-md-2">

@@ -2,11 +2,8 @@ package jp.ac.ems.form;
 
 import java.util.List;
 
-import lombok.AccessLevel;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 /**
  * 成績Form基底クラス

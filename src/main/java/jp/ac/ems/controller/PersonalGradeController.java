@@ -18,7 +18,7 @@ import jp.ac.ems.service.PersonalGradeService;
  * @author tejc999999
  */
 @Controller
-@RequestMapping("/common/progress/personal")
+@RequestMapping("/common/grade/personal")
 public class PersonalGradeController {
 
 	/**
@@ -47,13 +47,13 @@ public class PersonalGradeController {
     String getList(@Validated PersonalGradeForm form, BindingResult result,
             Model model) {
     	
-    	PersonalGradeForm personalGradeForm = personalGradeService.getGradeFormDefaultLogin(form);
-    	model.addAttribute("personalGradeForm", personalGradeForm);    	
+    	PersonalGradeForm personalGradeForm = personalGradeService.getGradeFormDefault(form);
+    	model.addAttribute("personalGradeForm", personalGradeForm);
     	
     	// ドロップダウン項目設定
     	personalGradeService.setSelectData(form, model);
 
-        return "common/progress/personal";
+        return "common/grade/personal";
     }
     
     /**
@@ -67,27 +67,33 @@ public class PersonalGradeController {
     public String targetselectList(@Validated PersonalGradeForm form, BindingResult result,
             Model model) {
         
-        return postList(form, result, model);
-    }
-
-    /**
-     * 個人成績一覧(grade list).
-     * @param form 個人成績Form(personal grade form)
-     * @param result エラーチェック結果(error validate result)
-     * @param model 成績一覧保存用モデル(model to save grade list)
-     * @return 課題問題登録用ページビュー(task question add page view)
-     */
-    private String postList(@Validated PersonalGradeForm form, BindingResult result,
-            Model model) {
-
-    	PersonalGradeForm personalGradeForm = personalGradeService.getGradeFormDefault(form);
+    	PersonalGradeForm personalGradeForm = personalGradeService.getGradeFormByAll(form);
     	model.addAttribute("personalGradeForm", personalGradeForm);    	
     	
     	// ドロップダウン項目設定
     	personalGradeService.setSelectData(form, model);
 
-        return "common/progress/personal";
+        return "common/grade/personal";
     }
+
+//    /**
+//     * 個人成績一覧(grade list).
+//     * @param form 個人成績Form(personal grade form)
+//     * @param result エラーチェック結果(error validate result)
+//     * @param model 成績一覧保存用モデル(model to save grade list)
+//     * @return 課題問題登録用ページビュー(task question add page view)
+//     */
+//    private String postList(@Validated PersonalGradeForm form, BindingResult result,
+//            Model model) {
+//
+//    	PersonalGradeForm personalGradeForm = personalGradeService.getGradeFormByAll(form);
+//    	model.addAttribute("personalGradeForm", personalGradeForm);    	
+//    	
+//    	// ドロップダウン項目設定
+//    	personalGradeService.setSelectData(form, model);
+//
+//        return "common/grade/personal";
+//    }
 
     /**
      * 中分類取得(get field middle list).
@@ -100,7 +106,13 @@ public class PersonalGradeController {
     public String addSelectFieldMiddle(@Validated PersonalGradeForm form, BindingResult result,
             Model model) {
         
-        return postList(form, result, model);
+    	PersonalGradeForm personalGradeForm = personalGradeService.getGradeFormByField(form);
+    	model.addAttribute("personalGradeForm", personalGradeForm);    	
+    	
+    	// ドロップダウン項目設定
+    	personalGradeService.setSelectData(form, model);
+
+        return "common/grade/personal";
     }
     
     /**
@@ -114,7 +126,13 @@ public class PersonalGradeController {
     public String addSelectFieldSmall(@Validated PersonalGradeForm form, BindingResult result,
             Model model) {
         
-        return postList(form, result, model);
+    	PersonalGradeForm personalGradeForm = personalGradeService.getGradeFormByField(form);
+    	model.addAttribute("personalGradeForm", personalGradeForm);    	
+    	
+    	// ドロップダウン項目設定
+    	personalGradeService.setSelectData(form, model);
+
+        return "common/grade/personal";
     }
         
     /**
@@ -134,7 +152,7 @@ public class PersonalGradeController {
     	// ドロップダウン項目設定
     	personalGradeService.setSelectData(form, model);
         
-        return "common/progress/personal";
+        return "common/grade/personal";
     }
     
     /**
@@ -154,6 +172,6 @@ public class PersonalGradeController {
     	// ドロップダウン項目設定
     	personalGradeService.setSelectData(form, model);
         
-        return "common/progress/personal";
+        return "common/grade/personal";
     }
 }

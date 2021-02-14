@@ -576,9 +576,9 @@ public class GradleControllerTest {
 	@Test
     public void 学生なしで成績一覧ページ表示_正常() throws Exception {
 		
-    	MvcResult result = mockMvc.perform(get("/common/progress"))
+    	MvcResult result = mockMvc.perform(get("/common/grade"))
     		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
-                "common/progress/list")).andReturn();
+                "common/grade/list")).andReturn();
     	
     	GradeForm form = (GradeForm) result.getModelAndView().getModel().get("gradeForm");
     	// 学生名が存在しない
@@ -611,9 +611,9 @@ public class GradleControllerTest {
         DbSetup dbSetup = new DbSetup(dest, ops);
         dbSetup.launch();
 		
-    	MvcResult result = mockMvc.perform(get("/common/progress"))
+    	MvcResult result = mockMvc.perform(get("/common/grade"))
     		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
-                "common/progress/list")).andReturn();
+                "common/grade/list")).andReturn();
     	
     	GradeForm form = (GradeForm) result.getModelAndView().getModel().get("gradeForm");
     	// 1名分の学生名が存在する
@@ -654,9 +654,9 @@ public class GradleControllerTest {
         DbSetup dbSetup = new DbSetup(dest, ops);
         dbSetup.launch();
 		
-    	MvcResult result = mockMvc.perform(get("/common/progress"))
+    	MvcResult result = mockMvc.perform(get("/common/grade"))
     		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
-                "common/progress/list")).andReturn();
+                "common/grade/list")).andReturn();
     	
     	GradeForm form = (GradeForm) result.getModelAndView().getModel().get("gradeForm");
     	// 2名分の学生名が存在する(指定なし＝回答数順:学生１、学生２)
@@ -708,9 +708,9 @@ public class GradleControllerTest {
 		requestForm.setSelectYear("2011H");
 		requestForm.setSelectSortKey(GradeForm.SORT_CORRECT_KEY);
 		
-    	MvcResult result = mockMvc.perform(post("/common/progress").param("selectYearBtn", "").flashAttr("gradeForm", requestForm))
+    	MvcResult result = mockMvc.perform(post("/common/grade").param("selectYearBtn", "").flashAttr("gradeForm", requestForm))
     		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
-                "common/progress/list")).andReturn();
+                "common/grade/list")).andReturn();
 
     	GradeForm responseForm = (GradeForm) result.getModelAndView().getModel().get("gradeForm");
     	// 2名分の学生名が存在する(正解率順:学生１、学生２)
@@ -762,9 +762,9 @@ public class GradleControllerTest {
 		requestForm.setSelectYear("2011H");
 		requestForm.setSelectSortKey(GradeForm.SORT_COUNT_KEY);
 
-    	MvcResult result = mockMvc.perform(post("/common/progress").param("selectYearBtn", "").flashAttr("gradeForm", requestForm))
+    	MvcResult result = mockMvc.perform(post("/common/grade").param("selectYearBtn", "").flashAttr("gradeForm", requestForm))
     		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
-                "common/progress/list")).andReturn();
+                "common/grade/list")).andReturn();
 
     	GradeForm responseForm = (GradeForm) result.getModelAndView().getModel().get("gradeForm");
     	
@@ -823,9 +823,9 @@ public class GradleControllerTest {
 		requestForm.setSelectFieldL(FieldLarge.AP_FL_1_TECHNOLOGY.getId().toString());
 		requestForm.setSelectSortKey(GradeForm.SORT_COUNT_KEY);
 
-		MvcResult result = mockMvc.perform(post("/common/progress").param("selectFieldBtn", "").flashAttr("gradeForm", requestForm))
+		MvcResult result = mockMvc.perform(post("/common/grade").param("selectFieldBtn", "").flashAttr("gradeForm", requestForm))
     		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
-                "common/progress/list")).andReturn();
+                "common/grade/list")).andReturn();
 
     	GradeForm form = (GradeForm) result.getModelAndView().getModel().get("gradeForm");
     	// 2名分の学生名が存在する(回答数順:学生１、学生２)
@@ -883,9 +883,9 @@ public class GradleControllerTest {
 		requestForm.setSelectFieldL(FieldLarge.AP_FL_1_TECHNOLOGY.getId().toString());
 		requestForm.setSelectSortKey(GradeForm.SORT_COUNT_KEY);
 
-		MvcResult result = mockMvc.perform(post("/common/progress").param("selectFieldBtn", "").flashAttr("gradeForm", requestForm))
+		MvcResult result = mockMvc.perform(post("/common/grade").param("selectFieldBtn", "").flashAttr("gradeForm", requestForm))
     		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
-                "common/progress/list")).andReturn();
+                "common/grade/list")).andReturn();
 
     	GradeForm form = (GradeForm) result.getModelAndView().getModel().get("gradeForm");
     	// 2名分の学生名が存在する(回答数順:学生１、学生２)
@@ -943,9 +943,9 @@ public class GradleControllerTest {
 		requestForm.setSelectFieldM(FieldMiddle.AP_FM_10_CORPORATE_AND_LEGAL.getId().toString());
 		requestForm.setSelectSortKey(GradeForm.SORT_CORRECT_KEY);
 
-		MvcResult result = mockMvc.perform(post("/common/progress").param("selectFieldBtn", "").flashAttr("gradeForm", requestForm))
+		MvcResult result = mockMvc.perform(post("/common/grade").param("selectFieldBtn", "").flashAttr("gradeForm", requestForm))
     		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
-                "common/progress/list")).andReturn();
+                "common/grade/list")).andReturn();
 
     	GradeForm form = (GradeForm) result.getModelAndView().getModel().get("gradeForm");
     	// 2名分の学生名が存在する(正答率順:学生２、学生１)
@@ -1003,9 +1003,9 @@ public class GradleControllerTest {
 		requestForm.setSelectFieldM(FieldMiddle.AP_FM_10_CORPORATE_AND_LEGAL.getId().toString());
 		requestForm.setSelectSortKey(GradeForm.SORT_CORRECT_KEY);
 
-		MvcResult result = mockMvc.perform(post("/common/progress").param("selectFieldBtn", "").flashAttr("gradeForm", requestForm))
+		MvcResult result = mockMvc.perform(post("/common/grade").param("selectFieldBtn", "").flashAttr("gradeForm", requestForm))
     		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
-                "common/progress/list")).andReturn();
+                "common/grade/list")).andReturn();
 
     	GradeForm form = (GradeForm) result.getModelAndView().getModel().get("gradeForm");
     	// 2名分の学生名が存在する(正答率順:学生２、学生１)
@@ -1063,9 +1063,9 @@ public class GradleControllerTest {
 		requestForm.setSelectFieldS(FieldSmall.AP_FS_23_LEGAL_AFFAIRS.getId().toString());
 		requestForm.setSelectSortKey(GradeForm.SORT_COUNT_KEY);
 
-		MvcResult result = mockMvc.perform(post("/common/progress").param("selectFieldBtn", "").flashAttr("gradeForm", requestForm))
+		MvcResult result = mockMvc.perform(post("/common/grade").param("selectFieldBtn", "").flashAttr("gradeForm", requestForm))
     		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
-                "common/progress/list")).andReturn();
+                "common/grade/list")).andReturn();
 
     	GradeForm form = (GradeForm) result.getModelAndView().getModel().get("gradeForm");
     	// 2名分の学生名が存在する(回答数順:学生１、学生２)
@@ -1122,9 +1122,9 @@ public class GradleControllerTest {
 		GradeForm requestForm = new GradeForm();
 		requestForm.setSelectFieldS(FieldSmall.AP_FS_1_BASIC_THEORY.getId().toString());
 
-		MvcResult result = mockMvc.perform(post("/common/progress").param("selectFieldBtn", "").flashAttr("gradeForm", requestForm))
+		MvcResult result = mockMvc.perform(post("/common/grade").param("selectFieldBtn", "").flashAttr("gradeForm", requestForm))
     		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
-                "common/progress/list")).andReturn();
+                "common/grade/list")).andReturn();
 
     	GradeForm form = (GradeForm) result.getModelAndView().getModel().get("gradeForm");
     	// 2名分の学生名が存在する(回答数順:学生１、学生２)
@@ -1183,9 +1183,9 @@ public class GradleControllerTest {
 //		requestForm.setSelectYear("2009A");
 //		requestForm.setSelectSortKey(GradeForm.SORT_COUNT_KEY);
 //
-//		MvcResult result = mockMvc.perform(post("/common/progress").param("selectYearBtn", "").flashAttr("gradeForm", requestForm))
+//		MvcResult result = mockMvc.perform(post("/common/grade").param("selectYearBtn", "").flashAttr("gradeForm", requestForm))
 //    		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
-//                "common/progress/list")).andReturn();
+//                "common/grade/list")).andReturn();
 //
 //    	GradeForm form = (GradeForm) result.getModelAndView().getModel().get("gradeForm");
 //    	// 2名分の学生名が存在する(回答数順:学生１、学生２)
@@ -1244,9 +1244,9 @@ public class GradleControllerTest {
 //		requestForm.setSelectYear("2011H");
 //		requestForm.setSelectSortKey(GradeForm.SORT_CORRECT_KEY);
 //
-//		MvcResult result = mockMvc.perform(post("/common/progress").param("selectYearBtn", "").flashAttr("gradeForm", requestForm))
+//		MvcResult result = mockMvc.perform(post("/common/grade").param("selectYearBtn", "").flashAttr("gradeForm", requestForm))
 //    		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
-//                "common/progress/list")).andReturn();
+//                "common/grade/list")).andReturn();
 //
 //    	GradeForm form = (GradeForm) result.getModelAndView().getModel().get("gradeForm");
 //    	// 2名分の学生名が存在する(正答率順:学生２、学生１)
@@ -1304,9 +1304,9 @@ public class GradleControllerTest {
 //		requestForm.setSelectFieldS(FieldSmall.AP_FS_23_LEGAL_AFFAIRS.getId().toString());
 //		requestForm.setSelectYear("2011H");
 //
-//		MvcResult result = mockMvc.perform(post("/common/progress").param("selectYearBtn", "").flashAttr("gradeForm", requestForm))
+//		MvcResult result = mockMvc.perform(post("/common/grade").param("selectYearBtn", "").flashAttr("gradeForm", requestForm))
 //    		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
-//                "common/progress/list")).andReturn();
+//                "common/grade/list")).andReturn();
 //
 //    	GradeForm form = (GradeForm) result.getModelAndView().getModel().get("gradeForm");
 //    	// 2名分の学生名が存在する(回答数順:学生２、学生１)
@@ -1363,9 +1363,9 @@ public class GradleControllerTest {
 		GradeForm requestForm = new GradeForm();
 		requestForm.setSelectFieldS(FieldSmall.AP_FS_23_LEGAL_AFFAIRS.getId().toString());
 
-		MvcResult result = mockMvc.perform(post("/common/progress").param("selectYearBtn", "").flashAttr("gradeForm", requestForm))
+		MvcResult result = mockMvc.perform(post("/common/grade").param("selectYearBtn", "").flashAttr("gradeForm", requestForm))
     		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
-                "common/progress/list")).andReturn();
+                "common/grade/list")).andReturn();
 
     	GradeForm form = (GradeForm) result.getModelAndView().getModel().get("gradeForm");
     	// 2名分の学生名が存在する(回答数順:学生１、学生２)
@@ -1401,9 +1401,9 @@ public class GradleControllerTest {
 		GradeForm requestForm = new GradeForm();
 		requestForm.setSelectFieldL(FieldLarge.AP_FL_2_MANAGEMENT.getId().toString());
 
-		MvcResult result = mockMvc.perform(post("/common/progress").param("selectFieldMiddleBtn", "").flashAttr("gradeForm", requestForm))
+		MvcResult result = mockMvc.perform(post("/common/grade").param("selectFieldMiddleBtn", "").flashAttr("gradeForm", requestForm))
     		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
-                "common/progress/list")).andReturn();
+                "common/grade/list")).andReturn();
 
     	// 大分類
 		Map<String, String> expFieldLMap =  new LinkedHashMap<String, String>();
@@ -1435,9 +1435,9 @@ public class GradleControllerTest {
 		
 		GradeForm requestForm = new GradeForm();
 
-		MvcResult result = mockMvc.perform(post("/common/progress").param("selectFieldMiddleBtn", "").flashAttr("gradeForm", requestForm))
+		MvcResult result = mockMvc.perform(post("/common/grade").param("selectFieldMiddleBtn", "").flashAttr("gradeForm", requestForm))
     		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
-                "common/progress/list")).andReturn();
+                "common/grade/list")).andReturn();
 
     	// 大分類
 		Map<String, String> expFieldLMap =  new LinkedHashMap<String, String>();
@@ -1468,9 +1468,9 @@ public class GradleControllerTest {
 		requestForm.setSelectFieldL(FieldLarge.AP_FL_2_MANAGEMENT.getId().toString());
 		requestForm.setSelectFieldM(FieldMiddle.AP_FM_5_PROJECT_MANAGEMENT.getId().toString());
 
-		MvcResult result = mockMvc.perform(post("/common/progress").param("selectFieldMiddleBtn", "").flashAttr("gradeForm", requestForm))
+		MvcResult result = mockMvc.perform(post("/common/grade").param("selectFieldMiddleBtn", "").flashAttr("gradeForm", requestForm))
     		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
-                "common/progress/list")).andReturn();
+                "common/grade/list")).andReturn();
 
     	// 大分類
 		Map<String, String> expFieldLMap =  new LinkedHashMap<String, String>();
@@ -1511,9 +1511,9 @@ public class GradleControllerTest {
 		GradeForm requestForm = new GradeForm();
 		requestForm.setSelectFieldM(FieldMiddle.AP_FM_5_PROJECT_MANAGEMENT.getId().toString());
 
-		MvcResult result = mockMvc.perform(post("/common/progress").param("selectFieldMiddleBtn", "").flashAttr("gradeForm", requestForm))
+		MvcResult result = mockMvc.perform(post("/common/grade").param("selectFieldMiddleBtn", "").flashAttr("gradeForm", requestForm))
     		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
-                "common/progress/list")).andReturn();
+                "common/grade/list")).andReturn();
 
     	// 大分類
 		Map<String, String> expFieldLMap =  new LinkedHashMap<String, String>();
@@ -1553,9 +1553,9 @@ public class GradleControllerTest {
 		
 		GradeForm requestForm = new GradeForm();
 
-		MvcResult result = mockMvc.perform(post("/common/progress").param("selectFieldMiddleBtn", "").flashAttr("gradeForm", requestForm))
+		MvcResult result = mockMvc.perform(post("/common/grade").param("selectFieldMiddleBtn", "").flashAttr("gradeForm", requestForm))
     		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
-                "common/progress/list")).andReturn();
+                "common/grade/list")).andReturn();
 
     	// 大分類
 		Map<String, String> expFieldLMap =  new LinkedHashMap<String, String>();
@@ -1589,9 +1589,9 @@ public class GradleControllerTest {
 		GradeForm requestForm = new GradeForm();
 		requestForm.setSelectFieldL(FieldLarge.AP_FL_2_MANAGEMENT.getId().toString());
 
-		MvcResult result = mockMvc.perform(post("/common/progress").param("selectFieldMiddleBtn", "").flashAttr("gradeForm", requestForm))
+		MvcResult result = mockMvc.perform(post("/common/grade").param("selectFieldMiddleBtn", "").flashAttr("gradeForm", requestForm))
     		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
-                "common/progress/list")).andReturn();
+                "common/grade/list")).andReturn();
 
     	// 大分類
 		Map<String, String> expFieldLMap =  new LinkedHashMap<String, String>();

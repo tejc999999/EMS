@@ -7,7 +7,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -37,8 +39,9 @@ import com.ninja_squad.dbsetup.destination.DataSourceDestination;
 import com.ninja_squad.dbsetup.destination.Destination;
 import com.ninja_squad.dbsetup.operation.Operation;
 
+import jp.ac.ems.config.FieldLarge;
+import jp.ac.ems.config.FieldMiddle;
 import jp.ac.ems.config.RoleCode;
-import jp.ac.ems.form.GradeForm;
 import jp.ac.ems.form.PersonalGradeForm;
 
 /**
@@ -574,9 +577,9 @@ public class PersonalGradeControllerTest {
 		PersonalGradeForm requestForm = new PersonalGradeForm();
 		requestForm.setUserId(INSERT_STUDENT1_ID + "xyz");
 		
-    	MvcResult result = mockMvc.perform(post("/common/progress/personal").param("targetIdSelectBtn", "").flashAttr("personalGradeForm", requestForm))
+    	MvcResult result = mockMvc.perform(post("/common/grade/personal").param("targetIdSelectBtn", "").flashAttr("personalGradeForm", requestForm))
     		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
-                "common/progress/personal")).andReturn();
+                "common/grade/personal")).andReturn();
     	
     	PersonalGradeForm responseForm = (PersonalGradeForm) result.getModelAndView().getModel().get("personalGradeForm");
     	// 学生名が存在しない
@@ -594,15 +597,16 @@ public class PersonalGradeControllerTest {
    	 * 成績なしで学生を指定して成績一覧ページ表示.
      * @throws Exception MockMVC失敗時例外
      */
+	@SuppressWarnings("unchecked")
 	@Test
     public void 学生なしで学生を指定して成績一覧ページ表示_正常() throws Exception {
 		
 		PersonalGradeForm requestForm = new PersonalGradeForm();
 		requestForm.setUserId(INSERT_STUDENT1_ID);
 		
-    	MvcResult result = mockMvc.perform(post("/common/progress/personal").param("targetIdSelectBtn", "").flashAttr("personalGradeForm", requestForm))
+    	MvcResult result = mockMvc.perform(post("/common/grade/personal").param("targetIdSelectBtn", "").flashAttr("personalGradeForm", requestForm))
     		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
-                "common/progress/personal")).andReturn();
+                "common/grade/personal")).andReturn();
     	
     	PersonalGradeForm responseForm = (PersonalGradeForm) result.getModelAndView().getModel().get("personalGradeForm");
     	// 学生名が1人ぶん
@@ -615,21 +619,28 @@ public class PersonalGradeControllerTest {
     	// 不正解数が存在しない
     	List<String> actIncorrectCntList = responseForm.getIncorrectGradeList();
     	assertThat(actIncorrectCntList.size()).isEqualTo(0);
+    	
+    	// 大分類名称一覧
+    	Map<String, String> actFieldLMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldLDropItems");
+    	Map<String, String> expFieldLMap = new LinkedHashMap<>();
+    	expFieldLMap.put(FieldLarge.AP_FL_1_TECHNOLOGY.getId().toString(), FieldLarge.AP_FL_1_TECHNOLOGY.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_2_MANAGEMENT.getId().toString(), FieldLarge.AP_FL_2_MANAGEMENT.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_3_STRATEGY.getId().toString(), FieldLarge.AP_FL_3_STRATEGY.getName());
+    	assertThat(actFieldLMap).containsExactlyInAnyOrderEntriesOf(expFieldLMap);
     }
 
     /**
    	 * 成績なしで学生自身が成績一覧ページ表示.
      * @throws Exception MockMVC失敗時例外
      */
+	@SuppressWarnings("unchecked")
 	@Test
     @WithUserDetails(value=INSERT_STUDENT1_ID, userDetailsServiceBeanName="UserDetailService")
     public void 学生なしで学生自身が成績一覧ページ表示_正常() throws Exception {
 		
-		PersonalGradeForm requestForm = new PersonalGradeForm();
-		
-    	MvcResult result = mockMvc.perform(get("/common/progress/personal").flashAttr("personalGradeForm", requestForm))
+    	MvcResult result = mockMvc.perform(get("/common/grade/personal"))
     		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
-                "common/progress/personal")).andReturn();
+                "common/grade/personal")).andReturn();
     	
     	PersonalGradeForm responseForm = (PersonalGradeForm) result.getModelAndView().getModel().get("personalGradeForm");
     	// 学生名が1人ぶん
@@ -642,27 +653,531 @@ public class PersonalGradeControllerTest {
     	// 不正解数が存在しない
     	List<String> actIncorrectCntList = responseForm.getIncorrectGradeList();
     	assertThat(actIncorrectCntList.size()).isEqualTo(0);
+    	
+    	// 大分類名称一覧
+    	Map<String, String> actFieldLMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldLDropItems");
+    	Map<String, String> expFieldLMap = new LinkedHashMap<>();
+    	expFieldLMap.put(FieldLarge.AP_FL_1_TECHNOLOGY.getId().toString(), FieldLarge.AP_FL_1_TECHNOLOGY.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_2_MANAGEMENT.getId().toString(), FieldLarge.AP_FL_2_MANAGEMENT.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_3_STRATEGY.getId().toString(), FieldLarge.AP_FL_3_STRATEGY.getName());
+    	assertThat(actFieldLMap).containsExactlyInAnyOrderEntriesOf(expFieldLMap);
     }
-
 
     /**
    	 * 複数名の学生の成績ありで学生を指定して成績一覧ページ表示.
+     * @throws Exception MockMVC失敗時例外
+     */
+	@SuppressWarnings("unchecked")
+	@Test
+    public void 複数名の学生の成績ありで学生を指定して成績一覧ページ表示_正常() throws Exception {
+
+        // DB状態
+        // 回答履歴を作成
+		// 学生１：回答数11：正解数5：不正解数6
+		// 学生２：回答数8:正解数4:不正解数4
+        Destination dest = new DataSourceDestination(dataSource);
+        Operation ops = Operations.sequenceOf(
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2,
+        		/*INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2,*/
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA2,
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA1, /*INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA2,*/
+        		INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_INCORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_INCORRECT_DATA2);
+        DbSetup dbSetup = new DbSetup(dest, ops);
+        dbSetup.launch();
+		
+		PersonalGradeForm requestForm = new PersonalGradeForm();
+		requestForm.setUserId(INSERT_STUDENT1_ID);
+		
+    	MvcResult result = mockMvc.perform(post("/common/grade/personal").param("targetIdSelectBtn", "").flashAttr("personalGradeForm", requestForm))
+    		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
+                "common/grade/personal")).andReturn();
+    	
+    	PersonalGradeForm responseForm = (PersonalGradeForm) result.getModelAndView().getModel().get("personalGradeForm");
+    	// 学生名が1人ぶん
+    	List<String> actStudentNameList = responseForm.getUserNameList();
+    	assertThat(actStudentNameList.size()).isEqualTo(1);
+    	assertThat(actStudentNameList.get(0)).isEqualTo(INSERT_STUDENT1_NAME);
+    	// 正解数5
+    	List<String> actCorrectCntList = responseForm.getCorrectGradeList();
+    	assertThat(actCorrectCntList.size()).isEqualTo(1);
+    	assertThat(actCorrectCntList.get(0)).isEqualTo("5");
+    	// 不正解数6
+    	List<String> actIncorrectCntList = responseForm.getIncorrectGradeList();
+    	assertThat(actIncorrectCntList.size()).isEqualTo(1);
+    	assertThat(actIncorrectCntList.get(0)).isEqualTo("6");
+    	
+    	// 大分類名称一覧
+    	Map<String, String> actFieldLMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldLDropItems");
+    	Map<String, String> expFieldLMap = new LinkedHashMap<>();
+    	expFieldLMap.put(FieldLarge.AP_FL_1_TECHNOLOGY.getId().toString(), FieldLarge.AP_FL_1_TECHNOLOGY.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_2_MANAGEMENT.getId().toString(), FieldLarge.AP_FL_2_MANAGEMENT.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_3_STRATEGY.getId().toString(), FieldLarge.AP_FL_3_STRATEGY.getName());
+    	assertThat(actFieldLMap).containsExactlyInAnyOrderEntriesOf(expFieldLMap);
+    }
+
+    /**
    	 * 複数名の学生の成績ありで学生自身が成績一覧ページ表示.
-   	 * 年度別抽出で学生を指定して成績一覧ページ表示.
-   	 * 年度別抽出で学生自身が成績一覧ページ表示.
-   	 * 大分類別抽出で学生を指定して成績一覧ページ表示.
-   	 * 大分類別抽出で学生自身が成績一覧ページ表示.
-   	 * 中分類別抽出で学生を指定して成績一覧ページ表示.
-   	 * 中分類別抽出で学生自身が成績一覧ページ表示.
-   	 * 小分類別抽出で学生を指定して成績一覧ページ表示.
-   	 * 小分類別抽出で学生自身が成績一覧ページ表示.
+     * @throws Exception MockMVC失敗時例外
+     */
+	@SuppressWarnings("unchecked")
+	@Test
+    @WithUserDetails(value=INSERT_STUDENT2_ID, userDetailsServiceBeanName="UserDetailService")
+    public void 複数名の学生の成績ありで学生自身が成績一覧ページ表示_正常() throws Exception {
+
+        // DB状態
+        // 回答履歴を作成
+		// 学生１：回答数11：正解数5：不正解数6
+		// 学生２：回答数8:正解数4:不正解数4
+        Destination dest = new DataSourceDestination(dataSource);
+        Operation ops = Operations.sequenceOf(
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2,
+        		/*INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2,*/
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA2,
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA1, /*INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA2,*/
+        		INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_INCORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_INCORRECT_DATA2);
+        DbSetup dbSetup = new DbSetup(dest, ops);
+        dbSetup.launch();
+		
+    	MvcResult result = mockMvc.perform(get("/common/grade/personal"))
+        		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
+                    "common/grade/personal")).andReturn();
+    	
+    	PersonalGradeForm responseForm = (PersonalGradeForm) result.getModelAndView().getModel().get("personalGradeForm");
+    	// 学生名が1人ぶん
+    	List<String> actStudentNameList = responseForm.getUserNameList();
+    	assertThat(actStudentNameList.size()).isEqualTo(1);
+    	assertThat(actStudentNameList.get(0)).isEqualTo(INSERT_STUDENT2_NAME);
+    	// 正解数4
+    	List<String> actCorrectCntList = responseForm.getCorrectGradeList();
+    	assertThat(actCorrectCntList.size()).isEqualTo(1);
+    	assertThat(actCorrectCntList.get(0)).isEqualTo("4");
+    	// 不正解数4
+    	List<String> actIncorrectCntList = responseForm.getIncorrectGradeList();
+    	assertThat(actIncorrectCntList.size()).isEqualTo(1);
+    	assertThat(actIncorrectCntList.get(0)).isEqualTo("4");
+    	
+    	// 大分類名称一覧
+    	Map<String, String> actFieldLMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldLDropItems");
+    	Map<String, String> expFieldLMap = new LinkedHashMap<>();
+    	expFieldLMap.put(FieldLarge.AP_FL_1_TECHNOLOGY.getId().toString(), FieldLarge.AP_FL_1_TECHNOLOGY.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_2_MANAGEMENT.getId().toString(), FieldLarge.AP_FL_2_MANAGEMENT.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_3_STRATEGY.getId().toString(), FieldLarge.AP_FL_3_STRATEGY.getName());
+    	assertThat(actFieldLMap).containsExactlyInAnyOrderEntriesOf(expFieldLMap);
+    }
+
+/**
+ *  以降のテストはPOST送信になるため、学生自身が行う場合もHTML画面でhiddent値として自身のIDをFormに設定して送信するため、学生を指定した場合と同一の処理を通る
+ *  そのため、テストは学生自身と学生指定を湧けずに行っている
+ */
+	
+    /**
+   	 * 年度別抽出で成績一覧ページ表示.
+     * @throws Exception MockMVC失敗時例外
+     */
+	@SuppressWarnings("unchecked")
+	@Test
+    public void 年度別抽出で成績一覧ページ表示__正常() throws Exception {
+
+        // DB状態
+        // 回答履歴を作成(2010A)
+		// 学生１：回答数3：正解数1：不正解数2
+		// 学生２：回答数4:正解数2:不正解数2
+        Destination dest = new DataSourceDestination(dataSource);
+        Operation ops = Operations.sequenceOf(
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2,
+        		/*INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2,*/
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA2,
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA1, /*INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA2,*/
+        		INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_INCORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_INCORRECT_DATA2);
+        DbSetup dbSetup = new DbSetup(dest, ops);
+        dbSetup.launch();
+		
+		PersonalGradeForm requestForm = new PersonalGradeForm();
+		requestForm.setUserId(INSERT_STUDENT1_ID);
+		requestForm.setSelectYear("2010A");
+		
+    	MvcResult result = mockMvc.perform(post("/common/grade/personal").param("selectYearBtn", "").flashAttr("personalGradeForm", requestForm))
+    		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
+                "common/grade/personal")).andReturn();
+    	
+    	PersonalGradeForm responseForm = (PersonalGradeForm) result.getModelAndView().getModel().get("personalGradeForm");
+    	// 学生名が1人ぶん
+    	List<String> actStudentNameList = responseForm.getUserNameList();
+    	assertThat(actStudentNameList.size()).isEqualTo(1);
+    	assertThat(actStudentNameList.get(0)).isEqualTo(INSERT_STUDENT1_NAME);
+    	// 正解数1
+    	List<String> actCorrectCntList = responseForm.getCorrectGradeList();
+    	assertThat(actCorrectCntList.size()).isEqualTo(1);
+    	assertThat(actCorrectCntList.get(0)).isEqualTo("1");
+    	// 不正解数2
+    	List<String> actIncorrectCntList = responseForm.getIncorrectGradeList();
+    	assertThat(actIncorrectCntList.size()).isEqualTo(1);
+    	assertThat(actIncorrectCntList.get(0)).isEqualTo("2");
+    	
+    	// 大分類名称一覧
+    	Map<String, String> actFieldLMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldLDropItems");
+    	Map<String, String> expFieldLMap = new LinkedHashMap<>();
+    	expFieldLMap.put(FieldLarge.AP_FL_1_TECHNOLOGY.getId().toString(), FieldLarge.AP_FL_1_TECHNOLOGY.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_2_MANAGEMENT.getId().toString(), FieldLarge.AP_FL_2_MANAGEMENT.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_3_STRATEGY.getId().toString(), FieldLarge.AP_FL_3_STRATEGY.getName());
+    	assertThat(actFieldLMap).containsExactlyInAnyOrderEntriesOf(expFieldLMap);
+    }
+
+    /**
+   	 * 存在しない学生IDを指定し、年度別抽出で成績一覧ページ表示.
+     * @throws Exception MockMVC失敗時例外
+     */
+	@SuppressWarnings("unchecked")
+	@Test
+    public void 存在しない学生を指定_年度別抽出で成績一覧ページ表示__正常() throws Exception {
+
+        // DB状態
+        // 回答履歴を作成(2010A)
+		// 学生１：回答数3：正解数1：不正解数2
+		// 学生２：回答数4:正解数2:不正解数2
+        Destination dest = new DataSourceDestination(dataSource);
+        Operation ops = Operations.sequenceOf(
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2,
+        		/*INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2,*/
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA2,
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA1, /*INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA2,*/
+        		INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_INCORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_INCORRECT_DATA2);
+        DbSetup dbSetup = new DbSetup(dest, ops);
+        dbSetup.launch();
+		
+		PersonalGradeForm requestForm = new PersonalGradeForm();
+		requestForm.setUserId(INSERT_STUDENT1_ID + "xyz");
+		requestForm.setSelectYear("2010A");
+		
+    	MvcResult result = mockMvc.perform(post("/common/grade/personal").param("selectYearBtn", "").flashAttr("personalGradeForm", requestForm))
+    		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
+                "common/grade/personal")).andReturn();
+    	
+    	PersonalGradeForm responseForm = (PersonalGradeForm) result.getModelAndView().getModel().get("personalGradeForm");
+    	// 学生名が0人ぶん
+    	List<String> actStudentNameList = responseForm.getUserNameList();
+    	assertThat(actStudentNameList.size()).isEqualTo(0);
+    	// 正解数0
+    	List<String> actCorrectCntList = responseForm.getCorrectGradeList();
+    	assertThat(actCorrectCntList.size()).isEqualTo(0);
+    	// 不正解数0
+    	List<String> actIncorrectCntList = responseForm.getIncorrectGradeList();
+    	assertThat(actIncorrectCntList.size()).isEqualTo(0);
+    	
+    	// 大分類名称一覧
+    	Map<String, String> actFieldLMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldLDropItems");
+    	Map<String, String> expFieldLMap = new LinkedHashMap<>();
+    	expFieldLMap.put(FieldLarge.AP_FL_1_TECHNOLOGY.getId().toString(), FieldLarge.AP_FL_1_TECHNOLOGY.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_2_MANAGEMENT.getId().toString(), FieldLarge.AP_FL_2_MANAGEMENT.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_3_STRATEGY.getId().toString(), FieldLarge.AP_FL_3_STRATEGY.getName());
+    	assertThat(actFieldLMap).containsExactlyInAnyOrderEntriesOf(expFieldLMap);
+    }
+
+    /**
+   	 * 学生を指定し、中分類の項目を取得する.
+     * @throws Exception MockMVC失敗時例外
+     */
+	@SuppressWarnings("unchecked")
+	@Test
+    public void 学生の指定あり_中分類の項目を取得する_正常() throws Exception {
+		
+        // DB状態
+        // 回答履歴を作成(2010A)
+		// 学生１：回答数7：正解数3：不正解数4
+        Destination dest = new DataSourceDestination(dataSource);
+        Operation ops = Operations.sequenceOf(
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2,
+        		/*INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2,*/
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA2,
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA1, /*INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA2,*/
+        		INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_INCORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_INCORRECT_DATA2);
+        DbSetup dbSetup = new DbSetup(dest, ops);
+        dbSetup.launch();
+        
+		PersonalGradeForm requestForm = new PersonalGradeForm();
+		requestForm.setUserId(INSERT_STUDENT1_ID);
+		requestForm.setSelectFieldL(FieldLarge.AP_FL_1_TECHNOLOGY.getId().toString());
+		
+    	MvcResult result = mockMvc.perform(post("/common/grade/personal").param("selectFieldLargeBtn", "").flashAttr("personalGradeForm", requestForm))
+    		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
+                "common/grade/personal")).andReturn();
+
+    	// 成績情報は取得し直さない
+    	PersonalGradeForm responseForm = (PersonalGradeForm) result.getModelAndView().getModel().get("personalGradeForm");
+    	// 学生名が1人ぶん
+    	List<String> actStudentNameList = responseForm.getUserNameList();
+    	assertThat(actStudentNameList.size()).isEqualTo(1);
+    	assertThat(actStudentNameList.get(0)).isEqualTo(INSERT_STUDENT1_NAME);
+    	// 正解数3
+    	List<String> actCorrectCntList = responseForm.getCorrectGradeList();
+    	assertThat(actCorrectCntList.size()).isEqualTo(1);
+    	assertThat(actCorrectCntList.get(0)).isEqualTo("3");
+    	// 不正解数4
+    	List<String> actIncorrectCntList = responseForm.getIncorrectGradeList();
+    	assertThat(actIncorrectCntList.size()).isEqualTo(1);
+    	assertThat(actIncorrectCntList.get(0)).isEqualTo("4");
+    	
+    	// 大分類名称一覧
+    	Map<String, String> actFieldLMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldLDropItems");
+    	Map<String, String> expFieldLMap = new LinkedHashMap<>();
+    	expFieldLMap.put(FieldLarge.AP_FL_1_TECHNOLOGY.getId().toString(), FieldLarge.AP_FL_1_TECHNOLOGY.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_2_MANAGEMENT.getId().toString(), FieldLarge.AP_FL_2_MANAGEMENT.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_3_STRATEGY.getId().toString(), FieldLarge.AP_FL_3_STRATEGY.getName());
+    	assertThat(actFieldLMap).containsExactlyInAnyOrderEntriesOf(expFieldLMap);
+    	
+    	// 中分類名称一覧
+    	Map<String, String> actFieldMMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldMDropItems");
+    	Map<String, String> expFieldMMap = new LinkedHashMap<>();
+    	expFieldMMap.put(FieldMiddle.AP_FM_1_BASIC_THEORY.getId().toString(), FieldMiddle.AP_FM_1_BASIC_THEORY.getName());
+    	expFieldMMap.put(FieldMiddle.AP_FM_2_COMPUTER_SYSTEM.getId().toString(), FieldMiddle.AP_FM_2_COMPUTER_SYSTEM.getName());
+    	expFieldMMap.put(FieldMiddle.AP_FM_3_TECHNOLOGY_ELEMENT.getId().toString(), FieldMiddle.AP_FM_3_TECHNOLOGY_ELEMENT.getName());
+    	expFieldMMap.put(FieldMiddle.AP_FM_4_DEVELOPMENT_TECHNOLOGY.getId().toString(), FieldMiddle.AP_FM_4_DEVELOPMENT_TECHNOLOGY.getName());
+    	assertThat(actFieldMMap).containsExactlyInAnyOrderEntriesOf(expFieldMMap);
+    }
+
+    /**
+   	 * 学生を指定せず、中分類の項目を取得する別.
+     * @throws Exception MockMVC失敗時例外
+     */
+	@SuppressWarnings("unchecked")
+	@Test
+    public void 学生指定なし_中分類の項目を取得する_正常() throws Exception {
+
+		PersonalGradeForm requestForm = new PersonalGradeForm();
+		requestForm.setSelectFieldL(FieldLarge.AP_FL_3_STRATEGY.getId().toString());
+
+    	MvcResult result = mockMvc.perform(post("/common/grade/personal").param("selectFieldLargeBtn", "").flashAttr("personalGradeForm", requestForm))
+    		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
+                "common/grade/personal")).andReturn();
+    	
+    	PersonalGradeForm responseForm = (PersonalGradeForm) result.getModelAndView().getModel().get("personalGradeForm");
+    	// 学生名なし
+    	List<String> actStudentNameList = responseForm.getUserNameList();
+    	assertThat(actStudentNameList.size()).isEqualTo(0);
+    	// 正解数なし
+    	List<String> actCorrectCntList = responseForm.getCorrectGradeList();
+    	assertThat(actCorrectCntList.size()).isEqualTo(0);
+    	// 不正解数なし
+    	List<String> actIncorrectCntList = responseForm.getIncorrectGradeList();
+    	assertThat(actIncorrectCntList.size()).isEqualTo(0);
+    	
+    	// 大分類名称一覧
+    	Map<String, String> actFieldLMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldLDropItems");
+    	Map<String, String> expFieldLMap = new LinkedHashMap<>();
+    	expFieldLMap.put(FieldLarge.AP_FL_1_TECHNOLOGY.getId().toString(), FieldLarge.AP_FL_1_TECHNOLOGY.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_2_MANAGEMENT.getId().toString(), FieldLarge.AP_FL_2_MANAGEMENT.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_3_STRATEGY.getId().toString(), FieldLarge.AP_FL_3_STRATEGY.getName());
+    	assertThat(actFieldLMap).containsExactlyInAnyOrderEntriesOf(expFieldLMap);
+
+    	// 中分類名称一覧
+    	Map<String, String> actFieldMMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldMDropItems");
+    	Map<String, String> expFieldMMap = new LinkedHashMap<>();
+    	expFieldMMap.put(FieldMiddle.AP_FM_7_SYSTEM_PLANNING.getId().toString(), FieldMiddle.AP_FM_7_SYSTEM_PLANNING.getName());
+    	expFieldMMap.put(FieldMiddle.AP_FM_8_SYSTEM_STRATEGY.getId().toString(), FieldMiddle.AP_FM_8_SYSTEM_STRATEGY.getName());
+    	expFieldMMap.put(FieldMiddle.AP_FM_9_MANAGEMENT_STRATEGY.getId().toString(), FieldMiddle.AP_FM_9_MANAGEMENT_STRATEGY.getName());
+    	expFieldMMap.put(FieldMiddle.AP_FM_10_CORPORATE_AND_LEGAL.getId().toString(), FieldMiddle.AP_FM_10_CORPORATE_AND_LEGAL.getName());
+
+    	assertThat(actFieldMMap).containsExactlyInAnyOrderEntriesOf(expFieldMMap);
+	}
+	
+    /**
+   	 * 存在しない学生を指定し、中分類の項目を取得する.
+     * @throws Exception MockMVC失敗時例外
+     */
+	@SuppressWarnings("unchecked")
+	@Test
+    public void 存在しない学生の指定あり_中分類の項目を取得する_正常() throws Exception {
+		
+        // DB状態
+        // 回答履歴を作成(2010A)
+		// 学生１：回答数3：正解数1：不正解数2
+		// 学生２：回答数4:正解数2:不正解数2
+        Destination dest = new DataSourceDestination(dataSource);
+        Operation ops = Operations.sequenceOf(
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2,
+        		/*INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2,*/
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA2,
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA1, /*INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA2,*/
+        		INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_INCORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_INCORRECT_DATA2);
+        DbSetup dbSetup = new DbSetup(dest, ops);
+        dbSetup.launch();
+        
+		PersonalGradeForm requestForm = new PersonalGradeForm();
+		requestForm.setUserId(INSERT_STUDENT1_ID + "xyz");
+		requestForm.setSelectFieldL(FieldLarge.AP_FL_2_MANAGEMENT.getId().toString());
+		
+    	MvcResult result = mockMvc.perform(post("/common/grade/personal").param("selectFieldLargeBtn", "").flashAttr("personalGradeForm", requestForm))
+    		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
+                "common/grade/personal")).andReturn();
+
+    	// 成績情報は取得し直さない
+    	PersonalGradeForm responseForm = (PersonalGradeForm) result.getModelAndView().getModel().get("personalGradeForm");
+    	// 学生名が0人ぶん
+    	List<String> actStudentNameList = responseForm.getUserNameList();
+    	assertThat(actStudentNameList.size()).isEqualTo(0);
+    	// 正解数0
+    	List<String> actCorrectCntList = responseForm.getCorrectGradeList();
+    	assertThat(actCorrectCntList.size()).isEqualTo(0);
+    	// 不正解数0
+    	List<String> actIncorrectCntList = responseForm.getIncorrectGradeList();
+    	assertThat(actIncorrectCntList.size()).isEqualTo(0);
+    	
+    	// 大分類名称一覧
+    	Map<String, String> actFieldLMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldLDropItems");
+    	Map<String, String> expFieldLMap = new LinkedHashMap<>();
+    	expFieldLMap.put(FieldLarge.AP_FL_1_TECHNOLOGY.getId().toString(), FieldLarge.AP_FL_1_TECHNOLOGY.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_2_MANAGEMENT.getId().toString(), FieldLarge.AP_FL_2_MANAGEMENT.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_3_STRATEGY.getId().toString(), FieldLarge.AP_FL_3_STRATEGY.getName());
+    	assertThat(actFieldLMap).containsExactlyInAnyOrderEntriesOf(expFieldLMap);
+    	
+    	// 中分類名称一覧
+    	Map<String, String> actFieldMMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldMDropItems");
+    	Map<String, String> expFieldMMap = new LinkedHashMap<>();
+    	expFieldMMap.put(FieldMiddle.AP_FM_5_PROJECT_MANAGEMENT.getId().toString(), FieldMiddle.AP_FM_5_PROJECT_MANAGEMENT.getName());
+    	expFieldMMap.put(FieldMiddle.AP_FM_6_SERVICE_MANAGEMENT.getId().toString(), FieldMiddle.AP_FM_6_SERVICE_MANAGEMENT.getName());
+    	assertThat(actFieldMMap).containsExactlyInAnyOrderEntriesOf(expFieldMMap);
+    }
+
+    /**
+   	 * 学生を指定し、大分類を指定せずに中分類の項目を取得する.
+     * @throws Exception MockMVC失敗時例外
+     */
+	@SuppressWarnings("unchecked")
+	@Test
+    public void 学生の指定あり_大分類を指定せずに中分類の項目を取得する_正常() throws Exception {
+		
+        // DB状態
+        // 回答履歴を作成(2010A)
+		// 学生１：回答数11：正解数5：不正解数6
+        Destination dest = new DataSourceDestination(dataSource);
+        Operation ops = Operations.sequenceOf(
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2,
+        		/*INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2,*/
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA2,
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA1, /*INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA2,*/
+        		INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_INCORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_INCORRECT_DATA2);
+        DbSetup dbSetup = new DbSetup(dest, ops);
+        dbSetup.launch();
+        
+		PersonalGradeForm requestForm = new PersonalGradeForm();
+		requestForm.setUserId(INSERT_STUDENT1_ID);
+//		requestForm.setSelectFieldL(FieldLarge.AP_FL_2_MANAGEMENT.getId().toString());
+		
+    	MvcResult result = mockMvc.perform(post("/common/grade/personal").param("selectFieldLargeBtn", "").flashAttr("personalGradeForm", requestForm))
+    		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
+                "common/grade/personal")).andReturn();
+
+    	// 成績情報は取得し直さない
+    	PersonalGradeForm responseForm = (PersonalGradeForm) result.getModelAndView().getModel().get("personalGradeForm");
+    	// 学生名が1人ぶん
+    	List<String> actStudentNameList = responseForm.getUserNameList();
+    	assertThat(actStudentNameList.size()).isEqualTo(1);
+    	assertThat(actStudentNameList.get(0)).isEqualTo(INSERT_STUDENT1_NAME);
+    	// 正解数5
+    	List<String> actCorrectCntList = responseForm.getCorrectGradeList();
+    	assertThat(actCorrectCntList.size()).isEqualTo(1);
+    	assertThat(actCorrectCntList.get(0)).isEqualTo("5");
+    	// 不正解数6
+    	List<String> actIncorrectCntList = responseForm.getIncorrectGradeList();
+    	assertThat(actIncorrectCntList.size()).isEqualTo(1);
+    	assertThat(actIncorrectCntList.get(0)).isEqualTo("6");
+    	
+    	// 大分類名称一覧
+    	Map<String, String> actFieldLMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldLDropItems");
+    	Map<String, String> expFieldLMap = new LinkedHashMap<>();
+    	expFieldLMap.put(FieldLarge.AP_FL_1_TECHNOLOGY.getId().toString(), FieldLarge.AP_FL_1_TECHNOLOGY.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_2_MANAGEMENT.getId().toString(), FieldLarge.AP_FL_2_MANAGEMENT.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_3_STRATEGY.getId().toString(), FieldLarge.AP_FL_3_STRATEGY.getName());
+    	assertThat(actFieldLMap).containsExactlyInAnyOrderEntriesOf(expFieldLMap);
+    	
+    	// 中分類名称一覧
+    	Map<String, String> actFieldMMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldMDropItems");
+    	assertThat(actFieldMMap).isEmpty();
+    }
+
+	
+	
+    /**
+   	 * 学生を指定し、小分類の項目を取得する.
+   	 * 学生を指定せず、小分類の項目を取得する.
+   	 * 存在しない学生を指定し、小分類の項目を取得する
+   	 * 中分類を指定せず、小分類の項目を取得する
+   	 * 
    	 * 学生を指定して同じ問題を複数回カウントして、成績一覧ページを表示.
-   	 * 学生自身が大分類を指定して中分類取得.
-   	 * 学生を指定して大分類を指定せず中分類取得.
-   	 * 学生自身が大分類と中分類を指定して小分類取得.
-   	 * 学生を指定して大分類を指定せず中分類を指定して小分類取得.
-   	 * 学生自身が大分類と中分類を指定せず小分類取得.
-   	 * 学生を指定して大分類を指定して中分類を指定せず小分類取得.
+   	 * 
+   	 * 学生を指定し、大分類を指定し、成績を取得する.
+   	 * 学生を指定し、大分類を指定せず中分類を指定し、成績を取得する.
+   	 * 学生を指定し、大分類と中分類と小分類を指定し、成績を取得する.
+   	 * 学生を指定し、大分類を指定せず中分類と小分類を指定し、成績を取得する.
+   	 * 学生を指定し、大分類と中分類を指定せず小分類を指定し、成績を取得する
+   	 * 学生を指定し、大分類を指定して中分類を指定せず小分類を指定し、成績を取得する.
+   	 * 
+   	 * 存在しない学生を指定し、大分類のみ指定し、、成績を取得する.
+   	 * 存在しない学生を指定し、大分類と中分類を指定し、、成績を取得する.
+   	 * 存在しない学生を指定し、大分類と中分類と小分類を指定し、成績を取得する.
      */
 
 }

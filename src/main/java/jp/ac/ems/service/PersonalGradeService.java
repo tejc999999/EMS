@@ -22,15 +22,14 @@ public interface PersonalGradeService {
 	 * @param form 成績Form(grad form)
 	 * @return 成績Form(grad form)
 	 */
-    public PersonalGradeForm getGradeFormDefaultLogin(PersonalGradeForm form);
-
+    public PersonalGradeForm getGradeFormDefault(PersonalGradeForm form);
     
 	/**
 	 * 全問題の個人成績を取得する.
 	 * @param form 個人成績Form(personal grad form)
 	 * @return 個人成績Form(personal grad form)
 	 */
-    public PersonalGradeForm getGradeFormDefault(PersonalGradeForm form);
+    public PersonalGradeForm getGradeFormByAll(PersonalGradeForm form);
     
 	/**
 	 * 特定年度の個人成績を取得する.

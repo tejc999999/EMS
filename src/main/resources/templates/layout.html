@@ -67,9 +67,9 @@
         		<li class="nav-item dropdown" sec:authorize="hasRole('STUDENT') or hasRole('TEACHER')">
           			<a class="nav-link dropdown-toggle" href="#" id="personalGradeDropDown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">進捗</a>
           			<div class="dropdown-menu" aria-labelledby="personalGradeDropDown">
-              			<a sec:authorize="hasRole('TEACHER')" class="dropdown-item" th:href="@{'/common/progress/personal'}">個人進捗</a>
-              			<a sec:authorize="hasRole('STUDENT')" class="dropdown-item" th:href="@{'/common/progress/personal'}">個人進捗</a>
-              			<a class="dropdown-item" th:href="@{'/common/progress'}">全体進捗一覧</a>
+              			<a sec:authorize="hasRole('TEACHER')" class="dropdown-item" th:href="@{'/common/grade/personal'}">個人進捗</a>
+              			<a sec:authorize="hasRole('STUDENT')" class="dropdown-item" th:href="@{'/common/grade/personal'}">個人進捗</a>
+              			<a class="dropdown-item" th:href="@{'/common/grade'}">全体進捗一覧</a>
           			</div>
         		</li>
         		<li class="nav-item dropdown" sec:authorize="hasRole('TEACHER')">
