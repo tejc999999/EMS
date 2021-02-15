@@ -41,6 +41,7 @@ import com.ninja_squad.dbsetup.operation.Operation;
 
 import jp.ac.ems.config.FieldLarge;
 import jp.ac.ems.config.FieldMiddle;
+import jp.ac.ems.config.FieldSmall;
 import jp.ac.ems.config.RoleCode;
 import jp.ac.ems.form.PersonalGradeForm;
 
@@ -171,6 +172,54 @@ public class PersonalGradeControllerTest {
     				INSERT_QUESTION6_NUMBER, INSERT_QUESTION6_FIELD_L_ID, INSERT_QUESTION6_FIELD_M_ID,
     				INSERT_QUESTION6_FIELD_S_ID, INSERT_QUESTION6_CORRECT).build();
 
+    // ID8:2009(H21)H, 1(大分類), 1(中分類), 2(小分類)
+    private static final Long INSERT_QUESTION7_ID = Long.valueOf("8");
+    private static final String INSERT_QUESTION7_DIVISION = "AP";
+    private static final String INSERT_QUESTION7_YEAR = "2009";
+    private static final String INSERT_QUESTION7_TERM = "H";
+    private static final Byte INSERT_QUESTION7_NUMBER = Byte.valueOf("8");
+    private static final Byte INSERT_QUESTION7_FIELD_L_ID = Byte.valueOf("1");
+    private static final Byte INSERT_QUESTION7_FIELD_M_ID = Byte.valueOf("1");
+    private static final Byte INSERT_QUESTION7_FIELD_S_ID = Byte.valueOf("2");
+    private static final Byte INSERT_QUESTION7_CORRECT = Byte.valueOf("2");
+    private static final Operation INSERT_QUESTION7_DATA = Operations.insertInto(
+    		"t_question").columns("id", "division", "year", "term", "number", "field_l_id", "field_m_id", "field_s_id", "correct")
+    		.values(INSERT_QUESTION7_ID, INSERT_QUESTION7_DIVISION, INSERT_QUESTION7_YEAR, INSERT_QUESTION7_TERM,
+    				INSERT_QUESTION7_NUMBER, INSERT_QUESTION7_FIELD_L_ID, INSERT_QUESTION7_FIELD_M_ID,
+    				INSERT_QUESTION7_FIELD_S_ID, INSERT_QUESTION7_CORRECT).build();
+
+    // ID9:2009(H21)H, 1(大分類), 2(中分類), 3(小分類)
+    private static final Long INSERT_QUESTION8_ID = Long.valueOf("9");
+    private static final String INSERT_QUESTION8_DIVISION = "AP";
+    private static final String INSERT_QUESTION8_YEAR = "2009";
+    private static final String INSERT_QUESTION8_TERM = "H";
+    private static final Byte INSERT_QUESTION8_NUMBER = Byte.valueOf("9");
+    private static final Byte INSERT_QUESTION8_FIELD_L_ID = Byte.valueOf("1");
+    private static final Byte INSERT_QUESTION8_FIELD_M_ID = Byte.valueOf("2");
+    private static final Byte INSERT_QUESTION8_FIELD_S_ID = Byte.valueOf("3");
+    private static final Byte INSERT_QUESTION8_CORRECT = Byte.valueOf("3");
+    private static final Operation INSERT_QUESTION8_DATA = Operations.insertInto(
+    		"t_question").columns("id", "division", "year", "term", "number", "field_l_id", "field_m_id", "field_s_id", "correct")
+    		.values(INSERT_QUESTION8_ID, INSERT_QUESTION8_DIVISION, INSERT_QUESTION8_YEAR, INSERT_QUESTION8_TERM,
+    				INSERT_QUESTION8_NUMBER, INSERT_QUESTION8_FIELD_L_ID, INSERT_QUESTION8_FIELD_M_ID,
+    				INSERT_QUESTION8_FIELD_S_ID, INSERT_QUESTION8_CORRECT).build();
+
+    // ID14:2009(H21)H, 1(大分類), 2(中分類), 4(小分類)
+    private static final Long INSERT_QUESTION9_ID = Long.valueOf("14");
+    private static final String INSERT_QUESTION9_DIVISION = "AP";
+    private static final String INSERT_QUESTION9_YEAR = "2009";
+    private static final String INSERT_QUESTION9_TERM = "H";
+    private static final Byte INSERT_QUESTION9_NUMBER = Byte.valueOf("9");
+    private static final Byte INSERT_QUESTION9_FIELD_L_ID = Byte.valueOf("1");
+    private static final Byte INSERT_QUESTION9_FIELD_M_ID = Byte.valueOf("2");
+    private static final Byte INSERT_QUESTION9_FIELD_S_ID = Byte.valueOf("4");
+    private static final Byte INSERT_QUESTION9_CORRECT = Byte.valueOf("3");
+    private static final Operation INSERT_QUESTION9_DATA = Operations.insertInto(
+    		"t_question").columns("id", "division", "year", "term", "number", "field_l_id", "field_m_id", "field_s_id", "correct")
+    		.values(INSERT_QUESTION9_ID, INSERT_QUESTION9_DIVISION, INSERT_QUESTION9_YEAR, INSERT_QUESTION9_TERM,
+    				INSERT_QUESTION9_NUMBER, INSERT_QUESTION9_FIELD_L_ID, INSERT_QUESTION9_FIELD_M_ID,
+    				INSERT_QUESTION9_FIELD_S_ID, INSERT_QUESTION9_CORRECT).build();    
+
     // 回答履歴（1人目)
     // 正解1:2009(H21)A, 1(大分類), 1(中分類), 1(小分類)
     private static final Long INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1_ID = Long.valueOf("1");
@@ -227,57 +276,57 @@ public class PersonalGradeControllerTest {
 
     // 回答履歴（2人目)
     // 正解1:2009(H21)A, 1(大分類), 1(中分類), 1(小分類)
-    private static final Long INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1_ID = Long.valueOf("5");
-    private static final Boolean INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1_CORRECT_FLG = true;
-    private static final Long INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1_QUESTION_ID = Long.valueOf("1");
-	private static final Date INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1_UPDATE_DATE = new Date();
-	private static final String INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1_UPDATE_USER_ID = INSERT_STUDENT2_ID;
-    private static final Operation INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1 = Operations.insertInto(
-    		"t_student_question_history").columns("id", "correct_flg", "question_id", "update_date", "user_id").values(
-    				INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1_ID,
-    				INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1_CORRECT_FLG,
-    				INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1_QUESTION_ID,
-    				INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1_UPDATE_DATE,
-    				INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1_UPDATE_USER_ID).build();
+//    private static final Long INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1_ID = Long.valueOf("5");
+//    private static final Boolean INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1_CORRECT_FLG = true;
+//    private static final Long INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1_QUESTION_ID = Long.valueOf("1");
+//	private static final Date INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1_UPDATE_DATE = new Date();
+//	private static final String INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1_UPDATE_USER_ID = INSERT_STUDENT2_ID;
+//    private static final Operation INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1 = Operations.insertInto(
+//    		"t_student_question_history").columns("id", "correct_flg", "question_id", "update_date", "user_id").values(
+//    				INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1_ID,
+//    				INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1_CORRECT_FLG,
+//    				INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1_QUESTION_ID,
+//    				INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1_UPDATE_DATE,
+//    				INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1_UPDATE_USER_ID).build();
     // 正解2:2009(H21)A, 1(大分類), 1(中分類), 1(小分類)
-    private static final Long INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2_ID = Long.valueOf("6");
-    private static final Boolean INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2_CORRECT_FLG = true;
-    private static final Long INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2_QUESTION_ID = Long.valueOf("2");
-	private static final Date INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2_UPDATE_DATE = new Date();
-	private static final String INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2_UPDATE_USER_ID = INSERT_STUDENT2_ID;
-    private static final Operation INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2 = Operations.insertInto(
-    		"t_student_question_history").columns("id", "correct_flg", "question_id", "update_date", "user_id").values(
-    				INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2_ID,
-    				INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2_CORRECT_FLG,
-    				INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2_QUESTION_ID,
-    				INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2_UPDATE_DATE,
-    				INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2_UPDATE_USER_ID).build();
+//    private static final Long INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2_ID = Long.valueOf("6");
+//    private static final Boolean INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2_CORRECT_FLG = true;
+//    private static final Long INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2_QUESTION_ID = Long.valueOf("2");
+//	private static final Date INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2_UPDATE_DATE = new Date();
+//	private static final String INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2_UPDATE_USER_ID = INSERT_STUDENT2_ID;
+//    private static final Operation INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2 = Operations.insertInto(
+//    		"t_student_question_history").columns("id", "correct_flg", "question_id", "update_date", "user_id").values(
+//    				INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2_ID,
+//    				INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2_CORRECT_FLG,
+//    				INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2_QUESTION_ID,
+//    				INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2_UPDATE_DATE,
+//    				INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2_UPDATE_USER_ID).build();
     // 不正解1:2009(H21)A, 1(大分類), 1(中分類), 1(小分類)
-    private static final Long INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1_ID = Long.valueOf("7");
-    private static final Boolean INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1_CORRECT_FLG = false;
-    private static final Long INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1_QUESTION_ID = Long.valueOf("1");
-	private static final Date INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1_UPDATE_DATE = new Date();
-	private static final String INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1_UPDATE_USER_ID = INSERT_STUDENT2_ID;
-    private static final Operation INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1 = Operations.insertInto(
-    		"t_student_question_history").columns("id", "correct_flg", "question_id", "update_date", "user_id").values(
-    				INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1_ID,
-    				INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1_CORRECT_FLG,
-    				INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1_QUESTION_ID,
-    				INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1_UPDATE_DATE,
-    				INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1_UPDATE_USER_ID).build();
+//    private static final Long INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1_ID = Long.valueOf("7");
+//    private static final Boolean INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1_CORRECT_FLG = false;
+//    private static final Long INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1_QUESTION_ID = Long.valueOf("1");
+//	private static final Date INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1_UPDATE_DATE = new Date();
+//	private static final String INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1_UPDATE_USER_ID = INSERT_STUDENT2_ID;
+//    private static final Operation INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1 = Operations.insertInto(
+//    		"t_student_question_history").columns("id", "correct_flg", "question_id", "update_date", "user_id").values(
+//    				INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1_ID,
+//    				INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1_CORRECT_FLG,
+//    				INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1_QUESTION_ID,
+//    				INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1_UPDATE_DATE,
+//    				INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1_UPDATE_USER_ID).build();
     // 不正解2:2009(H21)A, 1(大分類), 1(中分類), 1(小分類)
-    private static final Long INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2_ID = Long.valueOf("8");
-    private static final Boolean INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2_CORRECT_FLG = false;
-    private static final Long INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2_QUESTION_ID = Long.valueOf("2");
-	private static final Date INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2_UPDATE_DATE = new Date();
-	private static final String INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2_UPDATE_USER_ID = INSERT_STUDENT2_ID;
-    private static final Operation INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2 = Operations.insertInto(
-    		"t_student_question_history").columns("id", "correct_flg", "question_id", "update_date", "user_id").values(
-    				INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2_ID,
-    				INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2_CORRECT_FLG,
-    				INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2_QUESTION_ID,
-    				INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2_UPDATE_DATE,
-    				INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2_UPDATE_USER_ID).build();
+//    private static final Long INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2_ID = Long.valueOf("8");
+//    private static final Boolean INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2_CORRECT_FLG = false;
+//    private static final Long INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2_QUESTION_ID = Long.valueOf("2");
+//	private static final Date INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2_UPDATE_DATE = new Date();
+//	private static final String INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2_UPDATE_USER_ID = INSERT_STUDENT2_ID;
+//    private static final Operation INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2 = Operations.insertInto(
+//    		"t_student_question_history").columns("id", "correct_flg", "question_id", "update_date", "user_id").values(
+//    				INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2_ID,
+//    				INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2_CORRECT_FLG,
+//    				INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2_QUESTION_ID,
+//    				INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2_UPDATE_DATE,
+//    				INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2_UPDATE_USER_ID).build();
 
     // 回答履歴（1人目)
     // 正解1:2011(H23)H, 3(大分類), 10(中分類), 23(小分類)
@@ -403,18 +452,18 @@ public class PersonalGradeControllerTest {
     				INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA1_UPDATE_USER_ID).build();
     
     // 正解2:2010(H22)A, 1(大分類), 1(中分類), 1(小分類)
-    private static final Long INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA2_ID = Long.valueOf("18");
-    private static final Boolean INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA2_CORRECT_FLG = true;
-    private static final Long INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA2_QUESTION_ID = Long.valueOf("241");
-	private static final Date INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA2_UPDATE_DATE = new Date();
-	private static final String INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA2_UPDATE_USER_ID = INSERT_STUDENT1_ID;
-    private static final Operation INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA2 = Operations.insertInto(
-    		"t_student_question_history").columns("id", "correct_flg", "question_id", "update_date", "user_id").values(
-    				INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA2_ID,
-    				INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA2_CORRECT_FLG,
-    				INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA2_QUESTION_ID,
-    				INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA2_UPDATE_DATE,
-    				INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA2_UPDATE_USER_ID).build();
+//    private static final Long INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA2_ID = Long.valueOf("18");
+//    private static final Boolean INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA2_CORRECT_FLG = true;
+//    private static final Long INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA2_QUESTION_ID = Long.valueOf("241");
+//	private static final Date INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA2_UPDATE_DATE = new Date();
+//	private static final String INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA2_UPDATE_USER_ID = INSERT_STUDENT1_ID;
+//    private static final Operation INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA2 = Operations.insertInto(
+//    		"t_student_question_history").columns("id", "correct_flg", "question_id", "update_date", "user_id").values(
+//    				INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA2_ID,
+//    				INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA2_CORRECT_FLG,
+//    				INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA2_QUESTION_ID,
+//    				INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA2_UPDATE_DATE,
+//    				INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA2_UPDATE_USER_ID).build();
     
     // 不正解1:2010(H22)A, 1(大分類), 1(中分類), 1(小分類)
     private static final Long INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_INCORRECT_DATA1_ID = Long.valueOf("19");
@@ -500,6 +549,146 @@ public class PersonalGradeControllerTest {
     				INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_INCORRECT_DATA2_UPDATE_DATE,
     				INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_INCORRECT_DATA2_UPDATE_USER_ID).build();
         
+    // 正解1:2009(H21)H, 1(大分類), 1(中分類), 2(小分類)
+    private static final Long INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1_ID = Long.valueOf("25");
+    private static final Boolean INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1_CORRECT_FLG = true;
+    private static final Long INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1_QUESTION_ID = Long.valueOf("8");
+	private static final Date INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1_UPDATE_DATE = new Date();
+	private static final String INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1_UPDATE_USER_ID = INSERT_STUDENT1_ID;
+    private static final Operation INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1 = Operations.insertInto(
+    		"t_student_question_history").columns("id", "correct_flg", "question_id", "update_date", "user_id").values(
+    				INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1_ID,
+    				INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1_CORRECT_FLG,
+    				INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1_QUESTION_ID,
+    				INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1_UPDATE_DATE,
+    				INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1_UPDATE_USER_ID).build();
+    
+    // 不正解1:2009(H21)H, 1(大分類), 1(中分類), 2(小分類)
+    private static final Long INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1_ID = Long.valueOf("26");
+    private static final Boolean INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1_CORRECT_FLG = false;
+    private static final Long INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1_QUESTION_ID = Long.valueOf("8");
+	private static final Date INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1_UPDATE_DATE = new Date();
+	private static final String INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1_UPDATE_USER_ID = INSERT_STUDENT1_ID;
+    private static final Operation INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1 = Operations.insertInto(
+    		"t_student_question_history").columns("id", "correct_flg", "question_id", "update_date", "user_id").values(
+    				INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1_ID,
+    				INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1_CORRECT_FLG,
+    				INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1_QUESTION_ID,
+    				INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1_UPDATE_DATE,
+    				INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1_UPDATE_USER_ID).build();
+
+    // 正解1:2009(H21)H, 1(大分類), 2(中分類), 3(小分類)
+    private static final Long INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1_ID = Long.valueOf("27");
+    private static final Boolean INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1_CORRECT_FLG = true;
+    private static final Long INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1_QUESTION_ID = Long.valueOf("9");
+	private static final Date INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1_UPDATE_DATE = new Date();
+	private static final String INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1_UPDATE_USER_ID = INSERT_STUDENT1_ID;
+    private static final Operation INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1 = Operations.insertInto(
+    		"t_student_question_history").columns("id", "correct_flg", "question_id", "update_date", "user_id").values(
+    				INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1_ID,
+    				INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1_CORRECT_FLG,
+    				INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1_QUESTION_ID,
+    				INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1_UPDATE_DATE,
+    				INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1_UPDATE_USER_ID).build();
+    
+    // 正解1:2009(H21)H, 1(大分類), 2(中分類), 3(小分類)
+    private static final Long INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1_ID = Long.valueOf("28");
+    private static final Boolean INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1_CORRECT_FLG = false;
+    private static final Long INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1_QUESTION_ID = Long.valueOf("9");
+	private static final Date INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1_UPDATE_DATE = new Date();
+	private static final String INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1_UPDATE_USER_ID = INSERT_STUDENT1_ID;
+    private static final Operation INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1 = Operations.insertInto(
+    		"t_student_question_history").columns("id", "correct_flg", "question_id", "update_date", "user_id").values(
+    				INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1_ID,
+    				INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1_CORRECT_FLG,
+    				INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1_QUESTION_ID,
+    				INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1_UPDATE_DATE,
+    				INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1_UPDATE_USER_ID).build();
+    
+    // 正解1:2009(H21)H, 1(大分類), 1(中分類), 2(小分類)
+    private static final Long INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1_ID = Long.valueOf("29");
+    private static final Boolean INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1_CORRECT_FLG = true;
+    private static final Long INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1_QUESTION_ID = Long.valueOf("8");
+	private static final Date INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1_UPDATE_DATE = new Date();
+	private static final String INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1_UPDATE_USER_ID = INSERT_STUDENT2_ID;
+    private static final Operation INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1 = Operations.insertInto(
+    		"t_student_question_history").columns("id", "correct_flg", "question_id", "update_date", "user_id").values(
+    				INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1_ID,
+    				INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1_CORRECT_FLG,
+    				INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1_QUESTION_ID,
+    				INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1_UPDATE_DATE,
+    				INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1_UPDATE_USER_ID).build();
+    
+    // 不正解1:2009(H21)H, 1(大分類), 1(中分類), 2(小分類)
+    private static final Long INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1_ID = Long.valueOf("30");
+    private static final Boolean INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1_CORRECT_FLG = false;
+    private static final Long INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1_QUESTION_ID = Long.valueOf("8");
+	private static final Date INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1_UPDATE_DATE = new Date();
+	private static final String INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1_UPDATE_USER_ID = INSERT_STUDENT2_ID;
+    private static final Operation INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1 = Operations.insertInto(
+    		"t_student_question_history").columns("id", "correct_flg", "question_id", "update_date", "user_id").values(
+    				INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1_ID,
+    				INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1_CORRECT_FLG,
+    				INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1_QUESTION_ID,
+    				INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1_UPDATE_DATE,
+    				INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1_UPDATE_USER_ID).build();
+
+    // 正解1:2009(H21)H, 1(大分類), 2(中分類), 3(小分類)
+    private static final Long INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1_ID = Long.valueOf("31");
+    private static final Boolean INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1_CORRECT_FLG = true;
+    private static final Long INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1_QUESTION_ID = Long.valueOf("9");
+	private static final Date INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1_UPDATE_DATE = new Date();
+	private static final String INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1_UPDATE_USER_ID = INSERT_STUDENT2_ID;
+    private static final Operation INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1 = Operations.insertInto(
+    		"t_student_question_history").columns("id", "correct_flg", "question_id", "update_date", "user_id").values(
+    				INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1_ID,
+    				INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1_CORRECT_FLG,
+    				INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1_QUESTION_ID,
+    				INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1_UPDATE_DATE,
+    				INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1_UPDATE_USER_ID).build();
+    
+    // 正解1:2009(H21)H, 1(大分類), 2(中分類), 3(小分類)
+    private static final Long INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1_ID = Long.valueOf("32");
+    private static final Boolean INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1_CORRECT_FLG = false;
+    private static final Long INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1_QUESTION_ID = Long.valueOf("9");
+	private static final Date INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1_UPDATE_DATE = new Date();
+	private static final String INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1_UPDATE_USER_ID = INSERT_STUDENT2_ID;
+    private static final Operation INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1 = Operations.insertInto(
+    		"t_student_question_history").columns("id", "correct_flg", "question_id", "update_date", "user_id").values(
+    				INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1_ID,
+    				INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1_CORRECT_FLG,
+    				INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1_QUESTION_ID,
+    				INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1_UPDATE_DATE,
+    				INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1_UPDATE_USER_ID).build();
+    
+    // 正解1:2009(H21)H, 1(大分類), 2(中分類), 4(小分類)
+    private static final Long INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_4_CORRECT_DATA1_ID = Long.valueOf("33");
+    private static final Boolean INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_4_CORRECT_DATA1_CORRECT_FLG = true;
+    private static final Long INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_4_CORRECT_DATA1_QUESTION_ID = Long.valueOf("14");
+	private static final Date INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_4_CORRECT_DATA1_UPDATE_DATE = new Date();
+	private static final String INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_4_CORRECT_DATA1_UPDATE_USER_ID = INSERT_STUDENT1_ID;
+    private static final Operation INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_4_CORRECT_DATA1 = Operations.insertInto(
+    		"t_student_question_history").columns("id", "correct_flg", "question_id", "update_date", "user_id").values(
+    				INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_4_CORRECT_DATA1_ID,
+    				INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_4_CORRECT_DATA1_CORRECT_FLG,
+    				INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_4_CORRECT_DATA1_QUESTION_ID,
+    				INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_4_CORRECT_DATA1_UPDATE_DATE,
+    				INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_4_CORRECT_DATA1_UPDATE_USER_ID).build();
+    
+    // 不正解1:2009(H21)H, 1(大分類), 2(中分類), 4(小分類)
+    private static final Long INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_4_INCORRECT_DATA1_ID = Long.valueOf("34");
+    private static final Boolean INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_4_INCORRECT_DATA1_INCORRECT_FLG = false;
+    private static final Long INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_4_INCORRECT_DATA1_QUESTION_ID = Long.valueOf("14");
+	private static final Date INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_4_INCORRECT_DATA1_UPDATE_DATE = new Date();
+	private static final String INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_4_INCORRECT_DATA1_UPDATE_USER_ID = INSERT_STUDENT1_ID;
+    private static final Operation INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_4_INCORRECT_DATA1 = Operations.insertInto(
+    		"t_student_question_history").columns("id", "correct_flg", "question_id", "update_date", "user_id").values(
+    				INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_4_INCORRECT_DATA1_ID,
+    				INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_4_INCORRECT_DATA1_INCORRECT_FLG,
+    				INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_4_INCORRECT_DATA1_QUESTION_ID,
+    				INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_4_INCORRECT_DATA1_UPDATE_DATE,
+    				INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_4_INCORRECT_DATA1_UPDATE_USER_ID).build();
+    
     // 全学生削除
     private static final Operation DELETE_ALL_STUDENT_DATA = Operations.sql(
     		"DELETE FROM t_user");
@@ -535,7 +724,9 @@ public class PersonalGradeControllerTest {
         // デフォルトのマスター管理者を作成
         Destination dest = new DataSourceDestination(dataSource);
         Operation ops = Operations.sequenceOf(INSERT_STUDENT1_DATA, INSERT_STUDENT2_DATA,
-        		INSERT_QUESTION1_DATA, INSERT_QUESTION2_DATA, INSERT_QUESTION3_DATA, INSERT_QUESTION4_DATA, INSERT_QUESTION5_DATA, INSERT_QUESTION6_DATA);
+        		INSERT_QUESTION1_DATA, INSERT_QUESTION2_DATA, INSERT_QUESTION3_DATA,
+        		INSERT_QUESTION4_DATA, INSERT_QUESTION5_DATA, INSERT_QUESTION6_DATA,
+        		INSERT_QUESTION7_DATA, INSERT_QUESTION8_DATA, INSERT_QUESTION9_DATA);
         DbSetup dbSetup = new DbSetup(dest, ops);
         dbSetup.launch();
     }
@@ -1034,9 +1225,6 @@ public class PersonalGradeControllerTest {
     public void 存在しない学生の指定あり_中分類の項目を取得する_正常() throws Exception {
 		
         // DB状態
-        // 回答履歴を作成(2010A)
-		// 学生１：回答数3：正解数1：不正解数2
-		// 学生２：回答数4:正解数2:不正解数2
         Destination dest = new DataSourceDestination(dataSource);
         Operation ops = Operations.sequenceOf(
         		INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2,
@@ -1101,7 +1289,6 @@ public class PersonalGradeControllerTest {
     public void 学生の指定あり_大分類を指定せずに中分類の項目を取得する_正常() throws Exception {
 		
         // DB状態
-        // 回答履歴を作成(2010A)
 		// 学生１：回答数11：正解数5：不正解数6
         Destination dest = new DataSourceDestination(dataSource);
         Operation ops = Operations.sequenceOf(
@@ -1124,7 +1311,6 @@ public class PersonalGradeControllerTest {
         
 		PersonalGradeForm requestForm = new PersonalGradeForm();
 		requestForm.setUserId(INSERT_STUDENT1_ID);
-//		requestForm.setSelectFieldL(FieldLarge.AP_FL_2_MANAGEMENT.getId().toString());
 		
     	MvcResult result = mockMvc.perform(post("/common/grade/personal").param("selectFieldLargeBtn", "").flashAttr("personalGradeForm", requestForm))
     		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
@@ -1158,26 +1344,1340 @@ public class PersonalGradeControllerTest {
     	assertThat(actFieldMMap).isEmpty();
     }
 
+
+    /**
+   	 * 学生を指定し、大分類と中分類を指定して、小分類の項目を取得する.
+     * @throws Exception MockMVC失敗時例外
+     */
+	@SuppressWarnings("unchecked")
+	@Test
+    public void 学生の指定あり_大分類と中分類を指定_小分類の項目を取得する_正常() throws Exception {
+		
+        // DB状態
+		// 学生１：回答数1：正解数1：不正解数0
+        Destination dest = new DataSourceDestination(dataSource);
+        Operation ops = Operations.sequenceOf(
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2,
+        		/*INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2,*/
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA2,
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA1, /*INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA2,*/
+        		INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_INCORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_INCORRECT_DATA2,
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1, /*INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1,*/
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1);
+        DbSetup dbSetup = new DbSetup(dest, ops);
+        dbSetup.launch();
+        
+		PersonalGradeForm requestForm = new PersonalGradeForm();
+		requestForm.setUserId(INSERT_STUDENT1_ID);
+		requestForm.setSelectFieldL(FieldLarge.AP_FL_1_TECHNOLOGY.getId().toString());
+		requestForm.setSelectFieldM(FieldMiddle.AP_FM_2_COMPUTER_SYSTEM.getId().toString());
+		
+    	MvcResult result = mockMvc.perform(post("/common/grade/personal").param("selectFieldMiddleBtn", "").flashAttr("personalGradeForm", requestForm))
+    		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
+                "common/grade/personal")).andReturn();
+
+    	// 成績情報は取得し直さない
+    	PersonalGradeForm responseForm = (PersonalGradeForm) result.getModelAndView().getModel().get("personalGradeForm");
+    	// 学生名が1人ぶん
+    	List<String> actStudentNameList = responseForm.getUserNameList();
+    	assertThat(actStudentNameList.size()).isEqualTo(1);
+    	assertThat(actStudentNameList.get(0)).isEqualTo(INSERT_STUDENT1_NAME);
+    	// 正解数5
+    	List<String> actCorrectCntList = responseForm.getCorrectGradeList();
+    	assertThat(actCorrectCntList.size()).isEqualTo(1);
+    	assertThat(actCorrectCntList.get(0)).isEqualTo("1");
+    	// 不正解数6
+    	List<String> actIncorrectCntList = responseForm.getIncorrectGradeList();
+    	assertThat(actIncorrectCntList.size()).isEqualTo(1);
+    	assertThat(actIncorrectCntList.get(0)).isEqualTo("0");
+    	
+    	// 大分類名称一覧
+    	Map<String, String> actFieldLMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldLDropItems");
+    	Map<String, String> expFieldLMap = new LinkedHashMap<>();
+    	expFieldLMap.put(FieldLarge.AP_FL_1_TECHNOLOGY.getId().toString(), FieldLarge.AP_FL_1_TECHNOLOGY.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_2_MANAGEMENT.getId().toString(), FieldLarge.AP_FL_2_MANAGEMENT.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_3_STRATEGY.getId().toString(), FieldLarge.AP_FL_3_STRATEGY.getName());
+    	assertThat(actFieldLMap).containsExactlyInAnyOrderEntriesOf(expFieldLMap);
+    	
+    	// 中分類名称一覧
+    	Map<String, String> actFieldMMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldMDropItems");
+    	Map<String, String> expFieldMMap = new LinkedHashMap<>();    	
+    	expFieldMMap.put(FieldMiddle.AP_FM_1_BASIC_THEORY.getId().toString(), FieldMiddle.AP_FM_1_BASIC_THEORY.getName());
+    	expFieldMMap.put(FieldMiddle.AP_FM_2_COMPUTER_SYSTEM.getId().toString(), FieldMiddle.AP_FM_2_COMPUTER_SYSTEM.getName());
+    	expFieldMMap.put(FieldMiddle.AP_FM_3_TECHNOLOGY_ELEMENT.getId().toString(), FieldMiddle.AP_FM_3_TECHNOLOGY_ELEMENT.getName());
+    	expFieldMMap.put(FieldMiddle.AP_FM_4_DEVELOPMENT_TECHNOLOGY.getId().toString(), FieldMiddle.AP_FM_4_DEVELOPMENT_TECHNOLOGY.getName());
+    	assertThat(actFieldMMap).containsExactlyInAnyOrderEntriesOf(expFieldMMap);
+    	
+    	// 小分類名称一覧
+    	Map<String, String> actFieldSMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldSDropItems");
+    	Map<String, String> expFieldSMap = new LinkedHashMap<>();    	
+    	expFieldSMap.put(FieldSmall.AP_FS_3_COMPUTER_COMPONENTS.getId().toString(), FieldSmall.AP_FS_3_COMPUTER_COMPONENTS.getName());
+    	expFieldSMap.put(FieldSmall.AP_FS_4_SYSTEM_COMPONENTS.getId().toString(), FieldSmall.AP_FS_4_SYSTEM_COMPONENTS.getName());
+    	expFieldSMap.put(FieldSmall.AP_FS_5_SOFTWARE.getId().toString(), FieldSmall.AP_FS_5_SOFTWARE.getName());
+    	expFieldSMap.put(FieldSmall.AP_FS_6_HARDWARE.getId().toString(), FieldSmall.AP_FS_6_HARDWARE.getName());
+    	assertThat(actFieldSMap).containsExactlyInAnyOrderEntriesOf(expFieldSMap);
+    }
+
+    /**
+   	 * 学生を指定せず、大分類と中分類を指定して、小分類の項目を取得する.
+     * @throws Exception MockMVC失敗時例外
+     */
+	@SuppressWarnings("unchecked")
+	@Test
+    public void 学生の指定なし_大分類と中分類を指定_小分類の項目を取得する_正常() throws Exception {
+		
+        // DB状態
+		// 学生１：回答数1：正解数1：不正解数0
+        Destination dest = new DataSourceDestination(dataSource);
+        Operation ops = Operations.sequenceOf(
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2,
+        		/*INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2,*/
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA2,
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA1, /*INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA2,*/
+        		INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_INCORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_INCORRECT_DATA2,
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1, /*INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1,*/
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1);
+        DbSetup dbSetup = new DbSetup(dest, ops);
+        dbSetup.launch();
+        
+		PersonalGradeForm requestForm = new PersonalGradeForm();
+		requestForm.setSelectFieldL(FieldLarge.AP_FL_1_TECHNOLOGY.getId().toString());
+		requestForm.setSelectFieldM(FieldMiddle.AP_FM_2_COMPUTER_SYSTEM.getId().toString());
+		
+    	MvcResult result = mockMvc.perform(post("/common/grade/personal").param("selectFieldMiddleBtn", "").flashAttr("personalGradeForm", requestForm))
+    		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
+                "common/grade/personal")).andReturn();
+
+    	// 成績情報は取得し直さない
+    	PersonalGradeForm responseForm = (PersonalGradeForm) result.getModelAndView().getModel().get("personalGradeForm");
+    	// 学生名が1人ぶん
+    	List<String> actStudentNameList = responseForm.getUserNameList();
+    	assertThat(actStudentNameList.size()).isEqualTo(0);
+    	// 正解数5
+    	List<String> actCorrectCntList = responseForm.getCorrectGradeList();
+    	assertThat(actCorrectCntList.size()).isEqualTo(0);
+    	// 不正解数6
+    	List<String> actIncorrectCntList = responseForm.getIncorrectGradeList();
+    	assertThat(actIncorrectCntList.size()).isEqualTo(0);
+    	
+    	// 大分類名称一覧
+    	Map<String, String> actFieldLMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldLDropItems");
+    	Map<String, String> expFieldLMap = new LinkedHashMap<>();
+    	expFieldLMap.put(FieldLarge.AP_FL_1_TECHNOLOGY.getId().toString(), FieldLarge.AP_FL_1_TECHNOLOGY.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_2_MANAGEMENT.getId().toString(), FieldLarge.AP_FL_2_MANAGEMENT.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_3_STRATEGY.getId().toString(), FieldLarge.AP_FL_3_STRATEGY.getName());
+    	assertThat(actFieldLMap).containsExactlyInAnyOrderEntriesOf(expFieldLMap);
+    	
+    	// 中分類名称一覧
+    	Map<String, String> actFieldMMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldMDropItems");
+    	Map<String, String> expFieldMMap = new LinkedHashMap<>();    	
+    	expFieldMMap.put(FieldMiddle.AP_FM_1_BASIC_THEORY.getId().toString(), FieldMiddle.AP_FM_1_BASIC_THEORY.getName());
+    	expFieldMMap.put(FieldMiddle.AP_FM_2_COMPUTER_SYSTEM.getId().toString(), FieldMiddle.AP_FM_2_COMPUTER_SYSTEM.getName());
+    	expFieldMMap.put(FieldMiddle.AP_FM_3_TECHNOLOGY_ELEMENT.getId().toString(), FieldMiddle.AP_FM_3_TECHNOLOGY_ELEMENT.getName());
+    	expFieldMMap.put(FieldMiddle.AP_FM_4_DEVELOPMENT_TECHNOLOGY.getId().toString(), FieldMiddle.AP_FM_4_DEVELOPMENT_TECHNOLOGY.getName());
+    	assertThat(actFieldMMap).containsExactlyInAnyOrderEntriesOf(expFieldMMap);
+    	
+    	// 小分類名称一覧
+    	Map<String, String> actFieldSMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldSDropItems");
+    	Map<String, String> expFieldSMap = new LinkedHashMap<>();    	
+    	expFieldSMap.put(FieldSmall.AP_FS_3_COMPUTER_COMPONENTS.getId().toString(), FieldSmall.AP_FS_3_COMPUTER_COMPONENTS.getName());
+    	expFieldSMap.put(FieldSmall.AP_FS_4_SYSTEM_COMPONENTS.getId().toString(), FieldSmall.AP_FS_4_SYSTEM_COMPONENTS.getName());
+    	expFieldSMap.put(FieldSmall.AP_FS_5_SOFTWARE.getId().toString(), FieldSmall.AP_FS_5_SOFTWARE.getName());
+    	expFieldSMap.put(FieldSmall.AP_FS_6_HARDWARE.getId().toString(), FieldSmall.AP_FS_6_HARDWARE.getName());
+    	assertThat(actFieldSMap).containsExactlyInAnyOrderEntriesOf(expFieldSMap);
+    }
+
+    /**
+   	 * 存在しない学生を指定し、大分類と中分類を指定して、小分類の項目を取得する.
+     * @throws Exception MockMVC失敗時例外
+     */
+	@SuppressWarnings("unchecked")
+	@Test
+    public void 存在しない学生の指定_大分類と中分類を指定_小分類の項目を取得する_正常() throws Exception {
+		
+        // DB状態
+		// 学生１：回答数1：正解数1：不正解数0
+        Destination dest = new DataSourceDestination(dataSource);
+        Operation ops = Operations.sequenceOf(
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2,
+        		/*INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2,*/
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA2,
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA1, /*INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA2,*/
+        		INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_INCORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_INCORRECT_DATA2,
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1, /*INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1,*/
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1);
+        DbSetup dbSetup = new DbSetup(dest, ops);
+        dbSetup.launch();
+        
+		PersonalGradeForm requestForm = new PersonalGradeForm();
+		requestForm.setUserId(INSERT_STUDENT1_ID + "xyz");
+		requestForm.setSelectFieldL(FieldLarge.AP_FL_1_TECHNOLOGY.getId().toString());
+		requestForm.setSelectFieldM(FieldMiddle.AP_FM_2_COMPUTER_SYSTEM.getId().toString());
+		
+    	MvcResult result = mockMvc.perform(post("/common/grade/personal").param("selectFieldMiddleBtn", "").flashAttr("personalGradeForm", requestForm))
+    		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
+                "common/grade/personal")).andReturn();
+
+    	// 成績情報は取得し直さない
+    	PersonalGradeForm responseForm = (PersonalGradeForm) result.getModelAndView().getModel().get("personalGradeForm");
+    	// 学生名が1人ぶん
+    	List<String> actStudentNameList = responseForm.getUserNameList();
+    	assertThat(actStudentNameList.size()).isEqualTo(0);
+    	// 正解数5
+    	List<String> actCorrectCntList = responseForm.getCorrectGradeList();
+    	assertThat(actCorrectCntList.size()).isEqualTo(0);
+    	// 不正解数6
+    	List<String> actIncorrectCntList = responseForm.getIncorrectGradeList();
+    	assertThat(actIncorrectCntList.size()).isEqualTo(0);
+    	
+    	// 大分類名称一覧
+    	Map<String, String> actFieldLMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldLDropItems");
+    	Map<String, String> expFieldLMap = new LinkedHashMap<>();
+    	expFieldLMap.put(FieldLarge.AP_FL_1_TECHNOLOGY.getId().toString(), FieldLarge.AP_FL_1_TECHNOLOGY.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_2_MANAGEMENT.getId().toString(), FieldLarge.AP_FL_2_MANAGEMENT.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_3_STRATEGY.getId().toString(), FieldLarge.AP_FL_3_STRATEGY.getName());
+    	assertThat(actFieldLMap).containsExactlyInAnyOrderEntriesOf(expFieldLMap);
+    	
+    	// 中分類名称一覧
+    	Map<String, String> actFieldMMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldMDropItems");
+    	Map<String, String> expFieldMMap = new LinkedHashMap<>();    	
+    	expFieldMMap.put(FieldMiddle.AP_FM_1_BASIC_THEORY.getId().toString(), FieldMiddle.AP_FM_1_BASIC_THEORY.getName());
+    	expFieldMMap.put(FieldMiddle.AP_FM_2_COMPUTER_SYSTEM.getId().toString(), FieldMiddle.AP_FM_2_COMPUTER_SYSTEM.getName());
+    	expFieldMMap.put(FieldMiddle.AP_FM_3_TECHNOLOGY_ELEMENT.getId().toString(), FieldMiddle.AP_FM_3_TECHNOLOGY_ELEMENT.getName());
+    	expFieldMMap.put(FieldMiddle.AP_FM_4_DEVELOPMENT_TECHNOLOGY.getId().toString(), FieldMiddle.AP_FM_4_DEVELOPMENT_TECHNOLOGY.getName());
+    	assertThat(actFieldMMap).containsExactlyInAnyOrderEntriesOf(expFieldMMap);
+    	
+    	// 小分類名称一覧
+    	Map<String, String> actFieldSMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldSDropItems");
+    	Map<String, String> expFieldSMap = new LinkedHashMap<>();    	
+    	expFieldSMap.put(FieldSmall.AP_FS_3_COMPUTER_COMPONENTS.getId().toString(), FieldSmall.AP_FS_3_COMPUTER_COMPONENTS.getName());
+    	expFieldSMap.put(FieldSmall.AP_FS_4_SYSTEM_COMPONENTS.getId().toString(), FieldSmall.AP_FS_4_SYSTEM_COMPONENTS.getName());
+    	expFieldSMap.put(FieldSmall.AP_FS_5_SOFTWARE.getId().toString(), FieldSmall.AP_FS_5_SOFTWARE.getName());
+    	expFieldSMap.put(FieldSmall.AP_FS_6_HARDWARE.getId().toString(), FieldSmall.AP_FS_6_HARDWARE.getName());
+    	assertThat(actFieldSMap).containsExactlyInAnyOrderEntriesOf(expFieldSMap);
+    }
+
+    /**
+   	 * 学生を指定し、大分類と中分類を指定せず、小分類の項目を取得する.
+     * @throws Exception MockMVC失敗時例外
+     */
+	@SuppressWarnings("unchecked")
+	@Test
+    public void 学生の指定あり_大分類と中分類の指定なし_小分類の項目を取得する_正常() throws Exception {
+		
+        // DB状態
+		// 学生１：回答数15：正解数7：不正解数8
+        Destination dest = new DataSourceDestination(dataSource);
+        Operation ops = Operations.sequenceOf(
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2,
+        		/*INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2,*/
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA2,
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA1, /*INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA2,*/
+        		INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_INCORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_INCORRECT_DATA2,
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1,
+        		
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1, 
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1);
+        DbSetup dbSetup = new DbSetup(dest, ops);
+        dbSetup.launch();
+        
+		PersonalGradeForm requestForm = new PersonalGradeForm();
+		requestForm.setUserId(INSERT_STUDENT1_ID);
+		
+    	MvcResult result = mockMvc.perform(post("/common/grade/personal").param("selectFieldMiddleBtn", "").flashAttr("personalGradeForm", requestForm))
+    		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
+                "common/grade/personal")).andReturn();
+
+    	// 成績情報は取得し直さない
+    	PersonalGradeForm responseForm = (PersonalGradeForm) result.getModelAndView().getModel().get("personalGradeForm");
+    	// 学生名が1人ぶん
+    	List<String> actStudentNameList = responseForm.getUserNameList();
+    	assertThat(actStudentNameList.size()).isEqualTo(1);
+    	assertThat(actStudentNameList.get(0)).isEqualTo(INSERT_STUDENT1_NAME);
+    	// 正解数7
+    	List<String> actCorrectCntList = responseForm.getCorrectGradeList();
+    	assertThat(actCorrectCntList.size()).isEqualTo(1);
+    	assertThat(actCorrectCntList.get(0)).isEqualTo("7");
+    	// 不正解数8
+    	List<String> actIncorrectCntList = responseForm.getIncorrectGradeList();
+    	assertThat(actIncorrectCntList.size()).isEqualTo(1);
+    	assertThat(actIncorrectCntList.get(0)).isEqualTo("8");
+    	
+    	// 大分類名称一覧
+    	Map<String, String> actFieldLMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldLDropItems");
+    	Map<String, String> expFieldLMap = new LinkedHashMap<>();
+    	expFieldLMap.put(FieldLarge.AP_FL_1_TECHNOLOGY.getId().toString(), FieldLarge.AP_FL_1_TECHNOLOGY.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_2_MANAGEMENT.getId().toString(), FieldLarge.AP_FL_2_MANAGEMENT.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_3_STRATEGY.getId().toString(), FieldLarge.AP_FL_3_STRATEGY.getName());
+    	assertThat(actFieldLMap).containsExactlyInAnyOrderEntriesOf(expFieldLMap);
+    	
+    	// 中分類名称一覧
+    	Map<String, String> actFieldMMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldMDropItems");
+    	assertThat(actFieldMMap).isEmpty();
+    	
+    	// 小分類名称一覧
+    	Map<String, String> actFieldSMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldSDropItems");
+    	assertThat(actFieldSMap).isEmpty();
+    }
+
+    /**
+   	 * 学生を指定し、同じ問題を複数回カウントして年度指定で成績を取得.
+     * @throws Exception MockMVC失敗時例外
+     */
+	@SuppressWarnings("unchecked")
+	@Test
+    public void 学生の指定あり_同じ問題を複数回カウント_年度指定で成績を取得する_正常() throws Exception {
+		
+        // DB状態
+		// 学生１：回答数1：正解数1：不正解数1
+        Destination dest = new DataSourceDestination(dataSource);
+        Operation ops = Operations.sequenceOf(
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1);
+        DbSetup dbSetup = new DbSetup(dest, ops);
+        dbSetup.launch();
+        
+		PersonalGradeForm requestForm = new PersonalGradeForm();
+		requestForm.setUserId(INSERT_STUDENT1_ID);
+		requestForm.setSelectYear("2009A");
+		
+    	MvcResult result = mockMvc.perform(post("/common/grade/personal").param("selectFieldMiddleBtn", "").flashAttr("personalGradeForm", requestForm))
+    		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
+                "common/grade/personal")).andReturn();
+
+    	// 成績情報は取得し直さない
+    	PersonalGradeForm responseForm = (PersonalGradeForm) result.getModelAndView().getModel().get("personalGradeForm");
+    	// 学生名が1人ぶん
+    	List<String> actStudentNameList = responseForm.getUserNameList();
+    	assertThat(actStudentNameList.size()).isEqualTo(1);
+    	assertThat(actStudentNameList.get(0)).isEqualTo(INSERT_STUDENT1_NAME);
+    	// 正解数7
+    	List<String> actCorrectCntList = responseForm.getCorrectGradeList();
+    	assertThat(actCorrectCntList.size()).isEqualTo(1);
+    	assertThat(actCorrectCntList.get(0)).isEqualTo("1");
+    	// 不正解数8
+    	List<String> actIncorrectCntList = responseForm.getIncorrectGradeList();
+    	assertThat(actIncorrectCntList.size()).isEqualTo(1);
+    	assertThat(actIncorrectCntList.get(0)).isEqualTo("1");
+    	
+    	// 大分類名称一覧
+    	Map<String, String> actFieldLMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldLDropItems");
+    	Map<String, String> expFieldLMap = new LinkedHashMap<>();
+    	expFieldLMap.put(FieldLarge.AP_FL_1_TECHNOLOGY.getId().toString(), FieldLarge.AP_FL_1_TECHNOLOGY.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_2_MANAGEMENT.getId().toString(), FieldLarge.AP_FL_2_MANAGEMENT.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_3_STRATEGY.getId().toString(), FieldLarge.AP_FL_3_STRATEGY.getName());
+    	assertThat(actFieldLMap).containsExactlyInAnyOrderEntriesOf(expFieldLMap);
+    	
+    	// 中分類名称一覧
+    	Map<String, String> actFieldMMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldMDropItems");
+    	assertThat(actFieldMMap).isEmpty();
+    	
+    	// 小分類名称一覧
+    	Map<String, String> actFieldSMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldSDropItems");
+    	assertThat(actFieldSMap).isEmpty();
+    }
+	
+    /**
+   	 * 学生を指定し、同じ問題を複数回カウントして年度指定で成績を取得.
+     * @throws Exception MockMVC失敗時例外
+     */
+	@SuppressWarnings("unchecked")
+	@Test
+    public void 学生の指定あり_同じ問題を複数回カウント_分野指定で成績を取得する_正常() throws Exception {
+		
+        // DB状態
+		// 学生１：回答数1：正解数1：不正解数1
+        Destination dest = new DataSourceDestination(dataSource);
+        Operation ops = Operations.sequenceOf(
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1);
+        DbSetup dbSetup = new DbSetup(dest, ops);
+        dbSetup.launch();
+        
+		PersonalGradeForm requestForm = new PersonalGradeForm();
+		requestForm.setUserId(INSERT_STUDENT1_ID);
+		requestForm.setSelectFieldL(FieldLarge.AP_FL_1_TECHNOLOGY.getId().toString());
+		
+    	MvcResult result = mockMvc.perform(post("/common/grade/personal").param("selectFieldBtn", "").flashAttr("personalGradeForm", requestForm))
+    		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
+                "common/grade/personal")).andReturn();
+
+    	// 成績情報は取得し直さない
+    	PersonalGradeForm responseForm = (PersonalGradeForm) result.getModelAndView().getModel().get("personalGradeForm");
+    	// 学生名が1人ぶん
+    	List<String> actStudentNameList = responseForm.getUserNameList();
+    	assertThat(actStudentNameList.size()).isEqualTo(1);
+    	assertThat(actStudentNameList.get(0)).isEqualTo(INSERT_STUDENT1_NAME);
+    	// 正解数1
+    	List<String> actCorrectCntList = responseForm.getCorrectGradeList();
+    	assertThat(actCorrectCntList.size()).isEqualTo(1);
+    	assertThat(actCorrectCntList.get(0)).isEqualTo("1");
+    	// 不正解数1
+    	List<String> actIncorrectCntList = responseForm.getIncorrectGradeList();
+    	assertThat(actIncorrectCntList.size()).isEqualTo(1);
+    	assertThat(actIncorrectCntList.get(0)).isEqualTo("1");
+    	
+    	// 大分類名称一覧
+    	Map<String, String> actFieldLMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldLDropItems");
+    	Map<String, String> expFieldLMap = new LinkedHashMap<>();
+    	expFieldLMap.put(FieldLarge.AP_FL_1_TECHNOLOGY.getId().toString(), FieldLarge.AP_FL_1_TECHNOLOGY.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_2_MANAGEMENT.getId().toString(), FieldLarge.AP_FL_2_MANAGEMENT.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_3_STRATEGY.getId().toString(), FieldLarge.AP_FL_3_STRATEGY.getName());
+    	assertThat(actFieldLMap).containsExactlyInAnyOrderEntriesOf(expFieldLMap);
+    	
+    	// 中分類名称一覧
+    	Map<String, String> actFieldMMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldMDropItems");
+    	Map<String, String> expFieldMMap = new LinkedHashMap<>();
+    	expFieldMMap.put(FieldMiddle.AP_FM_1_BASIC_THEORY.getId().toString(), FieldMiddle.AP_FM_1_BASIC_THEORY.getName());
+    	expFieldMMap.put(FieldMiddle.AP_FM_2_COMPUTER_SYSTEM.getId().toString(), FieldMiddle.AP_FM_2_COMPUTER_SYSTEM.getName());
+    	expFieldMMap.put(FieldMiddle.AP_FM_3_TECHNOLOGY_ELEMENT.getId().toString(), FieldMiddle.AP_FM_3_TECHNOLOGY_ELEMENT.getName());
+    	expFieldMMap.put(FieldMiddle.AP_FM_4_DEVELOPMENT_TECHNOLOGY.getId().toString(), FieldMiddle.AP_FM_4_DEVELOPMENT_TECHNOLOGY.getName());
+    	assertThat(actFieldMMap).containsExactlyInAnyOrderEntriesOf(expFieldMMap);
+    	
+    	// 小分類名称一覧
+    	Map<String, String> actFieldSMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldSDropItems");
+    	assertThat(actFieldSMap).isEmpty();
+    }
+
+    /**
+   	 * 学生を指定し、大分類を指定して成績を取得.
+     * @throws Exception MockMVC失敗時例外
+     */
+	@SuppressWarnings("unchecked")
+	@Test
+    public void 学生の指定あり_大分類を指定_成績を取得する_正常() throws Exception {
+		
+        // DB状態
+		// 学生１：回答数11：正解数5：不正解数6
+        Destination dest = new DataSourceDestination(dataSource);
+        Operation ops = Operations.sequenceOf(
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2,
+        		/*INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2,*/
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA2,
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA1, /*INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA2,*/
+        		INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_INCORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_INCORRECT_DATA2,
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1,
+        		
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1, 
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1);
+        DbSetup dbSetup = new DbSetup(dest, ops);
+        dbSetup.launch();
+        
+		PersonalGradeForm requestForm = new PersonalGradeForm();
+		requestForm.setUserId(INSERT_STUDENT1_ID);
+		requestForm.setSelectFieldL(FieldLarge.AP_FL_1_TECHNOLOGY.getId().toString());
+		
+    	MvcResult result = mockMvc.perform(post("/common/grade/personal").param("selectFieldBtn", "").flashAttr("personalGradeForm", requestForm))
+    		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
+                "common/grade/personal")).andReturn();
+
+    	// 成績情報は取得し直さない
+    	PersonalGradeForm responseForm = (PersonalGradeForm) result.getModelAndView().getModel().get("personalGradeForm");
+    	// 学生名が1人ぶん
+    	List<String> actStudentNameList = responseForm.getUserNameList();
+    	assertThat(actStudentNameList.size()).isEqualTo(1);
+    	assertThat(actStudentNameList.get(0)).isEqualTo(INSERT_STUDENT1_NAME);
+    	// 正解数5
+    	List<String> actCorrectCntList = responseForm.getCorrectGradeList();
+    	assertThat(actCorrectCntList.size()).isEqualTo(1);
+    	assertThat(actCorrectCntList.get(0)).isEqualTo("5");
+    	// 不正解数6
+    	List<String> actIncorrectCntList = responseForm.getIncorrectGradeList();
+    	assertThat(actIncorrectCntList.size()).isEqualTo(1);
+    	assertThat(actIncorrectCntList.get(0)).isEqualTo("6");
+    	
+    	// 大分類名称一覧
+    	Map<String, String> actFieldLMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldLDropItems");
+    	Map<String, String> expFieldLMap = new LinkedHashMap<>();
+    	expFieldLMap.put(FieldLarge.AP_FL_1_TECHNOLOGY.getId().toString(), FieldLarge.AP_FL_1_TECHNOLOGY.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_2_MANAGEMENT.getId().toString(), FieldLarge.AP_FL_2_MANAGEMENT.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_3_STRATEGY.getId().toString(), FieldLarge.AP_FL_3_STRATEGY.getName());
+    	assertThat(actFieldLMap).containsExactlyInAnyOrderEntriesOf(expFieldLMap);
+    	
+    	// 中分類名称一覧
+    	Map<String, String> actFieldMMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldMDropItems");
+    	Map<String, String> expFieldMMap = new LinkedHashMap<>();
+    	expFieldMMap.put(FieldMiddle.AP_FM_1_BASIC_THEORY.getId().toString(), FieldMiddle.AP_FM_1_BASIC_THEORY.getName());
+    	expFieldMMap.put(FieldMiddle.AP_FM_2_COMPUTER_SYSTEM.getId().toString(), FieldMiddle.AP_FM_2_COMPUTER_SYSTEM.getName());
+    	expFieldMMap.put(FieldMiddle.AP_FM_3_TECHNOLOGY_ELEMENT.getId().toString(), FieldMiddle.AP_FM_3_TECHNOLOGY_ELEMENT.getName());
+    	expFieldMMap.put(FieldMiddle.AP_FM_4_DEVELOPMENT_TECHNOLOGY.getId().toString(), FieldMiddle.AP_FM_4_DEVELOPMENT_TECHNOLOGY.getName());
+    	assertThat(actFieldMMap).containsExactlyInAnyOrderEntriesOf(expFieldMMap);
+    	
+    	// 小分類名称一覧
+    	Map<String, String> actFieldSMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldSDropItems");
+    	assertThat(actFieldSMap).isEmpty();
+    }
+
+
+    /**
+   	 * 学生を指定し、大分類と中分類を指定して成績を取得.
+     * @throws Exception MockMVC失敗時例外
+     */
+	@SuppressWarnings("unchecked")
+	@Test
+    public void 学生の指定あり_大分類と中分類を指定_成績を取得する_正常() throws Exception {
+		
+        // DB状態
+		// 学生１：回答数1：正解数1：不正解数0
+        Destination dest = new DataSourceDestination(dataSource);
+        Operation ops = Operations.sequenceOf(
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2,
+        		/*INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2,*/
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA2,
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA1, /*INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA2,*/
+        		INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_INCORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_INCORRECT_DATA2,
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1,
+        		/*INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1,*/
+        		
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1, 
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1);
+        DbSetup dbSetup = new DbSetup(dest, ops);
+        dbSetup.launch();
+        
+		PersonalGradeForm requestForm = new PersonalGradeForm();
+		requestForm.setUserId(INSERT_STUDENT1_ID);
+		requestForm.setSelectFieldL(FieldLarge.AP_FL_1_TECHNOLOGY.getId().toString());
+		requestForm.setSelectFieldM(FieldMiddle.AP_FM_2_COMPUTER_SYSTEM.getId().toString());
+		
+    	MvcResult result = mockMvc.perform(post("/common/grade/personal").param("selectFieldBtn", "").flashAttr("personalGradeForm", requestForm))
+    		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
+                "common/grade/personal")).andReturn();
+
+    	// 成績情報は取得し直さない
+    	PersonalGradeForm responseForm = (PersonalGradeForm) result.getModelAndView().getModel().get("personalGradeForm");
+    	// 学生名が1人ぶん
+    	List<String> actStudentNameList = responseForm.getUserNameList();
+    	assertThat(actStudentNameList.size()).isEqualTo(1);
+    	assertThat(actStudentNameList.get(0)).isEqualTo(INSERT_STUDENT1_NAME);
+    	// 正解数1
+    	List<String> actCorrectCntList = responseForm.getCorrectGradeList();
+    	assertThat(actCorrectCntList.size()).isEqualTo(1);
+    	assertThat(actCorrectCntList.get(0)).isEqualTo("1");
+    	// 不正解数0
+    	List<String> actIncorrectCntList = responseForm.getIncorrectGradeList();
+    	assertThat(actIncorrectCntList.size()).isEqualTo(1);
+    	assertThat(actIncorrectCntList.get(0)).isEqualTo("0");
+    	
+    	// 大分類名称一覧
+    	Map<String, String> actFieldLMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldLDropItems");
+    	Map<String, String> expFieldLMap = new LinkedHashMap<>();
+    	expFieldLMap.put(FieldLarge.AP_FL_1_TECHNOLOGY.getId().toString(), FieldLarge.AP_FL_1_TECHNOLOGY.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_2_MANAGEMENT.getId().toString(), FieldLarge.AP_FL_2_MANAGEMENT.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_3_STRATEGY.getId().toString(), FieldLarge.AP_FL_3_STRATEGY.getName());
+    	assertThat(actFieldLMap).containsExactlyInAnyOrderEntriesOf(expFieldLMap);
+    	
+    	// 中分類名称一覧
+    	Map<String, String> actFieldMMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldMDropItems");
+    	Map<String, String> expFieldMMap = new LinkedHashMap<>();
+    	expFieldMMap.put(FieldMiddle.AP_FM_1_BASIC_THEORY.getId().toString(), FieldMiddle.AP_FM_1_BASIC_THEORY.getName());
+    	expFieldMMap.put(FieldMiddle.AP_FM_2_COMPUTER_SYSTEM.getId().toString(), FieldMiddle.AP_FM_2_COMPUTER_SYSTEM.getName());
+    	expFieldMMap.put(FieldMiddle.AP_FM_3_TECHNOLOGY_ELEMENT.getId().toString(), FieldMiddle.AP_FM_3_TECHNOLOGY_ELEMENT.getName());
+    	expFieldMMap.put(FieldMiddle.AP_FM_4_DEVELOPMENT_TECHNOLOGY.getId().toString(), FieldMiddle.AP_FM_4_DEVELOPMENT_TECHNOLOGY.getName());
+    	assertThat(actFieldMMap).containsExactlyInAnyOrderEntriesOf(expFieldMMap);
+    	
+    	// 小分類名称一覧
+    	Map<String, String> actFieldSMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldSDropItems");
+    	Map<String, String> expFieldSMap = new LinkedHashMap<>();
+    	expFieldSMap.put(FieldSmall.AP_FS_3_COMPUTER_COMPONENTS.getId().toString(), FieldSmall.AP_FS_3_COMPUTER_COMPONENTS.getName());
+    	expFieldSMap.put(FieldSmall.AP_FS_4_SYSTEM_COMPONENTS.getId().toString(), FieldSmall.AP_FS_4_SYSTEM_COMPONENTS.getName());
+    	expFieldSMap.put(FieldSmall.AP_FS_5_SOFTWARE.getId().toString(), FieldSmall.AP_FS_5_SOFTWARE.getName());
+    	expFieldSMap.put(FieldSmall.AP_FS_6_HARDWARE.getId().toString(), FieldSmall.AP_FS_6_HARDWARE.getName());
+    	
+    	assertThat(actFieldSMap).containsExactlyInAnyOrderEntriesOf(expFieldSMap);
+    }
+	
+    /**
+   	 * 学生を指定し、大分類と中分類と小分類を指定して成績を取得.
+     * @throws Exception MockMVC失敗時例外
+     */
+	@SuppressWarnings("unchecked")
+	@Test
+    public void 学生の指定あり_大分類と中分類と小分類を指定_成績を取得する_正常() throws Exception {
+		
+        // DB状態
+		// 学生１：回答数1：正解数0：不正解数1
+        Destination dest = new DataSourceDestination(dataSource);
+        Operation ops = Operations.sequenceOf(
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2,
+        		/*INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2,*/
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA2,
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA1, /*INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA2,*/
+        		INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_INCORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_INCORRECT_DATA2,
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1,
+        		/*INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1,*/
+        		
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1, 
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1,
+        		
+        		/*INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_4_CORRECT_DATA1,*/
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_4_INCORRECT_DATA1);
+        DbSetup dbSetup = new DbSetup(dest, ops);
+        dbSetup.launch();
+        
+		PersonalGradeForm requestForm = new PersonalGradeForm();
+		requestForm.setUserId(INSERT_STUDENT1_ID);
+		requestForm.setSelectFieldL(FieldLarge.AP_FL_1_TECHNOLOGY.getId().toString());
+		requestForm.setSelectFieldM(FieldMiddle.AP_FM_2_COMPUTER_SYSTEM.getId().toString());
+		requestForm.setSelectFieldS(FieldSmall.AP_FS_4_SYSTEM_COMPONENTS.getId().toString());
+		
+    	MvcResult result = mockMvc.perform(post("/common/grade/personal").param("selectFieldBtn", "").flashAttr("personalGradeForm", requestForm))
+    		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
+                "common/grade/personal")).andReturn();
+
+    	// 成績情報は取得し直さない
+    	PersonalGradeForm responseForm = (PersonalGradeForm) result.getModelAndView().getModel().get("personalGradeForm");
+    	// 学生名が1人ぶん
+    	List<String> actStudentNameList = responseForm.getUserNameList();
+    	assertThat(actStudentNameList.size()).isEqualTo(1);
+    	assertThat(actStudentNameList.get(0)).isEqualTo(INSERT_STUDENT1_NAME);
+    	// 正解数1
+    	List<String> actCorrectCntList = responseForm.getCorrectGradeList();
+    	assertThat(actCorrectCntList.size()).isEqualTo(1);
+    	assertThat(actCorrectCntList.get(0)).isEqualTo("0");
+    	// 不正解数0
+    	List<String> actIncorrectCntList = responseForm.getIncorrectGradeList();
+    	assertThat(actIncorrectCntList.size()).isEqualTo(1);
+    	assertThat(actIncorrectCntList.get(0)).isEqualTo("1");
+    	
+    	// 大分類名称一覧
+    	Map<String, String> actFieldLMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldLDropItems");
+    	Map<String, String> expFieldLMap = new LinkedHashMap<>();
+    	expFieldLMap.put(FieldLarge.AP_FL_1_TECHNOLOGY.getId().toString(), FieldLarge.AP_FL_1_TECHNOLOGY.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_2_MANAGEMENT.getId().toString(), FieldLarge.AP_FL_2_MANAGEMENT.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_3_STRATEGY.getId().toString(), FieldLarge.AP_FL_3_STRATEGY.getName());
+    	assertThat(actFieldLMap).containsExactlyInAnyOrderEntriesOf(expFieldLMap);
+    	
+    	// 中分類名称一覧
+    	Map<String, String> actFieldMMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldMDropItems");
+    	Map<String, String> expFieldMMap = new LinkedHashMap<>();
+    	expFieldMMap.put(FieldMiddle.AP_FM_1_BASIC_THEORY.getId().toString(), FieldMiddle.AP_FM_1_BASIC_THEORY.getName());
+    	expFieldMMap.put(FieldMiddle.AP_FM_2_COMPUTER_SYSTEM.getId().toString(), FieldMiddle.AP_FM_2_COMPUTER_SYSTEM.getName());
+    	expFieldMMap.put(FieldMiddle.AP_FM_3_TECHNOLOGY_ELEMENT.getId().toString(), FieldMiddle.AP_FM_3_TECHNOLOGY_ELEMENT.getName());
+    	expFieldMMap.put(FieldMiddle.AP_FM_4_DEVELOPMENT_TECHNOLOGY.getId().toString(), FieldMiddle.AP_FM_4_DEVELOPMENT_TECHNOLOGY.getName());
+    	assertThat(actFieldMMap).containsExactlyInAnyOrderEntriesOf(expFieldMMap);
+    	
+    	// 小分類名称一覧
+    	Map<String, String> actFieldSMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldSDropItems");
+    	Map<String, String> expFieldSMap = new LinkedHashMap<>();
+    	expFieldSMap.put(FieldSmall.AP_FS_3_COMPUTER_COMPONENTS.getId().toString(), FieldSmall.AP_FS_3_COMPUTER_COMPONENTS.getName());
+    	expFieldSMap.put(FieldSmall.AP_FS_4_SYSTEM_COMPONENTS.getId().toString(), FieldSmall.AP_FS_4_SYSTEM_COMPONENTS.getName());
+    	expFieldSMap.put(FieldSmall.AP_FS_5_SOFTWARE.getId().toString(), FieldSmall.AP_FS_5_SOFTWARE.getName());
+    	expFieldSMap.put(FieldSmall.AP_FS_6_HARDWARE.getId().toString(), FieldSmall.AP_FS_6_HARDWARE.getName());
+    	assertThat(actFieldSMap).containsExactlyInAnyOrderEntriesOf(expFieldSMap);
+    }
+
+	
+    /**
+   	 * 学生を指定し、大分類を指定せず中分類を指定して成績を取得.
+     * @throws Exception MockMVC失敗時例外
+     */
+	@SuppressWarnings("unchecked")
+	@Test
+    public void 学生を指定_大分類を指定せず中分類を指定して成績を取得する_正常() throws Exception {
+		
+        // DB状態
+		// 学生１：回答数1：正解数1：不正解数0
+        Destination dest = new DataSourceDestination(dataSource);
+        Operation ops = Operations.sequenceOf(
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2,
+        		/*INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2,*/
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA2,
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA1, /*INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA2,*/
+        		INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_INCORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_INCORRECT_DATA2,
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1,
+        		/*INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1,*/
+        		
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1, 
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1,
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_4_CORRECT_DATA1
+        		/*INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_4_INCORRECT_DATA1*/);
+        DbSetup dbSetup = new DbSetup(dest, ops);
+        dbSetup.launch();
+        
+		PersonalGradeForm requestForm = new PersonalGradeForm();
+		requestForm.setUserId(INSERT_STUDENT1_ID);
+		requestForm.setSelectFieldM(FieldMiddle.AP_FM_2_COMPUTER_SYSTEM.getId().toString());
+		
+    	MvcResult result = mockMvc.perform(post("/common/grade/personal").param("selectFieldBtn", "").flashAttr("personalGradeForm", requestForm))
+    		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
+                "common/grade/personal")).andReturn();
+
+    	// 成績情報は取得し直さない
+    	PersonalGradeForm responseForm = (PersonalGradeForm) result.getModelAndView().getModel().get("personalGradeForm");
+    	// 学生名が1人ぶん
+    	List<String> actStudentNameList = responseForm.getUserNameList();
+    	assertThat(actStudentNameList.size()).isEqualTo(1);
+    	assertThat(actStudentNameList.get(0)).isEqualTo(INSERT_STUDENT1_NAME);
+    	// 正解数1
+    	List<String> actCorrectCntList = responseForm.getCorrectGradeList();
+    	assertThat(actCorrectCntList.size()).isEqualTo(1);
+    	assertThat(actCorrectCntList.get(0)).isEqualTo("2");
+    	// 不正解数0
+    	List<String> actIncorrectCntList = responseForm.getIncorrectGradeList();
+    	assertThat(actIncorrectCntList.size()).isEqualTo(1);
+    	assertThat(actIncorrectCntList.get(0)).isEqualTo("0");
+    	
+    	// 大分類名称一覧
+    	Map<String, String> actFieldLMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldLDropItems");
+    	Map<String, String> expFieldLMap = new LinkedHashMap<>();
+    	expFieldLMap.put(FieldLarge.AP_FL_1_TECHNOLOGY.getId().toString(), FieldLarge.AP_FL_1_TECHNOLOGY.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_2_MANAGEMENT.getId().toString(), FieldLarge.AP_FL_2_MANAGEMENT.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_3_STRATEGY.getId().toString(), FieldLarge.AP_FL_3_STRATEGY.getName());
+    	assertThat(actFieldLMap).containsExactlyInAnyOrderEntriesOf(expFieldLMap);
+    	
+    	// 中分類名称一覧
+    	Map<String, String> actFieldMMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldMDropItems");
+    	Map<String, String> expFieldMMap = new LinkedHashMap<>();
+    	expFieldMMap.put(FieldMiddle.AP_FM_1_BASIC_THEORY.getId().toString(), FieldMiddle.AP_FM_1_BASIC_THEORY.getName());
+    	expFieldMMap.put(FieldMiddle.AP_FM_2_COMPUTER_SYSTEM.getId().toString(), FieldMiddle.AP_FM_2_COMPUTER_SYSTEM.getName());
+    	expFieldMMap.put(FieldMiddle.AP_FM_3_TECHNOLOGY_ELEMENT.getId().toString(), FieldMiddle.AP_FM_3_TECHNOLOGY_ELEMENT.getName());
+    	expFieldMMap.put(FieldMiddle.AP_FM_4_DEVELOPMENT_TECHNOLOGY.getId().toString(), FieldMiddle.AP_FM_4_DEVELOPMENT_TECHNOLOGY.getName());
+    	assertThat(actFieldMMap).containsExactlyInAnyOrderEntriesOf(expFieldMMap);
+    	
+    	// 小分類名称一覧
+    	Map<String, String> actFieldSMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldSDropItems");
+    	Map<String, String> expFieldSMap = new LinkedHashMap<>();
+    	expFieldSMap.put(FieldSmall.AP_FS_3_COMPUTER_COMPONENTS.getId().toString(), FieldSmall.AP_FS_3_COMPUTER_COMPONENTS.getName());
+    	expFieldSMap.put(FieldSmall.AP_FS_4_SYSTEM_COMPONENTS.getId().toString(), FieldSmall.AP_FS_4_SYSTEM_COMPONENTS.getName());
+    	expFieldSMap.put(FieldSmall.AP_FS_5_SOFTWARE.getId().toString(), FieldSmall.AP_FS_5_SOFTWARE.getName());
+    	expFieldSMap.put(FieldSmall.AP_FS_6_HARDWARE.getId().toString(), FieldSmall.AP_FS_6_HARDWARE.getName());
+    	assertThat(actFieldSMap).containsExactlyInAnyOrderEntriesOf(expFieldSMap);
+    }
 	
 	
     /**
-   	 * 学生を指定し、小分類の項目を取得する.
-   	 * 学生を指定せず、小分類の項目を取得する.
-   	 * 存在しない学生を指定し、小分類の項目を取得する
-   	 * 中分類を指定せず、小分類の項目を取得する
-   	 * 
-   	 * 学生を指定して同じ問題を複数回カウントして、成績一覧ページを表示.
-   	 * 
-   	 * 学生を指定し、大分類を指定し、成績を取得する.
-   	 * 学生を指定し、大分類を指定せず中分類を指定し、成績を取得する.
-   	 * 学生を指定し、大分類と中分類と小分類を指定し、成績を取得する.
-   	 * 学生を指定し、大分類を指定せず中分類と小分類を指定し、成績を取得する.
-   	 * 学生を指定し、大分類と中分類を指定せず小分類を指定し、成績を取得する
-   	 * 学生を指定し、大分類を指定して中分類を指定せず小分類を指定し、成績を取得する.
-   	 * 
-   	 * 存在しない学生を指定し、大分類のみ指定し、、成績を取得する.
-   	 * 存在しない学生を指定し、大分類と中分類を指定し、、成績を取得する.
-   	 * 存在しない学生を指定し、大分類と中分類と小分類を指定し、成績を取得する.
+   	 * 学生を指定し、大分類を指定せず中分類と小分類を指定して成績を取得.
+     * @throws Exception MockMVC失敗時例外
      */
+	@SuppressWarnings("unchecked")
+	@Test
+    public void 学生を指定_大分類を指定せず中分類と小分類を指定して成績を取得する_正常() throws Exception {
+		
+        // DB状態
+		// 学生１：回答数1：正解数0：不正解数1
+        Destination dest = new DataSourceDestination(dataSource);
+        Operation ops = Operations.sequenceOf(
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2,
+        		/*INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2,*/
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA2,
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA1, /*INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA2,*/
+        		INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_INCORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_INCORRECT_DATA2,
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1,
+        		/*INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1,*/
+        		
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1, 
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1,
+        		
+        		/*INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_4_CORRECT_DATA1,*/
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_4_INCORRECT_DATA1);
+        DbSetup dbSetup = new DbSetup(dest, ops);
+        dbSetup.launch();
+        
+		PersonalGradeForm requestForm = new PersonalGradeForm();
+		requestForm.setUserId(INSERT_STUDENT1_ID);
+		requestForm.setSelectFieldM(FieldMiddle.AP_FM_2_COMPUTER_SYSTEM.getId().toString());
+		requestForm.setSelectFieldS(FieldSmall.AP_FS_4_SYSTEM_COMPONENTS.getId().toString());
+		
+    	MvcResult result = mockMvc.perform(post("/common/grade/personal").param("selectFieldBtn", "").flashAttr("personalGradeForm", requestForm))
+    		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
+                "common/grade/personal")).andReturn();
 
+    	// 成績情報は取得し直さない
+    	PersonalGradeForm responseForm = (PersonalGradeForm) result.getModelAndView().getModel().get("personalGradeForm");
+    	// 学生名が1人ぶん
+    	List<String> actStudentNameList = responseForm.getUserNameList();
+    	assertThat(actStudentNameList.size()).isEqualTo(1);
+    	assertThat(actStudentNameList.get(0)).isEqualTo(INSERT_STUDENT1_NAME);
+    	// 正解数0
+    	List<String> actCorrectCntList = responseForm.getCorrectGradeList();
+    	assertThat(actCorrectCntList.size()).isEqualTo(1);
+    	assertThat(actCorrectCntList.get(0)).isEqualTo("0");
+    	// 不正解数1
+    	List<String> actIncorrectCntList = responseForm.getIncorrectGradeList();
+    	assertThat(actIncorrectCntList.size()).isEqualTo(1);
+    	assertThat(actIncorrectCntList.get(0)).isEqualTo("1");
+    	
+    	// 大分類名称一覧
+    	Map<String, String> actFieldLMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldLDropItems");
+    	Map<String, String> expFieldLMap = new LinkedHashMap<>();
+    	expFieldLMap.put(FieldLarge.AP_FL_1_TECHNOLOGY.getId().toString(), FieldLarge.AP_FL_1_TECHNOLOGY.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_2_MANAGEMENT.getId().toString(), FieldLarge.AP_FL_2_MANAGEMENT.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_3_STRATEGY.getId().toString(), FieldLarge.AP_FL_3_STRATEGY.getName());
+    	assertThat(actFieldLMap).containsExactlyInAnyOrderEntriesOf(expFieldLMap);
+    	
+    	// 中分類名称一覧
+    	Map<String, String> actFieldMMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldMDropItems");
+    	Map<String, String> expFieldMMap = new LinkedHashMap<>();
+    	expFieldMMap.put(FieldMiddle.AP_FM_1_BASIC_THEORY.getId().toString(), FieldMiddle.AP_FM_1_BASIC_THEORY.getName());
+    	expFieldMMap.put(FieldMiddle.AP_FM_2_COMPUTER_SYSTEM.getId().toString(), FieldMiddle.AP_FM_2_COMPUTER_SYSTEM.getName());
+    	expFieldMMap.put(FieldMiddle.AP_FM_3_TECHNOLOGY_ELEMENT.getId().toString(), FieldMiddle.AP_FM_3_TECHNOLOGY_ELEMENT.getName());
+    	expFieldMMap.put(FieldMiddle.AP_FM_4_DEVELOPMENT_TECHNOLOGY.getId().toString(), FieldMiddle.AP_FM_4_DEVELOPMENT_TECHNOLOGY.getName());
+    	assertThat(actFieldMMap).containsExactlyInAnyOrderEntriesOf(expFieldMMap);
+    	
+    	// 小分類名称一覧
+    	Map<String, String> actFieldSMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldSDropItems");
+    	Map<String, String> expFieldSMap = new LinkedHashMap<>();
+    	expFieldSMap.put(FieldSmall.AP_FS_3_COMPUTER_COMPONENTS.getId().toString(), FieldSmall.AP_FS_3_COMPUTER_COMPONENTS.getName());
+    	expFieldSMap.put(FieldSmall.AP_FS_4_SYSTEM_COMPONENTS.getId().toString(), FieldSmall.AP_FS_4_SYSTEM_COMPONENTS.getName());
+    	expFieldSMap.put(FieldSmall.AP_FS_5_SOFTWARE.getId().toString(), FieldSmall.AP_FS_5_SOFTWARE.getName());
+    	expFieldSMap.put(FieldSmall.AP_FS_6_HARDWARE.getId().toString(), FieldSmall.AP_FS_6_HARDWARE.getName());
+    	assertThat(actFieldSMap).containsExactlyInAnyOrderEntriesOf(expFieldSMap);
+    }
+
+    /**
+   	 * 学生を指定し、大分類と中分類を指定せず小分類を指定して成績を取得.
+     * @throws Exception MockMVC失敗時例外
+     */
+	@SuppressWarnings("unchecked")
+	@Test
+    public void 学生を指定_大分類と中分類を指定せず小分類を指定して成績を取得する_正常() throws Exception {
+		
+        // DB状態
+		// 学生１：回答数1：正解数0：不正解数1
+        Destination dest = new DataSourceDestination(dataSource);
+        Operation ops = Operations.sequenceOf(
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2,
+        		/*INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2,*/
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA2,
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA1, /*INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA2,*/
+        		INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_INCORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_INCORRECT_DATA2,
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1,
+        		/*INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1,*/
+        		
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1, 
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1,
+        		
+        		/*INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_4_CORRECT_DATA1,*/
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_4_INCORRECT_DATA1);
+        DbSetup dbSetup = new DbSetup(dest, ops);
+        dbSetup.launch();
+        
+		PersonalGradeForm requestForm = new PersonalGradeForm();
+		requestForm.setUserId(INSERT_STUDENT1_ID);
+		requestForm.setSelectFieldS(FieldSmall.AP_FS_4_SYSTEM_COMPONENTS.getId().toString());
+		
+    	MvcResult result = mockMvc.perform(post("/common/grade/personal").param("selectFieldBtn", "").flashAttr("personalGradeForm", requestForm))
+    		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
+                "common/grade/personal")).andReturn();
+
+    	// 成績情報は取得し直さない
+    	PersonalGradeForm responseForm = (PersonalGradeForm) result.getModelAndView().getModel().get("personalGradeForm");
+    	// 学生名が1人ぶん
+    	List<String> actStudentNameList = responseForm.getUserNameList();
+    	assertThat(actStudentNameList.size()).isEqualTo(1);
+    	assertThat(actStudentNameList.get(0)).isEqualTo(INSERT_STUDENT1_NAME);
+    	// 正解数0
+    	List<String> actCorrectCntList = responseForm.getCorrectGradeList();
+    	assertThat(actCorrectCntList.size()).isEqualTo(1);
+    	assertThat(actCorrectCntList.get(0)).isEqualTo("0");
+    	// 不正解数1
+    	List<String> actIncorrectCntList = responseForm.getIncorrectGradeList();
+    	assertThat(actIncorrectCntList.size()).isEqualTo(1);
+    	assertThat(actIncorrectCntList.get(0)).isEqualTo("1");
+    	
+    	// 大分類名称一覧
+    	Map<String, String> actFieldLMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldLDropItems");
+    	Map<String, String> expFieldLMap = new LinkedHashMap<>();
+    	expFieldLMap.put(FieldLarge.AP_FL_1_TECHNOLOGY.getId().toString(), FieldLarge.AP_FL_1_TECHNOLOGY.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_2_MANAGEMENT.getId().toString(), FieldLarge.AP_FL_2_MANAGEMENT.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_3_STRATEGY.getId().toString(), FieldLarge.AP_FL_3_STRATEGY.getName());
+    	assertThat(actFieldLMap).containsExactlyInAnyOrderEntriesOf(expFieldLMap);
+    	
+    	// 中分類名称一覧
+    	Map<String, String> actFieldMMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldMDropItems");
+    	assertThat(actFieldMMap).isEmpty();
+    	
+    	// 小分類名称一覧
+    	Map<String, String> actFieldSMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldSDropItems");
+    	assertThat(actFieldSMap).isEmpty();
+    }
+
+	
+    /**
+   	 * 学生を指定し、中分類を指定せずに大分類と小分類を指定して成績を取得.
+     * @throws Exception MockMVC失敗時例外
+     */
+	@SuppressWarnings("unchecked")
+	@Test
+    public void 学生を指定_中分類を指定せずに大分類と小分類を指定して成績を取得する_正常() throws Exception {
+		
+        // DB状態
+		// 学生１：回答数1：正解数0：不正解数1
+        Destination dest = new DataSourceDestination(dataSource);
+        Operation ops = Operations.sequenceOf(
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2,
+        		/*INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2,*/
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA2,
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA1, /*INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA2,*/
+        		INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_INCORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_INCORRECT_DATA2,
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1,
+        		/*INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1,*/
+        		
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1, 
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1,
+        		
+        		/*INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_4_CORRECT_DATA1,*/
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_4_INCORRECT_DATA1);
+        DbSetup dbSetup = new DbSetup(dest, ops);
+        dbSetup.launch();
+        
+		PersonalGradeForm requestForm = new PersonalGradeForm();
+		requestForm.setUserId(INSERT_STUDENT1_ID);
+		requestForm.setSelectFieldL(FieldLarge.AP_FL_1_TECHNOLOGY.getId().toString());
+		requestForm.setSelectFieldS(FieldSmall.AP_FS_4_SYSTEM_COMPONENTS.getId().toString());
+		
+    	MvcResult result = mockMvc.perform(post("/common/grade/personal").param("selectFieldBtn", "").flashAttr("personalGradeForm", requestForm))
+    		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
+                "common/grade/personal")).andReturn();
+
+    	// 成績情報は取得し直さない
+    	PersonalGradeForm responseForm = (PersonalGradeForm) result.getModelAndView().getModel().get("personalGradeForm");
+    	// 学生名が1人ぶん
+    	List<String> actStudentNameList = responseForm.getUserNameList();
+    	assertThat(actStudentNameList.size()).isEqualTo(1);
+    	assertThat(actStudentNameList.get(0)).isEqualTo(INSERT_STUDENT1_NAME);
+    	// 正解数0
+    	List<String> actCorrectCntList = responseForm.getCorrectGradeList();
+    	assertThat(actCorrectCntList.size()).isEqualTo(1);
+    	assertThat(actCorrectCntList.get(0)).isEqualTo("0");
+    	// 不正解数1
+    	List<String> actIncorrectCntList = responseForm.getIncorrectGradeList();
+    	assertThat(actIncorrectCntList.size()).isEqualTo(1);
+    	assertThat(actIncorrectCntList.get(0)).isEqualTo("1");
+    	
+    	// 大分類名称一覧
+    	Map<String, String> actFieldLMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldLDropItems");
+    	Map<String, String> expFieldLMap = new LinkedHashMap<>();
+    	expFieldLMap.put(FieldLarge.AP_FL_1_TECHNOLOGY.getId().toString(), FieldLarge.AP_FL_1_TECHNOLOGY.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_2_MANAGEMENT.getId().toString(), FieldLarge.AP_FL_2_MANAGEMENT.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_3_STRATEGY.getId().toString(), FieldLarge.AP_FL_3_STRATEGY.getName());
+    	assertThat(actFieldLMap).containsExactlyInAnyOrderEntriesOf(expFieldLMap);
+    	
+    	// 中分類名称一覧
+    	Map<String, String> actFieldMMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldMDropItems");
+    	Map<String, String> expFieldMMap = new LinkedHashMap<>();
+    	expFieldMMap.put(FieldMiddle.AP_FM_1_BASIC_THEORY.getId().toString(), FieldMiddle.AP_FM_1_BASIC_THEORY.getName());
+    	expFieldMMap.put(FieldMiddle.AP_FM_2_COMPUTER_SYSTEM.getId().toString(), FieldMiddle.AP_FM_2_COMPUTER_SYSTEM.getName());
+    	expFieldMMap.put(FieldMiddle.AP_FM_3_TECHNOLOGY_ELEMENT.getId().toString(), FieldMiddle.AP_FM_3_TECHNOLOGY_ELEMENT.getName());
+    	expFieldMMap.put(FieldMiddle.AP_FM_4_DEVELOPMENT_TECHNOLOGY.getId().toString(), FieldMiddle.AP_FM_4_DEVELOPMENT_TECHNOLOGY.getName());
+    	assertThat(actFieldMMap).containsExactlyInAnyOrderEntriesOf(expFieldMMap);
+    	
+    	// 小分類名称一覧
+    	Map<String, String> actFieldSMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldSDropItems");
+    	assertThat(actFieldSMap).isEmpty();
+    }
+	
+    /**
+   	 * 存在しない学生を指定し、大分類を指定して成績を取得.
+     * @throws Exception MockMVC失敗時例外
+     */
+	@SuppressWarnings("unchecked")
+	@Test
+    public void 存在しない学生を指定_大分類を指定して成績を取得する_正常() throws Exception {
+		
+        // DB状態
+		// 学生１：回答数1：正解数0：不正解数1
+        Destination dest = new DataSourceDestination(dataSource);
+        Operation ops = Operations.sequenceOf(
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2,
+        		/*INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2,*/
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA2,
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA1, /*INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA2,*/
+        		INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_INCORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_INCORRECT_DATA2,
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1,
+        		/*INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1,*/
+        		
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1, 
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1,
+        		
+        		/*INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_4_CORRECT_DATA1,*/
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_4_INCORRECT_DATA1);
+        DbSetup dbSetup = new DbSetup(dest, ops);
+        dbSetup.launch();
+        
+		PersonalGradeForm requestForm = new PersonalGradeForm();
+		requestForm.setUserId(INSERT_STUDENT1_ID + "xyz");
+		requestForm.setSelectFieldL(FieldLarge.AP_FL_1_TECHNOLOGY.getId().toString());
+		
+    	MvcResult result = mockMvc.perform(post("/common/grade/personal").param("selectFieldBtn", "").flashAttr("personalGradeForm", requestForm))
+    		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
+                "common/grade/personal")).andReturn();
+
+    	// 成績情報は取得し直さない
+    	PersonalGradeForm responseForm = (PersonalGradeForm) result.getModelAndView().getModel().get("personalGradeForm");
+    	// 学生名が0人ぶん
+    	List<String> actStudentNameList = responseForm.getUserNameList();
+    	assertThat(actStudentNameList).isEmpty();
+    	// 正解数0
+    	List<String> actCorrectCntList = responseForm.getCorrectGradeList();
+    	assertThat(actCorrectCntList).isEmpty();
+    	// 不正解数0
+    	List<String> actIncorrectCntList = responseForm.getIncorrectGradeList();
+    	assertThat(actIncorrectCntList).isEmpty();
+    	
+    	// 大分類名称一覧
+    	Map<String, String> actFieldLMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldLDropItems");
+    	Map<String, String> expFieldLMap = new LinkedHashMap<>();
+    	expFieldLMap.put(FieldLarge.AP_FL_1_TECHNOLOGY.getId().toString(), FieldLarge.AP_FL_1_TECHNOLOGY.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_2_MANAGEMENT.getId().toString(), FieldLarge.AP_FL_2_MANAGEMENT.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_3_STRATEGY.getId().toString(), FieldLarge.AP_FL_3_STRATEGY.getName());
+    	assertThat(actFieldLMap).containsExactlyInAnyOrderEntriesOf(expFieldLMap);
+    	
+    	// 中分類名称一覧
+    	Map<String, String> actFieldMMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldMDropItems");
+    	Map<String, String> expFieldMMap = new LinkedHashMap<>();
+    	expFieldMMap.put(FieldMiddle.AP_FM_1_BASIC_THEORY.getId().toString(), FieldMiddle.AP_FM_1_BASIC_THEORY.getName());
+    	expFieldMMap.put(FieldMiddle.AP_FM_2_COMPUTER_SYSTEM.getId().toString(), FieldMiddle.AP_FM_2_COMPUTER_SYSTEM.getName());
+    	expFieldMMap.put(FieldMiddle.AP_FM_3_TECHNOLOGY_ELEMENT.getId().toString(), FieldMiddle.AP_FM_3_TECHNOLOGY_ELEMENT.getName());
+    	expFieldMMap.put(FieldMiddle.AP_FM_4_DEVELOPMENT_TECHNOLOGY.getId().toString(), FieldMiddle.AP_FM_4_DEVELOPMENT_TECHNOLOGY.getName());
+    	assertThat(actFieldMMap).containsExactlyInAnyOrderEntriesOf(expFieldMMap);
+    	
+    	// 小分類名称一覧
+    	Map<String, String> actFieldSMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldSDropItems");
+    	assertThat(actFieldSMap).isEmpty();
+    }
+	
+    /**
+   	 * 存在しない学生を指定し、大分類と中分類を指定して成績を取得.
+     * @throws Exception MockMVC失敗時例外
+     */
+	@SuppressWarnings("unchecked")
+	@Test
+    public void 存在しない学生を指定_大分類と中分類を指定して成績を取得する_正常() throws Exception {
+		
+        // DB状態
+		// 学生１：回答数1：正解数0：不正解数1
+        Destination dest = new DataSourceDestination(dataSource);
+        Operation ops = Operations.sequenceOf(
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2,
+        		/*INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2,*/
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA2,
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA1, /*INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA2,*/
+        		INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_INCORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_INCORRECT_DATA2,
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1,
+        		/*INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1,*/
+        		
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1, 
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1,
+        		
+        		/*INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_4_CORRECT_DATA1,*/
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_4_INCORRECT_DATA1);
+        DbSetup dbSetup = new DbSetup(dest, ops);
+        dbSetup.launch();
+        
+		PersonalGradeForm requestForm = new PersonalGradeForm();
+		requestForm.setUserId(INSERT_STUDENT1_ID + "xyz");
+		requestForm.setSelectFieldL(FieldLarge.AP_FL_1_TECHNOLOGY.getId().toString());
+		requestForm.setSelectFieldM(FieldMiddle.AP_FM_2_COMPUTER_SYSTEM.getId().toString());
+		
+    	MvcResult result = mockMvc.perform(post("/common/grade/personal").param("selectFieldBtn", "").flashAttr("personalGradeForm", requestForm))
+    		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
+                "common/grade/personal")).andReturn();
+
+    	// 成績情報は取得し直さない
+    	PersonalGradeForm responseForm = (PersonalGradeForm) result.getModelAndView().getModel().get("personalGradeForm");
+    	// 学生名が0人ぶん
+    	List<String> actStudentNameList = responseForm.getUserNameList();
+    	assertThat(actStudentNameList).isEmpty();
+    	// 正解数0
+    	List<String> actCorrectCntList = responseForm.getCorrectGradeList();
+    	assertThat(actCorrectCntList).isEmpty();
+    	// 不正解数0
+    	List<String> actIncorrectCntList = responseForm.getIncorrectGradeList();
+    	assertThat(actIncorrectCntList).isEmpty();
+    	
+    	// 大分類名称一覧
+    	Map<String, String> actFieldLMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldLDropItems");
+    	Map<String, String> expFieldLMap = new LinkedHashMap<>();
+    	expFieldLMap.put(FieldLarge.AP_FL_1_TECHNOLOGY.getId().toString(), FieldLarge.AP_FL_1_TECHNOLOGY.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_2_MANAGEMENT.getId().toString(), FieldLarge.AP_FL_2_MANAGEMENT.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_3_STRATEGY.getId().toString(), FieldLarge.AP_FL_3_STRATEGY.getName());
+    	assertThat(actFieldLMap).containsExactlyInAnyOrderEntriesOf(expFieldLMap);
+    	
+    	// 中分類名称一覧
+    	Map<String, String> actFieldMMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldMDropItems");
+    	Map<String, String> expFieldMMap = new LinkedHashMap<>();
+    	expFieldMMap.put(FieldMiddle.AP_FM_1_BASIC_THEORY.getId().toString(), FieldMiddle.AP_FM_1_BASIC_THEORY.getName());
+    	expFieldMMap.put(FieldMiddle.AP_FM_2_COMPUTER_SYSTEM.getId().toString(), FieldMiddle.AP_FM_2_COMPUTER_SYSTEM.getName());
+    	expFieldMMap.put(FieldMiddle.AP_FM_3_TECHNOLOGY_ELEMENT.getId().toString(), FieldMiddle.AP_FM_3_TECHNOLOGY_ELEMENT.getName());
+    	expFieldMMap.put(FieldMiddle.AP_FM_4_DEVELOPMENT_TECHNOLOGY.getId().toString(), FieldMiddle.AP_FM_4_DEVELOPMENT_TECHNOLOGY.getName());
+    	assertThat(actFieldMMap).containsExactlyInAnyOrderEntriesOf(expFieldMMap);
+    	
+    	// 小分類名称一覧
+    	Map<String, String> actFieldSMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldSDropItems");
+    	Map<String, String> expFieldSMap = new LinkedHashMap<>();
+    	expFieldSMap.put(FieldSmall.AP_FS_3_COMPUTER_COMPONENTS.getId().toString(), FieldSmall.AP_FS_3_COMPUTER_COMPONENTS.getName());
+    	expFieldSMap.put(FieldSmall.AP_FS_4_SYSTEM_COMPONENTS.getId().toString(), FieldSmall.AP_FS_4_SYSTEM_COMPONENTS.getName());
+    	expFieldSMap.put(FieldSmall.AP_FS_5_SOFTWARE.getId().toString(), FieldSmall.AP_FS_5_SOFTWARE.getName());
+    	expFieldSMap.put(FieldSmall.AP_FS_6_HARDWARE.getId().toString(), FieldSmall.AP_FS_6_HARDWARE.getName());
+    	assertThat(actFieldSMap).containsExactlyInAnyOrderEntriesOf(expFieldSMap);
+    }
+	
+    /**
+   	 * 存在しない学生を指定し、大分類と中分類と小分類を指定して成績を取得.
+     * @throws Exception MockMVC失敗時例外
+     */
+	@SuppressWarnings("unchecked")
+	@Test
+    public void 存在しない学生を指定_大分類と中分類と小分類を指定して成績を取得する_正常() throws Exception {
+		
+        // DB状態
+		// 学生１：回答数1：正解数0：不正解数1
+        Destination dest = new DataSourceDestination(dataSource);
+        Operation ops = Operations.sequenceOf(
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2,
+        		/*INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2009A_1_1_1_INCORRECT_DATA2,*/
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2011H_3_10_23_INCORRECT_DATA2,
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA1, /*INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_CORRECT_DATA2,*/
+        		INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_INCORRECT_DATA1, INSERT_STUDENT1_QUESTION_HISTORY_2010A_1_1_1_INCORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_CORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_CORRECT_DATA2,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_INCORRECT_DATA1, INSERT_STUDENT2_QUESTION_HISTORY_2010A_3_10_23_INCORRECT_DATA2,
+        		
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1,
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1,
+        		/*INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1,*/
+        		
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_CORRECT_DATA1,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_1_2_INCORRECT_DATA1,
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_CORRECT_DATA1, 
+        		INSERT_STUDENT2_QUESTION_HISTORY_2009H_1_2_3_INCORRECT_DATA1,
+        		
+        		/*INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_4_CORRECT_DATA1,*/
+        		INSERT_STUDENT1_QUESTION_HISTORY_2009H_1_2_4_INCORRECT_DATA1);
+        DbSetup dbSetup = new DbSetup(dest, ops);
+        dbSetup.launch();
+        
+		PersonalGradeForm requestForm = new PersonalGradeForm();
+		requestForm.setUserId(INSERT_STUDENT1_ID + "xyz");
+		requestForm.setSelectFieldL(FieldLarge.AP_FL_1_TECHNOLOGY.getId().toString());
+		requestForm.setSelectFieldM(FieldMiddle.AP_FM_2_COMPUTER_SYSTEM.getId().toString());
+		requestForm.setSelectFieldS(FieldSmall.AP_FS_4_SYSTEM_COMPONENTS.getId().toString());
+		
+    	MvcResult result = mockMvc.perform(post("/common/grade/personal").param("selectFieldBtn", "").flashAttr("personalGradeForm", requestForm))
+    		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
+                "common/grade/personal")).andReturn();
+
+    	// 成績情報は取得し直さない
+    	PersonalGradeForm responseForm = (PersonalGradeForm) result.getModelAndView().getModel().get("personalGradeForm");
+    	// 学生名が0人ぶん
+    	List<String> actStudentNameList = responseForm.getUserNameList();
+    	assertThat(actStudentNameList).isEmpty();
+    	// 正解数0
+    	List<String> actCorrectCntList = responseForm.getCorrectGradeList();
+    	assertThat(actCorrectCntList).isEmpty();
+    	// 不正解数0
+    	List<String> actIncorrectCntList = responseForm.getIncorrectGradeList();
+    	assertThat(actIncorrectCntList).isEmpty();
+    	
+    	// 大分類名称一覧
+    	Map<String, String> actFieldLMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldLDropItems");
+    	Map<String, String> expFieldLMap = new LinkedHashMap<>();
+    	expFieldLMap.put(FieldLarge.AP_FL_1_TECHNOLOGY.getId().toString(), FieldLarge.AP_FL_1_TECHNOLOGY.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_2_MANAGEMENT.getId().toString(), FieldLarge.AP_FL_2_MANAGEMENT.getName());
+    	expFieldLMap.put(FieldLarge.AP_FL_3_STRATEGY.getId().toString(), FieldLarge.AP_FL_3_STRATEGY.getName());
+    	assertThat(actFieldLMap).containsExactlyInAnyOrderEntriesOf(expFieldLMap);
+    	
+    	// 中分類名称一覧
+    	Map<String, String> actFieldMMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldMDropItems");
+    	Map<String, String> expFieldMMap = new LinkedHashMap<>();
+    	expFieldMMap.put(FieldMiddle.AP_FM_1_BASIC_THEORY.getId().toString(), FieldMiddle.AP_FM_1_BASIC_THEORY.getName());
+    	expFieldMMap.put(FieldMiddle.AP_FM_2_COMPUTER_SYSTEM.getId().toString(), FieldMiddle.AP_FM_2_COMPUTER_SYSTEM.getName());
+    	expFieldMMap.put(FieldMiddle.AP_FM_3_TECHNOLOGY_ELEMENT.getId().toString(), FieldMiddle.AP_FM_3_TECHNOLOGY_ELEMENT.getName());
+    	expFieldMMap.put(FieldMiddle.AP_FM_4_DEVELOPMENT_TECHNOLOGY.getId().toString(), FieldMiddle.AP_FM_4_DEVELOPMENT_TECHNOLOGY.getName());
+    	assertThat(actFieldMMap).containsExactlyInAnyOrderEntriesOf(expFieldMMap);
+    	
+    	// 小分類名称一覧
+    	Map<String, String> actFieldSMap = (Map<String, String>) result.getModelAndView().getModel().get("fieldSDropItems");
+    	Map<String, String> expFieldSMap = new LinkedHashMap<>();
+    	expFieldSMap.put(FieldSmall.AP_FS_3_COMPUTER_COMPONENTS.getId().toString(), FieldSmall.AP_FS_3_COMPUTER_COMPONENTS.getName());
+    	expFieldSMap.put(FieldSmall.AP_FS_4_SYSTEM_COMPONENTS.getId().toString(), FieldSmall.AP_FS_4_SYSTEM_COMPONENTS.getName());
+    	expFieldSMap.put(FieldSmall.AP_FS_5_SOFTWARE.getId().toString(), FieldSmall.AP_FS_5_SOFTWARE.getName());
+    	expFieldSMap.put(FieldSmall.AP_FS_6_HARDWARE.getId().toString(), FieldSmall.AP_FS_6_HARDWARE.getName());
+    	assertThat(actFieldSMap).containsExactlyInAnyOrderEntriesOf(expFieldSMap);
+    }
 }
