@@ -1,8 +1,7 @@
-package jp.ac.ems.controller.teacher.student;
+package jp.ac.controller.student;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -10,9 +9,6 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -42,15 +38,11 @@ import com.ninja_squad.dbsetup.destination.DataSourceDestination;
 import com.ninja_squad.dbsetup.destination.Destination;
 import com.ninja_squad.dbsetup.operation.Operation;
 
-import jp.ac.ems.config.FieldLarge;
-import jp.ac.ems.config.FieldMiddle;
-import jp.ac.ems.config.FieldSmall;
 import jp.ac.ems.config.RoleCode;
-import jp.ac.ems.form.PersonalGradeForm;
 import jp.ac.ems.form.student.TopForm;
 
 /**
- * 学生用トップContollerテスト（test student top Controller Class）.
+ * 学生用トップContollerテスト（test student top Controller Test）.
  * @author user01
  *
  */
@@ -61,9 +53,6 @@ import jp.ac.ems.form.student.TopForm;
 @AutoConfigureMockMvc /*@WebAppConfigurationの内容を含む*/
 @ActiveProfiles("test")
 public class StudentTopControllerTest {
-	
-	// 本日日付
-	private static final Date NOW_DATE = new Date();
 
 	// 学生１人目
 	private static final String INSERT_STUDENT1_ID = "unitstudent1";
@@ -133,9 +122,11 @@ public class StudentTopControllerTest {
     				INSERT_QUESTION3_NUMBER, INSERT_QUESTION3_FIELD_L_ID, INSERT_QUESTION3_FIELD_M_ID,
     				INSERT_QUESTION3_FIELD_S_ID, INSERT_QUESTION3_CORRECT).build();
 
-
+	// 本日日付
     private static final Date INSERT_DATE_NOW = getDateNow();
+	// 前週日付
     private static final Date INSERT_DATE_1WEEKAGO = getDate1WeekAgo();
+	// 前々週日付
     private static final Date INSERT_DATE_2WEEKAGO = getDate2WeekAgo();
 
     
@@ -745,7 +736,6 @@ public class StudentTopControllerTest {
 	 * 今週のみ問題を解いた状態で学生トップページを表示する.
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unchecked")
 	@Test
     @WithUserDetails(value=INSERT_STUDENT1_ID, userDetailsServiceBeanName="UserDetailService")
     public void 今週のみ問題を解いた状態で学生トップページを表示する_正常() throws Exception {
@@ -873,7 +863,6 @@ public class StudentTopControllerTest {
 	 * 今週と前週は問題を解かず、それ以前にのみ問題を解いた状態でトップページを表示する.
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unchecked")
 	@Test
     @WithUserDetails(value=INSERT_STUDENT1_ID, userDetailsServiceBeanName="UserDetailService")
     public void 今週と前週は問題を解かずそれ以前にのみ問題を解いた状態でトップページを表示する_正常() throws Exception {
@@ -938,7 +927,6 @@ public class StudentTopControllerTest {
 	 * 今週と前週とそれ以前の問題を解いた状態、かつ分野は一部解答一部未回答の状態で学生トップページを表示する.
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unchecked")
 	@Test
     @WithUserDetails(value=INSERT_STUDENT1_ID, userDetailsServiceBeanName="UserDetailService")
     public void 今週と前週とそれ以前の問題を解いた状態で学生トップページを表示する_正常() throws Exception {
