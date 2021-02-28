@@ -2,8 +2,12 @@ package jp.ac.ems.controller.admin.teacher;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -32,8 +36,13 @@ import com.ninja_squad.dbsetup.destination.DataSourceDestination;
 import com.ninja_squad.dbsetup.destination.Destination;
 import com.ninja_squad.dbsetup.operation.Operation;
 
+import jp.ac.ems.config.FieldLarge;
+import jp.ac.ems.config.FieldMiddle;
+import jp.ac.ems.config.FieldSmall;
 import jp.ac.ems.config.RoleCode;
 import jp.ac.ems.form.student.TopForm;
+import jp.ac.ems.form.teacher.TaskForm;
+import jp.ac.ems.form.teacher.TaskRandomForm;
 
 /**
  * 先生用課題Contollerテスト（teacher task Controller Test）.
@@ -1547,7 +1556,7 @@ public class TeacherTaskControllerTest {
 	private static final String INSERT_STUDENT_COURSE1_USER_ID = INSERT_STUDENT3_ID;
 	private static final String INSERT_STUDENT_COURSE1_COURSE_ID = INSERT_COURSE1_ID;
     private static final Operation INSERT_STUDENT_COURSE1_DATA = Operations.insertInto(
-            "t_student_course").columns("id", "user_id", "class_id").values(INSERT_STUDENT_COURSE1_ID, INSERT_STUDENT_COURSE1_USER_ID, INSERT_STUDENT_COURSE1_COURSE_ID).build();
+            "t_student_course").columns("id", "user_id", "course_id").values(INSERT_STUDENT_COURSE1_ID, INSERT_STUDENT_COURSE1_USER_ID, INSERT_STUDENT_COURSE1_COURSE_ID).build();
     
     /**
      * SpringMVCモックオブジェクト.
@@ -1656,16 +1665,46 @@ public class TeacherTaskControllerTest {
    	 * 課題登録_ランダム問題選択_複数の学生に課題を送信_正常.
      * @throws Exception MockMVC失敗時例外
      */
+	@SuppressWarnings("unchecked")
 	@Test
     public void 課題登録_ランダム問題選択_複数の学生に課題を送信_正常() throws Exception {
 		
-    	MvcResult result = mockMvc.perform(get("/teacher/task/add"))
+    	mockMvc.perform(get("/teacher/task/add"))
     		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
-                "student/top")).andReturn();
+                "teacher/task/add")).andReturn();
 
-    	TopForm form = (TopForm) result.getModelAndView().getModel().get("topForm");
+    	String taskTitle = "テスト用課題";
+    	String taskDescription = "テスト用課題説明";
+    	
+    	TaskForm taskForm = new TaskForm();
+    	taskForm.setTitle(taskTitle);
+    	taskForm.setDescription(taskDescription);
 
-    	assertThat(form.getTotalAnswerCnt()).isEqualTo("0");
+    	MvcResult resultAddQuestion = mockMvc.perform(post("/teacher/task/add-question")
+    			.flashAttr("taskForm", taskForm)
+    			.param("randomBtn", "ランダム出題"))
+		.andExpect(status().is2xxSuccessful()).andExpect(view().name(
+            "teacher/task/add_random_question")).andReturn();
+
+    	Map<String, Object> resultAddQuestionMap = resultAddQuestion.getModelAndView().getModel();
+    	// タイトル、説明文のテスト
+    	TaskRandomForm resultAddQuestionTaskRandomForm = (TaskRandomForm) resultAddQuestionMap.get("taskRandomForm");
+    	assertThat(resultAddQuestionTaskRandomForm.getTitle()).isEqualTo(taskTitle);
+    	assertThat(resultAddQuestionTaskRandomForm.getDescription()).isEqualTo(taskDescription);
+    	// 選択した問題リストのテスト
+    	assertThat(resultAddQuestionTaskRandomForm.getQuestionCheckedList()).hasSize(0);
+    	
+    	// 分野名のテスト
+    	Map<String, String> actResultAddQuestionFieldCheckItems = (Map<String, String>) resultAddQuestionMap.get("fieldCheckItems");
+    	Map<String, String> expResultAddQuestionFieldCheckItems = new HashMap<String, String>();
+    	expResultAddQuestionFieldCheckItems.put(String.valueOf(FieldLarge.LEVEL), "大分類");
+    	expResultAddQuestionFieldCheckItems.put(String.valueOf(FieldMiddle.LEVEL), "中分類");
+    	expResultAddQuestionFieldCheckItems.put(String.valueOf(FieldSmall.LEVEL), "小分類");
+    	assertThat(actResultAddQuestionFieldCheckItems).containsAllEntriesOf(expResultAddQuestionFieldCheckItems);
+
+    	// 選択問題のテスト
+    	Map<String, String> actResultAddQuestionQuestionMap = (Map<String, String>) resultAddQuestionMap.get("questionCheckItems");
+    	assertThat(actResultAddQuestionQuestionMap).hasSize(0);
     }
 
 	
