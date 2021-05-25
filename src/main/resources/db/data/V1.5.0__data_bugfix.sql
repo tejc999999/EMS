@@ -1,0 +1,1 @@
+UPDATE t_question SET correct = 3 where id = 918;

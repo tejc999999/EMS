@@ -260,16 +260,25 @@ public class StudentTaskServiceImpl implements StudentTaskService {
 		    	for(int i = currentPosition - 1; i > -1; i--) {
 		    		String tmpQuestionId = sortQuestionIdList.get(i);
 
-		    		Optional<StudentTaskQuestionHistoryBean> optStudentTaskQuestionHistoryBean = studentTaskQuestionHistoryRepository.findByUserIdAndTaskIdAndQuestionId(userId, Long.valueOf(taskId), Long.valueOf(tmpQuestionId));
-		    		optStudentTaskQuestionHistoryBean.ifPresent(studentTaskQuestionHistoryBean -> {
-		    			if(studentTaskQuestionHistoryBean.getAnswer() == null) {
-		    				unselectedQuestionIdList.add(studentTaskQuestionHistoryBean.getQuestionId());
+		    		List<StudentTaskQuestionHistoryBean> studentTaskQuestionHistoryBeanList = studentTaskQuestionHistoryRepository.findByUserIdAndTaskIdAndQuestionId(userId, Long.valueOf(taskId), Long.valueOf(tmpQuestionId));
+		    		if(studentTaskQuestionHistoryBeanList != null && studentTaskQuestionHistoryBeanList.size() > 0) {
+		    			if(studentTaskQuestionHistoryBeanList.get(0).getAnswer() == null) {
+		    				unselectedQuestionIdList.add(studentTaskQuestionHistoryBeanList.get(0).getQuestionId());
 		    			}
-		    		});
-		    		// 問題すら開いていない場合は履歴にデータが残らないため、存在しない場合を未回答とする
-		    		if(optStudentTaskQuestionHistoryBean.isEmpty()) {
+		    		} else {
+			    		// 問題すら開いていない場合は履歴にデータが残らないため、存在しない場合を未回答とする
 		    			unselectedQuestionIdList.add(Long.valueOf(tmpQuestionId));
 		    		}
+//		    		Optional<StudentTaskQuestionHistoryBean> optStudentTaskQuestionHistoryBean = studentTaskQuestionHistoryRepository.findByUserIdAndTaskIdAndQuestionId(userId, Long.valueOf(taskId), Long.valueOf(tmpQuestionId));
+//		    		optStudentTaskQuestionHistoryBean.ifPresent(studentTaskQuestionHistoryBean -> {
+//		    			if(studentTaskQuestionHistoryBean.getAnswer() == null) {
+//		    				unselectedQuestionIdList.add(studentTaskQuestionHistoryBean.getQuestionId());
+//		    			}
+//		    		});
+//		    		// 問題すら開いていない場合は履歴にデータが残らないため、存在しない場合を未回答とする
+//		    		if(optStudentTaskQuestionHistoryBean.isEmpty()) {
+//		    			unselectedQuestionIdList.add(Long.valueOf(tmpQuestionId));
+//		    		}
 
 		    		if(unselectedQuestionIdList.size() > 0) break;
 		    	}
@@ -285,16 +294,25 @@ public class StudentTaskServiceImpl implements StudentTaskService {
 		    	for(int i = currentPosition + 1; i < sortQuestionIdList.size(); i++) {
 		    		String tmpQuestionId = sortQuestionIdList.get(i);
 
-		    		Optional<StudentTaskQuestionHistoryBean> optStudentTaskQuestionHistoryBean = studentTaskQuestionHistoryRepository.findByUserIdAndTaskIdAndQuestionId(userId, Long.valueOf(taskId), Long.valueOf(tmpQuestionId));
-		    		optStudentTaskQuestionHistoryBean.ifPresent(studentTaskQuestionHistoryBean -> {
-		    			if(studentTaskQuestionHistoryBean.getAnswer() == null) {
-		    				unselectedQuestionIdList.add(studentTaskQuestionHistoryBean.getQuestionId());
+		    		List<StudentTaskQuestionHistoryBean> studentTaskQuestionHistoryBeanList = studentTaskQuestionHistoryRepository.findByUserIdAndTaskIdAndQuestionId(userId, Long.valueOf(taskId), Long.valueOf(tmpQuestionId));
+		    		if(studentTaskQuestionHistoryBeanList != null && studentTaskQuestionHistoryBeanList.size() > 0) {
+		    			if(studentTaskQuestionHistoryBeanList.get(0).getAnswer() == null) {
+		    				unselectedQuestionIdList.add(studentTaskQuestionHistoryBeanList.get(0).getQuestionId());
 		    			}
-		    		});
-		    		// 問題すら開いていない場合は履歴にデータが残らないため、存在しない場合を未回答とする
-		    		if(optStudentTaskQuestionHistoryBean.isEmpty()) {
+		    		} else {
+			    		// 問題すら開いていない場合は履歴にデータが残らないため、存在しない場合を未回答とする
 		    			unselectedQuestionIdList.add(Long.valueOf(tmpQuestionId));
 		    		}
+//		    		Optional<StudentTaskQuestionHistoryBean> optStudentTaskQuestionHistoryBean = studentTaskQuestionHistoryRepository.findByUserIdAndTaskIdAndQuestionId(userId, Long.valueOf(taskId), Long.valueOf(tmpQuestionId));
+//		    		optStudentTaskQuestionHistoryBean.ifPresent(studentTaskQuestionHistoryBean -> {
+//		    			if(studentTaskQuestionHistoryBean.getAnswer() == null) {
+//		    				unselectedQuestionIdList.add(studentTaskQuestionHistoryBean.getQuestionId());
+//		    			}
+//		    		});
+//		    		// 問題すら開いていない場合は履歴にデータが残らないため、存在しない場合を未回答とする
+//		    		if(optStudentTaskQuestionHistoryBean.isEmpty()) {
+//		    			unselectedQuestionIdList.add(Long.valueOf(tmpQuestionId));
+//		    		}
 		    		
 		    		if(unselectedQuestionIdList.size() > 0) break;
 		    	}
@@ -330,17 +348,24 @@ public class StudentTaskServiceImpl implements StudentTaskService {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userId = auth.getName();
-		
+		        
     	// 問題履歴を更新する
         // IDを設定
 		StudentTaskQuestionHistoryBean studentTaskQuestionHistoryBean = new StudentTaskQuestionHistoryBean();
-		Optional<StudentTaskQuestionHistoryBean> optStudentTaskQuestionHistory
+		List<StudentTaskQuestionHistoryBean> studentTaskQuestionHistoryList
 			= studentTaskQuestionHistoryRepository.findByUserIdAndTaskIdAndQuestionId(userId,
 															Long.valueOf(taskId),
 															Long.valueOf(questionId));
-		optStudentTaskQuestionHistory.ifPresent(bean->{
-			studentTaskQuestionHistoryBean.setId(bean.getId());
-		});
+		if(studentTaskQuestionHistoryList != null && studentTaskQuestionHistoryList.size() > 0) {
+			studentTaskQuestionHistoryBean.setId(studentTaskQuestionHistoryList.get(0).getId());
+		}
+//		Optional<StudentTaskQuestionHistoryBean> optStudentTaskQuestionHistoryList
+//		= studentTaskQuestionHistoryRepository.findByUserIdAndTaskIdAndQuestionId(userId,
+//														Long.valueOf(taskId),
+//														Long.valueOf(questionId));
+//		optStudentTaskQuestionHistory.ifPresent(bean->{
+//			studentTaskQuestionHistoryBean.setId(bean.getId());
+//		});
 		// 回答情報を設定
 		studentTaskQuestionHistoryBean.setTaskId(Long.valueOf(taskId));
 		studentTaskQuestionHistoryBean.setQuestionId(Long.valueOf(questionId));
@@ -587,13 +612,20 @@ public class StudentTaskServiceImpl implements StudentTaskService {
 		// 回答履歴がある場合、回答をコピーする
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userId = auth.getName();
-		Optional<StudentTaskQuestionHistoryBean> optStudentTaskQuestionHistory
+		List<StudentTaskQuestionHistoryBean> studentTaskQuestionHistoryList
 			= studentTaskQuestionHistoryRepository.findByUserIdAndTaskIdAndQuestionId(userId,
-															Long.valueOf(taskId),
-															Long.valueOf(questionId));
-		optStudentTaskQuestionHistory.ifPresent(bean->{
-			questionForm.setAnswer(String.valueOf(bean.getAnswer()));
-		});
+														Long.valueOf(taskId),
+														Long.valueOf(questionId));
+		if(studentTaskQuestionHistoryList != null && studentTaskQuestionHistoryList.size() > 0) {
+			questionForm.setAnswer(String.valueOf(studentTaskQuestionHistoryList.get(0).getAnswer()));
+		}
+//		Optional<StudentTaskQuestionHistoryBean> optStudentTaskQuestionHistory
+//			= studentTaskQuestionHistoryRepository.findByUserIdAndTaskIdAndQuestionId(userId,
+//															Long.valueOf(taskId),
+//															Long.valueOf(questionId));
+//		optStudentTaskQuestionHistory.ifPresent(bean->{
+//			questionForm.setAnswer(String.valueOf(bean.getAnswer()));
+//		});
 
     	// 問題情報文字列を作成し、Formにセットする    	
     	StringBuffer questionInfoStrBuff = new StringBuffer();
