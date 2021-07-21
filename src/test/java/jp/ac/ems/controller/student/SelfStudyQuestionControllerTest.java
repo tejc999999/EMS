@@ -1,4 +1,4 @@
-package jp.ac.controller.student;
+package jp.ac.ems.controller.student;
 
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -9,7 +9,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * 学生用課題Contollerテスト（student task Controller Test）.
+ * 学生用自習問題Contollerテスト（student self study question Controller Test）.
  * 
  * @author user01-m
  *
@@ -20,19 +20,15 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc /*@WebAppConfigurationの内容を含む*/
 @ActiveProfiles("test")
-public class StudentTaskControllerTest {
+public class SelfStudyQuestionControllerTest {
 
 }
 /**
- * 【課題一覧】
- * ・タイトル
- * ・説明
- * ・回答数
- * ・ボタン（確認or開始）
- * ・ステータス
- * 【課題確認】
- * ・正解数、不正解数
- * ・タイトル
- * ・説明
- * ・課題問番、年度/期、分野、回答、正解、結果、確認ボタン
+ * ・課題名
+ * ・年度期問番（平成30年秋期 問1）
+ * ・分類（テクノロジ/基礎理論/基礎理論）
+ * ・書き込みボタン（操作はテスト不可能）
+ * ・画像
+ * ・解答群
+ * ・回答ボタン
  */

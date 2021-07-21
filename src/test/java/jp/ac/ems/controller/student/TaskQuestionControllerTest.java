@@ -1,4 +1,4 @@
-package jp.ac.controller.student;
+package jp.ac.ems.controller.student;
 
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;

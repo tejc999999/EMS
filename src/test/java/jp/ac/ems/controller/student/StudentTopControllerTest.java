@@ -1,4 +1,4 @@
-package jp.ac.controller.student;
+package jp.ac.ems.controller.student;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -38,6 +38,7 @@ import com.ninja_squad.dbsetup.destination.DataSourceDestination;
 import com.ninja_squad.dbsetup.destination.Destination;
 import com.ninja_squad.dbsetup.operation.Operation;
 
+import jp.ac.ems.EMSApplication;
 import jp.ac.ems.config.RoleCode;
 import jp.ac.ems.form.student.TopForm;
 

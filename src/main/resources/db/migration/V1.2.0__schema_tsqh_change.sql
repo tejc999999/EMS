@@ -15,7 +15,7 @@ ALTER TABLE t_student_question_history DROP COLUMN correct_cnt;
 ALTER TABLE t_student_question_history DROP COLUMN incorrect_cnt;
 
 DELETE FROM t_student_question_history;
-/*
+/*!
 delimiter //
 CREATE PROCEDURE insertcorrect(IN p1 INT, IN p2 INT, IN p3 INT, IN p4 INT)
 BEGIN

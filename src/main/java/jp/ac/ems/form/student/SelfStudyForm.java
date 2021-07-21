@@ -142,5 +142,5 @@ public class SelfStudyForm {
      */
 	@NotNull
 	@Min(0)
-    private String totalNumber;
+    private String totalNumber = "0";
 }

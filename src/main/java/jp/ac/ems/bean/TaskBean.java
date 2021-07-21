@@ -69,7 +69,7 @@ public class TaskBean {
     public TaskBean() {
         taskQuestionBeans = new HashSet<>();
         studentTaskBeans = new HashSet<>();
-        studentTaskQuestionHistoryBeans = new HashSet<>();
+//        studentTaskQuestionHistoryBeans = new HashSet<>();
     }
 
     /**
@@ -90,14 +90,14 @@ public class TaskBean {
     @JoinColumn(name = "task_id")
     private Set<StudentTaskBean> studentTaskBeans;
 
-    /**
-     * 学生・課題・問題履歴Bean：相互参照オブジェクト(user・task・question history：cross reference object).
-     */
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
-    private Set<StudentTaskQuestionHistoryBean> studentTaskQuestionHistoryBeans;
+//    /**
+//     * 学生・課題・問題履歴Bean：相互参照オブジェクト(user・task・question history：cross reference object).
+//     */
+//    @Setter(AccessLevel.NONE)
+//    @Getter(AccessLevel.NONE)
+//    @OneToMany(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "user_id")
+//    private Set<StudentTaskQuestionHistoryBean> studentTaskQuestionHistoryBeans;
 
     
     /**

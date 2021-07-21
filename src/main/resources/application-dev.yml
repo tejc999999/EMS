@@ -46,7 +46,7 @@ spring:
 
 ap:
   question:
-    imagefilepath: file:/E://AP_AM
+    imagefilepath: file:/F://AP_AM
 #    imagefilepath: https://ems-ap-am.s3-ap-northeast-1.amazonaws.com/
 
 server:
