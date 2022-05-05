@@ -1,5 +1,8 @@
-UPDATE t_question SET field_s_id=1 WHERE id=885;
-UPDATE t_question SET field_m_id=2, field_s_id=4 WHERE id=725;
+UPDATE t_question SET field_s_id = 1 WHERE id = 885;
+UPDATE t_question SET field_m_id = 2, field_s_id = 4 WHERE id = 725;
+UPDATE t_question SET field_s_id = 20 WHERE id = 1909;
+UPDATE t_question SET field_s_id = 20 WHERE id = 1911;
+UPDATE t_question SET field_m_id = 5 WHERE id = 1734;
 INSERT INTO t_question(id, division, year, term, number, field_l_id, field_m_id, field_s_id, correct) VALUES(1921, 'AP', '2021', 'A',1, 1, 1, 1, 4);
 INSERT INTO t_question(id, division, year, term, number, field_l_id, field_m_id, field_s_id, correct) VALUES(1922, 'AP', '2021', 'A',2, 1, 1, 1, 4);
 INSERT INTO t_question(id, division, year, term, number, field_l_id, field_m_id, field_s_id, correct) VALUES(1923, 'AP', '2021', 'A',3, 1, 1, 1, 3);
