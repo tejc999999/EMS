@@ -591,7 +591,7 @@ public class StudentTaskServiceImpl implements StudentTaskService {
     		questionForm.setFieldMId(String.valueOf(questionBean.getFieldMId()));
     		questionForm.setFieldSId(String.valueOf(questionBean.getFieldSId()));
     	});
-		String imagePath = questionForm.getYear() + "_" + questionForm.getTerm()
+		String imagePath = questionForm.getDivision()  + "/" + questionForm.getYear() + "_" + questionForm.getTerm()
 			+ "/" + String.format("%02d", Integer.parseInt(questionForm.getNumber())) + ".png";
 		questionForm.setImagePath(imagePath);
 
@@ -629,15 +629,21 @@ public class StudentTaskServiceImpl implements StudentTaskService {
 
     	// 問題情報文字列を作成し、Formにセットする    	
     	StringBuffer questionInfoStrBuff = new StringBuffer();
+    	if(ExamDivisionCode.FE.getCode().equals(questionForm.getDivision())) {
+    		questionInfoStrBuff.append(ExamDivisionCode.FE.getName() + " ");
+    	}else if(ExamDivisionCode.AP.getCode().equals(questionForm.getDivision())) {
+    		questionInfoStrBuff.append(ExamDivisionCode.AP.getName() + " ");
+    	}
+
     	questionInfoStrBuff.append(JPCalenderEncoder.getInstance().convertJpCalender(questionForm.getYear(), questionForm.getTerm()));
 		questionInfoStrBuff.append("期 問" + questionForm.getNumber());
     	questionForm.setQuestionInfoStr(questionInfoStrBuff.toString());
     	
     	// 問題分野情報文字列を作成し、Formにセットする
     	questionForm.setQuestionFieldInfoStr(
-    			FieldLarge.getName(ExamDivisionCode.AP.getName(), Byte.valueOf(questionForm.getFieldLId())) + "/"
-    			+ FieldMiddle.getName(ExamDivisionCode.AP.getName(), Byte.valueOf(questionForm.getFieldMId())) + "/"
-    			+ FieldSmall.getName(ExamDivisionCode.AP.getName(), Byte.valueOf(questionForm.getFieldSId())));
+    			FieldLarge.getName(ExamDivisionCode.AP.getCode(), Byte.valueOf(questionForm.getFieldLId())) + "/"
+    			+ FieldMiddle.getName(ExamDivisionCode.AP.getCode(), Byte.valueOf(questionForm.getFieldMId())) + "/"
+    			+ FieldSmall.getName(ExamDivisionCode.AP.getCode(), Byte.valueOf(questionForm.getFieldSId())));
     	
     	return questionForm;
 	}

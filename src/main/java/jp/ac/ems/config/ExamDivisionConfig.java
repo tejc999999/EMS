@@ -15,9 +15,15 @@ import org.springframework.context.annotation.Configuration;
 public class ExamDivisionConfig {
 
     /**
+     * FE区分画像ファイルパス(FE division image file path).
+     */
+    @Value("${ap.question.imagefilepath-fe}")
+    private String feQuestionImageFilePath;
+	
+    /**
      * AP区分画像ファイルパス(AP division image file path).
      */
-    @Value("${ap.question.imagefilepath}")
+    @Value("${ap.question.imagefilepath-ap}")
     private String apQuestionImageFilePath;
 
     /**
@@ -28,17 +34,18 @@ public class ExamDivisionConfig {
     public ExamDivisionCodeProperties examDivisionCodeProperties() {
 
         ExamDivisionCodeInfoDetail apInfo = new ExamDivisionCodeInfoDetail();
-        apInfo.setName(ExamDivisionCode.AP.getName());
+        apInfo.setCode(ExamDivisionCode.AP.getCode());
         apInfo.setFilepath(apQuestionImageFilePath);
 
         ExamDivisionCodeInfoDetail feInfo = new ExamDivisionCodeInfoDetail();
-        feInfo.setName(ExamDivisionCode.FE.getName());
+        feInfo.setCode(ExamDivisionCode.FE.getCode());
+        feInfo.setFilepath(feQuestionImageFilePath);
 
         Map<String, ExamDivisionCodeInfoDetail> map
                 = new HashMap<String, ExamDivisionCodeInfoDetail>();
 
-        map.put(apInfo.getName(), apInfo);
-        map.put(feInfo.getName(), feInfo);
+        map.put(apInfo.getCode(), apInfo);
+        map.put(feInfo.getCode(), feInfo);
 
         return new ExamDivisionCodeProperties(map);
     }

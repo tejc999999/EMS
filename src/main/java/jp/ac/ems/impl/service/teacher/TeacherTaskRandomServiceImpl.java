@@ -4,6 +4,7 @@ package jp.ac.ems.impl.service.teacher;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import jp.ac.ems.bean.QuestionBean;
+import jp.ac.ems.config.ExamDivisionCode;
 import jp.ac.ems.config.FieldBaseEnum;
 import jp.ac.ems.config.FieldLarge;
 import jp.ac.ems.config.FieldMiddle;
@@ -46,13 +48,14 @@ public class TeacherTaskRandomServiceImpl implements TeacherTaskRandomService {
     /**
      * 指定の出題数に基づき、分野ごとランダムに問題を取得する.
      * 
+     * @param examDivisionCode 試験区分コード(exam division code).
      * @param fieldLevel 分野レベル（0:大分類, 1：中分類, 2:小分類)
      * @param totalNumber 出題数
      * @param latestFlg 直近6回フラグ(true:有効、false:無効)
      * @return 問題マップ
      */
     @Override
-    public Map<String, String> getRandomQuestionIdList(int fieldLevel, int totalNumber, boolean latestFlg) {
+    public Map<String, String> getRandomQuestionIdList(String examDivisionCode, int fieldLevel, int totalNumber, boolean latestFlg) {
     	
         Map<String, String> result = null;
         List<QuestionBean> questionBeanList = null;
@@ -60,7 +63,14 @@ public class TeacherTaskRandomServiceImpl implements TeacherTaskRandomService {
     	// 最新年度期を取得する
     	String latestYear = null;
     	String latestTerm = null;
-    	for(QuestionBean questionBean : questionRepository.findDistinctYearAndTerm()) {
+    	List<QuestionBean> questionBeanListForYearAndTerm;
+    	if(examDivisionCode != null
+    			&& (ExamDivisionCode.AP.getCode().equals(examDivisionCode) || (ExamDivisionCode.FE.getCode().equals(examDivisionCode)))) {
+        	questionBeanList = questionRepository.findDistinctYearAndTermByDivision(examDivisionCode);
+    	} else {
+        	questionBeanList = questionRepository.findDistinctYearAndTerm();
+    	}
+    	for(QuestionBean questionBean : questionBeanList) {
     		String year = questionBean.getYear();
     		String term = questionBean.getTerm();
     		
@@ -76,7 +86,7 @@ public class TeacherTaskRandomServiceImpl implements TeacherTaskRandomService {
     	// 指定された問題数ごとに分野別の抽出数を算出
     	Map<Byte, Integer> numberByFieldMap = getNumberOfQuestionByField(questionByFieldMap, totalNumber);
     	// 指定した分野から、抽出数ぶんの問題を取得
-    	List<String> questionIdList = createRandomQuestionId(fieldLevel, numberByFieldMap, latestFlg);
+    	List<String> questionIdList = createRandomQuestionId(examDivisionCode, fieldLevel, numberByFieldMap, latestFlg);
 
     	questionBeanList = convertQuestionBeanFromQuestionIdList(questionIdList);
     	
@@ -105,14 +115,15 @@ public class TeacherTaskRandomServiceImpl implements TeacherTaskRandomService {
     /**
      * 指定の出題数に基づいた問題IDリストを生成.
      * 
+     * @param divisionCode 試験区分コード(exam division code).
      * @param fieldLevel 分野ごとの問題IDマップ
      * @param numberByFieldMap 分野ごとの出題数マップ
      * @param latestFlg 直近6回フラグ
      * @return 問題IDリスト
      */
-    private List<String> createRandomQuestionId(int fieldLevel, Map<Byte, Integer> numberByFieldMap, boolean latestFlg) {
+    private List<String> createRandomQuestionId(String divisionCode, int fieldLevel, Map<Byte, Integer> numberByFieldMap, boolean latestFlg) {
     	
-    	return sharedTaskService.createRandomQuestionId(fieldLevel, numberByFieldMap, latestFlg);
+    	return sharedTaskService.createRandomQuestionId(divisionCode, fieldLevel, numberByFieldMap, latestFlg);
     }
     
 //    // TODO: あとで共通サービス化
@@ -286,9 +297,12 @@ public class TeacherTaskRandomServiceImpl implements TeacherTaskRandomService {
     @Override
     public void setSelectDataForRandom(Model model) {
 
+    	// 試験区分名
+        Map<String, String> examDivisionMap = sharedTaskService.findAllExamDivisionMap();
+        model.addAttribute("examDivisionDropItems", examDivisionMap);
+    	
     	// 分類名
         Map<String, String> fieldSMap = findAllFieldNameMap();
-        
         model.addAttribute("fieldCheckItems", fieldSMap);
 
     }
@@ -363,8 +377,7 @@ public class TeacherTaskRandomServiceImpl implements TeacherTaskRandomService {
     	
     	return sharedTaskService.save(form);
     }
-    
-    
+	
     /**
      * 分野名を取得する
      * 

@@ -30,20 +30,27 @@ public interface TeacherTaskIndividualService {
 
     /**
      * 年度ごとの問題を取得する(Get yearly question).
+     * @param examDivisionCode 試験区分コード(exam division code).
      * @param yearId 年度ID(year id)
      * @param fieldY 大分類(large field)
      * @param fieldM 中分類(middle field)
      * @param fieldS 小分類(small field)
      * @return 画面用問題マップ（key:チェックボックスID、value：問題ラベル）
      */
-    public Map<String, String> findAllQuestionByYearAndField(String yearId, String fieldL, String fieldM, String fieldS);
+    public Map<String, String> findAllQuestionByDivisionAndYearAndField(String examDivisionCode, String yearId, String fieldL, String fieldM, String fieldS);
     
     /**
      * 画面用問題マップ取得
      * @return 画面用問題マップ（key:チェックボックスID、value：問題ラベル）
      */
     public Map<String, String> findAllMap();
-
+    
+    /**
+     * 画面用年度マップ取得
+    * @return 画面用年度マップ（key:チェックボックスID、value：年度ラベル）
+    */
+    public Map<String, String> findAllYearMap();
+    
     /**
      * 全コースMap取得
      * @return 全コースMap
@@ -119,4 +126,7 @@ public interface TeacherTaskIndividualService {
      * @return 回答アイテムマップ
      */
     public Map<String,String> getAnswerSelectedItems();
+
+
+
 }

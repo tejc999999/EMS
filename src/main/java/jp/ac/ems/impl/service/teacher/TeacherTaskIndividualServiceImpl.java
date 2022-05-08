@@ -144,49 +144,90 @@ public class TeacherTaskIndividualServiceImpl implements TeacherTaskIndividualSe
     
     /**
      * 分野ごとの問題を取得する(Get fiealdly question).
+     * @param examDivisionCode 試験区分コード(exam division code).
      * @param fieldY 大分類(large field)
      * @param fieldM 中分類(middle field)
      * @param fieldS 小分類(small field)
      * @return 画面用問題マップ（key:チェックボックスID、value：問題ラベル）
      */
     @Override
-    public Map<String, String> findAllQuestionByYearAndField(String yearId, String fieldL, String fieldM, String fieldS) {
+    public Map<String, String> findAllQuestionByDivisionAndYearAndField(String examDivisionCode, String yearId, String fieldL, String fieldM, String fieldS) {
                 	
         Map<String, String> map = null;
         List<QuestionBean> questionBeanList = null;
         
-    	if(yearId == null || yearId.equals("")) {
-    		// 空入力の場合、全年度問取得
-            if(fieldS != null && !"".equals(fieldS)) {
-            	// 小分類IDで取得
-            	questionBeanList = questionRepository.findByFieldSId(Byte.valueOf(fieldS));
-            } else if(fieldM != null && !"".equals(fieldM)) {
-            	// 中分類IDで取得
-            	questionBeanList = questionRepository.findByFieldMId(Byte.valueOf(fieldM));
-            } else if(fieldL != null && !"".equals(fieldL)) {
-            	// 大分類IDで取得
-            	questionBeanList = questionRepository.findByFieldLId(Byte.valueOf(fieldL));
-            } else {
-            	
-            	questionBeanList = questionRepository.findAll();
+        if(examDivisionCode == null || examDivisionCode.equals("")) {
+
+        	if(yearId == null || yearId.equals("")) {
+        		// 空入力の場合、全年度問取得
+                if(fieldS != null && !"".equals(fieldS)) {
+                	// 小分類IDで取得
+                	questionBeanList = questionRepository.findByFieldSId(Byte.valueOf(fieldS));
+                } else if(fieldM != null && !"".equals(fieldM)) {
+                	// 中分類IDで取得
+                	questionBeanList = questionRepository.findByFieldMId(Byte.valueOf(fieldM));
+                } else if(fieldL != null && !"".equals(fieldL)) {
+                	// 大分類IDで取得
+                	questionBeanList = questionRepository.findByFieldLId(Byte.valueOf(fieldL));
+                } else {
+                	
+                	questionBeanList = questionRepository.findAll();
+                }
+        	} else {
+        		// 年度入力時、分類と合わせて年度と期も条件指定
+    	        String year = yearId.substring(0, 4);
+    	        String term = yearId.substring(4, 5);
+                if(fieldS != null && !"".equals(fieldS)) {
+                	// 小分類IDで取得
+                	questionBeanList = questionRepository.findByYearAndTermAndFieldSId(year, term, Byte.valueOf(fieldS));
+                } else if(fieldM != null && !"".equals(fieldM)) {
+                	// 中分類IDで取得
+                	questionBeanList = questionRepository.findByYearAndTermAndFieldMId(year, term, Byte.valueOf(fieldM));
+                } else if(fieldL != null && !"".equals(fieldL)) {
+                	// 大分類IDで取得
+                	questionBeanList = questionRepository.findByYearAndTermAndFieldLId(year, term, Byte.valueOf(fieldL));
+                } else {
+                	
+                	questionBeanList = questionRepository.findByYearAndTerm(year, term);
+                }
+            }        	
+        } else {
+
+        	if(yearId == null || yearId.equals("")) {
+        		// 空入力の場合、全年度問取得
+                if(fieldS != null && !"".equals(fieldS)) {
+                	// 小分類IDで取得
+                	questionBeanList = questionRepository.findByDivisionAndFieldSId(examDivisionCode, Byte.valueOf(fieldS));
+                } else if(fieldM != null && !"".equals(fieldM)) {
+                	// 中分類IDで取得
+                	questionBeanList = questionRepository.findByDivisionAndFieldMId(examDivisionCode, Byte.valueOf(fieldM));
+                } else if(fieldL != null && !"".equals(fieldL)) {
+                	// 大分類IDで取得
+                	questionBeanList = questionRepository.findByDivisionAndFieldLId(examDivisionCode, Byte.valueOf(fieldL));
+                } else {
+                	
+                	questionBeanList = questionRepository.findByDivision(examDivisionCode);
+                }
+        	} else {
+        		// 年度入力時、分類と合わせて年度と期も条件指定
+    	        String year = yearId.substring(0, 4);
+    	        String term = yearId.substring(4, 5);
+                if(fieldS != null && !"".equals(fieldS)) {
+                	// 小分類IDで取得
+                	questionBeanList = questionRepository.findByDivisionAndYearAndTermAndFieldSId(examDivisionCode, year, term, Byte.valueOf(fieldS));
+                } else if(fieldM != null && !"".equals(fieldM)) {
+                	// 中分類IDで取得
+                	questionBeanList = questionRepository.findByDivisionAndYearAndTermAndFieldMId(examDivisionCode, year, term, Byte.valueOf(fieldM));
+                } else if(fieldL != null && !"".equals(fieldL)) {
+                	// 大分類IDで取得
+                	questionBeanList = questionRepository.findByDivisionAndYearAndTermAndFieldLId(examDivisionCode, year, term, Byte.valueOf(fieldL));
+                } else {
+                	
+                	questionBeanList = questionRepository.findByDivisionAndYearAndTerm(examDivisionCode, year, term);
+                }
             }
-    	} else {
-    		// 年度入力時、分類と合わせて年度と期も条件指定
-	        String year = yearId.substring(0, 4);
-	        String term = yearId.substring(4, 5);
-            if(fieldS != null && !"".equals(fieldS)) {
-            	// 小分類IDで取得
-            	questionBeanList = questionRepository.findByYearAndTermAndFieldSId(year, term, Byte.valueOf(fieldS));
-            } else if(fieldM != null && !"".equals(fieldM)) {
-            	// 中分類IDで取得
-            	questionBeanList = questionRepository.findByYearAndTermAndFieldMId(year, term, Byte.valueOf(fieldM));
-            } else if(fieldL != null && !"".equals(fieldL)) {
-            	// 大分類IDで取得
-            	questionBeanList = questionRepository.findByYearAndTermAndFieldLId(year, term, Byte.valueOf(fieldL));
-            } else {
-            	
-            	questionBeanList = questionRepository.findByYearAndTerm(year, term);
-            }
+        	
+
     	}
 
         map = convertQuestionMap(questionBeanList);
@@ -435,6 +476,10 @@ public class TeacherTaskIndividualServiceImpl implements TeacherTaskIndividualSe
     @Override
     public void setSelectDataForSelect(TaskIndividualForm form, Model model) {
     	
+    	// 試験区分取得
+        Map<String, String> examDivisionMap = sharedTaskService.findAllExamDivisionMap();
+        model.addAttribute("examDivisionDropItems", examDivisionMap);
+    	
     	// 年度取得
         Map<String, String> yearMap = findAllYearMap();
         model.addAttribute("yearDropItems", yearMap);
@@ -561,7 +606,7 @@ public class TeacherTaskIndividualServiceImpl implements TeacherTaskIndividualSe
     		questionForm.setFieldMId(String.valueOf(questionBean.getFieldMId()));
     		questionForm.setFieldSId(String.valueOf(questionBean.getFieldSId()));
     	});
-		String imagePath = questionForm.getYear() + "_" + questionForm.getTerm()
+		String imagePath = questionForm.getDivision() + "/" + questionForm.getYear() + "_" + questionForm.getTerm()
 			+ "/" + String.format("%02d", Integer.parseInt(questionForm.getNumber())) + ".png";
 		questionForm.setImagePath(imagePath);
 
@@ -581,16 +626,20 @@ public class TeacherTaskIndividualServiceImpl implements TeacherTaskIndividualSe
 
     	// 問題情報文字列を作成し、Formにセットする    	
     	StringBuffer questionInfoStrBuff = new StringBuffer();
-
+    	if(ExamDivisionCode.FE.getCode().equals(questionForm.getDivision())) {
+    		questionInfoStrBuff.append(ExamDivisionCode.FE.getName() + " ");
+    	}else if(ExamDivisionCode.AP.getCode().equals(questionForm.getDivision())) {
+    		questionInfoStrBuff.append(ExamDivisionCode.AP.getName() + " ");
+    	}
     	questionInfoStrBuff.append(JPCalenderEncoder.getInstance().convertJpCalender(questionForm.getYear(), questionForm.getTerm()));
 		questionInfoStrBuff.append("期 問" + questionForm.getNumber());
     	questionForm.setQuestionInfoStr(questionInfoStrBuff.toString());
     	
     	// 問題分野情報文字列を作成し、Formにセットする
     	questionForm.setQuestionFieldInfoStr(
-    			FieldLarge.getName(ExamDivisionCode.AP.getName(), Byte.valueOf(questionForm.getFieldLId())) + "/"
-    			+ FieldMiddle.getName(ExamDivisionCode.AP.getName(), Byte.valueOf(questionForm.getFieldMId())) + "/"
-    			+ FieldSmall.getName(ExamDivisionCode.AP.getName(), Byte.valueOf(questionForm.getFieldSId())));
+    			FieldLarge.getName(ExamDivisionCode.AP.getCode(), Byte.valueOf(questionForm.getFieldLId())) + "/"
+    			+ FieldMiddle.getName(ExamDivisionCode.AP.getCode(), Byte.valueOf(questionForm.getFieldMId())) + "/"
+    			+ FieldSmall.getName(ExamDivisionCode.AP.getCode(), Byte.valueOf(questionForm.getFieldSId())));
     	
     	return questionForm;
 	}
@@ -599,10 +648,10 @@ public class TeacherTaskIndividualServiceImpl implements TeacherTaskIndividualSe
      * 画面用年度マップ取得
      * @return 画面用年度マップ（key:ドロップダウンリストID、value：年度ラベル）
      */
-    private Map<String, String> findAllYearMap() {
+    public Map<String, String> findAllYearMap() {
     	
     	Map<String, String> map = new LinkedHashMap<String, String>();
-    	
+
     	for(QuestionBean questionBean : questionRepository.findDistinctYearAndTerm()) {
     		StringBuffer keyBuff = new StringBuffer();
     		StringBuffer valueBuff = new StringBuffer();

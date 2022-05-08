@@ -1,5 +1,6 @@
 package jp.ac.ems.controller.teacher.task.individual;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import jp.ac.ems.controller.teacher.task.TeacherTaskAddController;
@@ -103,30 +104,6 @@ public class TeacherTaskAddTargetIndividualController{
     }
     
     /**
-     * 年度別問題取得(Obtaining questions by year).
-     * @param form 課題Form(task form)
-     * @param result エラーチェック結果(error validate result)
-     * @param model モデル(model)
-     * @return 課題問題登録用ページビュー(task question add page view)
-     */
-    @PostMapping(params = "selectYearBtn")
-    public String addSelectYear(@Validated TaskIndividualForm form, BindingResult result,
-            Model model) {
-
-    	// 問題更新
-    	Map<String, String> questionMap = taskIndividualService.findAllQuestionByYearAndField(form.getSelectYear(), form.getSelectFieldL(), form.getSelectFieldM(), form.getSelectFieldS());
-    	model.addAttribute("questionCheckItems", questionMap);
-    	
-    	// ドロップダウン項目設定
-    	taskIndividualService.setSelectDataForSelect(form, model);
-    	
-        // 入力状態保持のため
-        model.addAttribute("courseForm", form);
-        
-        return "teacher/task/add_individual_question";
-    }
-    
-    /**
      * 中分類取得(get field middle list).
      * @param form 課題Form(task form)
      * @param result エラーチェック結果(error validate result)
@@ -138,7 +115,7 @@ public class TeacherTaskAddTargetIndividualController{
             Model model) {
         
     	// 問題更新
-    	Map<String, String> questionMap = taskIndividualService.findAllQuestionByYearAndField(form.getSelectYear(), form.getSelectFieldL(), form.getSelectFieldM(), form.getSelectFieldS());
+    	Map<String, String> questionMap = taskIndividualService.findAllQuestionByDivisionAndYearAndField(form.getSelectExamDivision(), form.getSelectYear(), form.getSelectFieldL(), form.getSelectFieldM(), form.getSelectFieldS());
     	model.addAttribute("questionCheckItems", questionMap);
     	
     	// ドロップダウン項目設定
@@ -162,7 +139,7 @@ public class TeacherTaskAddTargetIndividualController{
             Model model) {
         
     	// 問題更新
-    	Map<String, String> questionMap = taskIndividualService.findAllQuestionByYearAndField(form.getSelectYear(), form.getSelectFieldL(), form.getSelectFieldM(), form.getSelectFieldS());
+    	Map<String, String> questionMap = taskIndividualService.findAllQuestionByDivisionAndYearAndField(form.getSelectExamDivision(), form.getSelectYear(), form.getSelectFieldL(), form.getSelectFieldM(), form.getSelectFieldS());
     	model.addAttribute("questionCheckItems", questionMap);
     	
     	// ドロップダウン項目設定
@@ -173,28 +150,28 @@ public class TeacherTaskAddTargetIndividualController{
         
         return "teacher/task/add_individual_question";
     }
-        
-    /**
-     * 分野別問題取得(Obtaining questions by field).
-     * @param form 課題Form(task form)
-     * @param result エラーチェック結果(error validate result)
-     * @param model モデル(model)
-     * @return 課題問題登録用ページビュー(task question add page view)
-     */
-    @PostMapping(params = "selectFieldBtn")
-    public String addSelectField(@Validated TaskIndividualForm form, BindingResult result,
-            Model model) {
 
-    	// 問題更新
-    	Map<String, String> questionMap = taskIndividualService.findAllQuestionByYearAndField(form.getSelectYear(), form.getSelectFieldL(), form.getSelectFieldM(), form.getSelectFieldS());
-    	model.addAttribute("questionCheckItems", questionMap);
-    	
-    	// ドロップダウン項目設定
-    	taskIndividualService.setSelectDataForSelect(form, model);
-    	
-        // 入力状態保持のため
-        model.addAttribute("courseForm", form);
-        
-        return "teacher/task/add_individual_question";
-    }
+	  /**
+	  * 問題取得(get questions).
+	  * @param form 課題Form(task form)
+	  * @param result エラーチェック結果(error validate result)
+	  * @param model モデル(model)
+	  * @return 課題問題登録用ページビュー(task question add page view)
+	  */
+	 @PostMapping(params = "selecConditionstBtn")
+	 public String addSelectConditions(@Validated TaskIndividualForm form, BindingResult result,
+	         Model model) {
+	
+	 	// 問題更新
+	 	Map<String, String> questionMap = taskIndividualService.findAllQuestionByDivisionAndYearAndField(form.getSelectExamDivision(), form.getSelectYear(), form.getSelectFieldL(), form.getSelectFieldM(), form.getSelectFieldS());
+	 	model.addAttribute("questionCheckItems", questionMap);
+	 	
+	 	// ドロップダウン項目設定
+	 	taskIndividualService.setSelectDataForSelect(form, model);
+	 	
+	     // 入力状態保持のため
+	     model.addAttribute("courseForm", form);
+	     
+	     return "teacher/task/add_individual_question";
+	 }
 }

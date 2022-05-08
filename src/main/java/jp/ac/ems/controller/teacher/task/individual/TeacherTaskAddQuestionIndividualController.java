@@ -36,14 +36,12 @@ public class TeacherTaskAddQuestionIndividualController {
     	
     	if(result.hasErrors()) {
     		
-//    		model.addAttribute("taskForm", form);
             return "redirect:/teacher/task/add";
     	}
     	// ドロップダウン項目設定
     	taskIndividualService.setSelectDataForSelect(form, model);
     	
         // 全問表示は通信負荷が高いため、初期状態は問題なしに変更
-//        Map<String, String> questionMap = taskService.findAllMap();
     	Map<String, String> questionMap = new HashMap<>();
         model.addAttribute("questionCheckItems", questionMap);
         

@@ -26,6 +26,7 @@ import jp.ac.ems.bean.StudentTaskBean;
 import jp.ac.ems.bean.TaskBean;
 import jp.ac.ems.bean.TaskQuestionBean;
 import jp.ac.ems.bean.UserBean;
+import jp.ac.ems.config.ExamDivisionCode;
 import jp.ac.ems.config.FieldLarge;
 import jp.ac.ems.config.FieldMiddle;
 import jp.ac.ems.config.FieldSmall;
@@ -83,70 +84,122 @@ public class SharedTaskServiceImpl implements SharedTaskService {
     /**
      * 指定の出題数に基づいた問題IDリストを生成.
      * 
+     * @param divisionCode 試験区分コード(exam division code).
      * @param fieldLevel 分野ごとの問題IDマップ
      * @param numberByFieldMap 分野ごとの出題数マップ
      * @param latestFlg 直近6回フラグ
      * @return 問題IDリスト
      */
 	@Override
-    public List<String> createRandomQuestionId(int fieldLevel, Map<Byte, Integer> numberByFieldMap, boolean latestFlg) {
+    public List<String> createRandomQuestionId(String divisionCode, int fieldLevel, Map<Byte, Integer> numberByFieldMap, boolean latestFlg) {
     	List<String> result = new ArrayList<String>();
 
-    	if(fieldLevel == FieldLarge.LEVEL) {
-    		// 大分類
-	    	numberByFieldMap.entrySet()
-	    		.stream()
-	    		.forEach(e -> {
-	        		List<QuestionBean> questionList = questionRepository.findByFieldLId(e.getKey());
-	        		List<String> fieldLQuestionIdList = questionList.stream().map(s -> String.valueOf(s.getId())).collect(Collectors.toList());
-	    			if(latestFlg) {
-	    				fieldLQuestionIdList = getLatestQuestionIdList(fieldLQuestionIdList);
-	    			}
-	    			result.addAll(getRandom(fieldLQuestionIdList, e.getValue()));
-	    		});
-    	} else if(fieldLevel == FieldMiddle.LEVEL) {
-    		// 中分類
-	    	numberByFieldMap.entrySet()
-    		.stream()
-    		.forEach(e -> {
-        		List<QuestionBean> questionList = questionRepository.findByFieldMId(e.getKey());
-        		List<String> fieldMQuestionIdList = questionList.stream().map(s -> String.valueOf(s.getId())).collect(Collectors.toList());
-    			if(latestFlg) {
-    				fieldMQuestionIdList = getLatestQuestionIdList(fieldMQuestionIdList);
-    			}
-    			result.addAll(getRandom(fieldMQuestionIdList, e.getValue()));
-    		});
-    	} else if(fieldLevel == FieldSmall.LEVEL) {
-    		// 小分類
-	    	numberByFieldMap.entrySet()
-    		.stream()
-    		.forEach(e -> {
-        		List<QuestionBean> questionList = questionRepository.findByFieldSId(e.getKey());
-        		List<String> fieldSQuestionIdList = questionList.stream().map(s -> String.valueOf(s.getId())).collect(Collectors.toList());
-    			if(latestFlg) {
-    				fieldSQuestionIdList = getLatestQuestionIdList(fieldSQuestionIdList);
-    			}
-    			result.addAll(getRandom(fieldSQuestionIdList, e.getValue()));
-    		});
-    	}
-    	
+    	if(divisionCode != null 
+    			&& (ExamDivisionCode.AP.getCode().equals(divisionCode) || ExamDivisionCode.FE.getCode().equals(divisionCode))) {
+
+        	if(fieldLevel == FieldLarge.LEVEL) {
+        		// 大分類
+    	    	numberByFieldMap.entrySet()
+    	    		.stream()
+    	    		.forEach(e -> {
+    	        		List<QuestionBean> questionList = questionRepository.findByDivisionAndFieldLId(divisionCode, e.getKey());
+    	        		List<String> fieldLQuestionIdList = questionList.stream().map(s -> String.valueOf(s.getId())).collect(Collectors.toList());
+    	    			if(latestFlg) {
+    	    				fieldLQuestionIdList = getLatestQuestionIdList(divisionCode, fieldLQuestionIdList);
+    	    			}
+    	    			result.addAll(getRandom(fieldLQuestionIdList, e.getValue()));
+    	    		});
+        	} else if(fieldLevel == FieldMiddle.LEVEL) {
+        		// 中分類
+    	    	numberByFieldMap.entrySet()
+        		.stream()
+        		.forEach(e -> {
+            		List<QuestionBean> questionList = questionRepository.findByDivisionAndFieldMId(divisionCode, e.getKey());
+            		List<String> fieldMQuestionIdList = questionList.stream().map(s -> String.valueOf(s.getId())).collect(Collectors.toList());
+        			if(latestFlg) {
+        				fieldMQuestionIdList = getLatestQuestionIdList(divisionCode, fieldMQuestionIdList);
+        			}
+        			result.addAll(getRandom(fieldMQuestionIdList, e.getValue()));
+        		});
+        	} else if(fieldLevel == FieldSmall.LEVEL) {
+        		// 小分類
+    	    	numberByFieldMap.entrySet()
+        		.stream()
+        		.forEach(e -> {
+            		List<QuestionBean> questionList = questionRepository.findByDivisionAndFieldSId(divisionCode, e.getKey());
+            		List<String> fieldSQuestionIdList = questionList.stream().map(s -> String.valueOf(s.getId())).collect(Collectors.toList());
+        			if(latestFlg) {
+        				fieldSQuestionIdList = getLatestQuestionIdList(divisionCode, fieldSQuestionIdList);
+        			}
+        			result.addAll(getRandom(fieldSQuestionIdList, e.getValue()));
+        		});
+        	}
+
+    	} else {
+        	if(fieldLevel == FieldLarge.LEVEL) {
+        		// 大分類
+    	    	numberByFieldMap.entrySet()
+    	    		.stream()
+    	    		.forEach(e -> {
+    	        		List<QuestionBean> questionList = questionRepository.findByFieldLId(e.getKey());
+    	        		List<String> fieldLQuestionIdList = questionList.stream().map(s -> String.valueOf(s.getId())).collect(Collectors.toList());
+    	    			if(latestFlg) {
+    	    				fieldLQuestionIdList = getLatestQuestionIdList(divisionCode, fieldLQuestionIdList);
+    	    			}
+    	    			result.addAll(getRandom(fieldLQuestionIdList, e.getValue()));
+    	    		});
+        	} else if(fieldLevel == FieldMiddle.LEVEL) {
+        		// 中分類
+    	    	numberByFieldMap.entrySet()
+        		.stream()
+        		.forEach(e -> {
+            		List<QuestionBean> questionList = questionRepository.findByFieldMId(e.getKey());
+            		List<String> fieldMQuestionIdList = questionList.stream().map(s -> String.valueOf(s.getId())).collect(Collectors.toList());
+        			if(latestFlg) {
+        				fieldMQuestionIdList = getLatestQuestionIdList(divisionCode, fieldMQuestionIdList);
+        			}
+        			result.addAll(getRandom(fieldMQuestionIdList, e.getValue()));
+        		});
+        	} else if(fieldLevel == FieldSmall.LEVEL) {
+        		// 小分類
+    	    	numberByFieldMap.entrySet()
+        		.stream()
+        		.forEach(e -> {
+            		List<QuestionBean> questionList = questionRepository.findByFieldSId(e.getKey());
+            		List<String> fieldSQuestionIdList = questionList.stream().map(s -> String.valueOf(s.getId())).collect(Collectors.toList());
+        			if(latestFlg) {
+        				fieldSQuestionIdList = getLatestQuestionIdList(divisionCode, fieldSQuestionIdList);
+        			}
+        			result.addAll(getRandom(fieldSQuestionIdList, e.getValue()));
+        		});
+        	}
+        }
+
     	return result;
     }
 	
     /**
      * 直近6回の問題のみ取得する
      * 
+     * @param divisionCode 試験区分コード(exam division code).
      * @param list 問題IDリスト
      * @return 直近6回の問題IDリスト
      */
 	@Override
-    public List<String> getLatestQuestionIdList(List<String> questionIdList) {
+    public List<String> getLatestQuestionIdList(String divisionCode, List<String> questionIdList) {
     	
 		// 直近6回分だけにする
 		List<YearAndTermData> latestYearAndTermList = new ArrayList<>();
 		
 		// 直近6回に該当する年度、期を取得する
-    	for(QuestionBean questionBean : questionRepository.findDistinctYearAndTerm()) {
+		List<QuestionBean> questionBeanListForYearAndTerm;
+		if((divisionCode != null)
+			&& (ExamDivisionCode.FE.getCode().equals(divisionCode) || ExamDivisionCode.AP.getCode().equals(divisionCode))) {
+				questionBeanListForYearAndTerm = questionRepository.findDistinctYearAndTermByDivision(divisionCode);
+		} else {
+			questionBeanListForYearAndTerm = questionRepository.findDistinctYearAndTerm();
+		}
+    	for(QuestionBean questionBean : questionBeanListForYearAndTerm) {
     		// 全年度、期を取得
     		latestYearAndTermList.add(new YearAndTermData(Integer.valueOf(questionBean.getYear()), questionBean.getTerm()));
     	}
@@ -198,6 +251,14 @@ public class SharedTaskServiceImpl implements SharedTaskService {
     	
     	for(QuestionBean questionBean : questionBeanList) {
     		StringBuffer valueBuff = new StringBuffer();
+    		
+    		// 試験区分
+        	if(ExamDivisionCode.FE.getCode().equals(questionBean.getDivision())) {
+        		valueBuff.append(ExamDivisionCode.FE.getName() + " ");
+        	}else if(ExamDivisionCode.AP.getCode().equals(questionBean.getDivision())) {
+        		valueBuff.append(ExamDivisionCode.AP.getName() + " ");
+        	}
+    		
     		// 年度
         	valueBuff.append(JPCalenderEncoder.getInstance().convertJpCalender(questionBean.getYear(), questionBean.getTerm()));
     		
@@ -537,6 +598,20 @@ public class SharedTaskServiceImpl implements SharedTaskService {
 
         return resultForm;
     }
+    
+	/**
+	 * 画面用試験区分マップ取得
+	 * @return 画面試験区分マップ(key:ドロップダウンリストID、value:試験区分ラベル)
+	 */
+    @Override
+	public Map<String, String> findAllExamDivisionMap() {
+    	Map<String, String> map = new LinkedHashMap<String, String>();
+
+    	map.put(ExamDivisionCode.FE.getCode(), ExamDivisionCode.FE.getCode());
+    	map.put(ExamDivisionCode.AP.getCode(), ExamDivisionCode.AP.getCode());
+    	
+    	return map;
+	}
 
 	/**
 	 * 年度、期情報クラス

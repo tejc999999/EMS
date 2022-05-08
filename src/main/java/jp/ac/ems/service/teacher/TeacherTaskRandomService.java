@@ -16,12 +16,13 @@ public interface TeacherTaskRandomService {
     /**
      * 指定の出題数に基づき、分野ごとランダムに問題を取得する.
      * 
+     * @param examDivisionCode 試験区分コード(exam division code).
      * @param fieldLevel 分野レベル（0:大分類, 1：中分類, 2:小分類)
      * @param totalNumber 出題数
      * @param latestFlg 直近6回(true:有効、false:無効)
      * @return 問題IDマップ
      */
-    public Map<String, String> getRandomQuestionIdList(int fieldLevel, int totalNumber, boolean latestFlg);
+    public Map<String, String> getRandomQuestionIdList(String examDivisionCode, int fieldLevel, int totalNumber, boolean latestFlg);
     
     /**
      * 全コースMap取得

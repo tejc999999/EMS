@@ -6,8 +6,8 @@ package jp.ac.ems.config;
  */
 public enum ExamDivisionCode {
 
-    AP("001", "AP"),
-    FE("002", "FE")
+    AP("001", "AP", "応用情報技術者"),
+    FE("002", "FE", "基本情報技術者")
     ;
     
     /**
@@ -16,17 +16,24 @@ public enum ExamDivisionCode {
     private final String id;
     
     /**
-     * 試験区分名(exam division name).
+     * 試験区分コード(exam division code).
+     */
+    private final String code;
+    
+    /**
+     * 試験区分名称(exam division name).
      */
     private final String name;
     
     /**
      * コンストラクタ(constructor).
      * @param id 試験区分ID(exam divison id).
-     * @param name 試験区分名(exam division name)
+     * @param code 試験区分コード(exam division code).
+     * @param name 試験区分名(exam division name).
      */
-    private ExamDivisionCode(String id, String name) {
+    private ExamDivisionCode(String id, String code, String name) {
         this.id = id;
+        this.code = code;
         this.name = name;
     }
     
@@ -36,6 +43,14 @@ public enum ExamDivisionCode {
      */
     public String getId() {
         return this.id;
+    }
+    
+    /**
+     * 試験区分コード取得(get exam division code).
+     * @return 試験区分コード(exam division code)
+     */
+    public String getCode() {
+        return this.code;
     }
     
     /**

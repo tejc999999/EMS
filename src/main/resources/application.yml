@@ -46,7 +46,8 @@ spring:
 
 ap:
   question:
-    imagefilepath: ${AP_QUESTION_IMAGEPATH}
+    imagefilepath-ap: ${AP_QUESTION_IMAGEPATH}
+    imagefilepath-fe: ${FE_QUESTION_IMAGEPATH}
 
 server:
 #  charactercode: utf-8

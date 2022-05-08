@@ -10,9 +10,9 @@ import lombok.Data;
 public class ExamDivisionCodeInfoDetail {
 
     /**
-     * 試験区分名称(division name).
+     * 試験区分コード(division code).
      */
-    private String name;
+    private String code;
 
     /**
      * 問題画像ファイルパス(question image file path).

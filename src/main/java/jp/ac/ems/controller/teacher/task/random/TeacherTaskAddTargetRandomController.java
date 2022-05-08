@@ -117,12 +117,12 @@ public class TeacherTaskAddTargetRandomController{
     public String addselectRandom(@Validated TaskRandomForm form, BindingResult result,
             Model model) {
 
-    	// 分野名項目設定
+    	// 項目設定
     	taskRandomService.setSelectDataForRandom(model);
-    	
+
     	// 問題更新
     	if(form.getTotalNumber() != null &&  !"".equals(form.getTotalNumber())) {
-	    	Map<String, String> questionMap = taskRandomService.getRandomQuestionIdList(Integer.parseInt(form.getFieldChecked()), Integer.parseInt(form.getTotalNumber()), form.isLatestFlg());
+	    	Map<String, String> questionMap = taskRandomService.getRandomQuestionIdList(form.getSelectExamDivision(), Integer.parseInt(form.getFieldChecked()), Integer.parseInt(form.getTotalNumber()), form.isLatestFlg());
 	    	model.addAttribute("questionCheckItems", questionMap);
 	    	form.setQuestionCheckedList(new ArrayList<String>(questionMap.keySet()));
     	} else {

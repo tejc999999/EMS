@@ -26,7 +26,8 @@ spring:
 
 ap:
   question:
-    imagefilepath: file:/F://AP_AM
+    imagefilepath-ap: file:/F://AP_AM
+    imagefilepath-fe: file:/F://FE_AM
 
 server:
   charactercode: SJIS

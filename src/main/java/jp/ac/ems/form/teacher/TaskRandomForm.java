@@ -13,6 +13,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TaskRandomForm extends TaskForm {
 
+	/**
+	 * 選択試験区分（select exam division）.
+	 */
+	private String selectExamDivision = "";
+
     /**
      * 選択分類(select field).
      */

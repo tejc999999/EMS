@@ -14,6 +14,11 @@ import lombok.NoArgsConstructor;
 public class TaskIndividualForm extends TaskForm {
 
 	/**
+	 * 選択試験区分（select exam division）.
+	 */
+	private String selectExamDivision = "";
+	
+	/**
     * 選択年度(select year).
     */
    private String selectYear = "";

@@ -135,7 +135,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
 	 */
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		registry.addResourceHandler("/images/question/**")
-			.addResourceLocations(examDivisionCodeProperties.getMap().get(ExamDivisionCode.AP.getName()).getFilepath() + "/");
+		registry.addResourceHandler("/images/question/FE/**")
+		.addResourceLocations(examDivisionCodeProperties.getMap().get(ExamDivisionCode.FE.getCode()).getFilepath() + "/");
+		registry.addResourceHandler("/images/question/AP/**")
+			.addResourceLocations(examDivisionCodeProperties.getMap().get(ExamDivisionCode.AP.getCode()).getFilepath() + "/");
 	}
 }

@@ -1,9 +1,11 @@
 package jp.ac.ems.service.shared;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import jp.ac.ems.bean.QuestionBean;
+import jp.ac.ems.config.ExamDivisionCode;
 import jp.ac.ems.form.teacher.TaskForm;
 
 /**
@@ -55,21 +57,29 @@ public interface SharedTaskService {
     /**
      * 指定の出題数に基づいた問題IDリストを生成.
      * 
+     * @param divisionCode 試験区分コード(exam division code).
      * @param fieldLevel 分野ごとの問題IDマップ
      * @param numberByFieldMap 分野ごとの出題数マップ
      * @param latestFlg 直近6回フラグ
      * @return 問題IDリスト
      */
-    public List<String> createRandomQuestionId(int fieldLevel, Map<Byte, Integer> numberByFieldMap, boolean latestFlg);
+    public List<String> createRandomQuestionId(String divisionCode, int fieldLevel, Map<Byte, Integer> numberByFieldMap, boolean latestFlg);
 
     /**
      * 直近6回の問題のみ取得する
      * 
+     * @param divisionCode 試験区分コード(exam division code).
      * @param list 問題IDリスト
      * @return 直近6回の問題IDリスト
      */
-    public List<String> getLatestQuestionIdList(List<String> questionIdList);
+    public List<String> getLatestQuestionIdList(String divisionCode, List<String> questionIdList);
     
+	/**
+	 * 画面用試験区分マップ取得
+	 * @return 画面試験区分マップ(key:ドロップダウンリストID、value:試験区分ラベル)
+	 */
+	public Map<String, String> findAllExamDivisionMap();
+	
     /**
      * 問題Beanリストを画面用Mapに変換(convert question bean to map for monitor).
      * @param questionBeanList 問題Beanリスト(question baen list)

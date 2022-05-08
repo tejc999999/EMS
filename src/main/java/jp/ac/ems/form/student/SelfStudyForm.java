@@ -77,6 +77,11 @@ public class SelfStudyForm {
     @Getter(AccessLevel.NONE)
 	public static final String SORT_3_VALUE_RANDOM = "ランダム";
 	
+	/**
+	 * 選択試験区分（select exam division）.
+	 */
+	private String selectExamDivision = "";
+    
     /**
      * 選択年度(select year).
      */

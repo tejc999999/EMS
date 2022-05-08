@@ -16,6 +16,18 @@
     <label class="col-form-label col-12 col-md-12">【条件】</label>
   </div>
 
+  <div class="form-row">
+    <div class="form-group col-6 col-md-2">
+      <div class="form-group">
+        <label>試験区分</lable>
+        <select class="form-control" id="selectExamDivision" name="selectExamDivision">
+          <option value="">---</option>
+          <option th:each="item : ${examDivisionDropItems}" th:value="${item.key}" th:text="${item.value}" th:selected="${item.key} == *{selectExamDivision}">pulldown</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
   <div class="row form-inline pb-3">
     <div class="col-12 col-md-2">
       <label class="float-left">
@@ -23,9 +35,15 @@
       </label>
     </div>
   </div>
+  
+  <div class="row">
+    <div class="col-12">
+      ランダム選択基準（推奨：中分類）
+    </div>
+  </div>
 
-  <div class="row form-inline pb-3">
-    <div class="col-4 col-md-3" th:each="item : ${fieldCheckItems}">
+  <div class="row form-group pb-3">
+    <div class="form-inline col-4 col-md-3" th:each="item : ${fieldCheckItems}">
       <label class="radio-inline float-left">
         <input type="radio" name="fieldChecked" th:value="${item.key}" th:text="${item.value}" th:field="*{fieldChecked}" th:checked="${item.key.equals(selfStudyForm.fieldChecked)}" />
       </label>

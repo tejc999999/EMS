@@ -40,7 +40,7 @@ public class TeacherTaskAddQuestionRandomController {
 //    		model.addAttribute("taskForm", form);
             return "redirect:/teacher/task/add";
     	}
-    	// 分野名項目設定
+    	// 項目設定
     	taskRandomService.setSelectDataForRandom(model);
     	
     	Map<String, String> questionMap = new HashMap<>();

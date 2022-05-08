@@ -47,11 +47,16 @@ public class SelfStudyIndividualSelectQuestionProcessController {
     	SelfStudyForm selfStudyForm = studentSelfStudyService.getQuestionList(form);
     	model.addAttribute("selfStudyForm", selfStudyForm);
     	
+    	// 試験区分設定
+    	studentSelfStudyService.setSelectDivisionData(form, model);
+    	
     	// ドロップダウン項目設定
     	studentSelfStudyService.setSelectYearData(form, model);
     	studentSelfStudyService.setSelectFieldData(form, model);
+    	
     	// チェックボックス項目設定
     	studentSelfStudyService.setCheckItems(form, model);
+    	
     	// タグ情報をセット
     	model.addAttribute("questionTagItems", studentSelfStudyService.getQuestionTagSelectedItems());
 

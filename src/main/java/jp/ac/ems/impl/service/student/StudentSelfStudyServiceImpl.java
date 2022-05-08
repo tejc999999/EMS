@@ -144,6 +144,18 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 	}
 	
 	/**
+     * 試験区分項目設定(Set division param).
+     * @param form 自習Form(self study form)
+     * @param model モデル(model)
+	 */
+	@Override
+	public void setSelectDivisionData(SelfStudyForm form, Model model) {
+    	// 試験区分取得
+        Map<String, String> examDivisionMap = sharedTaskService.findAllExamDivisionMap();
+        model.addAttribute("examDivisionDropItems", examDivisionMap);
+	}
+	
+	/**
 	 * 条件に該当する問題IDリストを取得する.
 	 * 
 	 * @param form 自習Form(self study form)
@@ -153,70 +165,7 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 	public SelfStudyForm getQuestionList(SelfStudyForm form) {
 		
 		List<QuestionBean> questionBeanList = new ArrayList<>();
-		
-		// 年度：分野の条件なし
-		if((form.getSelectYear() == null || form.getSelectYear().equals(""))
-				&& (form.getSelectFieldS() == null || form.getSelectFieldS().equals(""))
-						&& (form.getSelectFieldM() == null || form.getSelectFieldM().equals(""))
-								&& (form.getSelectFieldL() == null || form.getSelectFieldL().equals(""))) {
-			List<QuestionBean> list = questionRepository.findAll();
-			if(list != null) {
-				questionBeanList.addAll(list);
-			}
-		} else {
-			if((form.getSelectYear() != null && !form.getSelectYear().equals(""))) {
-				// 年度条件あり
-				String yearStr = form.getSelectYear().substring(0, 4);
-				String termStr = form.getSelectYear().substring(4, 5);
-
-				if(form.getSelectFieldS() != null && !form.getSelectFieldS().equals("")) {
-					// 年度＋小分野条件
-					List<QuestionBean> list = questionRepository.findByYearAndTermAndFieldSId(yearStr, termStr, Byte.valueOf(form.getSelectFieldS()));
-					if(list != null) {
-						questionBeanList.addAll(list);
-					}
-				} else if(form.getSelectFieldM() != null && !form.getSelectFieldM().equals("")) {
-					// 年度＋中分野条件
-					List<QuestionBean> list = questionRepository.findByYearAndTermAndFieldMId(yearStr, termStr, Byte.valueOf(form.getSelectFieldM()));
-					if(list != null) {
-						questionBeanList.addAll(list);
-					}
-				} else if((form.getSelectFieldL() != null && !form.getSelectFieldL().equals(""))) {
-					// 年度＋大分野条件
-					List<QuestionBean> list = questionRepository.findByYearAndTermAndFieldLId(yearStr, termStr, Byte.valueOf(form.getSelectFieldL()));
-					if(list != null) {
-						questionBeanList.addAll(list);
-					}
-				} else {
-					// 年度条件のみ
-					List<QuestionBean> list = questionRepository.findByYearAndTerm(yearStr, termStr);
-					if(list != null) {
-						questionBeanList.addAll(list);
-					}
-				}
-			} else {
-				// 年度条件なし
-				if(form.getSelectFieldS() != null && !form.getSelectFieldS().equals("")) {
-					// 小分野条件
-					List<QuestionBean> list = questionRepository.findByFieldSId(Byte.valueOf(form.getSelectFieldS()));
-					if(list != null) {
-						questionBeanList.addAll(list);
-					}
-				} else if(form.getSelectFieldM() != null && !form.getSelectFieldM().equals("")) {
-					// 中分野条件
-					List<QuestionBean> list = questionRepository.findByFieldMId(Byte.valueOf(form.getSelectFieldM()));
-					if(list != null) {
-						questionBeanList.addAll(list);
-					}
-				} else if((form.getSelectFieldL() != null && !form.getSelectFieldL().equals(""))) {
-					// 大分野条件
-					List<QuestionBean> list = questionRepository.findByFieldLId(Byte.valueOf(form.getSelectFieldL()));
-					if(list != null) {
-						questionBeanList.addAll(list);
-					}
-				}
-			}
-		}
+		questionBeanList = setQuestionListByDivisionAndYearAndField(form, questionBeanList);
 		
 		List<String> questionIdList = new ArrayList<>();
 		for(QuestionBean bean : questionBeanList) {
@@ -317,7 +266,7 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 		
 		if(form.isLatestFlg()) {
 			// 直近6回以外の問題IDを取り除く
-			questionIdList = sharedTaskService.getLatestQuestionIdList(questionIdList);
+			questionIdList = sharedTaskService.getLatestQuestionIdList(form.getSelectExamDivision(), questionIdList);
 		}
 		
 		form.setQuestionList(questionIdList);
@@ -573,12 +522,17 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 			selfStudyQuestionForm.setTerm(questionBean.getTerm());
 			selfStudyQuestionForm.setYear(questionBean.getYear());
     	});
-		String imagePath = selfStudyQuestionForm.getYear() + "_" + selfStudyQuestionForm.getTerm()
+		String imagePath = selfStudyQuestionForm.getDivision() + "/" + selfStudyQuestionForm.getYear() + "_" + selfStudyQuestionForm.getTerm()
 			+ "/" + String.format("%02d", Integer.parseInt(selfStudyQuestionForm.getNumber())) + ".png";
 		selfStudyQuestionForm.setImagePath(imagePath);
 		
     	// 問題情報文字列を作成し、Formにセットする
     	StringBuffer questionInfoStrBuff = new StringBuffer();
+    	if(ExamDivisionCode.FE.getCode().equals(selfStudyQuestionForm.getDivision())) {
+    		questionInfoStrBuff.append(ExamDivisionCode.FE.getName() + " ");
+    	}else if(ExamDivisionCode.AP.getCode().equals(selfStudyQuestionForm.getDivision())) {
+    		questionInfoStrBuff.append(ExamDivisionCode.AP.getName() + " ");
+    	}
     	questionInfoStrBuff.append(JPCalenderEncoder.getInstance().convertJpCalender(selfStudyQuestionForm.getYear(), selfStudyQuestionForm.getTerm()));
     	
 		questionInfoStrBuff.append("期 問" + selfStudyQuestionForm.getNumber());
@@ -586,9 +540,9 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
     	
     	// 問題分野情報文字列を作成し、Formにセットする
 		selfStudyQuestionForm.setQuestionFieldInfoStr(
-    			FieldLarge.getName(ExamDivisionCode.AP.getName(), Byte.valueOf(selfStudyQuestionForm.getFieldLId())) + "/"
-    			+ FieldMiddle.getName(ExamDivisionCode.AP.getName(), Byte.valueOf(selfStudyQuestionForm.getFieldMId())) + "/"
-    			+ FieldSmall.getName(ExamDivisionCode.AP.getName(), Byte.valueOf(selfStudyQuestionForm.getFieldSId())));
+    			FieldLarge.getName(ExamDivisionCode.AP.getCode(), Byte.valueOf(selfStudyQuestionForm.getFieldLId())) + "/"
+    			+ FieldMiddle.getName(ExamDivisionCode.AP.getCode(), Byte.valueOf(selfStudyQuestionForm.getFieldMId())) + "/"
+    			+ FieldSmall.getName(ExamDivisionCode.AP.getCode(), Byte.valueOf(selfStudyQuestionForm.getFieldSId())));
 		
 		return selfStudyQuestionForm;
     }
@@ -718,6 +672,7 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
     	
     	int totalNumber = Integer.parseInt(form.getTotalNumber());
     	int fieldLevel = Integer.parseInt(form.getFieldChecked());
+    	String divisionCode = form.getSelectExamDivision();
     	boolean latestFlg = form.isLatestFlg();
     	
         List<String> questionIdList = null;
@@ -725,7 +680,14 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
     	// 最新年度期を取得する
     	String latestYear = null;
     	String latestTerm = null;
-    	for(QuestionBean questionBean : questionRepository.findDistinctYearAndTerm()) {
+    	List<QuestionBean> questionBeanListForLatest;
+    	if(divisionCode != null
+    			&& (ExamDivisionCode.FE.getCode().equals(divisionCode) || ExamDivisionCode.AP.getCode().equals(divisionCode))) {
+    		questionBeanListForLatest = questionRepository.findDistinctYearAndTermByDivision(divisionCode);
+    	} else {
+    		questionBeanListForLatest = questionRepository.findDistinctYearAndTerm();
+    	}
+    	for(QuestionBean questionBean : questionBeanListForLatest) {
     		String year = questionBean.getYear();
     		String term = questionBean.getTerm();
     		
@@ -736,12 +698,13 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
     			latestTerm = term;
     		}
     	}
+    	
     	// 分野別の問題Beanを取得
     	Map<Byte, List<QuestionBean>> questionByFieldMap = numberOfQuestionPerField(latestYear, latestTerm, fieldLevel);
     	// 指定された問題数ごとに分野別の抽出数を算出
     	Map<Byte, Integer> numberByFieldMap = getNumberOfQuestionByField(questionByFieldMap, totalNumber);
     	// 指定した分野から、抽出数ぶんの問題を取得
-    	questionIdList = createRandomQuestionId(fieldLevel, numberByFieldMap, latestFlg);
+    	questionIdList = createRandomQuestionId(divisionCode, fieldLevel, numberByFieldMap, latestFlg);
 
     	form.setQuestionList(questionIdList);
     }
@@ -878,16 +841,17 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
     }
 	
     /**
-     * 指定の出題数に基づいた問題IDリストを生成.
+     * 試験区分ごと、指定の出題数に基づいた問題IDリストを生成.
      * 
+     * @param examDivisionCode 試験区分コード(exam division code).
      * @param fieldLevel 分野ごとの問題IDマップ
      * @param numberByFieldMap 分野ごとの出題数マップ
      * @param latestFlg 直近6回フラグ
      * @return 問題IDリスト
      */
-    private List<String> createRandomQuestionId(int fieldLevel, Map<Byte, Integer> numberByFieldMap, boolean latestFlg) {
+    private List<String> createRandomQuestionId(String examDivisionCode, int fieldLevel, Map<Byte, Integer> numberByFieldMap, boolean latestFlg) {
     	
-    	return sharedTaskService.createRandomQuestionId(fieldLevel, numberByFieldMap, latestFlg);
+    	return sharedTaskService.createRandomQuestionId(examDivisionCode, fieldLevel, numberByFieldMap, latestFlg);
     }
     
     /**
@@ -901,5 +865,141 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
     public void saveQuestionTag(SelfStudyQuestionForm form, String tagId, String tagCheckFlg) {
     	
     	sharedTagService.saveQuestionTag(form.getQuestionList().get(form.getSelectQuestionNumber()), tagId, tagCheckFlg);
+    }
+
+    /**
+     * 試験区分、年度、分類による問題Beanリスト取得
+     * 
+     * @param form 自習Form(self study form).
+     * @param questionBeanList 問題Beanリスト(question bean list).
+     * @return 問題Beanリスト(question bean list).
+     */
+    private List<QuestionBean> setQuestionListByDivisionAndYearAndField(SelfStudyForm form, List<QuestionBean> questionBeanList) {
+    	
+    	// 指定なし
+    	if((form.getSelectExamDivision() == null || form.getSelectExamDivision().equals(""))
+    			&& (form.getSelectYear() == null || form.getSelectYear().equals(""))
+				&& (form.getSelectFieldS() == null || form.getSelectFieldS().equals(""))
+						&& (form.getSelectFieldM() == null || form.getSelectFieldM().equals(""))
+								&& (form.getSelectFieldL() == null || form.getSelectFieldL().equals(""))) {
+			List<QuestionBean> list = questionRepository.findAll();
+			if(list != null) {
+				questionBeanList.addAll(list);
+			}
+		} else {
+			if((form.getSelectExamDivision() != null)
+				&& (ExamDivisionCode.FE.getCode().equals(form.getSelectExamDivision()) || ExamDivisionCode.AP.getCode().equals(form.getSelectExamDivision()))) {
+				// 試験区分コード
+				String examDivisionCode = form.getSelectExamDivision();
+				
+				if((form.getSelectYear() != null && !form.getSelectYear().equals(""))) {
+					// 年度条件あり
+					String yearStr = form.getSelectYear().substring(0, 4);
+					String termStr = form.getSelectYear().substring(4, 5);
+
+					if(form.getSelectFieldS() != null && !form.getSelectFieldS().equals("")) {
+						// 年度＋小分野条件
+						List<QuestionBean> list = questionRepository.findByDivisionAndYearAndTermAndFieldSId(examDivisionCode, yearStr, termStr, Byte.valueOf(form.getSelectFieldS()));
+						if(list != null) {
+							questionBeanList.addAll(list);
+						}
+					} else if(form.getSelectFieldM() != null && !form.getSelectFieldM().equals("")) {
+						// 年度＋中分野条件
+						List<QuestionBean> list = questionRepository.findByDivisionAndYearAndTermAndFieldMId(examDivisionCode, yearStr, termStr, Byte.valueOf(form.getSelectFieldM()));
+						if(list != null) {
+							questionBeanList.addAll(list);
+						}
+					} else if((form.getSelectFieldL() != null && !form.getSelectFieldL().equals(""))) {
+						// 年度＋大分野条件
+						List<QuestionBean> list = questionRepository.findByDivisionAndYearAndTermAndFieldLId(examDivisionCode, yearStr, termStr, Byte.valueOf(form.getSelectFieldL()));
+						if(list != null) {
+							questionBeanList.addAll(list);
+						}
+					} else {
+						// 年度条件のみ
+						List<QuestionBean> list = questionRepository.findByDivisionAndYearAndTerm(examDivisionCode, yearStr, termStr);
+						if(list != null) {
+							questionBeanList.addAll(list);
+						}
+					}
+				} else {
+					// 年度条件なし
+					if(form.getSelectFieldS() != null && !form.getSelectFieldS().equals("")) {
+						// 小分野条件
+						List<QuestionBean> list = questionRepository.findByDivisionAndFieldSId(examDivisionCode, Byte.valueOf(form.getSelectFieldS()));
+						if(list != null) {
+							questionBeanList.addAll(list);
+						}
+					} else if(form.getSelectFieldM() != null && !form.getSelectFieldM().equals("")) {
+						// 中分野条件
+						List<QuestionBean> list = questionRepository.findByDivisionAndFieldMId(examDivisionCode, Byte.valueOf(form.getSelectFieldM()));
+						if(list != null) {
+							questionBeanList.addAll(list);
+						}
+					} else if((form.getSelectFieldL() != null && !form.getSelectFieldL().equals(""))) {
+						// 大分野条件
+						List<QuestionBean> list = questionRepository.findByDivisionAndFieldLId(examDivisionCode, Byte.valueOf(form.getSelectFieldL()));
+						if(list != null) {
+							questionBeanList.addAll(list);
+						}
+					}
+				}
+			} else {
+				if((form.getSelectYear() != null && !form.getSelectYear().equals(""))) {
+					// 年度条件あり
+					String yearStr = form.getSelectYear().substring(0, 4);
+					String termStr = form.getSelectYear().substring(4, 5);
+
+					if(form.getSelectFieldS() != null && !form.getSelectFieldS().equals("")) {
+						// 年度＋小分野条件
+						List<QuestionBean> list = questionRepository.findByYearAndTermAndFieldSId(yearStr, termStr, Byte.valueOf(form.getSelectFieldS()));
+						if(list != null) {
+							questionBeanList.addAll(list);
+						}
+					} else if(form.getSelectFieldM() != null && !form.getSelectFieldM().equals("")) {
+						// 年度＋中分野条件
+						List<QuestionBean> list = questionRepository.findByYearAndTermAndFieldMId(yearStr, termStr, Byte.valueOf(form.getSelectFieldM()));
+						if(list != null) {
+							questionBeanList.addAll(list);
+						}
+					} else if((form.getSelectFieldL() != null && !form.getSelectFieldL().equals(""))) {
+						// 年度＋大分野条件
+						List<QuestionBean> list = questionRepository.findByYearAndTermAndFieldLId(yearStr, termStr, Byte.valueOf(form.getSelectFieldL()));
+						if(list != null) {
+							questionBeanList.addAll(list);
+						}
+					} else {
+						// 年度条件のみ
+						List<QuestionBean> list = questionRepository.findByYearAndTerm(yearStr, termStr);
+						if(list != null) {
+							questionBeanList.addAll(list);
+						}
+					}
+				} else {
+					// 年度条件なし
+					if(form.getSelectFieldS() != null && !form.getSelectFieldS().equals("")) {
+						// 小分野条件
+						List<QuestionBean> list = questionRepository.findByFieldSId(Byte.valueOf(form.getSelectFieldS()));
+						if(list != null) {
+							questionBeanList.addAll(list);
+						}
+					} else if(form.getSelectFieldM() != null && !form.getSelectFieldM().equals("")) {
+						// 中分野条件
+						List<QuestionBean> list = questionRepository.findByFieldMId(Byte.valueOf(form.getSelectFieldM()));
+						if(list != null) {
+							questionBeanList.addAll(list);
+						}
+					} else if((form.getSelectFieldL() != null && !form.getSelectFieldL().equals(""))) {
+						// 大分野条件
+						List<QuestionBean> list = questionRepository.findByFieldLId(Byte.valueOf(form.getSelectFieldL()));
+						if(list != null) {
+							questionBeanList.addAll(list);
+						}
+					}
+				}
+			}
+		}
+    	
+    	return questionBeanList;
     }
 }

@@ -29,6 +29,13 @@ public interface StudentSelfStudyService {
      * @param model モデル(model)
 	 */
 	public void setCheckItems(SelfStudyForm form, Model model);
+    
+	/**
+     * 試験区分項目設定(Set division param).
+     * @param form 自習Form(self study form)
+     * @param model モデル(model)
+	 */
+	public void setSelectDivisionData(SelfStudyForm form, Model model);
 
 	/**
 	 * 条件に該当する問題IDリストを取得する.
