@@ -21,10 +21,11 @@ import jp.ac.ems.config.FieldMiddle;
 import jp.ac.ems.config.FieldSmall;
 import jp.ac.ems.form.BaseGradeForm;
 import jp.ac.ems.form.GradeForm;
+import jp.ac.ems.form.PersonalGradeForm;
 import jp.ac.ems.repository.QuestionRepository;
 import jp.ac.ems.repository.UserRepository;
 import jp.ac.ems.service.shared.SharedGradeService;
-import jp.ac.ems.service.util.JPCalenderEncoder;
+import jp.ac.ems.service.shared.SharedSearchConditionService;
 
 /**
  * 共通成績Serviceクラス（common grade Service Class）.
@@ -45,8 +46,15 @@ public class SharedGradeServiceImpl implements SharedGradeService {
 	@Autowired
 	private QuestionRepository questionRepository;
 	
+	/**
+	 * 共通検索条件サービス(common search condition service).
+	 */
+	@Autowired
+	private SharedSearchConditionService sharedSearchConditionService;
+	
     /**
      * ドロップダウン項目設定(Set dropdown param).
+     * 
      * @param fieldL 大分類ID
      * @param fieldM 中分類ID
      * @param model モデル(model)
@@ -54,26 +62,33 @@ public class SharedGradeServiceImpl implements SharedGradeService {
 	@Override
     public void setSelectData(String fieldL, String fieldM, Model model) {
 		
+		// クラス取得
+        Map<String, String> classMap = sharedSearchConditionService.findAllClassMap();
+        model.addAttribute("classDropItems", classMap);
+		
+		// コース取得
+        Map<String, String> courseMap = sharedSearchConditionService.findAllCourseMap();
+        model.addAttribute("courseDropItems", courseMap);
+		
     	// 年度取得
-        Map<String, String> yearMap = findAllYearMap();
+        Map<String, String> yearMap = sharedSearchConditionService.findAllYearMap();
         model.addAttribute("yearDropItems", yearMap);        
         
     	// 大分類取得
-        Map<String, String> fieldLMap = findAllFieldLMap();
+        Map<String, String> fieldLMap = sharedSearchConditionService.findAllFieldLMap();
         model.addAttribute("fieldLDropItems", fieldLMap);
     	
     	// 中分類取得
-        Map<String, String> fieldMMap = findAllFieldMMap(fieldL, fieldM);
+        Map<String, String> fieldMMap = sharedSearchConditionService.findAllFieldMMap(fieldL, fieldM);
         model.addAttribute("fieldMDropItems", fieldMMap);
     	
     	// 小分類取得
-        Map<String, String> fieldSMap = findAllFieldSMap(fieldM);
+        Map<String, String> fieldSMap = sharedSearchConditionService.findAllFieldSMap(fieldM);
         model.addAttribute("fieldSDropItems", fieldSMap);
         
     	// ソートキー取得
         Map<String, String> sortKeyMap = findAllSortKeyMap();
         model.addAttribute("sortKeyItems", sortKeyMap);
-
     }
 
 	/**
@@ -97,7 +112,7 @@ public class SharedGradeServiceImpl implements SharedGradeService {
 			Long questionId = sqhBean.getQuestionId();
 			
 			QuestionBean questionBean = questionBeanMap.get(questionId);
-			
+
 			GradeData grade = null;
 			if(gradeMap.containsKey(userId)) {
 				grade = gradeMap.get(userId);
@@ -113,14 +128,14 @@ public class SharedGradeServiceImpl implements SharedGradeService {
 			if((form.getSelectYear() == null || form.getSelectYear().equals("")) && (form.getSelectFieldL() == null || form.getSelectFieldL().equals(""))
 					&& (form.getSelectFieldM() == null || form.getSelectFieldM().equals("")) && (form.getSelectFieldS() == null || form.getSelectFieldS().equals(""))) {
 				// 全年度・全分野の成績
-				createGradeByAll(grade, correctFlg);
+				gradeCount(grade, correctFlg);
 				
 			} else if(form.getSelectYear() != null && !form.getSelectYear().equals("")) {
 				// 年度別の成績
 				
 				String year = questionBean.getYear() + questionBean.getTerm();
 				if(form.getSelectYear().equals(year)) {
-					createGradeByYear(grade, correctFlg, year);
+					gradeCount(grade, correctFlg);
 				}
 			} else {
 				// 分野別の成績
@@ -145,12 +160,12 @@ public class SharedGradeServiceImpl implements SharedGradeService {
 	}
 	
 	/**
-	 * 全問題の成績を作成
+	 * 正解/不正解のカウントアップ
 	 * 
 	 * @param grade 成績データ
 	 * @param correctFlg　正解フラグ
 	 */
-	private void createGradeByAll(GradeData grade, boolean correctFlg) {
+	private void gradeCount(GradeData grade, boolean correctFlg) {
 			
 		if(correctFlg) {
 			grade.setCorrectCnt(grade.getCorrectCnt() + 1);
@@ -159,21 +174,20 @@ public class SharedGradeServiceImpl implements SharedGradeService {
 		}
 	}
 	
-	/**
-	 * 年度指定で成績を作成
-	 * 
-	 * @param grade 成績データ
-	 * @param correctFlg 正解フラグ
-	 * @param year 年度情報
-	 */
-	private void createGradeByYear(GradeData grade, boolean correctFlg, String year) {
-
-		if(correctFlg) {
-			grade.setCorrectCnt(grade.getCorrectCnt() + 1);
-		} else {
-			grade.setIncorrectCnt(grade.getIncorrectCnt() + 1);
-		}
-	}
+//	/**
+//	 * 年度指定で成績を作成
+//	 * 
+//	 * @param grade 成績データ
+//	 * @param correctFlg 正解フラグ
+//	 */
+//	private void createGradeByYear(GradeData grade, boolean correctFlg) {
+//
+//		if(correctFlg) {
+//			grade.setCorrectCnt(grade.getCorrectCnt() + 1);
+//		} else {
+//			grade.setIncorrectCnt(grade.getIncorrectCnt() + 1);
+//		}
+//	}
 	
 	/**
 	 * 分野別で成績を作成
@@ -267,66 +281,6 @@ public class SharedGradeServiceImpl implements SharedGradeService {
 	}
 	
 	
-    /**
-     * 画面用大分類マップ取得(Get large  map for screen).
-     * @return 画面用大分類マップ（key:ドロップダウンリストID、value：大分類ラベル）
-     */
-    private Map<String, String> findAllFieldLMap() {
-    	
-    	Map<String, String> map = new LinkedHashMap<String, String>();
-
-    	EnumSet.allOf(FieldLarge.class)
-    	  .forEach(fieldL -> map.put(String.valueOf(fieldL.getId()), fieldL.getName()));
-    	
-    	return map;
-    }
-    
-    /**
-     * 画面用中分類マップ取得(Get middle filed map for screen).
-     * @param parentId 大分類ID(large field id)
-     * @param fieldMId 中分類ID(Middle Field id)
-     * @return 画面用中分類マップ（key:ドロップダウンリストID、value：中分類ラベル）
-     */
-    private Map<String, String> findAllFieldMMap(String parentId, String fieldMId) {
-
-    	Map<String, String> map = new LinkedHashMap<String, String>();
-    	if(parentId != null && !parentId.equals("")) {
-    		map.putAll(FieldMiddle.getMap(Byte.valueOf(parentId)));
-    	} else if(fieldMId != null && !fieldMId.equals("")) {
-    		map.putAll(findRestoreAllFieldMMap(parentId, fieldMId));
-    	}
-    	return map;
-    }
-    
-    /**
-     * 画面用中分類マップ復元取得(Get middle filed map for screen).
-     * @param parentId 大分類ID(large field id)
-     * @param fieldMId 中分類ID(Middle Field id)
-     * @return 画面用中分類マップ（key:ドロップダウンリストID、value：中分類ラベル）
-     */
-    private Map<String, String> findRestoreAllFieldMMap(String parentId, String fieldMId) {
-
-    	Map<String, String> map = new LinkedHashMap<String, String>();
-    	map.putAll(findAllFieldMMap(FieldMiddle.getParentId(Byte.valueOf(fieldMId)).toString(), fieldMId));
-
-    	return map;
-    }
-
-    
-    /**
-     * 画面用小分類マップ取得(Get small filed map for screen).
-     * @param parentId 中分類ID(middle field id)
-     * @return 画面用小分類マップ（key:ドロップダウンリストID、value：小分類ラベル）
-     */
-    private Map<String, String> findAllFieldSMap(String parentId) {
-    	
-    	
-    	Map<String, String> map = new LinkedHashMap<String, String>();
-    	if(parentId != null && !parentId.equals("")) {
-    		map.putAll(FieldSmall.getMap(Byte.valueOf(parentId)));
-    	}
-    	return map;
-    }
 
     /**
      * ソートキーマップ取得
@@ -341,34 +295,4 @@ public class SharedGradeServiceImpl implements SharedGradeService {
 
     	return map;
     }
-
-    /**
-     * 画面用年度マップ取得
-     * 
-     * @return 画面用年度マップ（key:ドロップダウンリストID、value：年度ラベル）
-     */
-    private Map<String, String> findAllYearMap() {
-    	
-    	Map<String, String> map = new LinkedHashMap<String, String>();
-    	
-    	for(QuestionBean questionBean : questionRepository.findDistinctYearAndTerm()) {
-    		StringBuffer keyBuff = new StringBuffer();
-    		StringBuffer valueBuff = new StringBuffer();
-    		// 年度
-    		keyBuff.append(questionBean.getYear());
-    		
-    		String termStr = questionBean.getTerm();
-    		// 期
-    		if("H".equals(termStr)) {
-    			keyBuff.append("H");
-    		} else {
-    			keyBuff.append("A");
-    		}
-        	valueBuff.append(JPCalenderEncoder.getInstance().convertJpCalender(questionBean.getYear(), termStr));
-
-   			map.put(keyBuff.toString(), valueBuff.toString());
-    	}
-    	return map;
-    }
-
 }

@@ -5,7 +5,7 @@ import java.util.Map;
 
 /**
  * 共通タグ処理サービスインターフェース（common tag service interface）.
- * @author user01-m
+ * @author tejc999999
  *
  */
 public interface SharedTagService {

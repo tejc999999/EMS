@@ -41,6 +41,7 @@ import jp.ac.ems.repository.TaskRepository;
 import jp.ac.ems.repository.UserRepository;
 import jp.ac.ems.service.shared.SharedTagService;
 import jp.ac.ems.service.shared.SharedTaskService;
+import jp.ac.ems.service.shared.SharedSearchConditionService;
 import jp.ac.ems.service.student.StudentSelfStudyService;
 import jp.ac.ems.service.util.JPCalenderEncoder;
 import lombok.Data;
@@ -57,13 +58,19 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 	 * タグ共通処理サービス
 	 */
 	@Autowired
-	SharedTagService sharedTagService;
+	private SharedTagService sharedTagService;
 
 	/**
 	 * 課題共通サービス
 	 */
 	@Autowired
-	SharedTaskService sharedTaskService;
+	private SharedTaskService sharedTaskService;
+	
+	/**
+	 * 共通検索条件サービス(common search condition service).
+	 */
+	@Autowired
+	private SharedSearchConditionService sharedSearchConditionService;
 	
 	/**
 	 * ユーザーリポジトリ(user repository)
@@ -97,7 +104,7 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 	@Override
     public void setSelectYearData(SelfStudyForm form, Model model) {
     	// 年度取得
-        Map<String, String> yearMap = findAllYearMap();
+        Map<String, String> yearMap = sharedSearchConditionService.findAllYearMap();
         model.addAttribute("yearDropItems", yearMap);
     }
 	
@@ -107,17 +114,17 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
      * @param model モデル(model)
      */
 	@Override
-    public void setSelectFieldData(SelfStudyForm form, Model model) {
+    public void setSelectFieldData(String fieldL, String fieldM, Model model) {
     	// 大分類取得
-        Map<String, String> fieldLMap = findAllFieldLMap();
+        Map<String, String> fieldLMap = sharedSearchConditionService.findAllFieldLMap();
         model.addAttribute("fieldLDropItems", fieldLMap);
     	
     	// 中分類取得
-        Map<String, String> fieldMMap = findAllFieldMMap(form.getSelectFieldL());
+        Map<String, String> fieldMMap = sharedSearchConditionService.findAllFieldMMap(fieldL, fieldM);
         model.addAttribute("fieldMDropItems", fieldMMap);
     	
     	// 小分類取得
-        Map<String, String> fieldSMap = findAllFieldSMap(form.getSelectFieldM());
+        Map<String, String> fieldSMap = sharedSearchConditionService.findAllFieldSMap(fieldM);
         model.addAttribute("fieldSDropItems", fieldSMap);
     }
 
@@ -469,7 +476,7 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
      */
     @Override
     public void setSelectDataForRandom(Model model) {
-
+    	
     	// 分類名
         Map<String, String> fieldSMap = findAllFieldNameMap();
         model.addAttribute("fieldCheckItems", fieldSMap);
@@ -547,77 +554,6 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 		return selfStudyQuestionForm;
     }
 	
-    /**
-     * 画面用年度マップ取得
-     * @return 画面用年度マップ（key:ドロップダウンリストID、value：年度ラベル）
-     */
-    private Map<String, String> findAllYearMap() {
-    	
-    	Map<String, String> map = new LinkedHashMap<String, String>();
-    	
-    	for(QuestionBean questionBean : questionRepository.findDistinctYearAndTerm()) {
-    		StringBuffer keyBuff = new StringBuffer();
-    		StringBuffer valueBuff = new StringBuffer();
-    		// 年度
-    		keyBuff.append(questionBean.getYear());
-    		
-    		String termStr = questionBean.getTerm();
-    		// 期
-    		if("H".equals(termStr)) {
-    			keyBuff.append("H");
-    		} else {
-    			keyBuff.append("A");
-    		}
-    		valueBuff.append(JPCalenderEncoder.getInstance().convertJpCalender(questionBean.getYear(), termStr));
-    		
-    		map.put(keyBuff.toString(), valueBuff.toString());
-    	}
-    	return map;
-    }
-    
-    /**
-     * 画面用大分類マップ取得(Get large  map for screen).
-     * @return 画面用大分類マップ（key:ドロップダウンリストID、value：大分類ラベル）
-     */
-    private Map<String, String> findAllFieldLMap() {
-    	
-    	Map<String, String> map = new LinkedHashMap<String, String>();
-
-    	EnumSet.allOf(FieldLarge.class)
-    	  .forEach(fieldL -> map.put(String.valueOf(fieldL.getId()), fieldL.getName()));
-    	
-    	return map;
-    }
-    
-    /**
-     * 画面用中分類マップ取得(Get middle filed map for screen).
-     * @param parentId 大分類ID(large field id)
-     * @return 画面用中分類マップ（key:ドロップダウンリストID、value：中分類ラベル）
-     */
-    private Map<String, String> findAllFieldMMap(String parentId) {
-
-    	Map<String, String> map = new LinkedHashMap<String, String>();
-    	if(parentId != null && !parentId.equals("")) {
-    		map.putAll(FieldMiddle.getMap(Byte.valueOf(parentId)));
-    	}
-    	return map;
-    }
-    
-    /**
-     * 画面用小分類マップ取得(Get small filed map for screen).
-     * @param parentId 中分類ID(middle field id)
-     * @return 画面用小分類マップ（key:ドロップダウンリストID、value：小分類ラベル）
-     */
-    private Map<String, String> findAllFieldSMap(String parentId) {
-    	
-    	
-    	Map<String, String> map = new LinkedHashMap<String, String>();
-    	if(parentId != null && !parentId.equals("")) {
-    		map.putAll(FieldSmall.getMap(Byte.valueOf(parentId)));
-    	}
-    	return map;
-    }
-    
 	/**
 	 * 回答IDを語句に置き換える(Convert answered id to word).
 	 * @param answeredId 回答ID(answered id)
@@ -942,6 +878,12 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 						if(list != null) {
 							questionBeanList.addAll(list);
 						}
+					} else {
+						// 試験区分のみ
+						List<QuestionBean> list = questionRepository.findByDivision(examDivisionCode);
+						if(list != null) {
+							questionBeanList.addAll(list);
+						}
 					}
 				}
 			} else {
@@ -995,6 +937,8 @@ public class StudentSelfStudyServiceImpl implements StudentSelfStudyService {
 						if(list != null) {
 							questionBeanList.addAll(list);
 						}
+					} else {
+						// 条件指定なし（先頭の条件で対応済み）
 					}
 				}
 			}

@@ -56,25 +56,25 @@ public class PersonalGradeController {
         return "common/grade/personal";
     }
     
-    /**
-     * ユーザーを指定した成績一覧(target user grade list).
-     * @param form 個人成績Form(personal grade form)
-     * @param result エラーチェック結果(error validate result)
-     * @param model 成績一覧保存用モデル(model to save grade list)
-     * @return 課題問題登録用ページビュー(task question add page view)
-     */
-    @PostMapping(params = "targetIdSelectBtn")
-    public String targetselectList(@Validated PersonalGradeForm form, BindingResult result,
-            Model model) {
-        
-    	PersonalGradeForm personalGradeForm = personalGradeService.getGradeFormByAll(form);
-    	model.addAttribute("personalGradeForm", personalGradeForm);    	
-    	
-    	// ドロップダウン項目設定
-    	personalGradeService.setSelectData(form, model);
-
-        return "common/grade/personal";
-    }
+//    /**
+//     * ユーザーを指定した成績一覧(target user grade list).
+//     * @param form 個人成績Form(personal grade form)
+//     * @param result エラーチェック結果(error validate result)
+//     * @param model 成績一覧保存用モデル(model to save grade list)
+//     * @return 課題問題登録用ページビュー(task question add page view)
+//     */
+//    @PostMapping(params = "targetIdSelectBtn")
+//    public String targetselectList(@Validated PersonalGradeForm form, BindingResult result,
+//            Model model) {
+//        
+//    	PersonalGradeForm personalGradeForm = personalGradeService.getGradeForm(form);
+//    	model.addAttribute("personalGradeForm", personalGradeForm);    	
+//    	
+//    	// ドロップダウン項目設定
+//    	personalGradeService.setSelectData(form, model);
+//
+//        return "common/grade/personal";
+//    }
 
 //    /**
 //     * 個人成績一覧(grade list).
@@ -105,9 +105,8 @@ public class PersonalGradeController {
     @PostMapping(params = "selectFieldLargeBtn")
     public String addSelectFieldMiddle(@Validated PersonalGradeForm form, BindingResult result,
             Model model) {
-        
-    	PersonalGradeForm personalGradeForm = personalGradeService.getGradeFormByField(form);
-    	model.addAttribute("personalGradeForm", personalGradeForm);    	
+    	PersonalGradeForm personalGradeForm = personalGradeService.getGradeForm(form);
+    	model.addAttribute("personalGradeForm", personalGradeForm);
     	
     	// ドロップダウン項目設定
     	personalGradeService.setSelectData(form, model);
@@ -126,7 +125,7 @@ public class PersonalGradeController {
     public String addSelectFieldSmall(@Validated PersonalGradeForm form, BindingResult result,
             Model model) {
         
-    	PersonalGradeForm personalGradeForm = personalGradeService.getGradeFormByField(form);
+    	PersonalGradeForm personalGradeForm = personalGradeService.getGradeForm(form);
     	model.addAttribute("personalGradeForm", personalGradeForm);    	
     	
     	// ドロップダウン項目設定
@@ -134,7 +133,7 @@ public class PersonalGradeController {
 
         return "common/grade/personal";
     }
-        
+
     /**
      * 年度別問題取得(Obtaining questions by year).
      * @param form 課題Form(task form)
@@ -142,11 +141,11 @@ public class PersonalGradeController {
      * @param model モデル(model)
      * @return 課題問題登録用ページビュー(task question add page view)
      */
-    @PostMapping(params = "selectYearBtn")
-    public String addSelectYear(@Validated PersonalGradeForm form, BindingResult result,
+    @PostMapping(params = "selectBtn")
+    public String addSelect(@Validated PersonalGradeForm form, BindingResult result,
             Model model) {
     	
-    	PersonalGradeForm personalGradeForm = personalGradeService.getGradeFormByYear(form);
+    	PersonalGradeForm personalGradeForm = personalGradeService.getGradeForm(form);
     	model.addAttribute("personalGradeForm", personalGradeForm);
     	
     	// ドロップダウン項目設定
@@ -155,23 +154,43 @@ public class PersonalGradeController {
         return "common/grade/personal";
     }
     
-    /**
-     * 分野別問題取得(Obtaining questions by field).
-     * @param form 課題Form(task form)
-     * @param result エラーチェック結果(error validate result)
-     * @param model モデル(model)
-     * @return 課題問題登録用ページビュー(task question add page view)
-     */
-    @PostMapping(params = "selectFieldBtn")
-    public String addSelectField(@Validated PersonalGradeForm form, BindingResult result,
-            Model model) {
-    	
-    	PersonalGradeForm personalGradeForm = personalGradeService.getGradeFormByField(form);
-    	model.addAttribute("personalGradeForm", personalGradeForm);
-    	
-    	// ドロップダウン項目設定
-    	personalGradeService.setSelectData(form, model);
-        
-        return "common/grade/personal";
-    }
+//    /**
+//     * 年度別問題取得(Obtaining questions by year).
+//     * @param form 課題Form(task form)
+//     * @param result エラーチェック結果(error validate result)
+//     * @param model モデル(model)
+//     * @return 課題問題登録用ページビュー(task question add page view)
+//     */
+//    @PostMapping(params = "selectYearBtn")
+//    public String addSelectYear(@Validated PersonalGradeForm form, BindingResult result,
+//            Model model) {
+//    	
+//    	PersonalGradeForm personalGradeForm = personalGradeService.getGradeFormByYear(form);
+//    	model.addAttribute("personalGradeForm", personalGradeForm);
+//    	
+//    	// ドロップダウン項目設定
+//    	personalGradeService.setSelectData(form, model);
+//        
+//        return "common/grade/personal";
+//    }
+//    
+//    /**
+//     * 分野別問題取得(Obtaining questions by field).
+//     * @param form 課題Form(task form)
+//     * @param result エラーチェック結果(error validate result)
+//     * @param model モデル(model)
+//     * @return 課題問題登録用ページビュー(task question add page view)
+//     */
+//    @PostMapping(params = "selectFieldBtn")
+//    public String addSelectField(@Validated PersonalGradeForm form, BindingResult result,
+//            Model model) {
+//    	
+//    	PersonalGradeForm personalGradeForm = personalGradeService.getGradeFormByField(form);
+//    	model.addAttribute("personalGradeForm", personalGradeForm);
+//    	
+//    	// ドロップダウン項目設定
+//    	personalGradeService.setSelectData(form, model);
+//        
+//        return "common/grade/personal";
+//    }
 }

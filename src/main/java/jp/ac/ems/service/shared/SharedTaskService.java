@@ -1,11 +1,9 @@
 package jp.ac.ems.service.shared;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import jp.ac.ems.bean.QuestionBean;
-import jp.ac.ems.config.ExamDivisionCode;
 import jp.ac.ems.form.teacher.TaskForm;
 
 /**

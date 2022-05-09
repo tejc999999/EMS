@@ -2,6 +2,7 @@ package jp.ac.ems.service;
 
 import org.springframework.ui.Model;
 
+import jp.ac.ems.form.GradeForm;
 import jp.ac.ems.form.PersonalGradeForm;
 
 /**
@@ -23,25 +24,33 @@ public interface PersonalGradeService {
 	 * @return 成績Form(grad form)
 	 */
     public PersonalGradeForm getGradeFormDefault(PersonalGradeForm form);
-    
-	/**
-	 * 全問題の個人成績を取得する.
-	 * @param form 個人成績Form(personal grad form)
-	 * @return 個人成績Form(personal grad form)
-	 */
-    public PersonalGradeForm getGradeFormByAll(PersonalGradeForm form);
-    
-	/**
-	 * 特定年度の個人成績を取得する.
-	 * @param form 個人成績Form(personal grad form)
-	 * @return 個人成績Form(personal grad form)
-	 */
-	public PersonalGradeForm getGradeFormByField(PersonalGradeForm form);
+//    
+//	/**
+//	 * 全問題の個人成績を取得する.
+//	 * @param form 個人成績Form(personal grad form)
+//	 * @return 個人成績Form(personal grad form)
+//	 */
+//    public PersonalGradeForm getGradeFormByAll(PersonalGradeForm form);
 
 	/**
-	 * 特定分類の個人成績を取得する.
-	 * @param form 個人成績Form(personal grad form)
-	 * @return 個人成績Form(personal grad form)
+	 * 成績Formを取得する(get grade form).
+	 * 
+	 * @param form 成績Form（grade form）
+	 * @return 成績Form(grade form)
 	 */
-	public PersonalGradeForm getGradeFormByYear(PersonalGradeForm form);
+	public PersonalGradeForm getGradeForm(PersonalGradeForm form);
+    
+//	/**
+//	 * 特定年度の個人成績を取得する.
+//	 * @param form 個人成績Form(personal grad form)
+//	 * @return 個人成績Form(personal grad form)
+//	 */
+//	public PersonalGradeForm getGradeFormByField(PersonalGradeForm form);
+//
+//	/**
+//	 * 特定分類の個人成績を取得する.
+//	 * @param form 個人成績Form(personal grad form)
+//	 * @return 個人成績Form(personal grad form)
+//	 */
+//	public PersonalGradeForm getGradeFormByYear(PersonalGradeForm form);
 }

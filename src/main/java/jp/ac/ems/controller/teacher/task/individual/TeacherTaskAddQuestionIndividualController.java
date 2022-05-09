@@ -39,7 +39,7 @@ public class TeacherTaskAddQuestionIndividualController {
             return "redirect:/teacher/task/add";
     	}
     	// ドロップダウン項目設定
-    	taskIndividualService.setSelectDataForSelect(form, model);
+    	taskIndividualService.setSelectDataForSelect(form.getSelectFieldL(), form.getSelectFieldM(), model);
     	
         // 全問表示は通信負荷が高いため、初期状態は問題なしに変更
     	Map<String, String> questionMap = new HashMap<>();

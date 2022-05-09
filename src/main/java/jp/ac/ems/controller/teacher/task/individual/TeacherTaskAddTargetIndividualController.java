@@ -119,7 +119,7 @@ public class TeacherTaskAddTargetIndividualController{
     	model.addAttribute("questionCheckItems", questionMap);
     	
     	// ドロップダウン項目設定
-    	taskIndividualService.setSelectDataForSelect(form, model);
+    	taskIndividualService.setSelectDataForSelect(form.getSelectFieldL(), form.getSelectFieldM(), model);
     	
         // 入力状態保持のため
         model.addAttribute("courseForm", form);
@@ -143,8 +143,8 @@ public class TeacherTaskAddTargetIndividualController{
     	model.addAttribute("questionCheckItems", questionMap);
     	
     	// ドロップダウン項目設定
-    	taskIndividualService.setSelectDataForSelect(form, model);
-    	
+    	taskIndividualService.setSelectDataForSelect(form.getSelectFieldL(), form.getSelectFieldM(), model);
+
         // 入力状態保持のため
         model.addAttribute("courseForm", form);
         
@@ -167,7 +167,7 @@ public class TeacherTaskAddTargetIndividualController{
 	 	model.addAttribute("questionCheckItems", questionMap);
 	 	
 	 	// ドロップダウン項目設定
-	 	taskIndividualService.setSelectDataForSelect(form, model);
+    	taskIndividualService.setSelectDataForSelect(form.getSelectFieldL(), form.getSelectFieldM(), model);
 	 	
 	     // 入力状態保持のため
 	     model.addAttribute("courseForm", form);

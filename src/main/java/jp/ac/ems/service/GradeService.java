@@ -25,16 +25,24 @@ public interface GradeService {
     public GradeForm getGradeFormDefault(GradeForm form);
     
 	/**
-	 * 特定年度の成績を取得する.
-	 * @param form 成績Form(grad form)
-	 * @return 成績Form(grad form)
+	 * 成績Formを取得する(get grade form).
+	 * 
+	 * @param form 成績Form（grade form）
+	 * @return 成績マップ(grade map)
 	 */
-	public GradeForm getGradeFormByField(GradeForm form);
+	public GradeForm getGradeForm(GradeForm form);
 
-	/**
-	 * 特定分類の成績を取得する.
-	 * @param form 成績Form(grad form)
-	 * @return 成績Form(grad form)
-	 */
-	public GradeForm getGradeFormByYear(GradeForm form);
+//	/**
+//	 * 特定年度の成績を取得する.
+//	 * @param form 成績Form(grad form)
+//	 * @return 成績Form(grad form)
+//	 */
+//	public GradeForm getGradeFormByField(GradeForm form);
+//
+//	/**
+//	 * 特定分類の成績を取得する.
+//	 * @param form 成績Form(grad form)
+//	 * @return 成績Form(grad form)
+//	 */
+//	public GradeForm getGradeFormByYear(GradeForm form);
 }

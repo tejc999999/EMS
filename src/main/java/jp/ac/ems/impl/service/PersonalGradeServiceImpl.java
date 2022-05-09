@@ -17,6 +17,7 @@ import org.springframework.ui.Model;
 import jp.ac.ems.bean.StudentQuestionHistoryBean;
 import jp.ac.ems.bean.UserBean;
 import jp.ac.ems.common.data.GradeData;
+import jp.ac.ems.form.GradeForm;
 import jp.ac.ems.form.PersonalGradeForm;
 import jp.ac.ems.repository.StudentQuestionHistoryRepository;
 import jp.ac.ems.repository.UserRepository;
@@ -77,45 +78,33 @@ public class PersonalGradeServiceImpl  implements PersonalGradeService {
         return form;
 	}
     
-	/**
-	 * 全問題の成績を取得する.
-	 * @param form 成績Form(grad form)
-	 * @return 成績Form(grad form)
-	 */
-    @Override
-    public PersonalGradeForm getGradeFormByAll(PersonalGradeForm form) {
-
-    	return getGradeForm(form);
-	}
-    
-	/**
-	 * 特定年度の成績を取得する.
-	 * @param form 成績Form(grad form)
-	 * @return 成績Form(grad form)
-	 */
-    @Override
-	public PersonalGradeForm getGradeFormByField(PersonalGradeForm form) {
-		
-		form.setSelectYear(null);
-		
-		return getGradeForm(form);
-	}
-
-	/**
-	 * 特定分類の成績を取得する.
-	 * @param form 成績Form(grad form)
-	 * @return 成績Form(grad form)
-	 */
-    @Override
-	public PersonalGradeForm getGradeFormByYear(PersonalGradeForm form) {
-		
-		form.setSelectFieldL(null);
-		form.setSelectFieldM(null);
-		form.setSelectFieldS(null);
-		
-		return getGradeForm(form);
-	}
-
+//	/**
+//	 * 特定年度の成績を取得する.
+//	 * @param form 成績Form(grad form)
+//	 * @return 成績Form(grad form)
+//	 */
+//    @Override
+//	public PersonalGradeForm getGradeFormByField(PersonalGradeForm form) {
+//		
+//		form.setSelectYear(null);
+//		
+//		return getGradeForm(form);
+//	}
+//
+//	/**
+//	 * 特定分類の成績を取得する.
+//	 * @param form 成績Form(grad form)
+//	 * @return 成績Form(grad form)
+//	 */
+//    @Override
+//	public PersonalGradeForm getGradeFormByYear(PersonalGradeForm form) {
+//		
+//		form.setSelectFieldL(null);
+//		form.setSelectFieldM(null);
+//		form.setSelectFieldS(null);
+//		
+//		return getGradeForm(form);
+//	}
 	
     /**
      * ドロップダウン項目設定(Set dropdown param).
@@ -136,7 +125,8 @@ public class PersonalGradeServiceImpl  implements PersonalGradeService {
 	 * @param form 成績Form（grade form）
 	 * @return 成績Form(grade form)
 	 */
-	private PersonalGradeForm getGradeForm(PersonalGradeForm form) {
+	@Override
+	public PersonalGradeForm getGradeForm(PersonalGradeForm form) {
 
 		// 成績作成
 		List<StudentQuestionHistoryBean> studentQuestHistoryBeanList = studentQuestionHistoryRepository.findAllByUserId(form.getUserId());

@@ -19,60 +19,88 @@
 <form th:action="@{/common/grade}" th:object="${gradeForm}" method="post">
 
   <div class="form-row">
+    <div class="form-group col-12 col-md-4">
+      <div class="form-group">
+        <label>クラス</label>
+		<select class="form-control" id="selectClass" name="selectClass">
+		     <option value="">---</option>
+		     <option th:each="item : ${classDropItems}" th:value="${item.key}" th:text="${item.value}" th:selected="${item.key} == *{selectClass}">pulldown</option>
+		</select>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group col-12 col-md-4">
+      <div class="form-group">
+        <label>コース</label>
+		<select class="form-control" id="selectCourse" name="selectCourse">
+		     <option value="">---</option>
+		     <option th:each="item : ${courseDropItems}" th:value="${item.key}" th:text="${item.value}" th:selected="${item.key} == *{selectCourse}">pulldown</option>
+		</select>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-row">
     <div class="form-group col-6 col-md-2">
       <div class="form-group">
+        <label>年度/期</label>
 		<select class="form-control" id="selectYear" name="selectYear">
 		     <option value="">---</option>
 		     <option th:each="item : ${yearDropItems}" th:value="${item.key}" th:text="${item.value}" th:selected="${item.key} == *{selectYear}">pulldown</option>
 		</select>
       </div>
     </div>
-   	<div class="form-group col-6 col-md-2">
-		<input type="submit" name="selectYearBtn" class="btn btn-info btn-block" th:value="選択">
-    </div>
   </div>
 
-  <div class="form-row">
-    <div class="form-group col-5 col-md-2">
-      <div class="form-group">
-	    <select class="form-control" id="selectFieldL" name="selectFieldL">
-	      <option value="">---</option>
-	      <option th:each="item : ${fieldLDropItems}" th:value="${item.key}" th:text="${item.value}" th:selected="${item.key} == *{selectFieldL}">pulldown</option>
-	    </select>
-      </div>
-    </div>
-    <div class="form-group col-2 col-md-1">
-      <input type="submit" name="selectFieldLargeBtn" class="btn btn-info btn-block" th:value="'>'">
-    </div>
-    <div class="form-group col-5 col-md-2">
-      <div class="form-group">
-	    <select class="form-control" id="selectFieldM" name="selectFieldM">
-	      <option value="">---</option>
-	      <option th:each="item : ${fieldMDropItems}" th:value="${item.key}" th:text="${item.value}" th:selected="${item.key} == *{selectFieldM}">pulldown</option>
-	    </select>
-      </div>
-    </div>
-    <div class="form-group col-2 col-md-1">
-      <input type="submit" name="selectFieldMiddleBtn" class="btn btn-info btn-block" th:value="'>'">
-    </div>
-    <div class="form-group col-5 col-md-2">
-      <div class="form-group">
-	    <select class="form-control" id="selectFieldS" name="selectFieldS">
-	      <option value="">---</option>
-	      <option th:each="item : ${fieldSDropItems}" th:value="${item.key}" th:text="${item.value}" th:selected="${item.key} == *{selectFieldS}">pulldown</option>
-	    </select>
-      </div>
-    </div>
-    <div class="form-group col-5 col-md-2">
-      <input type="submit" name="selectFieldBtn" class="btn btn-info btn-block" th:value="選択">
-    </div>
-  </div>
+		  <div class="form-row">
+		    <div class="form-group col-5 col-md-2">
+		      <div class="form-group">
+		        <label>大分類</lable>
+				<select class="form-control" id="selectFieldL" name="selectFieldL">
+				     <option value="">---</option>
+				     <option th:each="item : ${fieldLDropItems}" th:value="${item.key}" th:text="${item.value}" th:selected="${item.key} == *{selectFieldL}">pulldown</option>
+				</select>
+		      </div>
+		    </div>
+		    <div class="form-group col-2 col-md-1 align-self-center">
+				<input type="submit" name="selectFieldLargeBtn" class="btn btn-info btn-block" th:value="'>'">
+		    </div>
+		    <div class="form-group col-5 col-md-2">
+		      <div class="form-group">
+		        <label>中分類</lable>
+				<select class="form-control" id="selectFieldM" name="selectFieldM">
+				     <option value="">---</option>
+				     <option th:each="item : ${fieldMDropItems}" th:value="${item.key}" th:text="${item.value}" th:selected="${item.key} == *{selectFieldM}">pulldown</option>
+				</select>
+		      </div>
+		    </div>
+		    <div class="form-group col-2 col-md-1 align-self-center">
+				<input type="submit" name="selectFieldMiddleBtn" class="btn btn-info btn-block" th:value="'>'">
+		    </div>
+		    <div class="form-group col-5 col-md-2">
+		      <div class="form-group">
+		        <label>小分類</lable>
+				<select class="form-control" id="selectFieldS" name="selectFieldS">
+				     <option value="">---</option>
+				     <option th:each="item : ${fieldSDropItems}" th:value="${item.key}" th:text="${item.value}" th:selected="${item.key} == *{selectFieldS}">pulldown</option>
+				</select>
+		      </div>
+		    </div>
+		  </div>
 
   <div class="row form-inline pb-3">
     <div class="col-12 col-md-4" th:each="item : ${sortKeyItems}">
       <label class="radio-inline float-left">
         <input type="radio" name="selectSortKey" th:value="${item.key}" th:text="${item.value}" th:field="*{selectSortKey}" />
       </label>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group col-12">
+      <input type="submit" class="btn btn-info btn-block" name="selectBtn" value="成績抽出">
     </div>
   </div>
   

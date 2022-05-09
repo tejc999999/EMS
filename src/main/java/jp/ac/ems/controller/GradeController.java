@@ -14,7 +14,7 @@ import jp.ac.ems.form.GradeForm;
 import jp.ac.ems.service.GradeService;
 
 /**
- * 学生用成績Contollerクラス（student grade Controller Class）.
+ * 学生/先生・共通用成績Contollerクラス（student/teacher common grade Controller Class）.
  * @author tejc999999
  */
 @Controller
@@ -83,7 +83,7 @@ public class GradeController {
         
         return list(form, result, model);
     }
-        
+
     /**
      * 年度別問題取得(Obtaining questions by year).
      * @param form 課題Form(task form)
@@ -91,31 +91,11 @@ public class GradeController {
      * @param model モデル(model)
      * @return 課題問題登録用ページビュー(task question add page view)
      */
-    @PostMapping(params = "selectYearBtn")
-    public String addSelectYear(@Validated GradeForm form, BindingResult result,
+    @PostMapping(params = "selectBtn")
+    public String addSelect(@Validated GradeForm form, BindingResult result,
             Model model) {
     	
-    	GradeForm gradeForm = gradeService.getGradeFormByYear(form);
-    	model.addAttribute("gradeForm", gradeForm);
-    	
-    	// ドロップダウン項目設定
-    	gradeService.setSelectData(form, model);
-        
-        return "common/grade/list";
-    }
-    
-    /**
-     * 分野別問題取得(Obtaining questions by field).
-     * @param form 課題Form(task form)
-     * @param result エラーチェック結果(error validate result)
-     * @param model モデル(model)
-     * @return 課題問題登録用ページビュー(task question add page view)
-     */
-    @PostMapping(params = "selectFieldBtn")
-    public String addSelectField(@Validated GradeForm form, BindingResult result,
-            Model model) {
-    	
-    	GradeForm gradeForm = gradeService.getGradeFormByField(form);
+    	GradeForm gradeForm = gradeService.getGradeForm(form);
     	model.addAttribute("gradeForm", gradeForm);
     	
     	// ドロップダウン項目設定

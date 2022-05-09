@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import jp.ac.ems.bean.StudentQuestionHistoryBean;
 import jp.ac.ems.common.data.GradeData;
 import jp.ac.ems.form.BaseGradeForm;
+import jp.ac.ems.form.GradeForm;
 
 /**
  * 共通成績サービスインターフェース(common grade service interface).
@@ -23,8 +24,8 @@ public interface SharedGradeService {
      * @param fieldM 中分類ID
      * @param model モデル(model)
      */
-	public void setSelectData(String fieldL, String fieldM, Model model);
-	
+    public void setSelectData(String fieldL, String fieldM, Model model);
+
 	/**
 	 * グラフ描画設定
 	 * 
@@ -51,4 +52,5 @@ public interface SharedGradeService {
 	 * @return 成績データマップ
 	 */
 	public Map<String, GradeData> createGrade(BaseGradeForm form, List<StudentQuestionHistoryBean> questionHistoryBeanList);
+	
 }

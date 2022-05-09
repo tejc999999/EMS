@@ -11,10 +11,11 @@ public interface StudentSelfStudyService {
 
     /**
      * 分野ドロップダウン項目設定(Set field dropdown param).
-     * @param form 自習Form(self study form)
+     * @param fieldL 大分類
+     * @param fieldM 中分類
      * @param model モデル(model)
      */
-    public void setSelectFieldData(SelfStudyForm form, Model model);
+    public void setSelectFieldData(String fieldL, String fieldM, Model model);
 
     /**
      * 年度ドロップダウン項目設定(Set year dropdown param).

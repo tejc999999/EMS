@@ -42,7 +42,7 @@ public class SelfStudyIndividualSelectQuestionController {
     	
     	// ドロップダウン項目設定
     	studentSelfStudyService.setSelectYearData(form, model);
-    	studentSelfStudyService.setSelectFieldData(form, model);
+    	studentSelfStudyService.setSelectFieldData(form.getSelectFieldL(), form.getSelectFieldM(), model);
     	
     	// チェックボックス項目設定
     	studentSelfStudyService.setCheckItems(form, model);

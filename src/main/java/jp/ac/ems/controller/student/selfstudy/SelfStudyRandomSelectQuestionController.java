@@ -37,6 +37,9 @@ public class SelfStudyRandomSelectQuestionController {
     public String selfRandom(@Validated SelfStudyForm form, BindingResult result,
             Model model) {
     	
+    	// 試験区分名設定
+    	studentSelfStudyService.setSelectDivisionData(form, model);
+    	
     	// 分野名項目設定
     	studentSelfStudyService.setSelectDataForRandom(model);
 

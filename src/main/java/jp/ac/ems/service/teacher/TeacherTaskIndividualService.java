@@ -45,11 +45,6 @@ public interface TeacherTaskIndividualService {
      */
     public Map<String, String> findAllMap();
     
-    /**
-     * 画面用年度マップ取得
-    * @return 画面用年度マップ（key:チェックボックスID、value：年度ラベル）
-    */
-    public Map<String, String> findAllYearMap();
     
     /**
      * 全コースMap取得
@@ -93,10 +88,12 @@ public interface TeacherTaskIndividualService {
     
     /**
      * 個別選択用ドロップダウン項目設定(Set dropdown param for select).
-     * @param form 課題Form(task form)
+     * 
+     * @param fieldL 大分類
+     * @param fieldM 中分類
      * @param model モデル(model)
      */
-    public void setSelectDataForSelect(TaskIndividualForm form, Model model);
+    public void setSelectDataForSelect(String fieldL, String fieldM, Model model);
     
     /**
      * 課題Formに問題Formをセットする

@@ -30,6 +30,7 @@ import jp.ac.ems.repository.QuestionRepository;
 import jp.ac.ems.repository.StudentTaskQuestionHistoryRepository;
 import jp.ac.ems.repository.TaskRepository;
 import jp.ac.ems.repository.UserRepository;
+import jp.ac.ems.service.shared.SharedSearchConditionService;
 import jp.ac.ems.service.shared.SharedTaskService;
 import jp.ac.ems.service.teacher.TeacherTaskIndividualService;
 import jp.ac.ems.service.util.JPCalenderEncoder;
@@ -56,6 +57,12 @@ public class TeacherTaskIndividualServiceImpl implements TeacherTaskIndividualSe
 	@Autowired
 	SharedTaskService sharedTaskService;
 
+	/**
+	 * 共通検索条件サービス(common search condition service).
+	 */
+	@Autowired
+	private SharedSearchConditionService sharedSearchConditionService;
+	
     /**
      * 課題リポジトリ(task repository).
      */
@@ -470,30 +477,32 @@ public class TeacherTaskIndividualServiceImpl implements TeacherTaskIndividualSe
     
     /**
      * 個別選択用ドロップダウン項目設定(Set dropdown param for select).
-     * @param form 課題Form(task form)
+     * 
+     * @param fieldL 大分類
+     * @param fieldM 中分類
      * @param model モデル(model)
      */
     @Override
-    public void setSelectDataForSelect(TaskIndividualForm form, Model model) {
+    public void setSelectDataForSelect(String fieldL, String fieldM, Model model) {
     	
     	// 試験区分取得
         Map<String, String> examDivisionMap = sharedTaskService.findAllExamDivisionMap();
         model.addAttribute("examDivisionDropItems", examDivisionMap);
     	
     	// 年度取得
-        Map<String, String> yearMap = findAllYearMap();
+        Map<String, String> yearMap = sharedSearchConditionService.findAllYearMap();
         model.addAttribute("yearDropItems", yearMap);
     	
     	// 大分類取得
-        Map<String, String> fieldLMap = findAllFieldLMap();
+        Map<String, String> fieldLMap = sharedSearchConditionService.findAllFieldLMap();
         model.addAttribute("fieldLDropItems", fieldLMap);
     	
     	// 中分類取得
-        Map<String, String> fieldMMap = findAllFieldMMap(form.getSelectFieldL());
+        Map<String, String> fieldMMap = sharedSearchConditionService.findAllFieldMMap(fieldL, fieldM);
         model.addAttribute("fieldMDropItems", fieldMMap);
     	
     	// 小分類取得
-        Map<String, String> fieldSMap = findAllFieldSMap(form.getSelectFieldM());
+        Map<String, String> fieldSMap = sharedSearchConditionService.findAllFieldSMap(fieldM);
         model.addAttribute("fieldSDropItems", fieldSMap);
     }
     
@@ -643,76 +652,6 @@ public class TeacherTaskIndividualServiceImpl implements TeacherTaskIndividualSe
     	
     	return questionForm;
 	}
-    
-    /**
-     * 画面用年度マップ取得
-     * @return 画面用年度マップ（key:ドロップダウンリストID、value：年度ラベル）
-     */
-    public Map<String, String> findAllYearMap() {
-    	
-    	Map<String, String> map = new LinkedHashMap<String, String>();
-
-    	for(QuestionBean questionBean : questionRepository.findDistinctYearAndTerm()) {
-    		StringBuffer keyBuff = new StringBuffer();
-    		StringBuffer valueBuff = new StringBuffer();
-    		// 年度
-    		keyBuff.append(questionBean.getYear());
-    		// 期
-    		String termStr = questionBean.getTerm();
-    		if("H".equals(termStr)) {
-    			keyBuff.append("H");
-    		} else {
-    			keyBuff.append("A");
-    		}
-   			
-        	valueBuff.append(JPCalenderEncoder.getInstance().convertJpCalender(questionBean.getYear(), termStr));
-   			map.put(keyBuff.toString(), valueBuff.toString());
-    	}
-    	return map;
-    }
-    
-    /**
-     * 画面用大分類マップ取得(Get large  map for screen).
-     * @return 画面用大分類マップ（key:ドロップダウンリストID、value：大分類ラベル）
-     */
-    private Map<String, String> findAllFieldLMap() {
-    	
-    	Map<String, String> map = new LinkedHashMap<String, String>();
-
-    	EnumSet.allOf(FieldLarge.class)
-    	  .forEach(fieldL -> map.put(String.valueOf(fieldL.getId()), fieldL.getName()));
-    	
-    	return map;
-    }
-    
-    /**
-     * 画面用中分類マップ取得(Get middle filed map for screen).
-     * @param parentId 大分類ID(large field id)
-     * @return 画面用中分類マップ（key:ドロップダウンリストID、value：中分類ラベル）
-     */
-    private Map<String, String> findAllFieldMMap(String parentId) {
-
-    	Map<String, String> map = new LinkedHashMap<String, String>();
-    	if(parentId != null && !parentId.equals("")) {
-    		map.putAll(FieldMiddle.getMap(Byte.valueOf(parentId)));
-    	}
-    	return map;
-    }
-    
-    /**
-     * 画面用小分類マップ取得(Get small filed map for screen).
-     * @param parentId 中分類ID(middle field id)
-     * @return 画面用小分類マップ（key:ドロップダウンリストID、value：小分類ラベル）
-     */
-    private Map<String, String> findAllFieldSMap(String parentId) {
-    	
-    	
-    	Map<String, String> map = new LinkedHashMap<String, String>();
-    	if(parentId != null && !parentId.equals("")) {
-    		map.putAll(FieldSmall.getMap(Byte.valueOf(parentId)));
-    	}
-    	return map;
-    }
     
     /**
      * 問題Beanリストを画面用Mapに変換(convert question bean to map for monitor).

@@ -34,4 +34,15 @@ public class GradeForm extends BaseGradeForm {
      * ソート条件(sort key).
      */
     private String selectSortKey = GradeForm.SORT_COUNT_KEY;
+    
+    /**
+     * 選択クラス(select class).
+     */
+    private String selectClass;
+
+    /**
+     * 選択コース(select course).
+     */
+    private String selectCourse;
+
 }

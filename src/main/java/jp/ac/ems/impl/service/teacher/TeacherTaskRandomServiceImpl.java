@@ -63,7 +63,7 @@ public class TeacherTaskRandomServiceImpl implements TeacherTaskRandomService {
     	// 最新年度期を取得する
     	String latestYear = null;
     	String latestTerm = null;
-    	List<QuestionBean> questionBeanListForYearAndTerm;
+//    	List<QuestionBean> questionBeanListForYearAndTerm;
     	if(examDivisionCode != null
     			&& (ExamDivisionCode.AP.getCode().equals(examDivisionCode) || (ExamDivisionCode.FE.getCode().equals(examDivisionCode)))) {
         	questionBeanList = questionRepository.findDistinctYearAndTermByDivision(examDivisionCode);
