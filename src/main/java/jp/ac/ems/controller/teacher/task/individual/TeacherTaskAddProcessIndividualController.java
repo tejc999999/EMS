@@ -67,7 +67,7 @@ public class TeacherTaskAddProcessIndividualController {
      * @return 課題問題登録用ページビュー(task question add page view)
      */
     @PostMapping(params = "exclusionBtn")
-    public String addProcessExclution(@Validated TaskForm form, BindingResult result,
+    public String addProcessExclution(@Validated TaskIndividualForm form, BindingResult result,
             Model model) {
     	
     	// 全コースを取得する
