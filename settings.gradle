@@ -1,2 +1,2 @@
 // ルートプロジェクト名（マルチプロジェクトとして、サブプロジェクトを含めてビルドできる）
-rootProject.name = 'EMS_fe-compatible'
+rootProject.name = 'EMS_fe'
